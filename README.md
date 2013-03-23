@@ -64,3 +64,24 @@ Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINR
 同时，因为作者个人能力不足，所以也在此邀请喜爱 Ruby 并愿意为其开发扩展的同好加入。
 相信有你们的加入，SINRGE2 将会变得更好用。
 
+使用的类库
+==================
+
+Ruby 2.0.0 p0 http://www.ruby-lang.org/en/
+
+libnge2 https://github.com/ifreedom/libnge2
+  freetype2411
+  glew32
+  glu
+  libjpeg
+  libpng
+  opengl
+  zlib
+
+Seal 0.1.2 「焦尾」 https://github.com/zhangsu/seal
+  libmpg123
+  libogg
+  libvorbis
+  OpenAL32
+
+
