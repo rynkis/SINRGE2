@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B102A77B-FB23-4AAB-8970-87D59196074A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>SINRGE2</RootNamespace>
+    <ProjectName>SINRGE2</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IntDir>$(SolutionDir)$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)</TargetName>
+    <GenerateManifest>false</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
+    <IntDir>$(SolutionDir)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SINRGE2_EXPORTS;NGE_LIBTYPE_STATIC;GLEW_STATIC;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Depends\include;$(SolutionDir)Depends\include\hge;$(SolutionDir)Depends\include\nge2;$(ProjectDir);$(ProjectDir)nge2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>oldnames.lib;advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Depends\lib\msvcr100-ruby200-static_MT.lib;$(SolutionDir)Depends\lib\libogg.lib;$(SolutionDir)Depends\lib\libvorbis.lib;$(SolutionDir)Depends\lib\seal.lib;$(SolutionDir)Depends\lib\OpenAL32.lib;$(SolutionDir)Depends\lib\libnge2\libjpeg.lib;$(SolutionDir)Depends\lib\libnge2\libpng.lib;$(SolutionDir)Depends\lib\libnge2\zlib.lib;$(SolutionDir)Depends\lib\libnge2\freetype2411MT.lib;glu32.lib;opengl32.lib;$(SolutionDir)Depends\lib\libnge2\glew32s.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
+      <IgnoreSpecificDefaultLibraries>msvcrtd.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <Manifest>
+      <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2_EXPORTS;NGE_LIBTYPE_STATIC;GLEW_STATIC;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Depends\include;$(SolutionDir)Depends\include\hge;$(SolutionDir)Depends\include\nge2;$(ProjectDir);$(ProjectDir)nge2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DisableSpecificWarnings>4996;4142;4127</DisableSpecificWarnings>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <WarningLevel>Level3</WarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>oldnames.lib;advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Depends\lib\msvcr100-ruby200-static_MT.lib;$(SolutionDir)Depends\lib\libogg.lib;$(SolutionDir)Depends\lib\libvorbis.lib;$(SolutionDir)Depends\lib\seal.lib;$(SolutionDir)Depends\lib\OpenAL32.lib;$(SolutionDir)Depends\lib\libnge2\libjpeg.lib;$(SolutionDir)Depends\lib\libnge2\libpng.lib;$(SolutionDir)Depends\lib\libnge2\zlib.lib;$(SolutionDir)Depends\lib\libnge2\freetype2411MT.lib;glu32.lib;opengl32.lib;$(SolutionDir)Depends\lib\libnge2\glew32s.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
+      <StackReserveSize>0</StackReserveSize>
+      <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
+    </Link>
+    <PostBuildEvent>
+      <Command>copy $(IntDir)SINRGE2.dll $(SolutionDir)Bin\SINRGE2.dll</Command>
+    </PostBuildEvent>
+    <Manifest>
+      <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
+    </Manifest>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Depends\include\hge\hgecolor.h" />
+    <ClInclude Include="..\Depends\include\hge\hgeparticle.h" />
+    <ClInclude Include="..\Depends\include\hge\hgerect.h" />
+    <ClInclude Include="..\Depends\include\hge\hgevector.h" />
+    <ClInclude Include="..\Depends\include\seal.h" />
+    <ClInclude Include="..\Depends\include\seal\buf.h" />
+    <ClInclude Include="..\Depends\include\seal\core.h" />
+    <ClInclude Include="..\Depends\include\seal\efs.h" />
+    <ClInclude Include="..\Depends\include\seal\err.h" />
+    <ClInclude Include="..\Depends\include\seal\fmt.h" />
+    <ClInclude Include="..\Depends\include\seal\listener.h" />
+    <ClInclude Include="..\Depends\include\seal\raw.h" />
+    <ClInclude Include="..\Depends\include\seal\rvb.h" />
+    <ClInclude Include="..\Depends\include\seal\src.h" />
+    <ClInclude Include="..\Depends\include\seal\stream.h" />
+    <ClInclude Include="AutoBuffer.h" />
+    <ClInclude Include="Kconv.h" />
+    <ClInclude Include="nge2\include\libnge2.h" />
+    <ClInclude Include="nge2\include\libnge2pure.h" />
+    <ClInclude Include="nge2\include\nge.h" />
+    <ClInclude Include="nge2\include\nge_bmp.h" />
+    <ClInclude Include="nge2\include\nge_charsets.h" />
+    <ClInclude Include="nge2\include\nge_color.h" />
+    <ClInclude Include="nge2\include\nge_common.h" />
+    <ClInclude Include="nge2\include\nge_dll_export.h" />
+    <ClInclude Include="nge2\include\nge_endian_internal.h" />
+    <ClInclude Include="nge2\include\nge_font.h" />
+    <ClInclude Include="nge2\include\nge_font_internal.h" />
+    <ClInclude Include="nge2\include\nge_graphics.h" />
+    <ClInclude Include="nge2\include\nge_image.h" />
+    <ClInclude Include="nge2\include\nge_image_effect.h" />
+    <ClInclude Include="nge2\include\nge_image_ext.h" />
+    <ClInclude Include="nge2\include\nge_io_dir.h" />
+    <ClInclude Include="nge2\include\nge_io_file.h" />
+    <ClInclude Include="nge2\include\nge_io_file_internal.h" />
+    <ClInclude Include="nge2\include\nge_jpg.h" />
+    <ClInclude Include="nge2\include\nge_misc.h" />
+    <ClInclude Include="nge2\include\nge_mmgr.h" />
+    <ClInclude Include="nge2\include\nge_platform.h" />
+    <ClInclude Include="nge2\include\nge_png.h" />
+    <ClInclude Include="nge2\include\nge_rbtree.h" />
+    <ClInclude Include="nge2\include\nge_ref_handle.h" />
+    <ClInclude Include="nge2\include\nge_rle.h" />
+    <ClInclude Include="nge2\include\nge_sys_compatible.h" />
+    <ClInclude Include="nge2\include\nge_tex_cache.h" />
+    <ClInclude Include="nge2\include\nge_tga.h" />
+    <ClInclude Include="nge2\include\nge_timer.h" />
+    <ClInclude Include="nge2\include\pmp.h" />
+    <ClInclude Include="nge2\nge_font_bittype.h" />
+    <ClInclude Include="RbExport.h" />
+    <ClInclude Include="RbInput.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SINRGE2.h" />
+    <ClInclude Include="SINTypes.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Entry.cpp" />
+    <ClCompile Include="hge\hgecolor.cpp" />
+    <ClCompile Include="hge\hgeparticle.cpp" />
+    <ClCompile Include="hge\hgepmanager.cpp" />
+    <ClCompile Include="hge\hgerect.cpp" />
+    <ClCompile Include="hge\hgevector.cpp" />
+    <ClCompile Include="Kconv.cpp" />
+    <ClCompile Include="RbSeal.cpp" />
+    <ClCompile Include="System.cpp" />
+    <ClCompile Include="nge2\nge.c" />
+    <ClCompile Include="nge2\nge_bmp.c" />
+    <ClCompile Include="nge2\nge_charsets.c" />
+    <ClCompile Include="nge2\nge_font.c" />
+    <ClCompile Include="nge2\nge_font_freetype.c" />
+    <ClCompile Include="nge2\nge_font_hzk.c" />
+    <ClCompile Include="nge2\nge_font_nfont.c" />
+    <ClCompile Include="nge2\nge_graphics.c" />
+    <ClCompile Include="nge2\nge_image.c" />
+    <ClCompile Include="nge2\nge_image_effect.c" />
+    <ClCompile Include="nge2\nge_image_ext.c" />
+    <ClCompile Include="nge2\nge_io_dir.c" />
+    <ClCompile Include="nge2\nge_io_file.c" />
+    <ClCompile Include="nge2\nge_jpg.c" />
+    <ClCompile Include="nge2\nge_misc.c" />
+    <ClCompile Include="nge2\nge_png.c" />
+    <ClCompile Include="nge2\nge_rbtree.c" />
+    <ClCompile Include="nge2\nge_ref_handle.c" />
+    <ClCompile Include="nge2\nge_rle.c" />
+    <ClCompile Include="nge2\nge_sys_compatible.c" />
+    <ClCompile Include="nge2\nge_tex_cache.c" />
+    <ClCompile Include="nge2\nge_tga.c" />
+    <ClCompile Include="nge2\nge_timer.c" />
+    <ClCompile Include="RbGlobal.cpp" />
+    <ClCompile Include="RbInput.c" />
+    <ClCompile Include="RbNGE.cpp" />
+    <ClCompile Include="zlib.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\HISTORY" />
+    <None Include="..\LICENSE" />
+    <None Include="..\README" />
+    <None Include="..\XPManifest.xml" />
+    <None Include="SINRGE2.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SINRGE2.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

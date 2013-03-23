@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\System">
+      <UniqueIdentifier>{ff6f0dc1-b53c-4a53-a186-c1f864e9fda8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\RbExport">
+      <UniqueIdentifier>{595c9dd2-f2bc-4b7f-ac33-ab14d3aa84b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include">
+      <UniqueIdentifier>{63efe9f0-dcf1-44b8-9026-a402293247e9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\seal">
+      <UniqueIdentifier>{99af0702-0ee1-4969-90af-46fcdbcfa48e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\nge2">
+      <UniqueIdentifier>{73d3255f-bb81-4607-8883-cd387d51c948}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="libnge2">
+      <UniqueIdentifier>{af8824a9-1102-4fe1-bd58-282ba1365696}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Include\hge">
+      <UniqueIdentifier>{f0d647a2-a9b0-49da-a8d1-102bf7fb7653}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hge">
+      <UniqueIdentifier>{8e908986-c81c-4abb-8c72-51d3474c6ddc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\RubyExt">
+      <UniqueIdentifier>{0b0a99f9-e8b5-4e6c-a14a-8657b12e3d19}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SINRGE2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\buf.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\core.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\efs.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\err.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\fmt.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\listener.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\raw.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\rvb.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\src.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\seal\stream.h">
+      <Filter>Include\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="RbExport.h">
+      <Filter>源文件\RbExport</Filter>
+    </ClInclude>
+    <ClInclude Include="SINTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoBuffer.h">
+      <Filter>源文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="Kconv.h">
+      <Filter>源文件\System</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\libnge2.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\libnge2pure.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_bmp.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_charsets.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_color.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_common.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_dll_export.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_endian_internal.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_font.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_font_internal.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_graphics.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_image.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_image_effect.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_image_ext.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_io_dir.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_io_file.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_io_file_internal.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_jpg.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_misc.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_mmgr.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_platform.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_png.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_rbtree.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_ref_handle.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_rle.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_sys_compatible.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_tex_cache.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_tga.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\nge_timer.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\include\pmp.h">
+      <Filter>Include\nge2</Filter>
+    </ClInclude>
+    <ClInclude Include="nge2\nge_font_bittype.h">
+      <Filter>libnge2</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\hge\hgecolor.h">
+      <Filter>Include\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\hge\hgeparticle.h">
+      <Filter>Include\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\hge\hgerect.h">
+      <Filter>Include\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Depends\include\hge\hgevector.h">
+      <Filter>Include\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="RbInput.h">
+      <Filter>源文件\RbExport</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RbGlobal.cpp">
+      <Filter>源文件\RbExport</Filter>
+    </ClCompile>
+    <ClCompile Include="Kconv.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_bmp.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_charsets.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_font.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_font_freetype.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_font_hzk.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_font_nfont.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_graphics.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_image.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_image_effect.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_image_ext.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_io_dir.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_io_file.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_jpg.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_misc.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_png.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_rbtree.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_ref_handle.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_rle.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_sys_compatible.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_tex_cache.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_tga.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="nge2\nge_timer.c">
+      <Filter>libnge2</Filter>
+    </ClCompile>
+    <ClCompile Include="Entry.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgecolor.cpp">
+      <Filter>hge</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgeparticle.cpp">
+      <Filter>hge</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgepmanager.cpp">
+      <Filter>hge</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgerect.cpp">
+      <Filter>hge</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgevector.cpp">
+      <Filter>hge</Filter>
+    </ClCompile>
+    <ClCompile Include="RbNGE.cpp">
+      <Filter>源文件\RbExport</Filter>
+    </ClCompile>
+    <ClCompile Include="RbInput.c">
+      <Filter>源文件\RbExport</Filter>
+    </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>源文件\System</Filter>
+    </ClCompile>
+    <ClCompile Include="RbSeal.cpp">
+      <Filter>源文件\RbExport</Filter>
+    </ClCompile>
+    <ClCompile Include="zlib.c">
+      <Filter>源文件\RubyExt</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SINRGE2.def">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="..\XPManifest.xml">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="..\HISTORY" />
+    <None Include="..\LICENSE" />
+    <None Include="..\README" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SINRGE2.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
