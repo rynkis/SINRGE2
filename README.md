@@ -69,8 +69,10 @@ Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINR
 
 Ruby 2.0.0 p0 http://www.ruby-lang.org/en/
 
-libnge2 https://github.com/ifreedom/libnge2 附加依赖：freetype2411、glew32、 glu、libjpeg、libpng、 opengl、 zlib
+libnge2 https://github.com/ifreedom/libnge2
+--附加依赖：freetype2411、glew32、 glu、libjpeg、libpng、 opengl、 zlib
 
-Seal 0.1.2 「焦尾」 https://github.com/zhangsu/seal 附加依赖： libmpg123、libogg、 libvorbis、OpenAL32
+Seal 0.1.2 「焦尾」 https://github.com/zhangsu/seal
+--附加依赖： libmpg123、libogg、 libvorbis、OpenAL32
 
 
