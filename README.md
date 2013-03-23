@@ -2,9 +2,9 @@ SINRGE2 Ver.Draft
 =================
 Copyright (C) 2013 Sherry Lynch(or Shy07) <Gernischt@gmail.com>
 
-Sorry, readme is only chinese version available now.
+Sorry, only chinese version readme available now.
 
-[ 关于 SINRGE2 ]
+关于 SINRGE2
 ==================
 
 SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lynch（或称 Shy07）个人开发的一个用于游戏开发的 Ruby 实现。
@@ -15,7 +15,7 @@ Ver.Draft，SINRGE2 的第一个版本，是通过直接把 NGE2 的函数绑定
 
 另外，Ruby 2.0 和 NGE2 本身是支持 Linux 的。不过由于作者认为 Linux 虽然非常适合做开发，但并不是很适合玩游戏。因此作者是在 Windows 下进行开发调试的，SINRGE2的部分代码，例如 Input 部分，只能在 Windows 上运行，这一点也请谅解。当然，若有兴趣，也可自行移植到相应的平台。
 
-[ Ver.Draft 特性 ]
+Ver.Draft 特性
 ==================
 
 对比 RGSS 增加了：
@@ -44,7 +44,7 @@ Ver.Draft，SINRGE2 的第一个版本，是通过直接把 NGE2 的函数绑定
 * 动画支持，用于播放动画，支持gif。
 * 音频支持，用于播放声音，mp3，wav，可扩展。
 
-[ 使用 SINRGE2 ]
+使用 SINRGE2
 ==================
 
 首先请自行编译 SINRGE2，或者下载已经编译好的二进制版本。然后在 SINRGE2.exe 所在目录新建一个 mian.rb 文件。当然你也可以新建一个 ini 文件，并可以配置以下选项。（ini 文件名必须与 SINRGE2.exe 相同）
@@ -56,7 +56,7 @@ Scripts=your ruby scripts file's path
 ```
 之后编写你喜欢的 Ruby 代码，运行 SINRGE2.exe 即可。
 
-[ 未来的计划 ]
+未来的计划
 ==================
 
 Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINRGE2 的下一个版本将会完全放弃现在的代码，重新在 NGE2 的基础上进行抽象封装，争取实现接近 RGSS，但更为自由的 Ruby 类库。
