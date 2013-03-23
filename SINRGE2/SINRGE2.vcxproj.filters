@@ -322,9 +322,6 @@
     <None Include="..\XPManifest.xml">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="..\HISTORY" />
-    <None Include="..\LICENSE" />
-    <None Include="..\README" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SINRGE2.rc">

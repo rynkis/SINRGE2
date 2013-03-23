@@ -96,7 +96,7 @@
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(IntDir)SINRGE2.dll $(SolutionDir)Bin\SINRGE2.dll</Command>
+      <Command>copy $(IntDir)SINRGE2.dll $(SolutionDir)Demo\SINRGE2.dll</Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -197,9 +197,6 @@
     <ClCompile Include="zlib.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\HISTORY" />
-    <None Include="..\LICENSE" />
-    <None Include="..\README" />
     <None Include="..\XPManifest.xml" />
     <None Include="SINRGE2.def" />
   </ItemGroup>

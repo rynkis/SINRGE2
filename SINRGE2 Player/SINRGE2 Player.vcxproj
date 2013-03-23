@@ -87,7 +87,7 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(IntDir)SINRGE2.exe $(SolutionDir)Bin\SINRGE2.exe</Command>
+      <Command>copy $(IntDir)SINRGE2.exe $(SolutionDir)Demo\SINRGE2.exe</Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
