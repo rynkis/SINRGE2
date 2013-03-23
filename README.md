@@ -47,7 +47,7 @@ Ver.Draft 特性
 使用 SINRGE2
 ==================
 
-首先请自行编译 SINRGE2，或者下载已经编译好的二进制版本。然后在 SINRGE2.exe 所在目录新建一个 mian.rb 文件。当然你也可以新建一个 ini 文件，并可以配置以下选项。（ini 文件名必须与 SINRGE2.exe 相同）
+首先请自行编译 SINRGE2，项目工程推荐使用 VS2010 打开。然后在 SINRGE2.exe 所在目录新建一个 mian.rb 文件。当然你也可以新建一个 ini 文件，并可以配置以下选项。（ini 文件名必须与 SINRGE2.exe 相同）
 
 ```ini
 [Setting]
