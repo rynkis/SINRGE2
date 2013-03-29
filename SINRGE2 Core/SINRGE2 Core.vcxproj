@@ -14,7 +14,7 @@
     <ProjectGuid>{B102A77B-FB23-4AAB-8970-87D59196074A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SINRGE2</RootNamespace>
-    <ProjectName>SINRGE2</ProjectName>
+    <ProjectName>SINRGE2 Core</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -48,6 +48,7 @@
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
     <IntDir>$(SolutionDir)$(Configuration)\</IntDir>
+    <TargetName>SINRGE2</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -96,7 +97,7 @@
       <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(IntDir)SINRGE2.dll $(SolutionDir)Demo\SINRGE2.dll</Command>
+      <Command>copy $(IntDir)SINRGE2.dll $(SolutionDir)Bin\SINRGE2.dll</Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -167,7 +168,6 @@
     <ClCompile Include="hge\hgevector.cpp" />
     <ClCompile Include="Kconv.cpp" />
     <ClCompile Include="RbSeal.cpp" />
-    <ClCompile Include="System.cpp" />
     <ClCompile Include="nge2\nge.c" />
     <ClCompile Include="nge2\nge_bmp.c" />
     <ClCompile Include="nge2\nge_charsets.c" />
@@ -194,6 +194,7 @@
     <ClCompile Include="RbGlobal.cpp" />
     <ClCompile Include="RbInput.c" />
     <ClCompile Include="RbNGE.cpp" />
+    <ClCompile Include="SINRGE2.cpp" />
     <ClCompile Include="zlib.c" />
   </ItemGroup>
   <ItemGroup>

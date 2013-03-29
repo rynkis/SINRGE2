@@ -305,14 +305,14 @@
     <ClCompile Include="RbInput.c">
       <Filter>源文件\RbExport</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
-      <Filter>源文件\System</Filter>
-    </ClCompile>
     <ClCompile Include="RbSeal.cpp">
       <Filter>源文件\RbExport</Filter>
     </ClCompile>
     <ClCompile Include="zlib.c">
       <Filter>源文件\RubyExt</Filter>
+    </ClCompile>
+    <ClCompile Include="SINRGE2.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

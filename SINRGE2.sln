@@ -1,12 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2", "SINRGE2\SINRGE2.vcxproj", "{B102A77B-FB23-4AAB-8970-87D59196074A}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Player", "SINRGE2 Player\SINRGE2 Player.vcxproj", "{535383FC-CD0C-4134-81FA-9CE22E8E0A66}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B102A77B-FB23-4AAB-8970-87D59196074A} = {B102A77B-FB23-4AAB-8970-87D59196074A}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Core", "SINRGE2 Core\SINRGE2 Core.vcxproj", "{B102A77B-FB23-4AAB-8970-87D59196074A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,14 +14,14 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B102A77B-FB23-4AAB-8970-87D59196074A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{B102A77B-FB23-4AAB-8970-87D59196074A}.Debug|Win32.Build.0 = Debug|Win32
-		{B102A77B-FB23-4AAB-8970-87D59196074A}.Release|Win32.ActiveCfg = Release|Win32
-		{B102A77B-FB23-4AAB-8970-87D59196074A}.Release|Win32.Build.0 = Release|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Debug|Win32.ActiveCfg = Debug|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Debug|Win32.Build.0 = Debug|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.ActiveCfg = Release|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.Build.0 = Release|Win32
+		{B102A77B-FB23-4AAB-8970-87D59196074A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B102A77B-FB23-4AAB-8970-87D59196074A}.Debug|Win32.Build.0 = Debug|Win32
+		{B102A77B-FB23-4AAB-8970-87D59196074A}.Release|Win32.ActiveCfg = Release|Win32
+		{B102A77B-FB23-4AAB-8970-87D59196074A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
