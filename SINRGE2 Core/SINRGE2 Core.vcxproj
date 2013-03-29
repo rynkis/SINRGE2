@@ -202,7 +202,7 @@
     <None Include="SINRGE2.def" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SINRGE2.rc" />
+    <ResourceCompile Include="SINRGE2 Core.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

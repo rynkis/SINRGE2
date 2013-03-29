@@ -324,7 +324,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="SINRGE2.rc">
+    <ResourceCompile Include="SINRGE2 Core.rc">
       <Filter>资源文件</Filter>
     </ResourceCompile>
   </ItemGroup>
