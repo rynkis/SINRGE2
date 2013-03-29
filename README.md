@@ -9,7 +9,7 @@ Sorry, only chinese version readme available now.
 
 SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lynch（或称 Shy07）个人开发的一个用于游戏开发的 Ruby 实现。
 
-首先，这是一个 Bug 满满的版本，如果要投入实用的话……抱歉，浪费您的时间了……但如果您同样喜欢 Ruby，并且期待能有一个解决方案可以取代 RGSS，那么请您花点时间阅读下去，并希望您今后能够继续关注这个项目。
+首先，这是一个 Bug 满满的版本，如果要投入实用的话……抱歉，浪费您的时间了……但如果您同样喜欢 Ruby，并且期待能有一个开源自由的解决方案可以取代 RGSS，那么请您花点时间阅读下去，并希望您今后能够继续关注这个项目。
 
 Ver.Draft，SINRGE2 的第一个版本，是通过直接把 NGE2 的函数绑定到 Ruby 2.0 来完成的。因此，在调用 NGE2 函数的时候会失去 Ruby 原来那样优雅的感觉，关于这一点真是十分遗憾。当然，这也是把第一个版本称作“Draft”的原因。Draft，即草稿，表示仅是作者为了熟悉用 C++ 扩展 Ruby 的试作型产品。
 
@@ -68,11 +68,12 @@ Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINR
 ==================
 
 Ruby 2.0.0 p0 http://www.ruby-lang.org/en/
+--附加依赖：zlib
 
-libnge2 https://github.com/ifreedom/libnge2
---附加依赖：freetype2411、glew32、 glu、libjpeg、libpng、 opengl、 zlib
+libnge2 2.1 https://github.com/ifreedom/libnge2
+--附加依赖：freetype2411、glew32、 glu、libjpeg、libpng、 opengl
 
 Seal 0.1.2 「焦尾」 https://github.com/zhangsu/seal
---附加依赖： libmpg123、libogg、 libvorbis、OpenAL32
+--附加依赖：libmpg123、libogg、 libvorbis、OpenAL32
 
 
