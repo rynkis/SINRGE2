@@ -10,11 +10,11 @@
     #~ }
   #~ end
 	
-  #~ alias o_p p
+  #~ alias o_o p # <= 个人喜好问题= =
   #~ def p(*args)
-    #~ args.each {|a|
-      #~ open("log.txt", "a") {|f| f.write a.to_s}
-      #~ o_p a
+    #~ args.each {|b|
+      #~ open("log.txt", "a") {|f| f.write b.to_s}
+      #~ o_o b
     #~ }
   #~ end
 #~ end
@@ -86,8 +86,9 @@ begin
 	@se = Seal::Source.new
 	
 	print "#{Time.now} 打开音频文件流\n"
-	@bgm.stream = Seal::Stream.new("Audio/Last Whisper (SLOS Arrange).ogg")
-	#~ @bgm.buffer = Seal::Buffer.new("Audio/Last Whisper (SLOS Arrange).ogg")
+	#~ @bgm.stream = Seal::Stream.new("Audio/Last Whisper (SLOS Arrange).ogg")
+	# seal 的流播放不太靠谱，所以还是缓存播放吧= =b
+	@bgm.buffer = Seal::Buffer.new("Audio/Last Whisper (SLOS Arrange).ogg")
 	@bgm.looping = true
 	@se.buffer = Seal::Buffer.new("Audio/se.ogg")
 	#~ @se.gain = 150.0
@@ -113,6 +114,8 @@ begin
 	NGE.font_setcolor(@font1, 0xffffffff)
 	
 	@str = "执着于老朽的文字诗篇；痴迷程序代码和主机游戏；"
+	# @str.length * 3 是 utf8 汉字使用的字节数，下面英文可以不用乘三
+	# 目前中英文混排时字节数统计较麻烦，这个不是Ruby的风格，改进预定
 	NGE.font_drawtext(@font1, @str, @str.length * 3, @img3, 32, 32, 0)
 	@str = "爱世界，爱人民，不爱国；不坦率直白，造作即造文。"
 	NGE.font_drawtext(@font1, @str, @str.length * 3, @img3, 32, 64, 0)
@@ -184,7 +187,7 @@ begin
 	angle = 0
 	
 	print "#{Time.now} 主循环\n"
-	while true #@bgm.state == Seal::Source::State::PLAYING
+	while @bgm.state == Seal::Source::State::PLAYING
 		unless NGE::Frame.peek_message
 			#~ NGE.screen_shot("snap.png")
 			#~ NGE.image_save(NGE.screen_to_image, "snap.png", true, true)
@@ -221,11 +224,10 @@ begin
 		
 		Input.update
 		
-		angle += 0.5
-		angle = 0 if angle >= 360.0
-		
+		angle = angle + 0.5 >= 360.0 ? 0 : angle + 0.5
 		dt = (NGE.get_ticks(@timer) - mlast) / 1000.0
 		mlast = NGE.get_ticks(@timer)
+		
 		NGE.particle_system_update(@ptsys1, dt)
 		NGE.particle_system_update(@ptsys2, dt)
 		NGE.particle_system_update(@ptsys3, dt)
@@ -243,7 +245,7 @@ begin
 	
 	print "#{Time.now} 出错了= =\n"
 	loop { a = 1; sleep 1}
-rescue
-  p $!
-	loop { a = 1; sleep 1}
+#~ rescue
+  #~ p $!
+	#~ loop { a = 1; sleep 1}
 end
