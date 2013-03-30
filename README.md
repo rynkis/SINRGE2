@@ -59,7 +59,7 @@ Scripts=your ruby scripts file's path
 未来的计划
 ==================
 
-Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINRGE2 的下一个版本将会完全放弃现在的代码，重新在 NGE2 的基础上进行抽象封装，争取实现接近 RGSS，但更为自由的 Ruby 类库。
+Ver.Draft 是为了向 NGE2 致敬而保留了 NGE2 的函数调用方式，SINRGE2 的下一个版本将会在 NGE2 的基础上进行抽象封装，争取实现接近 RGSS，但更为自由的 Ruby 类库。
 
 同时，因为作者个人能力不足，所以也在此邀请喜爱 Ruby 并愿意为其开发扩展的同好加入。
 相信有你们的加入，SINRGE2 将会变得更好用。
