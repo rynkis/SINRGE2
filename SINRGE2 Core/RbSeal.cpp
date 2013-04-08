@@ -3,23 +3,20 @@ extern "C"
 {
 #include "seal.h"
 }
-//#include "ruby.h"
 
 using namespace Sin;
 
-namespace
-{
 static const char WAV_SYM[] = "wav";
-static const char OV_SYM[] = "ov";
+static const char OV_SYM[]	= "ov";
 static const char MPG_SYM[] = "mpg";
 
-static const char UNDETERMINED_SYM[] = "undetermined";
-static const char STATIC_SYM[] = "static";
-static const char STREAMING_SYM[] = "streaming";
+static const char UNDETERMINED_SYM[]	= "undetermined";
+static const char STATIC_SYM[]			= "static";
+static const char STREAMING_SYM[]		= "streaming";
 
 static const char INITIAL_SYM[] = "initial";
 static const char PLAYING_SYM[] = "playing";
-static const char PAUSED_SYM[] = "paused";
+static const char PAUSED_SYM[]	= "paused";
 static const char STOPPED_SYM[] = "stopped";
 
 static VALUE mSeal;
@@ -2079,7 +2076,7 @@ void Init_seal()
     bind_efs();
     bind_listener();
 }
-}
+
 namespace Sin
 {
 	void InitSeal()

@@ -1,5 +1,4 @@
 /*
- * Thanks to Dr.Watson JGE++!
 ** Haaf's Game Engine 1.7
 ** Copyright (C) 2003-2007, Relish Games
 ** hge.relishgames.com
@@ -7,19 +6,12 @@
 ** hgeColor*** helper classes implementation
 */
 
-#include <math.h>
+
 #include "hgecolor.h"
+#include <math.h>
 
 
-#ifndef min
-	#define min(x, y) ((x<y)?x:y)
-#endif
-
-#ifndef max
-	#define max(x, y) ((x>y)?x:y)
-#endif
-
-void hgeColorHSV::SetHWColor(uint32_t col)
+void hgeColorHSV::SetHWColor(DWORD col)
 {
 	float r, g, b;
 	float minv, maxv, delta;
@@ -49,15 +41,15 @@ void hgeColorHSV::SetHWColor(uint32_t col)
 		del_B = (((maxv - b) / 6) + (delta / 2)) / delta;
 
 		if      (r == maxv) {h = del_B - del_G;}
-		else if (g == maxv) {h = (1 / 3) + del_R - del_B;}
-		else if (b == maxv) {h = (2 / 3) + del_G - del_R;}
-
+		else if (g == maxv) {h = (1.0f / 3.0f) + del_R - del_B;}
+		else if (b == maxv) {h = (2.0f / 3.0f) + del_G - del_R;}
+		
 		if (h < 0) h += 1;
 		if (h > 1) h -= 1;
 	}
 }
 
-uint32_t hgeColorHSV::GetHWColor() const
+DWORD hgeColorHSV::GetHWColor() const
 {
 	float r, g, b;
 	float xh, i, p1, p2, p3;
@@ -85,6 +77,6 @@ uint32_t hgeColorHSV::GetHWColor() const
 		else			 {r = v;  g = p1; b = p2;}
 	}
 
-	return (MAKE_RGBA_8888((int)(r*255.0f), (int)(g*255.0f), (int)(b*255.0f),(int)(a*255.0f)));
+	return (DWORD(a*255.0f)<<24) + (DWORD(r*255.0f)<<16) + (DWORD(g*255.0f)<<8) + DWORD(b*255.0f);
 }
 

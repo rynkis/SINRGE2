@@ -47,7 +47,6 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetName>SINRGE2</TargetName>
     <GenerateManifest>false</GenerateManifest>
-    <IntDir>$(SolutionDir)$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -87,7 +86,8 @@
       </IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(IntDir)SINRGE2.exe $(SolutionDir)Bin\SINRGE2.exe</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>

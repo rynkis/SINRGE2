@@ -54,11 +54,11 @@ hgeParticleSystem* hgeParticleManager::SpawnPS(hgeParticleSystemInfo *psi, float
 	return psList[nPS-1];
 }
 
-BOOL hgeParticleManager::IsPSAlive(hgeParticleSystem *ps) const
+bool hgeParticleManager::IsPSAlive(hgeParticleSystem *ps) const
 {
 	int i;
-	for(i=0;i<nPS;i++) if(psList[i]==ps) return 1;
-	return 0;
+	for(i=0;i<nPS;i++) if(psList[i]==ps) return true;
+	return false;
 }
 
 void hgeParticleManager::Transpose(float x, float y)
