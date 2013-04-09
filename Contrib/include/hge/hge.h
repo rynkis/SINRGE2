@@ -298,7 +298,7 @@ public:
 	virtual bool			CALL	System_Initiate() = 0;
 	virtual void			CALL	System_Shutdown() = 0;
 	virtual bool			CALL	System_Start() = 0;
-	virtual bool			CALL	System_Update() = 0;
+	//virtual bool			CALL	System_Update() = 0;
 	virtual wchar_t*		CALL	System_GetErrorMessage() = 0;
 	virtual	void			CALL	System_Log(const wchar_t *format, ...) = 0;
 	virtual bool			CALL	System_Launch(const wchar_t *url) = 0;
@@ -418,7 +418,8 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target) = 0;
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height) = 0;
-	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false) = 0;
+	//virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false) = 0;
+	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0) = 0;
 	virtual void			CALL	Texture_Free(HTEXTURE tex) = 0;
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false) = 0;
 	virtual int				CALL	Texture_GetHeight(HTEXTURE tex, bool bOriginal=false) = 0;
