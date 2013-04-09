@@ -1,7 +1,6 @@
 #ifndef __SIN_IMAGE_H__
 #define __SIN_IMAGE_H__
-#include "hge.h"
-#include "sin_types.h"
+#include "SINRGE2.h"
 
 typedef struct tagImage{
 	hgeQuad		quad;

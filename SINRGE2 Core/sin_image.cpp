@@ -1,4 +1,3 @@
-#include "SINRGE2.h"
 #include "sin_image.h"
 #include "nge_common.h"
 
@@ -260,7 +259,6 @@ void ImageFillRect(image_p pimage, int x, int y, int width, int height, u32 colo
 	if (!pTexData)
 		return;
 	
-	int pos = 0;
 	DWORD color2;
 	for (s32 lx = x; lx < x + width; ++lx)
 	{

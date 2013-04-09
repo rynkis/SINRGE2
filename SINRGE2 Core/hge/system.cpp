@@ -6,7 +6,8 @@
 ** Core system functions
 */
 
-#include "RbExport.h"
+//#include "RbExport.h"
+//#include "rge_resource.h"
 #include "hge_impl.h"
 
 
@@ -223,65 +224,64 @@ void CALL HGE_Impl::System_Shutdown()
 	System_Log(L"The End.");
 }
 
-bool CALL HGE_Impl::System_Update()
-{
-	// loop do
-	for(;;)
-	{
-		// Process window messages
-		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
-			if(m_msg.message == WM_QUIT){
-				bActive=false;
-				return false;
-			}
-			DispatchMessage(&m_msg);				
-			continue;
-		}
-		// If HGE window is focused or we have the "don't suspend" state - process the main loop
-		if(bActive || bDontSuspend)
-		{
-			// Ensure we have at least 1ms time step
-			// to not confuse user's code with 0
-			do { dt = timeGetTime() - t0; } while(dt < 1);
-			// If we reached the time for the next frame
-			// or we just run in unlimited FPS mode, then
-			// do the stuff
-			if(dt >= nFixedDelta)
-			{
-				// fDeltaTime = time step in seconds returned by Timer_GetDelta
-				fDeltaTime = dt/1000.0f;
-				// Cap too large time steps usually caused by lost focus to avoid jerks
-				if(fDeltaTime > 0.2f)
-				{
-					fDeltaTime = nFixedDelta ? nFixedDelta/1000.0f : 0.01f;
-				}
-				// Update time counter returned Timer_GetTime
-				fTime += fDeltaTime;
-				// Store current time for the next frame
-				// and count FPS
-				t0 = timeGetTime();
-				if(t0 - t0fps <= 1000) cfps++;
-				else {nFPS=cfps; cfps=0; t0fps=t0;}
-				// Do user's stuff
-			 	if(procRenderFunc) procRenderFunc();
-				// break the loop
-				break;
-			}
-			// If we have a fixed frame rate and the time
-			// for the next frame isn't too close, sleep a bit
-			else
-			{
-				if(nFixedDelta && dt/*+3*/ < nFixedDelta) RB_SLEEP(1);
-			}
-		}
-		// If main loop is suspended - just sleep a bit
-		// (though not too much to allow instant window
-		// redraw if requested by OS)
-		else RB_SLEEP(1);
-	}
-	return true;
-}
-
+//bool CALL HGE_Impl::System_Update()
+//{
+//	// loop do
+//	for(;;)
+//	{
+//		// Process window messages
+//		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
+//			if(m_msg.message == WM_QUIT){
+//				bActive=false;
+//				return false;
+//			}
+//			DispatchMessage(&m_msg);				
+//			continue;
+//		}
+//		// If HGE window is focused or we have the "don't suspend" state - process the main loop
+//		if(bActive || bDontSuspend)
+//		{
+//			// Ensure we have at least 1ms time step
+//			// to not confuse user's code with 0
+//			do { dt = timeGetTime() - t0; } while(dt < 1);
+//			// If we reached the time for the next frame
+//			// or we just run in unlimited FPS mode, then
+//			// do the stuff
+//			if(dt >= nFixedDelta)
+//			{
+//				// fDeltaTime = time step in seconds returned by Timer_GetDelta
+//				fDeltaTime = dt/1000.0f;
+//				// Cap too large time steps usually caused by lost focus to avoid jerks
+//				if(fDeltaTime > 0.2f)
+//				{
+//					fDeltaTime = nFixedDelta ? nFixedDelta/1000.0f : 0.01f;
+//				}
+//				// Update time counter returned Timer_GetTime
+//				fTime += fDeltaTime;
+//				// Store current time for the next frame
+//				// and count FPS
+//				t0 = timeGetTime();
+//				if(t0 - t0fps <= 1000) cfps++;
+//				else {nFPS=cfps; cfps=0; t0fps=t0;}
+//				// Do user's stuff
+//			 	if(procRenderFunc) procRenderFunc();
+//				// break the loop
+//				break;
+//			}
+//			// If we have a fixed frame rate and the time
+//			// for the next frame isn't too close, sleep a bit
+//			else
+//			{
+//				if(nFixedDelta && dt/*+3*/ < nFixedDelta) RB_SLEEP(1);
+//			}
+//		}
+//		// If main loop is suspended - just sleep a bit
+//		// (though not too much to allow instant window
+//		// redraw if requested by OS)
+//		else RB_SLEEP(1);
+//	}
+//	return true;
+//}
 
 bool CALL HGE_Impl::System_Start()
 {
@@ -564,12 +564,15 @@ void CALL HGE_Impl::System_SetStateString(hgeStringState state, const wchar_t *v
 		case HGE_TITLE:			wcscpy_s(szWinTitle,value);
 								if(pHGE->hwnd) SetWindowText(pHGE->hwnd, szWinTitle);
 								break;
-		case HGE_INIFILE:		if(value) wcscpy_s(szIniFile,Resource_MakePath(value));
+		case HGE_INIFILE:		if(value)
+									wcscpy_s(szIniFile,Resource_MakePath(value));
+									//wcscpy_s(szIniFile, ResManager::Instance()->Resource_MakePath(value));
 								else szIniFile[0]=0;
 								break;
 		case HGE_LOGFILE:		if(value)
 								{
 									wcscpy_s(szLogFile,Resource_MakePath(value));
+									//wcscpy_s(szIniFile, ResManager::Instance()->Resource_MakePath(value));
 									if(_wfopen_s(&hf, szLogFile, L"w")) szLogFile[0]=0;
 									else fclose(hf);
 								}
@@ -684,30 +687,31 @@ bool CALL HGE_Impl::System_Launch(const wchar_t *url)
 
 void CALL HGE_Impl::System_Snapshot(const wchar_t *filename)
 {
-	LPDIRECT3DSURFACE8 pSurf;
-	//wchar_t *shotname, tempname[_MAX_PATH];
-	//int i;
+#pragma message("		unfinished function " __FUNCTION__)
+	//LPDIRECT3DSURFACE8 pSurf;
+	////wchar_t *shotname, tempname[_MAX_PATH];
+	////int i;
 
-	if(!filename)
-	{
-		/*i=0;
-		shotname=Resource_EnumFiles(L"shot???.bmp");
-		while(shotname)
-		{
-			i++;
-			shotname=Resource_EnumFiles();
-		}
-		wsprintf(tempname, L"shot%03d.bmp", i);
-		filename=Resource_MakePath(tempname);*/
-		return;
-	}
+	//if(!filename)
+	//{
+	//	/*i=0;
+	//	shotname=Resource_EnumFiles(L"shot???.bmp");
+	//	while(shotname)
+	//	{
+	//		i++;
+	//		shotname=Resource_EnumFiles();
+	//	}
+	//	wsprintf(tempname, L"shot%03d.bmp", i);
+	//	filename=Resource_MakePath(tempname);*/
+	//	return;
+	//}
 
-	if(pD3DDevice)
-	{
-		pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf);
-		D3DXSaveSurfaceToFile(filename, D3DXIFF_BMP, pSurf, NULL, NULL);
-		pSurf->Release();
-	}
+	//if(pD3DDevice)
+	//{
+	//	pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf);
+	//	D3DXSaveSurfaceToFile(filename, D3DXIFF_BMP, pSurf, NULL, NULL);
+	//	pSurf->Release();
+	//}
 }
 
 //////// Implementation ////////

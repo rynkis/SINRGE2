@@ -78,7 +78,7 @@ public:
 	virtual bool			CALL	System_Initiate();
 	virtual void			CALL	System_Shutdown();
 	virtual bool			CALL	System_Start();
-	virtual bool			CALL	System_Update();
+	//virtual bool			CALL	System_Update();
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
 	virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
@@ -184,7 +184,8 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target);
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height);
-	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false);
+	//virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false);
+	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0);
 	virtual void			CALL	Texture_Free(HTEXTURE tex);
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false);
 	virtual int				CALL	Texture_GetHeight(HTEXTURE tex, bool bOriginal=false);

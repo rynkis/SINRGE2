@@ -2,6 +2,7 @@
 #define __C_RGE_RECT_H__
 
 #include "RbClassBase.h"
+#include "sin_types.h"
 
 using namespace Sin;
 

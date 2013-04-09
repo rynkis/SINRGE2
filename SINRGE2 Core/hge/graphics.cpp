@@ -365,7 +365,8 @@ HTEXTURE CALL HGE_Impl::Texture_Create(int width, int height)
 	return (HTEXTURE)pTex;
 }
 
-HTEXTURE CALL HGE_Impl::Texture_Load(const wchar_t *filename, DWORD size, bool bMipmap)
+//HTEXTURE CALL HGE_Impl::Texture_Load(const wchar_t *filename, DWORD size, bool bMipmap)
+HTEXTURE CALL HGE_Impl::Texture_Load(const wchar_t *filename, DWORD size, bool bMipmap, DWORD dwColorKey)
 {
 	void *data;
 	DWORD _size;
@@ -401,7 +402,7 @@ HTEXTURE CALL HGE_Impl::Texture_Load(const wchar_t *filename, DWORD size, bool b
 										D3DPOOL_MANAGED,	// Memory pool
 										D3DX_FILTER_NONE,	// Filter
 										D3DX_DEFAULT,		// Mip filter
-										0,					// Color key
+										dwColorKey,					// Color key
 										&info, NULL,
 										&pTex ) ) )
 
@@ -413,7 +414,7 @@ HTEXTURE CALL HGE_Impl::Texture_Load(const wchar_t *filename, DWORD size, bool b
 										D3DPOOL_MANAGED,	// Memory pool
 										D3DX_FILTER_NONE,	// Filter
 										D3DX_DEFAULT,		// Mip filter
-										0,					// Color key
+										dwColorKey,					// Color key
 										&info, NULL,
 										&pTex ) ) )
 

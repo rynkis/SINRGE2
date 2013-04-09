@@ -42,13 +42,16 @@ static VALUE init()
 	GetHgePtr()->System_SetState(HGE_FPS, 60);
 	
 	if(!GetHgePtr()->System_Initiate())
-	{
 		return Qfalse;
-	}
+	
 	//	start HGE system 
 	GetHgePtr()->System_Start();
 	//	Save the window's hwnd
 	GetFrmStructPtr()->m_hwnd = GetHgePtr()->System_GetState(HGE_HWND);
+
+	if (!HackD3D())
+		return Qfalse;
+
 	return Qtrue;
 }
 

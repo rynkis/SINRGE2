@@ -1,4 +1,6 @@
 #include "RbColor.h"
+#include "sin_types.h"
+#include "sin_color.h"
 
 VALUE rb_cColor;
 
@@ -83,10 +85,12 @@ VALUE RbColor::initialize(int argc, VALUE *argv, VALUE obj)
 	m_b = SinBound(m_b, 0, 255);
 	m_a = SinBound(m_a, 0, 255);
 
-	m_color.a = m_a;
+	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
+
+	/*m_color.a = m_a;
 	m_color.r = m_r;
 	m_color.g = m_g;
-	m_color.b = m_b;
+	m_color.b = m_b;*/
 
 	m_red	= INT2FIX(m_r);
 	m_green = INT2FIX(m_g);
@@ -113,7 +117,9 @@ VALUE RbColor::clone()
 
 VALUE RbColor::to_string()
 {
-	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), m_color.r, m_color.g, m_color.b, m_color.a);
+	//return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), m_color.r, m_color.g, m_color.b, m_color.a);
+	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(),
+		GET_RGBA_R(m_color), GET_RGBA_G(m_color), GET_RGBA_B(m_color), GET_RGBA_A(m_color));
 }
 
 VALUE RbColor::get_red()
@@ -127,7 +133,8 @@ VALUE RbColor::set_red(VALUE red)
 	m_r = FIX2INT(red);
 	m_r = SinBound(m_r, 0, 255);
 
-	m_color.r = m_r;
+	//m_color.r = m_r;
+	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_red	= INT2FIX(m_r);
 
 	return Qnil;
@@ -143,7 +150,8 @@ VALUE RbColor::set_green(VALUE green)
 	m_g = FIX2INT(green);
 	m_g = SinBound(m_g, 0, 255);
 
-	m_color.g = m_g;
+	//m_color.g = m_g;
+	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_green	= INT2FIX(m_g);
 
 	return Qnil;
@@ -159,7 +167,8 @@ VALUE RbColor::set_blue(VALUE blue)
 	m_b = FIX2INT(blue);
 	m_b = SinBound(m_b, 0, 255);
 
-	m_color.b = m_b;
+	//m_color.b = m_b;
+	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_blue	= INT2FIX(m_b);
 
 	return Qnil;
@@ -176,7 +185,8 @@ VALUE RbColor::set_alpha(VALUE alpha)
 	m_a = FIX2INT(alpha);
 	m_a = SinBound(m_a, 0, 255);
 
-	m_color.a = m_a;
+	//m_color.a = m_a;
+	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_alpha	= INT2FIX(m_a);
 
 	return Qnil;

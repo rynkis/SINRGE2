@@ -94,6 +94,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entry.cpp" />
+    <ClCompile Include="hge\resource.cpp" />
+    <ClCompile Include="RbBitmap.cpp" />
+    <ClCompile Include="rge_resource.cpp" />
     <ClCompile Include="sin_graphics.cpp" />
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
@@ -107,7 +110,6 @@
     <ClCompile Include="hge\ini.cpp" />
     <ClCompile Include="hge\power.cpp" />
     <ClCompile Include="hge\random.cpp" />
-    <ClCompile Include="hge\resource.cpp" />
     <ClCompile Include="hge\system.cpp" />
     <ClCompile Include="hge\timer.cpp" />
     <ClCompile Include="sin_image.cpp" />
@@ -176,10 +178,13 @@
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
+    <ClInclude Include="auxSingleton.h" />
+    <ClInclude Include="RbBitmap.h" />
+    <ClInclude Include="rge_resource.h" />
+    <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />
     <ClInclude Include="sin_graphics.h" />
     <ClInclude Include="hge\hge_impl.h" />
-    <ClInclude Include="hge\resource.h" />
     <ClInclude Include="sin_image.h" />
     <ClInclude Include="Kconv.h" />
     <ClInclude Include="nge_common.h" />

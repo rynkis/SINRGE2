@@ -12,6 +12,7 @@
 #include "RbColor.h"
 #include "RbTone.h"
 #include "RbFont.h"
+#include "RbBitmap.h"
 #include <fstream>
 #include <iostream>
 
@@ -19,6 +20,10 @@ using namespace Sin;
 
 static SinFrameStruct	m_frm_struct;
 static HGE*				m_pHge = 0;
+
+static 	IDirect3D8*			m_ref_d3d;
+static 	IDirect3DDevice8*	m_ref_device;
+static 	D3DCAPS8			m_d3d_caps;
 
 namespace
 {
@@ -131,6 +136,7 @@ namespace
 		RbColor::InitLibrary();
 		RbTone::InitLibrary();
 		RbFont::InitLibrary();
+		RbBitmap::InitLibrary();
 	}
 	
 	static VALUE _run_sin_in_protect(VALUE argv)
@@ -189,6 +195,7 @@ void Sin::SINRGE2Initialize()
 	}
 
 	m_frm_struct.Default();
+	ResManager::Instance()->Init();
 
 	///<	内部类扩展
 	InitRubyInnerClassExt();
@@ -273,6 +280,51 @@ HGE* Sin::GetHgePtr()
 void Sin::CreateHge()
 {
 	m_pHge = hgeCreate(HGE_VERSION);
+}
+
+bool Sin::HackD3D()
+{
+	//	Hack the D3D pointer & D3DDevice pointer
+	HTEXTURE pTmpTex = m_pHge->Texture_Create(2, 2); 
+	if (!pTmpTex)
+		goto failed_return;
+
+	if (FAILED((reinterpret_cast<LPDIRECT3DTEXTURE8>(pTmpTex))->GetDevice(&m_ref_device)))
+		goto failed_return;
+
+	if (FAILED(m_ref_device->GetDirect3D(&m_ref_d3d)))
+		goto failed_return;
+
+	if (FAILED(m_ref_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_caps)))
+		goto failed_return;
+
+	m_pHge->Texture_Free(pTmpTex);
+	pTmpTex = NULL;
+
+	return true;
+
+failed_return:
+	if (pTmpTex)
+	{
+		m_pHge->Texture_Free(pTmpTex);
+		pTmpTex = NULL;
+	}
+	return false;
+}
+
+IDirect3D8* Sin::GetD3DPtr()
+{
+	return m_ref_d3d;
+}
+
+IDirect3DDevice8* Sin::GetD3DDevicePtr()
+{
+	return m_ref_device;
+}
+
+D3DCAPS8* Sin::GetD3DCapsPtr()
+{
+	return &m_d3d_caps;
 }
 
 //char* GetTitle()

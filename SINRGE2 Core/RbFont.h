@@ -20,6 +20,8 @@ public:
 public:
 	static void		InitLibrary();
 
+	HFONT			GetHFont() const { return m_hFont; }
+
 protected:
 	virtual void	mark();
 	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);

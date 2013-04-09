@@ -1,8 +1,11 @@
 #ifndef __SINRGE2_H__
 #define __SINRGE2_H__
+#include "rge_resource.h"
 #include <Windows.h>
 #include "hge.h"
 #include "sin_color.h"
+#include "sin_types.h"
+#include <d3d8.h>
 
 typedef struct __SinFrameStruct
 {
@@ -31,18 +34,27 @@ typedef struct __SinFrameStruct
 
 namespace Sin
 {
-	SinFrameStruct*	GetFrmStructPtr();
-	HGE*			GetHgePtr();
-	void			CreateHge();
-	bool			RenderProc();
+	SinFrameStruct*		GetFrmStructPtr();
 
-	HWND			GetHwnd();
-	//char*			GetTitle();
-	wchar_t*		GetTitleW();
-	void			SINRGE2Initialize();
-	int				SINRGE2Eval(const char* script);
-	int				SINRGE2Entry(const char* rubyfile);
-	void			SetRubyLibHandle(HINSTANCE hModule);
+	IDirect3D8*			GetD3DPtr();
+	IDirect3DDevice8*	GetD3DDevicePtr();
+	D3DCAPS8*			GetD3DCapsPtr();
+	static DWORD		GetMaxTexW() { return GetD3DCapsPtr()->MaxTextureWidth; }
+	static DWORD		GetMaxTexH() { return GetD3DCapsPtr()->MaxTextureHeight; }
+
+	HGE*				GetHgePtr();
+	void				CreateHge();
+	bool				HackD3D();
+
+	bool				RenderProc();
+
+	HWND				GetHwnd();
+	//char*				GetTitle();
+	wchar_t*			GetTitleW();
+	void				SINRGE2Initialize();
+	int					SINRGE2Eval(const char* script);
+	int					SINRGE2Entry(const char* rubyfile);
+	void				SetRubyLibHandle(HINSTANCE hModule);
 }
 
 #endif	//	__SINRGE2_H__

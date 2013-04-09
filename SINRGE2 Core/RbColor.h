@@ -1,5 +1,5 @@
-#ifndef __C_RGE_COLOR_H__
-#define __C_RGE_COLOR_H__
+#ifndef __RB_COLOR_H__
+#define __RB_COLOR_H__
 
 #ifdef WIN32
 #pragma once
@@ -8,35 +8,6 @@
 #include "RbClassBase.h"
 
 using namespace Sin;
-
-#define PLATFORM_LITTLE_ENDIAN
-
-typedef union __UColor
-{
-#ifdef PLATFORM_LITTLE_ENDIAN	//	LITTLE_ENDIAN
-	struct //__LSB
-	{
-		BYTE	b;
-		BYTE	g;
-		BYTE	r;
-		BYTE	a;
-	};
-#else							//	BIG-ENDIAN
-	struct //__MSB
-	{
-		BYTE	a;
-		BYTE	r;
-		BYTE	g;
-		BYTE	b;
-	};
-#endif	//	PLATFORM_LITTLE_ENDIAN
-
-	DWORD	value;
-
-	__UColor(DWORD v) : value(v) {}
-	__UColor(BYTE _a, BYTE _r, BYTE _g, BYTE _b) : a(_a), r(_r), g(_g), b(_b) {}
-
-} UColor;
 
 class RbColor : public RbClassBase
 {
@@ -47,7 +18,7 @@ public:
 	static void		InitLibrary();
 
 public:
-	const UColor&	GetColor() const { return m_color; }
+	const DWORD		GetColor() const { return m_color; }
 
 protected:
 	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
@@ -59,7 +30,7 @@ protected:
 	virtual VALUE	to_string();
 
 protected:
-	UColor			m_color;
+	DWORD			m_color;
 	int				m_r;
 	int				m_g;
 	int				m_b;
@@ -87,4 +58,4 @@ protected:
 	attr_accessor(alpha)
 };
 
-#endif
+#endif  //__RB_COLOR_H__

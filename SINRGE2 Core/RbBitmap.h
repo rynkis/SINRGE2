@@ -6,7 +6,9 @@
 #endif
 
 #include "RbClassBase.h"
-#include "RbTextureEx.h"
+#include "sin_bitmap.h"
+
+using namespace Sin;
 
 class RbRect;
 class RbFont;
@@ -19,27 +21,21 @@ public:
 
 public:
 	static void				InitLibrary();
-	static bool				AdjustTexturesToneSingle(const SRgeTexture* pTex, DWORD dwTone);
-	static bool				AdjustTexturesToneDouble(const SRgeTexture* pSrcTex, const SRgeTexture* pDstTex, DWORD dwTone);
+	static bool				AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone);
 	static void				ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V);
-	//static void				ColorSpaceHSV2RGB(float H, float S, float V, int &R, int &G, int &B);
 	static void				ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B);
-	static bool				CreateTextureInMemory(void* pData, u32 uDataLength, DWORD dwColorKey, SRgeTexture* pTex);
+	static bool				GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, HDC hDC);
 
 public:
-	u32						GetSubTextureAttrCount()	const { return m_tex.GetSubTextureCount(); }
-	u32						GetRows()					const { return m_tex.rows; }
-	u32						GetCols()					const { return m_tex.cols; }
-	u32						GetBmpWidth()				const { return m_tex.width; }
-	u32						GetBmpHeight()				const { return m_tex.height; }
-	const SRgeTexture*		GetSRgeTexture()			const { return &m_tex; }
-	const SRgeTextureAttr*	GetSubTextures()			const { return m_tex.sub_textures; }
+	u32						GetWidth()					const { return m_bmp.width; }
+	u32						GetHeight()					const { return m_bmp.height; }
+	u32						GetMemWidth()				const { return m_bmp.texw; }
+	u32						GetMemHeight()				const { return m_bmp.texh; }
+	bitmap_p				GetBitmapPtr()				{ return &m_bmp; }
 
 	int						GetModifyCount()			const { return m_modify_count; }
 
 	bool					IsDisposed()				const { return m_disposed; }
-	bool					IsSingle()					const { return m_tex.IsSingle(); }
-	bool					IsMulti()					const { return m_tex.IsMulti(); }
 
 protected:
 	virtual void			mark();
@@ -50,13 +46,13 @@ protected:
 
 protected:
 	bool					m_disposed;
-	SRgeTexture				m_tex;
+	bitmap_t				m_bmp;
 	int						m_modify_count;
 
 	VALUE					m_filename;		// mark
 
-	CRgeRect*				m_rect_ptr;
-	CRgeFont*				m_font_ptr;
+	RbRect*					m_rect_ptr;
+	RbFont*					m_font_ptr;
 
 protected:
 	dm_method(dispose)
@@ -79,6 +75,10 @@ protected:
 	dm_method_vargs(clear_rect)
 	dm_method(blur)
 	dm_method02(radial_blur)
+	
+	dm_method(render)
+	dm_method(flip_h)
+	dm_method(flip_v)
 
 	attr_reader(rect)
 	attr_reader(width)

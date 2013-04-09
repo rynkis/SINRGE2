@@ -40,6 +40,9 @@
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{71f14302-2fb7-47b5-888e-1fd7f2a82759}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\rge">
+      <UniqueIdentifier>{70754fd1-7b49-4202-aa21-833d6ef5df61}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entry.cpp">
@@ -58,9 +61,6 @@
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="hge\random.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="hge\resource.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="hge\system.cpp">
@@ -137,6 +137,15 @@
     </ClCompile>
     <ClCompile Include="SINRGE2.cpp">
       <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="RbBitmap.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="rge_resource.cpp">
+      <Filter>源文件\rge</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\resource.cpp">
+      <Filter>头文件\hge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -251,9 +260,6 @@
     <ClInclude Include="hge\hge_impl.h">
       <Filter>源文件\hge</Filter>
     </ClInclude>
-    <ClInclude Include="hge\resource.h">
-      <Filter>源文件\hge</Filter>
-    </ClInclude>
     <ClInclude Include="..\Contrib\include\hge\hge.h">
       <Filter>头文件\hge</Filter>
     </ClInclude>
@@ -336,6 +342,18 @@
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
     <ClInclude Include="sin_types.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="RbBitmap.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="auxSingleton.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rge_resource.h">
+      <Filter>源文件\rge</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
   </ItemGroup>
