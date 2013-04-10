@@ -130,7 +130,7 @@ namespace
 		InitRbFrame();
 		//InitRbHge();
 		InitRbGraphics();
-		InitRbImage();
+		//InitRbImage();
 
 		RbRect::InitLibrary();
 		RbColor::InitLibrary();

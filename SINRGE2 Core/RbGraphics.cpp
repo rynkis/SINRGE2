@@ -1,6 +1,6 @@
 #include "RbExport.h"
 #include "SINRGE2.h"
-#include "sin_graphics.h"
+//#include "sin_graphics.h"
 
 using namespace Sin;
 
@@ -80,26 +80,26 @@ static VALUE end_scene()
 	return Qnil;
 }
 
-static VALUE image_to_screen(int argc, VALUE img, VALUE x, VALUE y)
-{
-	SafeImageValue(img);
-	SafeNumericValue(x);
-	SafeNumericValue(y);
-
-	image_p pimage;
-	Data_Get_Struct(img, image_t, pimage);
-	ImageToScreen(pimage, NUM2DBL(x), NUM2DBL(y));
-	return Qnil;
-}
+//static VALUE image_to_screen(int argc, VALUE img, VALUE x, VALUE y)
+//{
+//	SafeImageValue(img);
+//	SafeNumericValue(x);
+//	SafeNumericValue(y);
+//
+//	image_p pimage;
+//	Data_Get_Struct(img, image_t, pimage);
+//	ImageToScreen(pimage, NUM2DBL(x), NUM2DBL(y));
+//	return Qnil;
+//}
 
 void bind_graphics()
 {
-	rb_define_singleton_method(rb_mNge, "init", RbFunc(init), 0);
-	rb_define_singleton_method(rb_mNge, "quit", RbFunc(quit), 0);
+	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
+	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
 	
-	rb_define_module_function(rb_mNge, "begin_scene", RbFunc(begin_scene), -1);
-	rb_define_module_function(rb_mNge, "end_scene", RbFunc(end_scene), 0);
-	rb_define_module_function(rb_mNge, "image_to_screen", RbFunc(image_to_screen), 3);
+	rb_define_module_function(rb_mSin, "begin_scene", RbFunc(begin_scene), -1);
+	rb_define_module_function(rb_mSin, "end_scene", RbFunc(end_scene), 0);
+	//rb_define_module_function(rb_mSin, "image_to_screen", RbFunc(image_to_screen), 3);
 }
 
 namespace Sin

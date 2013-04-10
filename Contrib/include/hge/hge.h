@@ -274,7 +274,7 @@ public:
 	virtual wchar_t*		CALL	System_GetErrorMessage() = 0;
 	virtual	void			CALL	System_Log(const wchar_t *format, ...) = 0;
 	virtual bool			CALL	System_Launch(const wchar_t *url) = 0;
-	virtual void			CALL	System_Snapshot(const wchar_t *filename=0) = 0;
+	//virtual void			CALL	System_Snapshot(const wchar_t *filename=0) = 0;
 
 private:
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value) = 0;

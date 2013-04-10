@@ -621,34 +621,34 @@ bool CALL HGE_Impl::System_Launch(const wchar_t *url)
 	else return false;
 }
 
-void CALL HGE_Impl::System_Snapshot(const wchar_t *filename)
-{
-#pragma message("		unfinished function " __FUNCTION__)
-	//LPDIRECT3DSURFACE8 pSurf;
-	////wchar_t *shotname, tempname[_MAX_PATH];
-	////int i;
-
-	//if(!filename)
-	//{
-	//	/*i=0;
-	//	shotname=Resource_EnumFiles(L"shot???.bmp");
-	//	while(shotname)
-	//	{
-	//		i++;
-	//		shotname=Resource_EnumFiles();
-	//	}
-	//	wsprintf(tempname, L"shot%03d.bmp", i);
-	//	filename=Resource_MakePath(tempname);*/
-	//	return;
-	//}
-
-	//if(pD3DDevice)
-	//{
-	//	pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf);
-	//	D3DXSaveSurfaceToFile(filename, D3DXIFF_BMP, pSurf, NULL, NULL);
-	//	pSurf->Release();
-	//}
-}
+//void CALL HGE_Impl::System_Snapshot(const wchar_t *filename)
+//{
+//#pragma message("		Unfinished Function " __FUNCTION__)
+//	//LPDIRECT3DSURFACE8 pSurf;
+//	////wchar_t *shotname, tempname[_MAX_PATH];
+//	////int i;
+//
+//	//if(!filename)
+//	//{
+//	//	/*i=0;
+//	//	shotname=Resource_EnumFiles(L"shot???.bmp");
+//	//	while(shotname)
+//	//	{
+//	//		i++;
+//	//		shotname=Resource_EnumFiles();
+//	//	}
+//	//	wsprintf(tempname, L"shot%03d.bmp", i);
+//	//	filename=Resource_MakePath(tempname);*/
+//	//	return;
+//	//}
+//
+//	//if(pD3DDevice)
+//	//{
+//	//	pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf);
+//	//	D3DXSaveSurfaceToFile(filename, D3DXIFF_BMP, pSurf, NULL, NULL);
+//	//	pSurf->Release();
+//	//}
+//}
 
 //////// Implementation ////////
 

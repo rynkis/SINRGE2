@@ -117,20 +117,11 @@
     <ClCompile Include="nge_timer.cpp">
       <Filter>源文件\nge</Filter>
     </ClCompile>
-    <ClCompile Include="RbImage.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="RbGraphics.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="RbFrame.cpp">
       <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="sin_graphics.cpp">
-      <Filter>源文件\SINRGE2</Filter>
-    </ClCompile>
-    <ClCompile Include="sin_image.cpp">
-      <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
     <ClCompile Include="SINRGE2.cpp">
       <Filter>源文件\SINRGE2</Filter>
@@ -322,12 +313,6 @@
     </ClInclude>
     <ClInclude Include="nge_timer.h">
       <Filter>源文件\nge</Filter>
-    </ClInclude>
-    <ClInclude Include="sin_graphics.h">
-      <Filter>源文件\SINRGE2</Filter>
-    </ClInclude>
-    <ClInclude Include="sin_image.h">
-      <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
     <ClInclude Include="sin_color.h">
       <Filter>源文件\SINRGE2</Filter>

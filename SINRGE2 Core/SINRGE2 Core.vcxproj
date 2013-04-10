@@ -96,7 +96,6 @@
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="hge\resource.cpp" />
     <ClCompile Include="RbBitmap.cpp" />
-    <ClCompile Include="sin_graphics.cpp" />
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
     <ClCompile Include="hge\hgedistort.cpp" />
@@ -111,12 +110,10 @@
     <ClCompile Include="hge\random.cpp" />
     <ClCompile Include="hge\system.cpp" />
     <ClCompile Include="hge\timer.cpp" />
-    <ClCompile Include="sin_image.cpp" />
     <ClCompile Include="Kconv.cpp" />
     <ClCompile Include="RbFrame.cpp" />
     <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="RbGraphics.cpp" />
-    <ClCompile Include="RbImage.cpp" />
     <ClCompile Include="RubyExt\nonblock.c" />
     <ClCompile Include="RbColor.cpp" />
     <ClCompile Include="RbFont.cpp" />
@@ -180,9 +177,7 @@
     <ClInclude Include="RbBitmap.h" />
     <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />
-    <ClInclude Include="sin_graphics.h" />
     <ClInclude Include="hge\hge_impl.h" />
-    <ClInclude Include="sin_image.h" />
     <ClInclude Include="Kconv.h" />
     <ClInclude Include="nge_common.h" />
     <ClInclude Include="RbClassBase.h" />

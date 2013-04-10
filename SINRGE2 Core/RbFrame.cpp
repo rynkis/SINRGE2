@@ -240,10 +240,10 @@ void bind_frame()
 	rb_define_module_function(rb_mFrame, "set_size",	RbFunc(set_width_and_height), 2);
 
 	//rb_define_module_function(rb_mFrame, "peek_message", RbFunc(peek_message), 0);
-	rb_define_module_function(rb_mNge, "limit_fps", RbFunc(limit_fps), -1);
-	rb_define_module_function(rb_mNge, "real_fps", RbFunc(get_real_fps), 0);
-	rb_define_module_function(rb_mNge, "show_fps", RbFunc(show_fps), 0);
-	rb_define_module_function(rb_mNge, "peek_message", RbFunc(peek_message), 0);
+	rb_define_module_function(rb_mSin, "limit_fps", RbFunc(limit_fps), -1);
+	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
+	rb_define_module_function(rb_mSin, "show_fps", RbFunc(show_fps), 0);
+	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
 }
 
 namespace Sin

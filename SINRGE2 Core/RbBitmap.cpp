@@ -600,17 +600,6 @@ VALUE RbBitmap::brightness_change(VALUE brightness)
 	return Qnil;
 }
 
-/**
- *	@call
- *		tone_change([red[, green[, blue[, gray]]]])					-> nil
- *		tone_change(tone)											-> nil
- *
- *	@desc
- *		更改位图的色调。red|green|blue|gray 省略后的默认值都为255。
- *
- *	@excp
- *		如果对已经释放的对象进行调用会抛出DisposedObjectError异常。
- */
 VALUE RbBitmap::tone_change(int argc, VALUE *argv, VALUE obj)
 {
 	check_raise();
@@ -1494,69 +1483,59 @@ VALUE RbBitmap::set_font(VALUE font)
 VALUE RbBitmap::save_to_file(int argc, VALUE *argv, VALUE obj)
 {
 	check_raise();
-#pragma message("		Unfinished Function " __FUNCTION__)
 
-//	VALUE filepath, fileformat;
-//
-//	if (rb_scan_args(argc, argv, "11", &filepath, &fileformat) == 1)
-//		fileformat = INT2FIX(3);
-//	else
-//		SafeFixnumValue(fileformat);
-//
-//	SafeStringValue(filepath);
-//
-//	LPDIRECT3DSURFACE8 pDst = NULL;
-//	LPDIRECT3DSURFACE8 pSrc = NULL;
-//
-//	if (FAILED(GetD3DDevicePtr()->CreateImageSurface(m_bmp.texw, m_bmp.texh, D3DFMT_A8R8G8B8, &pDst)))
-//		return Qfalse;
-//
-//	POINT	pt = {0, };
-//	RECT	rt = {0, };
-//
-//	for (u32 i = 0; i < m_bmp.width; ++i) 
-//	{
-//		for (u32 j = 0; j < m_bmp.height; ++j) 
-//		{
-//			int index = i * m_bmp.height + j;
-//
-//			pt.x = m_tex.sub_textures[0].width * j;
-//			pt.y = m_tex.sub_textures[0].height * i;
-//
-//			rt.right	= SinMin(m_bmp.texw - pt.x,	m_tex.sub_textures[index].width);
-//			rt.bottom	= SinMin(m_bmp.texh - pt.y,	m_tex.sub_textures[index].height);
-//
-//			if (FAILED(((LPDIRECT3DTEXTURE8)m_tex.sub_textures[index].tex)->GetSurfaceLevel(0, &pSrc)))
-//				goto failed_return;
-//
-//			if (FAILED(GetD3DDevicePtr()->CopyRects(pSrc, &rt, 1, pDst, &pt)))
-//				goto failed_return;
-//
-//			pSrc->Release();
-//			pSrc = NULL;
-//		}
-//	}
-//
-//	//	This function supports the following file formats: .bmp and .dds.
-//	if (SUCCEEDED(D3DXSaveSurfaceToFileW(Kconv::UTF8ToUnicode(RSTRING_PTR(filepath)), 
-//		D3DXIFF_BMP, pDst, NULL, NULL)))
-//	{
-//		pDst->Release();
-//		pDst = NULL;
-//		return Qtrue;
-//	}
-//	
-//failed_return:
-//	if (pDst)
-//	{
-//		pDst->Release();
-//		pDst = NULL;
-//	}
-//	if (pSrc)
-//	{
-//		pSrc->Release();
-//		pSrc = NULL;
-//	}
+	VALUE filepath, fileformat;
+
+	if (rb_scan_args(argc, argv, "11", &filepath, &fileformat) == 1)
+		fileformat = INT2FIX(3);
+	else
+		SafeFixnumValue(fileformat);
+
+	SafeStringValue(filepath);
+
+	LPDIRECT3DSURFACE8 pDst = NULL;
+	LPDIRECT3DSURFACE8 pSrc = NULL;
+
+	if (FAILED(GetD3DDevicePtr()->CreateImageSurface(m_bmp.texw, m_bmp.texh, D3DFMT_A8R8G8B8, &pDst)))
+		return Qfalse;
+
+	POINT	pt = {0, };
+	RECT	rt = {0, };
+
+	pt.x = 0;
+	pt.y = 0;
+	rt.right	= m_bmp.texw;
+	rt.bottom	= m_bmp.texh;
+
+	if (FAILED(((LPDIRECT3DTEXTURE8)m_bmp.quad.tex)->GetSurfaceLevel(0, &pSrc)))
+		goto failed_return;
+
+	if (FAILED(GetD3DDevicePtr()->CopyRects(pSrc, &rt, 1, pDst, &pt)))
+		goto failed_return;
+
+	pSrc->Release();
+	pSrc = NULL;
+
+	//	This function supports the following file formats: .bmp and .dds.
+	if (SUCCEEDED(D3DXSaveSurfaceToFileW(Kconv::UTF8ToUnicode(RSTRING_PTR(filepath)), 
+		D3DXIFF_BMP, pDst, NULL, NULL)))
+	{
+		pDst->Release();
+		pDst = NULL;
+		return Qtrue;
+	}
+	
+failed_return:
+	if (pDst)
+	{
+		pDst->Release();
+		pDst = NULL;
+	}
+	if (pSrc)
+	{
+		pSrc->Release();
+		pSrc = NULL;
+	}
 	return Qfalse;
 }
 
