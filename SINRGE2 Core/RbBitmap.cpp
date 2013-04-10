@@ -6,6 +6,7 @@
 #include "RbTone.h"
 #include "SINRGE2.h"
 
+#include <math.h>
 #include <d3dx8tex.h>
 
 using namespace Sin;
@@ -170,11 +171,14 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 	VALUE arg01, arg02;
 
 	DWORD dwColorValue = 0;
+	HGE* hge = GetHgePtr();
+	hgeQuad quad;
+	wchar_t* filenameW;
 
 	if (rb_scan_args(argc, argv, "11", &arg01, &arg02) == 1)
 	{
 		SafeStringValue(arg01);
-		goto __bitmap_load;
+		goto __try_bitmap_load;
 	}
 	else
 	{
@@ -186,10 +190,20 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 				ccol = GetObjectPtr<RbColor>(arg02);
 				dwColorValue = ccol->GetColor();
 			}
-			goto __bitmap_load;
+			goto __try_bitmap_load;
 		}
 		else goto __bitmap_create;
 	}
+
+__try_bitmap_load:
+	{
+		filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(arg01));
+		quad.tex = hge->Texture_Load(filenameW);
+		if (!quad.tex)
+			goto __bitmap_load;
+
+	}
+	goto __finish;
 
 __bitmap_load:
 	{
@@ -198,52 +212,26 @@ __bitmap_load:
 
 		int suffix_idx;
 		
-		static wchar_t* szSuffix[] = {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
-		static char* szSuffixA[] = {".png", ".jpg", ".bmp", ".tga", ".dds", ".dib"};
-		static int	 uSuffixCnt = SinArrayCount(szSuffix);
+		static wchar_t* szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
+		static char*	szSuffixA[] = { ".png",  ".jpg",  ".bmp",  ".tga",  ".dds",  ".dib"};
+		static int		uSuffixCnt	= SinArrayCount(szSuffix);
 
-		char* tmpStr = RSTRING_PTR(arg01);
-		int len = MultiByteToWideChar(CP_UTF8, 0, tmpStr, -1, NULL, 0);
-		wchar_t* pStrW = (wchar_t*)malloc(len);
-		MultiByteToWideChar(CP_UTF8, 0, tmpStr, -1, pStrW, len);
-
-		if (data = GetHgePtr()->Resource_Load_Without_Suffix(pStrW, &size, szSuffix, uSuffixCnt, &suffix_idx))
+		if (data = hge->Resource_Load_Without_Suffix(filenameW, &size, szSuffix, uSuffixCnt, &suffix_idx))
 		{
-			hgeQuad quad;
-			quad.tex = GetHgePtr()->Texture_Load((const wchar_t*)data, size, false, dwColorValue);
+			quad.tex = hge->Texture_Load((const wchar_t*)data, size, false, dwColorValue);
+
 			if(!quad.tex)
 				rb_raise(rb_eSINBaseError, "Failed to load bitmap `%s'.", RSTRING_PTR(arg01));
-
-			quad.blend = BLEND_DEFAULT;
-			for (int i = 0; i < 4; i++)
-			{
-				quad.v[i].z = 0.5f;
-				quad.v[i].col = 0xffffffff;
-			}
-			quad.v[0].tx = 0; quad.v[0].ty = 0;
-			quad.v[1].tx = 1; quad.v[1].ty = 0;
-			quad.v[2].tx = 1; quad.v[2].ty = 1;
-			quad.v[3].tx = 0; quad.v[3].ty = 1;
 			
-			m_bmp.quad = quad;
-			m_bmp.width = GetHgePtr()->Texture_GetWidth(quad.tex, true);
-			m_bmp.height = GetHgePtr()->Texture_GetHeight(quad.tex, true);
-			m_bmp.texw = GetHgePtr()->Texture_GetWidth(quad.tex);
-			m_bmp.texh = GetHgePtr()->Texture_GetHeight(quad.tex);
-			m_bmp.rcentrex = m_bmp.width * 1.0f / 2;
-			m_bmp.rcentrey = m_bmp.height * 1.0f / 2;
-			
-			if (m_bmp.quad.tex)
-			{
-				VALUE tmp_filename = rb_str_dup(arg01);
-				if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffixA[suffix_idx]));
-				m_filename = rb_str_freeze(tmp_filename);
-			}
-
+			VALUE tmp_filename = rb_str_dup(arg01);
+			if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffixA[suffix_idx]));
+			m_filename = rb_str_freeze(tmp_filename);
 			// free
-			GetHgePtr()->Resource_Free(data);
-			//GetResManager()->Resource_Free(data);
+			hge->Resource_Free(data);
 		}
+		else
+			rb_raise(rb_eSINBaseError, "Failed to load bitmap `%s'.", RSTRING_PTR(arg01));
+
 	}
 	goto __finish;
 
@@ -255,11 +243,13 @@ __bitmap_create:
 		u32 w = FIX2INT(arg01);
 		u32 h = FIX2INT(arg02);
 
-		hgeQuad quad;
-		quad.tex = GetHgePtr()->Texture_Create(w, h);
+		quad.tex = hge->Texture_Create(w, h);
 		if(!quad.tex)
 			rb_raise(rb_eSINBaseError, "Failed to create bitmap: `%d x %d'.", w, h);
+	}
 
+__finish:
+	{
 		quad.blend = BLEND_DEFAULT;
 		for (int i = 0; i < 4; i++)
 		{
@@ -271,27 +261,21 @@ __bitmap_create:
 		quad.v[2].tx = 1; quad.v[2].ty = 1;
 		quad.v[3].tx = 0; quad.v[3].ty = 1;
 		
-		m_bmp.quad = quad;
-		m_bmp.width = GetHgePtr()->Texture_GetWidth(quad.tex, true);
-		m_bmp.height = GetHgePtr()->Texture_GetHeight(quad.tex, true);
-		m_bmp.texw = GetHgePtr()->Texture_GetWidth(quad.tex);
-		m_bmp.texh = GetHgePtr()->Texture_GetHeight(quad.tex);
+		m_bmp.quad		= quad;
+		m_bmp.width		= hge->Texture_GetWidth(quad.tex, true);
+		m_bmp.height	= hge->Texture_GetHeight(quad.tex, true);
+		m_bmp.texw		= hge->Texture_GetWidth(quad.tex);
+		m_bmp.texh		= hge->Texture_GetHeight(quad.tex);
 		m_bmp.rcentrex = m_bmp.width * 1.0f / 2;
 		m_bmp.rcentrey = m_bmp.height * 1.0f / 2;
-	}
 
-__finish:
-	{
 		//	create rect
 		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_bmp.texw), INT2FIX(m_bmp.texh)};
-
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
 		m_rect_ptr = GetObjectPtr<RbRect>(rect);
-
 		// create a font object for the bitmap-obj
 		VALUE font = rb_class_new_instance(0, 0, rb_cFont);
 		m_font_ptr = GetObjectPtr<RbFont>(font);
-
 		m_disposed = false;
 	}
 	return obj;
@@ -470,12 +454,55 @@ HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp
 		return 0;
 
 	HTEXTURE cut = GetHgePtr()->Texture_Create(width, height);
-	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(pBmp->quad.tex, true, x, y, width, height);
+	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(pBmp->quad.tex, true);//, x, y, width, height);
 	DWORD* pDesTexData = GetHgePtr()->Texture_Lock(cut, false);
-	memcpy(pDesTexData, pSrcTexData, width * height *sizeof(DWORD));
+	//memcpy(pDesTexData, pSrcTexData, width * height *sizeof(DWORD));
+	for (s32 ly = 0; ly < height; ++ly)
+		memcpy(pDesTexData + (width * ly), pSrcTexData + (pBmp->texw * (y + ly) + x), sizeof(DWORD) * width);
 	GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
 	GetHgePtr()->Texture_Unlock(cut);
 	return cut;
+}
+
+void RbBitmap::BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight)
+{
+	long x, y, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
+	
+	DWORD color11, color21, color12, color22;
+	BYTE a, r, g, b;
+	for (y = 0; y < NewHeight; y++)
+	{
+		// 获取y坐标
+		ty1 = y * OldHeight / MathHeight;
+		ty2 = ty1 + 1;
+		// 获取y权
+		py2 = y * OldHeight % MathHeight * 100 / MathHeight;
+		py1 = 100 - py2;
+		for (x = 0; x < NewWidth; x++)
+		{
+			tx1 = x * OldWidth / MathWidth;
+			tx2 = tx1 + 1;
+			// 获取x权
+			px2 = x * OldWidth % MathWidth * 100 / MathWidth;
+			px1 = 100 - px2;
+			// 获取四点颜色对应的权
+			p11 = px1 * py1;
+			p21 = px2 * py1;
+			p12 = px1 * py2;
+			p22 = px2 * py2;
+			// 获取颜色
+			color11 = OldBitmap[tx1 + ty1 * OldWidth];
+			color21 = OldBitmap[tx2 + ty1 * OldWidth];
+			color12 = OldBitmap[tx1 + ty2 * OldWidth];
+			color22 = OldBitmap[tx2 + ty2 * OldWidth];
+			// 计算颜色
+			a = (GET_ARGB_A(color11) * p11 + GET_ARGB_A(color21) * p21 + GET_ARGB_A(color12) * p12 + GET_ARGB_A(color22) * p22) / 10000;
+			r = (GET_ARGB_R(color11) * p11 + GET_ARGB_R(color21) * p21 + GET_ARGB_R(color12) * p12 + GET_ARGB_R(color22) * p22) / 10000;
+			g = (GET_ARGB_G(color11) * p11 + GET_ARGB_G(color21) * p21 + GET_ARGB_G(color12) * p12 + GET_ARGB_G(color22) * p22) / 10000;
+			b = (GET_ARGB_B(color11) * p11 + GET_ARGB_B(color21) * p21 + GET_ARGB_B(color12) * p12 + GET_ARGB_B(color22) * p22) / 10000;
+			NewBitmap[x + y * NewWidth] = MAKE_ARGB_8888(a, r, g, b);
+		}
+	}
 }
 
 VALUE RbBitmap::dispose()
@@ -659,7 +686,6 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		src = &m_bmp;
 		with_self = true;
 	}
-
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
 	SafeRectValue(src_rect);
@@ -681,12 +707,8 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		op = FIX2INT(opacity);
 		op = SinBound(op, 0, 255);
 	}
-
-	if (sx >= src->width)
-		return Qfalse;
-
-	if (sy >= src->height)
-		return Qfalse;
+	if (sx >= src->width) return Qfalse;
+	if (sy >= src->height) return Qfalse;
 
 	if (sx < 0)	{ sw += sx; sx = 0; }
 	if (sw <= 0)	return Qfalse;
@@ -704,7 +726,7 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	if (sh <= 0)	return Qfalse;
 
 	DWORD* pTempData;
-	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(src->quad.tex,true);
+	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(src->quad.tex, true);
 	if (with_self)
 	{
 		pTempData = (DWORD*)malloc(src->width * src->height * sizeof(DWORD));
@@ -718,7 +740,6 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	DWORD* pDstTexData = GetHgePtr()->Texture_Lock(des->quad.tex,false);
 	/*if (!pTempData || !pDstTexData)
 		return Qfalse;*/
-	
 	DWORD color1, color2;
 	BYTE a, r, g, b;
 	for (s32 lx = sx; lx < sw; ++lx)
@@ -738,7 +759,6 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 			pDstTexData[des->texw * (ly - sy + dy) + lx - sx + dx] = color2;
 		}
 	}
-
 	GetHgePtr()->Texture_Unlock(des->quad.tex);
 	if (with_self)
 		free(pTempData);
@@ -783,38 +803,42 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 		op = FIX2INT(opacity);
 		op = SinBound(op, 0, 255);
 	}
-
+	
+	if (dx + dw <= 0) return Qfalse;
+	if (dy + dh <= 0) return Qfalse;
+	if (m_bmp.texw - dx <= 0) return Qfalse;
+	if (m_bmp.texh - dy <= 0) return Qfalse;
+	
 	HGE* hge = GetHgePtr();
-	//bitmap_p tmpBmp = CloneBitmap(src);
-	HTEXTURE tmpTex = CutTexture(sx, sy, sw, sh, src);
-	hgeQuad quad;
-	for (int i = 0; i < 4; i++)
-	{
-		quad.v[i].z = 0.5f;
-		quad.v[i].col = src->quad.v[i].col;
-	}
-	quad.v[0].x = 0;	quad.v[0].y = 0;
-	quad.v[1].x = dw;	quad.v[1].y = 0;
-	quad.v[2].x = dw;	quad.v[2].y = dh;
-	quad.v[3].x = 0;	quad.v[3].y = dh;
-	quad.blend = src->quad.blend;
-	quad.tex = tmpTex;
 
-	HTARGET tar = hge->Target_Create(dw, dh, true);
-	hge->Gfx_BeginScene(tar);
-	hge->Gfx_RenderQuad(&quad);
-	hge->Gfx_EndScene();
+	HTEXTURE tmpTex;
+	/*if (sx == 0 && sy == 0 && sw == src->texw && sh == src->texh)
+		tmpTex = src->quad.tex;
+	else*/
+	tmpTex = CutTexture(sx, sy, sw, sh, src);
 
-	HTEXTURE srcTex = hge->Target_GetTexture(tar);
-	DWORD* pSrcTexData = hge->Texture_Lock(srcTex, true);
+	if (!tmpTex) return Qfalse;
+
+	DWORD* pSrcTexData = hge->Texture_Lock(tmpTex, true);
+	if (!pSrcTexData) return Qfalse;
+	DWORD* pTempData = (DWORD*)malloc(dw * dh * sizeof(DWORD));
+	int mathW = dw + sqrt(sqrt((double)(dw / sw)));
+	int mathH = dh + sqrt(sqrt((double)(dh / sh)));
+	BilinearZoom(pSrcTexData, pTempData, sw, sh, dw, dh, mathW, mathH);
+
 	DWORD* pDstTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
 	DWORD color1, color2;
 	BYTE a, r, g, b;
-	for (s32 lx = 0; lx < sw; ++lx)
+
+	int ndw = dw;
+	if (dw + dx > m_bmp.texw) dw = m_bmp.texw - dx;
+	if (dh + dy > m_bmp.texh) dh = m_bmp.texh - dy;
+
+	for (s32 lx = 0; lx < dw; ++lx)
 	{
-		for (s32 ly = 0; ly < sh; ++ly)
+		for (s32 ly = 0; ly < dh; ++ly)
 		{
-			color1 = pSrcTexData[dw * ly + lx];
+			color1 = pTempData[ndw * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
 			//	跳过透明像素
 			if (!a) continue;
@@ -828,10 +852,11 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 		}
 	}
 	hge->Texture_Unlock(m_bmp.quad.tex);
-	hge->Texture_Unlock(srcTex);
-	hge->Texture_Free(srcTex);
-	hge->Target_Free(tar);
+	hge->Texture_Unlock(tmpTex);
+	//if (sx != 0 || sy != 0 || sw != src->texw || sh != src->texh)
 	hge->Texture_Free(tmpTex);
+	free(pTempData);
+	
 	return Qnil;
 }
 
@@ -889,7 +914,7 @@ VALUE RbBitmap::fill_rect(int argc, VALUE *argv, VALUE obj)
 		for (s32 ly = y; ly < y + height; ++ly)
 		{
 			//	跳过透明像素
-			if (!GET_RGBA_A(color))
+			if (!GET_ARGB_A(color))
 				continue;
 
 			color2 = pTexData[m_bmp.texw * ly + lx];
@@ -910,8 +935,9 @@ VALUE RbBitmap::clear()
 	if (!pTexData)
 		return Qfalse;
 
-	for (int y = 0; y < m_bmp.height; ++y)
-		memset(&pTexData[m_bmp.texw * y], 0, sizeof(DWORD) * m_bmp.width);
+	/*for (int y = 0; y < m_bmp.height; ++y)
+		memset(&pTexData[m_bmp.texw * y], 0, sizeof(DWORD) * m_bmp.width);*/
+	ZeroMemory(pTexData, sizeof(DWORD) * m_bmp.width * m_bmp.height);
 
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	return Qnil;
@@ -958,7 +984,7 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 
 	DWORD dwColor = GetObjectPtr<RbTone>(color)->GetColor();
 	//	跳过透明像素
-	if (!GET_RGBA_A(dwColor))
+	if (!GET_ARGB_A(dwColor))
 		return Qfalse;
 
 	DWORD color2;
@@ -974,7 +1000,173 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 
 VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+
+	VALUE vx, vy, vw, vh, vstr, ha, va, rect;
+	int ix, iy, width, height;
+	wchar_t* pStr;
+	int halign, valign;
+
+	if (FIXNUM_P(argv[0]))
+	{
+		rb_scan_args(argc, argv, "52", &vx, &vy, &vw, &vh, &vstr, &ha, &va);
+		
+		SafeFixnumValue(vx);
+		SafeFixnumValue(vy);
+		SafeFixnumValue(vw);
+		SafeFixnumValue(vh);
+		SafeStringValue(vstr);
+
+		ix = FIX2INT(vx);
+		iy = FIX2INT(vy);
+		width = FIX2INT(vw);
+		height = FIX2INT(vh);
+	}
+	else
+	{
+		rb_scan_args(argc, argv, "22", &rect, &vstr, &ha, &va);
+
+		SafeRectValue(argv[0]);
+		SafeStringValue(vstr);
+
+		RbRect* rect = GetObjectPtr<RbRect>(argv[0]);
+		ix = rect->x;
+		iy = rect->y;
+		width = rect->width;
+		height = rect->height;
+	}
+	pStr  = Kconv::UTF8ToUnicode(RSTRING_PTR(vstr));
+	halign = NIL_P(ha) ? 0 : FIX2INT(ha);
+	valign = NIL_P(va) ? 1 : FIX2INT(va);
+
+	if (width <= 0 || height <= 0)
+		return Qfalse;
+
+	int iCharCount = wcslen(pStr);
+	if (!iCharCount)
+		return Qfalse;
+
+	DWORD draw_color = m_font_ptr->GetColorPtr()->GetColor();
+	if (!GET_ARGB_A(draw_color))
+		return Qfalse;
+
+	DWORD color1, color2 = 0;
+
+	HGE* hge = GetHgePtr();
+
+	//	开始正式描绘文字
+	HDC	hScreenDC = GetDC(NULL);
+
+	do
+	{
+		s32 cx, cy;
+
+		if (!GetTextRect(m_font_ptr->GetHFont(), pStr, cx, cy, hScreenDC))
+			break;
+
+		int offset_x = 0, offset_y = 0;
+
+		switch (halign % 3)
+		{
+			case 0:offset_x = 0;				break;
+			case 1:offset_x = (width - cx) / 2;	break;
+			case 2:offset_x = (width - cx);		break;
+		}
+
+		switch (valign % 3)
+		{
+			case 0:offset_y = 0;					break;
+			case 1:offset_y = (height - cy) / 2;	break;
+			case 2:offset_y = (height - cy);		break;
+		}
+
+		int iCharOffset = 0;
+
+		GLYPHMETRICS	gm;
+		TEXTMETRIC		tm;
+
+		static MAT2		mmat2 = {0, 1, 0, 0, 0, 0, 0, 1};
+
+		static BYTE		alphatable65[] = // 65.times{|i| 255 * i / (65 - 1)
+									{0,3,7,11,15,19,23,27,31,35,39,43,47,51,55,59,63,67,71,75,79,83,
+									87,91,95,99,103,107,111,115,119,123,127,131,135,139,143,147,151,
+									155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,
+									219,223,227,231,235,239,243,247,251,255};
+
+		static BYTE		buffer[1024];
+
+		//	锁定纹理
+		DWORD *pTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
+
+		//	锁定失败：退出
+		if (!pTexData)
+			break;
+
+		HFONT hOldFont = (HFONT)SelectObject(hScreenDC, m_font_ptr->GetHFont());
+
+		//	临时变量
+		int tmp_x, tmp_y;
+
+		//	循环逐字描绘
+		for (int i = 0; i < iCharCount; ++i)
+		{
+			DWORD dwBufferSize = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, 0, NULL, &mmat2);
+
+			if (dwBufferSize > SinArrayCount(buffer))
+				rb_raise(rb_eSINBaseError, "buffer size too small.");
+			//FetAssert(dwBufferSize <= FetArrayCount(buffer));
+
+			if (dwBufferSize > 0)
+			{
+				int nLentemp = GetGlyphOutline(hScreenDC, pStr[i],GGO_GRAY8_BITMAP,&gm,dwBufferSize,buffer,&mmat2);
+
+				GetTextMetrics(hScreenDC, &tm);
+
+				int stride = dwBufferSize / gm.gmBlackBoxY;
+
+				//	逐像素描绘
+				for (UINT x = 0; x < gm.gmBlackBoxX; ++x)
+				{
+					for (UINT y = 0; y < gm.gmBlackBoxY; ++y)
+					{
+						//	过滤掉越界的像素
+						tmp_x = x  + gm.gmptGlyphOrigin.x + iCharOffset + ix + offset_x;
+						tmp_y = y  + tm.tmAscent - gm.gmptGlyphOrigin.y + iy + offset_y;
+						if (tmp_x < 0 || tmp_x >= m_bmp.texw || tmp_y < 0 || tmp_y >= m_bmp.texh)
+							continue;
+
+						//	过滤全透明区域
+						BYTE tmp_gray = alphatable65[buffer[y * stride + x]];
+						if (!tmp_gray)
+							continue;
+
+						tmp_gray = (BYTE)((float)tmp_gray * GET_ARGB_A(draw_color) / 255);
+						if (!tmp_gray)
+							continue;
+
+						//	处理像素颜色
+						color1 = MAKE_ARGB_8888(tmp_gray, GET_ARGB_R(draw_color), GET_ARGB_G(draw_color), GET_ARGB_B(draw_color));
+						color2 = pTexData[tmp_y * m_bmp.texw + tmp_x];
+						BLEND_ARGB_8888(color1, color2);
+						pTexData[tmp_y * m_bmp.texw + tmp_x] = color2;
+					}
+				}
+			}
+
+			iCharOffset += gm.gmCellIncX;
+		}
+
+		// 取消锁定
+		hge->Texture_Unlock(m_bmp.quad.tex);
+		
+		SelectObject(hScreenDC, hOldFont);
+
+		++m_modify_count;
+
+	} while (0);
+	
+	//	释放DC
+	ReleaseDC(NULL, hScreenDC);
 
 	return Qnil;
 }
@@ -1105,10 +1297,10 @@ VALUE RbBitmap::blur()
                         if (xxx >= 0 && xxx < width)
 						{
                             d = *pdbl;
-                            a += d * GET_RGBA_A(pTexData[xxx + yyy * width]);
-                            r += d * GET_RGBA_R(pTexData[xxx + yyy * width]);
-                            g += d * GET_RGBA_G(pTexData[xxx + yyy * width]);
-                            b += d * GET_RGBA_B(pTexData[xxx + yyy * width]);
+                            a += d * GET_ARGB_A(pTexData[xxx + yyy * width]);
+                            r += d * GET_ARGB_R(pTexData[xxx + yyy * width]);
+                            g += d * GET_ARGB_G(pTexData[xxx + yyy * width]);
+                            b += d * GET_ARGB_B(pTexData[xxx + yyy * width]);
                         }
                         pdbl++;
                     }
@@ -1163,9 +1355,9 @@ VALUE RbBitmap::blur()
 	//					{
 	//						double weight = matrix[i_m] / nuclear;
 	//						long i = (h - y - 1) * w + x;
-	//						r += weight * GET_RGBA_R(pTexData[i]);
-	//						g += weight * GET_RGBA_G(pTexData[i]);
-	//						b += weight * GET_RGBA_B(pTexData[i]);
+	//						r += weight * GET_ARGB_R(pTexData[i]);
+	//						g += weight * GET_ARGB_G(pTexData[i]);
+	//						b += weight * GET_ARGB_B(pTexData[i]);
 	//					}
 	//					++i_m;
 	//				}
@@ -1174,7 +1366,7 @@ VALUE RbBitmap::blur()
 	//		}
 	//		// 保存处理结果
 	//		long i_s = (h - y_s - 1) * w + x_s;
-	//		pTexData[i_s] = MAKE_ARGB_8888(GET_RGBA_A(pTexData[i_s]), 
+	//		pTexData[i_s] = MAKE_ARGB_8888(GET_ARGB_A(pTexData[i_s]), 
 	//			(BYTE)(r > (BYTE)~0 ? (BYTE)~0 : r), 
 	//			(BYTE)(g > (BYTE)~0 ? (BYTE)~0 : g), 
 	//			(BYTE)(b > (BYTE)~0 ? (BYTE)~0 : b));

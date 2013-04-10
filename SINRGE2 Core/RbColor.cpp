@@ -24,7 +24,7 @@ void RbColor::InitLibrary()
 	 *		Color
 	 *
 	 *	@desc
-	 *		RGBA 颜色的类。
+	 *		ARGB 颜色的类。
 	 */
 	rb_cColor = rb_define_class_under(rb_mSin, "Color", rb_cObject);
 	
@@ -119,7 +119,7 @@ VALUE RbColor::to_string()
 {
 	//return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), m_color.r, m_color.g, m_color.b, m_color.a);
 	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(),
-		GET_RGBA_R(m_color), GET_RGBA_G(m_color), GET_RGBA_B(m_color), GET_RGBA_A(m_color));
+		GET_ARGB_R(m_color), GET_ARGB_G(m_color), GET_ARGB_B(m_color), GET_ARGB_A(m_color));
 }
 
 VALUE RbColor::get_red()

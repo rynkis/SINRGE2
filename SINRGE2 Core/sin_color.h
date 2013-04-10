@@ -8,10 +8,10 @@
 	g = (col >> 8) & 0xFF;\
 	b = (col & 0xFF);\
 }
-#define GET_RGBA_B(col)	(col&0xFF)
-#define GET_RGBA_G(col)	((col>>8)&0xFF)
-#define GET_RGBA_R(col)	((col>>16)&0xFF)
-#define GET_RGBA_A(col)	((col>>24)&0xFF)
+#define GET_ARGB_B(col)	(col&0xFF)
+#define GET_ARGB_G(col)	((col>>8)&0xFF)
+#define GET_ARGB_R(col)	((col>>16)&0xFF)
+#define GET_ARGB_A(col)	((col>>24)&0xFF)
 
 #define BLEND_ARGB_8888(src, des) {\
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;\

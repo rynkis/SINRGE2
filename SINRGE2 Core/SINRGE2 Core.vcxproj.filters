@@ -341,9 +341,6 @@
     <ClInclude Include="RbBitmap.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
-    <ClInclude Include="auxSingleton.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>

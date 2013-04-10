@@ -177,7 +177,6 @@
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
-    <ClInclude Include="auxSingleton.h" />
     <ClInclude Include="RbBitmap.h" />
     <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />

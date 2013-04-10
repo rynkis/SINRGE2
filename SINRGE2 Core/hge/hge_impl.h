@@ -48,24 +48,15 @@ struct CResourceList
 	CResourceList*		next;
 };
 
-//struct CStreamList
-//{
-//	HSTREAM				hstream;
-//	void*				data;
-//	CStreamList*		next;
-//};
-
 //struct CInputEventList
 //{
 //	hgeInputEvent		event;
 //	CInputEventList*	next;
 //};
 
-
 //void DInit();
 //void DDone();
 //bool DFrame();
-
 
 /*
 ** HGE Interface implementation
@@ -97,12 +88,7 @@ public:
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0);
 	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx);
 	virtual void			CALL	Resource_Free(void *res);
-	/*virtual bool			CALL	Resource_AttachPack(const wchar_t *filename, const wchar_t *password=0);
-	virtual void			CALL	Resource_RemovePack(const wchar_t *filename);
-	virtual void			CALL	Resource_RemoveAllPacks();*/
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0);
-	//virtual wchar_t*		CALL	Resource_EnumFiles(const wchar_t *wildcard=0);
-	//virtual wchar_t*		CALL	Resource_EnumFolders(const wchar_t *wildcard=0);
 
 	virtual	void			CALL	Ini_SetInt(const wchar_t *section, const wchar_t *name, int value);
 	virtual	int 			CALL	Ini_GetInt(const wchar_t *section, const wchar_t *name, int def_val);
@@ -118,44 +104,6 @@ public:
 	virtual float			CALL	Timer_GetTime();
 	virtual float			CALL	Timer_GetDelta();
 	virtual int				CALL	Timer_GetFPS();
-
-	/*virtual HEFFECT		CALL	Effect_Load(const char *filename, DWORD size=0);
-	virtual void		CALL	Effect_Free(HEFFECT eff);
-	virtual HCHANNEL	CALL 	Effect_Play(HEFFECT eff);
-	virtual HCHANNEL	CALL 	Effect_PlayEx(HEFFECT eff, int volume=100, int pan=0, float pitch=1.0f, bool loop=false);
-
-	virtual HMUSIC		CALL 	Music_Load(const char *filename, DWORD size=0);
-	virtual void		CALL	Music_Free(HMUSIC mus);
-	virtual HCHANNEL	CALL 	Music_Play(HMUSIC mus, bool loop, int volume = 100, int order = 0, int row = 0);
-	virtual void		CALL	Music_SetAmplification(HMUSIC music, int ampl);
-	virtual int			CALL	Music_GetAmplification(HMUSIC music);
-	virtual int			CALL	Music_GetLength(HMUSIC music);
-	virtual void		CALL	Music_SetPos(HMUSIC music, int order, int row);
-	virtual bool		CALL	Music_GetPos(HMUSIC music, int *order, int *row);
-	virtual void		CALL	Music_SetInstrVolume(HMUSIC music, int instr, int volume);
-	virtual int			CALL	Music_GetInstrVolume(HMUSIC music, int instr);
-	virtual void		CALL	Music_SetChannelVolume(HMUSIC music, int channel, int volume);
-	virtual int			CALL	Music_GetChannelVolume(HMUSIC music, int channel);
-
-	virtual HSTREAM		CALL	Stream_Load(const char *filename, DWORD size=0);
-	virtual void		CALL	Stream_Free(HSTREAM stream);
-	virtual HCHANNEL	CALL	Stream_Play(HSTREAM stream, bool loop, int volume = 100);
-
-	virtual void		CALL 	Channel_SetPanning(HCHANNEL chn, int pan);
-	virtual void		CALL 	Channel_SetVolume(HCHANNEL chn, int volume);
-	virtual void		CALL 	Channel_SetPitch(HCHANNEL chn, float pitch);
-	virtual void		CALL 	Channel_Pause(HCHANNEL chn);
-	virtual void		CALL 	Channel_Resume(HCHANNEL chn);
-	virtual void		CALL 	Channel_Stop(HCHANNEL chn);
-	virtual void		CALL 	Channel_PauseAll();
-	virtual void		CALL 	Channel_ResumeAll();
-	virtual void		CALL 	Channel_StopAll();
-	virtual bool		CALL	Channel_IsPlaying(HCHANNEL chn);
-	virtual float		CALL	Channel_GetLength(HCHANNEL chn);
-	virtual float		CALL	Channel_GetPos(HCHANNEL chn);
-	virtual void		CALL	Channel_SetPos(HCHANNEL chn, float fSeconds);
-	virtual void		CALL	Channel_SlideTo(HCHANNEL channel, float time, int volume, int pan = -101, float pitch = -1);
-	virtual bool		CALL	Channel_IsSliding(HCHANNEL channel);*/
 
 	/*virtual void		CALL	Input_GetMousePos(float *x, float *y);
 	virtual void		CALL	Input_SetMousePos(float x, float y);
@@ -216,7 +164,6 @@ public:
 	bool					(*procFocusGainFunc)();
 	bool					(*procGfxRestoreFunc)();
 	bool					(*procExitFunc)();
-	//const wchar_t*			szIcon;
 	wchar_t					szWinTitle[256];
 	int						nScreenWidth;
 	int						nScreenHeight;
@@ -226,20 +173,10 @@ public:
 	bool					bTextureFilter;
 	wchar_t					szIniFile[_MAX_PATH];
 	wchar_t					szLogFile[_MAX_PATH];
-	/*bool					bUseSound;
-	int						nSampleRate;
-	int						nFXVolume;
-	int						nMusVolume;
-	int						nStreamVolume;*/
 	int						nHGEFPS;
 	bool					bHideMouse;
 	bool					bDontSuspend;
 	HWND					hwndParent;
-
-	/*#ifdef DEMO
-	bool				bDMO;
-	#endif*/
-
 
 	// Power
 	int							nPowerStatus;
@@ -249,7 +186,6 @@ public:
 	void					_InitPowerStatus();
 	void					_UpdatePowerStatus();
 	void					_DonePowerStatus();
-
 
 	// Graphics
 	D3DPRESENT_PARAMETERS*  d3dpp;
@@ -295,17 +231,6 @@ public:
 	void				_SetProjectionMatrix(int width, int height);
 	
 
-	// Audio
-	/*HINSTANCE			hBass;
-	bool				bSilent;
-	CStreamList*		streams;
-	bool				_SoundInit();
-	void				_SoundDone();
-	void				_SetMusVolume(int vol);
-	void				_SetStreamVolume(int vol);
-	void				_SetFXVolume(int vol);*/
-
-
 	// Input
 	/*int					VKey;
 	int					Char;
@@ -324,9 +249,6 @@ public:
 
 	// Resources
 	wchar_t				szTmpFilename[_MAX_PATH];
-	//CResourceList*		res;
-	//HANDLE				hSearch;
-	//WIN32_FIND_DATA		SearchData;
 
 
 	// Timer

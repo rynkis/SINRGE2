@@ -146,7 +146,7 @@ void ImageToImageEx(const image_p src, const image_p des, int sx, int sy, int sw
 		{
 			color1 = pSrcTexData[src->texw * ly + lx];
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
-			if (!GET_RGBA_A(color1))
+			if (!GET_ARGB_A(color1))
 				continue;
 
 			color2 = pDstTexData[des->texw * (ly - sy + dy) + lx - sx + dx];
@@ -190,7 +190,7 @@ void ImageToImage(const image_p src, const image_p des, int dx, int dy)
 		{
 			color1 = pSrcTexData[src->texw * ly + lx];
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
-			if (!GET_RGBA_A(color1))
+			if (!GET_ARGB_A(color1))
 				continue;
 
 			color2 = pDstTexData[des->texw * (ly + dy) + lx + dx];
@@ -265,7 +265,7 @@ void ImageFillRect(image_p pimage, int x, int y, int width, int height, u32 colo
 		for (s32 ly = y; ly < y + height; ++ly)
 		{
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
-			if (!GET_RGBA_A(color))
+			if (!GET_ARGB_A(color))
 				continue;
 
 			color2 = pTexData[pimage->texw * ly + lx];

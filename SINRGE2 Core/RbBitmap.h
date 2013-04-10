@@ -27,6 +27,8 @@ public:
 	static bool				GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, HDC hDC);
 	static bitmap_p			CloneBitmap(bitmap_p pBmp);
 	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
+	static void				BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight);
+	
 
 public:
 	u32						GetWidth()					const { return m_bmp.width; }

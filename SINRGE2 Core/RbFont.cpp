@@ -32,7 +32,7 @@ RbFont::RbFont()
 	m_lfw.lfPitchAndFamily	= DEFAULT_PITCH | FF_DONTCARE;
 	m_lfw.lfQuality			= DEFAULT_QUALITY;//NONANTIALIASED_QUALITY;//DRAFT_QUALITY;//DEFAULT_QUALITY;
 	m_lfw.lfWidth			= 0;
-	m_lfw.lfHeight			= 18;			// ×ÖºÅ
+	m_lfw.lfHeight			= 20;			// ×ÖºÅ
 	m_lfw.lfWeight			= FW_NORMAL;	// ´ÖÌå FW_BOLD
 	m_lfw.lfItalic			= 0;			// Ð±Ìå
 }

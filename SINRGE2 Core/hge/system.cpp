@@ -74,19 +74,19 @@ bool CALL HGE_Impl::System_Initiate()
 
 	// Log system info
 
-	System_Log(L"HGE Started..\n");
+	//System_Log(L"HGE Started..\n");
 
-	System_Log(L"HGE version: %X.%X", HGE_VERSION>>8, HGE_VERSION & 0xFF);
+	//System_Log(L"HGE version: %X.%X", HGE_VERSION>>8, HGE_VERSION & 0xFF);
 	GetLocalTime(&tm);
-	System_Log(L"Date: %02d.%02d.%d, %02d:%02d:%02d\n", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
+	//System_Log(L"Date: %02d.%02d.%d, %02d:%02d:%02d\n", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
 
-	System_Log(L"Application: %s",szWinTitle);
+	//System_Log(L"Application: %s",szWinTitle);
 	os_ver.dwOSVersionInfoSize=sizeof(os_ver);
 	GetVersionEx(&os_ver);
-	System_Log(L"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
+	//System_Log(L"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
 
 	GlobalMemoryStatus(&mem_st);
-	System_Log(L"Memory: %ldK total, %ldK free\n",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
+	//System_Log(L"Memory: %ldK total, %ldK free\n",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
 
 
 	// Register window class
@@ -159,40 +159,13 @@ bool CALL HGE_Impl::System_Initiate()
 	_InitPowerStatus();
 	//_InputInit();
 	if(!_GfxInit()) { System_Shutdown(); return false; }
-	//if(!_SoundInit()) { System_Shutdown(); return false; }
 
-	System_Log(L"Init done.\n");
+	//System_Log(L"Init done.\n");
 
 	fTime=0.0f;
 	t0=t0fps=timeGetTime();
 	dt=cfps=0;
 	nFPS=0;
-
-	// Show splash
-
-//#ifdef DEMO
-//
-//	bool			(*func)();
-//	bool			(*rfunc)();
-//	HWND			hwndTmp;
-//
-//	if(pHGE->bDMO)
-//	{
-//		Sleep(200);
-//		func=(bool(*)())pHGE->System_GetStateFunc(HGE_FRAMEFUNC);
-//		rfunc=(bool(*)())pHGE->System_GetStateFunc(HGE_RENDERFUNC);
-//		hwndTmp=hwndParent; hwndParent=0;
-//		pHGE->System_SetStateFunc(HGE_FRAMEFUNC, DFrame);
-//		pHGE->System_SetStateFunc(HGE_RENDERFUNC, 0);
-//		DInit();
-//		pHGE->System_Start();
-//		DDone();
-//		hwndParent=hwndTmp;
-//		pHGE->System_SetStateFunc(HGE_FRAMEFUNC, func);
-//		pHGE->System_SetStateFunc(HGE_RENDERFUNC, rfunc);
-//	}
-//
-//#endif
 
 	// Done
 
@@ -201,12 +174,10 @@ bool CALL HGE_Impl::System_Initiate()
 
 void CALL HGE_Impl::System_Shutdown()
 {
-	System_Log(L"\nFinishing..");
+	//System_Log(L"\nFinishing..");
 
 	timeEndPeriod(1);
-	//if(hSearch) { FindClose(hSearch); hSearch=0; }
 	//_ClearQueue();
-	//_SoundDone();
 	_GfxDone();
 	_DonePowerStatus();
 
@@ -460,21 +431,10 @@ void CALL HGE_Impl::System_SetStateBool(hgeBoolState state, bool value)
 								}
 								break;
 
-		/*case HGE_USESOUND:		if(bUseSound!=value)
-								{
-									bUseSound=value;
-									if(bUseSound && hwnd) _SoundInit();
-									if(!bUseSound && hwnd) _SoundDone();
-								}
-								break;*/
-
 		case HGE_HIDEMOUSE:		bHideMouse=value; break;
 
 		case HGE_DONTSUSPEND:	bDontSuspend=value; break;
 
-		/*#ifdef DEMO
-		case HGE_SHOWSPLASH:	bDMO=value; break;
-		#endif*/
 	}
 }
 
@@ -508,21 +468,6 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 		case HGE_SCREENHEIGHT:	if(!pD3DDevice) nScreenHeight=value; break;
 
 		case HGE_SCREENBPP:		if(!pD3DDevice) nScreenBPP=value; break;
-
-		/*case HGE_SAMPLERATE:	if(!hBass) nSampleRate=value;
-								break;*/
-
-		/*case HGE_FXVOLUME:		nFXVolume=value;
-								_SetFXVolume(nFXVolume);
-								break;
-
-		case HGE_MUSVOLUME:		nMusVolume=value;
-								_SetMusVolume(nMusVolume);
-								break;
-
-		case HGE_STREAMVOLUME:	nStreamVolume=value;
-								_SetStreamVolume(nStreamVolume);
-								break;*/
 
 		case HGE_FPS:			if(VertArray) break;
 
@@ -588,13 +533,8 @@ bool CALL HGE_Impl::System_GetStateBool(hgeBoolState state)
 		case HGE_WINDOWED:		return bWindowed;
 		case HGE_ZBUFFER:		return bZBuffer;
 		case HGE_TEXTUREFILTER:	return bTextureFilter;
-		//case HGE_USESOUND:		return bUseSound;
 		case HGE_DONTSUSPEND:	return bDontSuspend;
 		case HGE_HIDEMOUSE:		return bHideMouse;
-
-		/*#ifdef DEMO
-		case HGE_SHOWSPLASH:	return bDMO;
-		#endif*/
 	}
 
 	return false;
@@ -632,10 +572,6 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 		case HGE_SCREENWIDTH:	return nScreenWidth;
 		case HGE_SCREENHEIGHT:	return nScreenHeight;
 		case HGE_SCREENBPP:		return nScreenBPP;
-		/*case HGE_SAMPLERATE:	return nSampleRate;
-		case HGE_FXVOLUME:		return nFXVolume;
-		case HGE_MUSVOLUME:		return nMusVolume;
-		case HGE_STREAMVOLUME:	return nStreamVolume;*/
 		case HGE_FPS:			return nHGEFPS;
 		case HGE_POWERSTATUS:	return nPowerStatus;
 	}
@@ -736,13 +672,6 @@ HGE_Impl::HGE_Impl()
 	VertArray=0;
 	textures=0;
 
-	//hBass=0;
-	//bSilent=false;
-	//streams=0;
-
-	/*hSearch=0;
-	res=0;*/
-
 	/*queue=0;
 	Char=VKey=Zpos=0;
 	Xpos=Ypos=0.0f;
@@ -770,11 +699,7 @@ HGE_Impl::HGE_Impl()
 	bTextureFilter=true;
 	szLogFile[0]=0;
 	szIniFile[0]=0;
-	/*bUseSound=true;
-	nSampleRate=44100;
-	nFXVolume=100;
-	nMusVolume=100;
-	nStreamVolume=100;*/
+	
 	nFixedDelta=0;
 	bHideMouse=true;
 	bDontSuspend=false;
@@ -783,12 +708,7 @@ HGE_Impl::HGE_Impl()
 	nPowerStatus=HGEPWR_UNSUPPORTED;
 	hKrnl32 = NULL;
 	lpfnGetSystemPowerStatus = NULL;
-
-//#ifdef DEMO
-//	bDMO=true;
-//#endif
-
-
+	
 	GetModuleFileName(GetModuleHandle(NULL), szAppPath, sizeof(szAppPath));
 	int i;
 	for(i=wcslen(szAppPath)-1; i>0; i--) if(szAppPath[i]=='\\') break;

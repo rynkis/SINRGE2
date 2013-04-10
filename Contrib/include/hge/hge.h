@@ -70,27 +70,6 @@ typedef DWORD HMUSIC;
 typedef DWORD HSTREAM;
 typedef DWORD HCHANNEL;
 
-typedef struct unz_file_info_s
-{
-	DWORD version; /* version made by                 2 bytes */
-	DWORD version_needed; /* version needed to extract       2 bytes */
-	DWORD flag; /* general purpose bit flag        2 bytes */
-	DWORD compression_method; /* compression method              2 bytes */
-	DWORD dosDate; /* last mod file date in Dos fmt   4 bytes */
-	DWORD crc; /* crc-32                          4 bytes */
-	DWORD compressed_size; /* compressed size                 4 bytes */
-	DWORD uncompressed_size; /* uncompressed size               4 bytes */
-	DWORD size_filename; /* filename length                 2 bytes */
-	DWORD size_file_extra; /* extra field length              2 bytes */
-	DWORD size_file_comment; /* file comment length             2 bytes */
-
-	DWORD disk_num_start; /* disk number start               2 bytes */
-	DWORD internal_fa; /* internal file attributes        2 bytes */
-	DWORD external_fa; /* external file attributes        4 bytes */
-
-	//tm_unz tmu_date;
-} unz_file_info;
-
 /*
 ** Hardware color macros
 */
@@ -128,8 +107,6 @@ enum hgeBoolState
 	HGE_ZBUFFER			= 2,    // bool		use z-buffer?		(default: false)
 	HGE_TEXTUREFILTER	= 3,    // bool		texture filtering?	(default: true)
 	
-	//HGE_USESOUND		= 4,    // bool		use BASS for sound?	(default: true)
-	
 	HGE_DONTSUSPEND		= 5,	// bool		focus lost:suspend?	(default: false)
 	HGE_HIDEMOUSE		= 6,	// bool		hide system cursor?	(default: true)
 
@@ -163,11 +140,6 @@ enum hgeIntState
 	HGE_SCREENWIDTH		= 17,   // int		screen width		(default: 800)
 	HGE_SCREENHEIGHT	= 18,   // int		screen height		(default: 600)
 	HGE_SCREENBPP		= 19,   // int		screen bitdepth		(default: 32) (desktop bpp in windowed mode)
-	
-	//HGE_SAMPLERATE		= 20,   // int		sample rate			(default: 44100)
-	//HGE_FXVOLUME		= 21,   // int		global fx volume	(default: 100)
-	//HGE_MUSVOLUME		= 22,   // int		global music volume	(default: 100)
-	//HGE_STREAMVOLUME	= 23,   // int		global music volume	(default: 100)
 	
 	HGE_FPS				= 24,	// int		fixed fps			(default: HGEFPS_UNLIMITED)
 
@@ -331,12 +303,7 @@ public:
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0) = 0;
 	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx) = 0;
 	virtual void			CALL	Resource_Free(void *res) = 0;
-	/*virtual bool			CALL	Resource_AttachPack(const wchar_t *filename, const wchar_t *password=0) = 0;
-	virtual void			CALL	Resource_RemovePack(const wchar_t *filename) = 0;
-	virtual void			CALL	Resource_RemoveAllPacks() = 0;*/
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0) = 0;
-	/*virtual wchar_t*		CALL	Resource_EnumFiles(const wchar_t *wildcard=0) = 0;
-	virtual wchar_t*		CALL	Resource_EnumFolders(const wchar_t *wildcard=0) = 0;*/
 
 	virtual	void			CALL	Ini_SetInt(const wchar_t *section, const wchar_t *name, int value) = 0;
 	virtual	int				CALL	Ini_GetInt(const wchar_t *section, const wchar_t *name, int def_val) = 0;
@@ -352,44 +319,6 @@ public:
 	virtual float			CALL	Timer_GetTime() = 0;
 	virtual float			CALL	Timer_GetDelta() = 0;
 	virtual int				CALL	Timer_GetFPS() = 0;
-
-	/*virtual HEFFECT		CALL	Effect_Load(const char *filename, DWORD size=0) = 0;
-	virtual void		CALL	Effect_Free(HEFFECT eff) = 0;
-	virtual HCHANNEL	CALL 	Effect_Play(HEFFECT eff) = 0;
-	virtual HCHANNEL	CALL	Effect_PlayEx(HEFFECT eff, int volume=100, int pan=0, float pitch=1.0f, bool loop=false) = 0;
-
-	virtual HMUSIC		CALL	Music_Load(const char *filename, DWORD size=0) = 0;
-	virtual void		CALL	Music_Free(HMUSIC mus) = 0;
-	virtual HCHANNEL	CALL	Music_Play(HMUSIC mus, bool loop, int volume = 100, int order = -1, int row = -1) = 0;
-	virtual void		CALL	Music_SetAmplification(HMUSIC music, int ampl) = 0;
-	virtual int			CALL	Music_GetAmplification(HMUSIC music) = 0;
-	virtual int			CALL	Music_GetLength(HMUSIC music) = 0;
-	virtual void		CALL	Music_SetPos(HMUSIC music, int order, int row) = 0;
-	virtual bool		CALL	Music_GetPos(HMUSIC music, int *order, int *row) = 0;
-	virtual void		CALL	Music_SetInstrVolume(HMUSIC music, int instr, int volume) = 0;
-	virtual int			CALL	Music_GetInstrVolume(HMUSIC music, int instr) = 0;
-	virtual void		CALL	Music_SetChannelVolume(HMUSIC music, int channel, int volume) = 0;
-	virtual int			CALL	Music_GetChannelVolume(HMUSIC music, int channel) = 0;
-
-	virtual HSTREAM		CALL	Stream_Load(const char *filename, DWORD size=0) = 0;
-	virtual void		CALL	Stream_Free(HSTREAM stream) = 0;
-	virtual HCHANNEL	CALL	Stream_Play(HSTREAM stream, bool loop, int volume = 100) = 0;
-
-	virtual void		CALL	Channel_SetPanning(HCHANNEL chn, int pan) = 0;
-	virtual void		CALL 	Channel_SetVolume(HCHANNEL chn, int volume) = 0;
-	virtual void		CALL 	Channel_SetPitch(HCHANNEL chn, float pitch) = 0;
-	virtual void		CALL 	Channel_Pause(HCHANNEL chn) = 0;
-	virtual void		CALL 	Channel_Resume(HCHANNEL chn) = 0;
-	virtual void		CALL 	Channel_Stop(HCHANNEL chn) = 0;
-	virtual void		CALL 	Channel_PauseAll() = 0;
-	virtual void		CALL 	Channel_ResumeAll() = 0;
-	virtual void		CALL 	Channel_StopAll() = 0;
-	virtual bool		CALL	Channel_IsPlaying(HCHANNEL chn) = 0;
-	virtual float		CALL	Channel_GetLength(HCHANNEL chn) = 0;
-	virtual float		CALL	Channel_GetPos(HCHANNEL chn) = 0;
-	virtual void		CALL	Channel_SetPos(HCHANNEL chn, float fSeconds) = 0;
-	virtual void		CALL	Channel_SlideTo(HCHANNEL channel, float time, int volume, int pan = -101, float pitch = -1) = 0;
-	virtual bool		CALL	Channel_IsSliding(HCHANNEL channel) = 0;*/
 
 	/*virtual void		CALL	Input_GetMousePos(float *x, float *y) = 0;
 	virtual void		CALL	Input_SetMousePos(float x, float y) = 0;
@@ -429,7 +358,6 @@ public:
 };
 
 extern "C" { EXPORT HGE * CALL hgeCreate(int ver); }
-
 
 /*
 ** HGE Virtual-key codes
@@ -548,7 +476,6 @@ extern "C" { EXPORT HGE * CALL hgeCreate(int ver); }
 //#define HGEK_F10		0x79
 //#define HGEK_F11		0x7A
 //#define HGEK_F12		0x7B
-
 
 #endif
 

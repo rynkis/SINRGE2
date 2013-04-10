@@ -20,6 +20,7 @@ public:
 public:
 	static void		InitLibrary();
 
+	RbColor*		GetColorPtr() const { return m_color_ptr; }
 	HFONT			GetHFont() const { return m_hFont; }
 
 protected:

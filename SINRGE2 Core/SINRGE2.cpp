@@ -147,10 +147,8 @@ namespace
 		
 		const VALUE script	= rb_ary_entry(argv, 0);
 		const VALUE f_name	= rb_ary_entry(argv, 1);
-
-		VALUE rt = rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
-
-		return rt;
+		//(void)rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
+		return rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);//Qnil;
 	}
 
 	static void _on_failed(VALUE err)
@@ -253,7 +251,6 @@ int	Sin::SINRGE2Entry(const char* rubyfile)
 			_on_failed(err);
 		}
 	}
-
 	return state;
 }
 
