@@ -148,9 +148,9 @@ namespace
 		const VALUE script	= rb_ary_entry(argv, 0);
 		const VALUE f_name	= rb_ary_entry(argv, 1);
 
-		(void)rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
+		VALUE rt = rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
 
-		return Qnil;
+		return rt;
 	}
 
 	static void _on_failed(VALUE err)
@@ -195,7 +195,7 @@ void Sin::SINRGE2Initialize()
 	}
 
 	m_frm_struct.Default();
-	ResManager::Instance()->Init();
+	//ResManager::Instance()->Init();
 
 	///<	内部类扩展
 	InitRubyInnerClassExt();

@@ -25,6 +25,8 @@ public:
 	static void				ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V);
 	static void				ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B);
 	static bool				GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, HDC hDC);
+	static bitmap_p			CloneBitmap(bitmap_p pBmp);
+	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
 
 public:
 	u32						GetWidth()					const { return m_bmp.width; }

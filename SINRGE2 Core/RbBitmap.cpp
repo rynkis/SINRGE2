@@ -197,11 +197,17 @@ __bitmap_load:
 		DWORD size;
 
 		int suffix_idx;
+		
+		static wchar_t* szSuffix[] = {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
+		static char* szSuffixA[] = {".png", ".jpg", ".bmp", ".tga", ".dds", ".dib"};
+		static int	 uSuffixCnt = SinArrayCount(szSuffix);
 
-		static char* szSuffix[] = {".png", ".jpg", ".bmp", ".tga", ".dds", ".dib"};
-		static u32	 uSuffixCnt = SinArrayCount(szSuffix);
+		char* tmpStr = RSTRING_PTR(arg01);
+		int len = MultiByteToWideChar(CP_UTF8, 0, tmpStr, -1, NULL, 0);
+		wchar_t* pStrW = (wchar_t*)malloc(len);
+		MultiByteToWideChar(CP_UTF8, 0, tmpStr, -1, pStrW, len);
 
-		if (data = GetResManager()->Resource_Load_Without_Suffix(RSTRING_PTR(arg01), &size, szSuffix, uSuffixCnt, &suffix_idx))
+		if (data = GetHgePtr()->Resource_Load_Without_Suffix(pStrW, &size, szSuffix, uSuffixCnt, &suffix_idx))
 		{
 			hgeQuad quad;
 			quad.tex = GetHgePtr()->Texture_Load((const wchar_t*)data, size, false, dwColorValue);
@@ -230,12 +236,13 @@ __bitmap_load:
 			if (m_bmp.quad.tex)
 			{
 				VALUE tmp_filename = rb_str_dup(arg01);
-				if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffix[suffix_idx]));
+				if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffixA[suffix_idx]));
 				m_filename = rb_str_freeze(tmp_filename);
 			}
 
 			// free
-			GetResManager()->Resource_Free(data);
+			GetHgePtr()->Resource_Free(data);
+			//GetResManager()->Resource_Free(data);
 		}
 	}
 	goto __finish;
@@ -436,6 +443,39 @@ bool RbBitmap::GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, H
 		ReleaseDC(NULL, hScreenDC);
 
 	return (bRet != 0);
+}
+
+bitmap_p RbBitmap::CloneBitmap(bitmap_p pBmp)
+{
+	bitmap_p clone = (bitmap_p)malloc(sizeof(bitmap_t));
+	memcpy(clone, pBmp, sizeof(bitmap_t));
+	clone->quad.tex = GetHgePtr()->Texture_Create(pBmp->width, pBmp->height);
+	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(pBmp->quad.tex, true);
+	DWORD* pDesTexData = GetHgePtr()->Texture_Lock(clone->quad.tex, false);
+	memcpy(pDesTexData, pSrcTexData, pBmp->width * pBmp->height *sizeof(DWORD));
+	GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
+	GetHgePtr()->Texture_Unlock(clone->quad.tex);
+	return clone;
+}
+
+HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp)
+{
+	//	ÐÞÕý¾ØÐÎÇøÓò
+	if (x < 0)						{ width += x; x = 0; }
+	if (y < 0)						{ height += y; y = 0; }
+	if (pBmp->texw - x < width)		{ width = pBmp->texw - x; }
+	if (pBmp->texh - y < height)	{ height = pBmp->texh - y; }
+
+	if (width <= 0 || height <= 0)
+		return 0;
+
+	HTEXTURE cut = GetHgePtr()->Texture_Create(width, height);
+	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(pBmp->quad.tex, true, x, y, width, height);
+	DWORD* pDesTexData = GetHgePtr()->Texture_Lock(cut, false);
+	memcpy(pDesTexData, pSrcTexData, width * height *sizeof(DWORD));
+	GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
+	GetHgePtr()->Texture_Unlock(cut);
+	return cut;
 }
 
 VALUE RbBitmap::dispose()
@@ -681,9 +721,9 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	
 	DWORD color1, color2;
 	BYTE a, r, g, b;
-	for (s32 lx = sx; lx < sx + sw; ++lx)
+	for (s32 lx = sx; lx < sw; ++lx)
 	{
-		for (s32 ly = sy; ly < sy + sh; ++ly)
+		for (s32 ly = sy; ly < sh; ++ly)
 		{
 			color1 = pTempData[src->texw * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
@@ -712,8 +752,86 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 
 VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
 
+	VALUE dest_rect, src_bitmap, src_rect, opacity;
+	bitmap_p src;
+	rb_scan_args(argc, argv, "31", &dest_rect, &src_bitmap, &src_rect, &opacity);
+	
+	SafeRectValue(dest_rect);
+	SafeBitmapValue(src_bitmap);
+	SafeRectValue(src_rect);
+	
+	RbRect* desRect = GetObjectPtr<RbRect>(dest_rect);
+	int dx = desRect->x;
+	int dy = desRect->y;
+	int dw = desRect->width;
+	int dh = desRect->height;
+	RbBitmap* srcBmp = GetObjectPtr<RbBitmap>(src_bitmap);
+	src = srcBmp->GetBitmapPtr();
+	RbRect* srcRect = GetObjectPtr<RbRect>(src_rect);
+	int sx = srcRect->x;
+	int sy = srcRect->y;
+	int sw = srcRect->width;
+	int sh = srcRect->height;
+	int op;// = (NIL_P(opacity) ? 255 : FIX2INT(opacity));
+	if (NIL_P(opacity))
+		op = 255;
+	else
+	{
+		SafeFixnumValue(opacity);
+		op = FIX2INT(opacity);
+		op = SinBound(op, 0, 255);
+	}
+
+	HGE* hge = GetHgePtr();
+	//bitmap_p tmpBmp = CloneBitmap(src);
+	HTEXTURE tmpTex = CutTexture(sx, sy, sw, sh, src);
+	hgeQuad quad;
+	for (int i = 0; i < 4; i++)
+	{
+		quad.v[i].z = 0.5f;
+		quad.v[i].col = src->quad.v[i].col;
+	}
+	quad.v[0].x = 0;	quad.v[0].y = 0;
+	quad.v[1].x = dw;	quad.v[1].y = 0;
+	quad.v[2].x = dw;	quad.v[2].y = dh;
+	quad.v[3].x = 0;	quad.v[3].y = dh;
+	quad.blend = src->quad.blend;
+	quad.tex = tmpTex;
+
+	HTARGET tar = hge->Target_Create(dw, dh, true);
+	hge->Gfx_BeginScene(tar);
+	hge->Gfx_RenderQuad(&quad);
+	hge->Gfx_EndScene();
+
+	HTEXTURE srcTex = hge->Target_GetTexture(tar);
+	DWORD* pSrcTexData = hge->Texture_Lock(srcTex, true);
+	DWORD* pDstTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
+	DWORD color1, color2;
+	BYTE a, r, g, b;
+	for (s32 lx = 0; lx < sw; ++lx)
+	{
+		for (s32 ly = 0; ly < sh; ++ly)
+		{
+			color1 = pSrcTexData[dw * ly + lx];
+			GET_ARGB_8888(color1, a, r, g, b)
+			//	Ìø¹ýÍ¸Ã÷ÏñËØ
+			if (!a) continue;
+			a = a * op / 255;
+			//	Ìø¹ýÍ¸Ã÷ÏñËØ
+			if (!a) continue;
+			color1 = MAKE_ARGB_8888(a, r, g, b);
+			color2 = pDstTexData[m_bmp.texw * (ly + dy) + lx + dx];
+			BLEND_ARGB_8888(color1, color2);
+			pDstTexData[m_bmp.texw * (ly + dy) + lx + dx] = color2;
+		}
+	}
+	hge->Texture_Unlock(m_bmp.quad.tex);
+	hge->Texture_Unlock(srcTex);
+	hge->Texture_Free(srcTex);
+	hge->Target_Free(tar);
+	hge->Texture_Free(tmpTex);
 	return Qnil;
 }
 

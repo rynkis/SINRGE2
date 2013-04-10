@@ -329,6 +329,7 @@ public:
 	inline const wchar_t*			System_GetState(hgeStringState state) { return System_GetStateString(state); }
 	
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0) = 0;
+	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx) = 0;
 	virtual void			CALL	Resource_Free(void *res) = 0;
 	/*virtual bool			CALL	Resource_AttachPack(const wchar_t *filename, const wchar_t *password=0) = 0;
 	virtual void			CALL	Resource_RemovePack(const wchar_t *filename) = 0;

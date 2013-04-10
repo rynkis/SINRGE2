@@ -185,6 +185,39 @@ _fromfile:
 	return ptr;
 }
 
+void* CALL HGE_Impl::Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx)
+{
+	void *data;
+
+	int	i;
+
+	if (!filename)	return 0;
+
+	wchar_t szTmpFilename[MAX_PATH];
+
+	data = Resource_Load(filename, size);
+
+	if (data)
+	{
+		if (suffix_idx)	*suffix_idx = -1;
+		return data;
+	}
+
+	for (i = 0; i < suffixs_size; ++i)
+	{
+		wcscpy_s(szTmpFilename, filename);
+		wcscat_s(szTmpFilename, suffixs[i]);
+
+		data = Resource_Load(szTmpFilename, size);
+
+		if (data)
+		{
+			if (suffix_idx)	*suffix_idx = i;
+			return data;
+		}
+	}
+	return 0;
+}
 
 void CALL HGE_Impl::Resource_Free(void *res)
 {

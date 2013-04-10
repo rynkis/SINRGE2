@@ -26,6 +26,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -86,7 +87,6 @@
       <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/lib/seal/seal.lib;$(SolutionDir)Contrib/lib/seal/OpenAL32.lib;$(SolutionDir)Contrib/lib/seal/libogg.lib;$(SolutionDir)Contrib/lib/seal/libvorbis.lib;$(SolutionDir)Contrib/lib/seal/libmpg123.lib;winmm.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libci.lib</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
-      <StackReserveSize>0</StackReserveSize>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -96,7 +96,6 @@
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="hge\resource.cpp" />
     <ClCompile Include="RbBitmap.cpp" />
-    <ClCompile Include="rge_resource.cpp" />
     <ClCompile Include="sin_graphics.cpp" />
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
@@ -180,7 +179,6 @@
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="auxSingleton.h" />
     <ClInclude Include="RbBitmap.h" />
-    <ClInclude Include="rge_resource.h" />
     <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />
     <ClInclude Include="sin_graphics.h" />

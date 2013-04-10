@@ -40,9 +40,6 @@
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{71f14302-2fb7-47b5-888e-1fd7f2a82759}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\rge">
-      <UniqueIdentifier>{70754fd1-7b49-4202-aa21-833d6ef5df61}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Entry.cpp">
@@ -141,11 +138,8 @@
     <ClCompile Include="RbBitmap.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
-    <ClCompile Include="rge_resource.cpp">
-      <Filter>源文件\rge</Filter>
-    </ClCompile>
     <ClCompile Include="hge\resource.cpp">
-      <Filter>头文件\hge</Filter>
+      <Filter>源文件\hge</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -349,9 +343,6 @@
     </ClInclude>
     <ClInclude Include="auxSingleton.h">
       <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="rge_resource.h">
-      <Filter>源文件\rge</Filter>
     </ClInclude>
     <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>

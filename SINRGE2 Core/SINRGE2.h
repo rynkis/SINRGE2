@@ -1,6 +1,6 @@
 #ifndef __SINRGE2_H__
 #define __SINRGE2_H__
-#include "rge_resource.h"
+//#include "rge_resource.h"
 #include <Windows.h>
 #include "hge.h"
 #include "sin_color.h"
