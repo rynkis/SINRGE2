@@ -540,8 +540,6 @@ VALUE RbBitmap::hue_change(VALUE hue)
 	float h, s, l;
 	BYTE a, r, g, b;
 
-	//int index;
-
 	DWORD* pTexData = GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 
 	for (s32 x = 0; x < m_bmp.width; ++x)
@@ -606,7 +604,6 @@ VALUE RbBitmap::tone_change(int argc, VALUE *argv, VALUE obj)
 
 	int a, r, g, b;
 	VALUE argv01, green, blue, gray;
-	//UColor tone(0);
 	DWORD tone = 0;
 
 	if (rb_scan_args(argc, argv, "04", &argv01, &green, &blue, &gray) == 1)
@@ -616,8 +613,6 @@ VALUE RbBitmap::tone_change(int argc, VALUE *argv, VALUE obj)
 			r = FIX2INT(argv01);
 			r = SinBound(r, 0, 255);
 			tone = MAKE_ARGB_8888(255, r, 255, 255);
-			/*tone.a = tone.g = tone.b = 255;
-			tone.r = r;*/
 		}
 		else
 		{
@@ -756,6 +751,10 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		pTempData = NULL;
 		GetHgePtr()->Texture_Unlock(src->quad.tex);
 	}
+	
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -846,6 +845,9 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	hge->Texture_Free(tmpTex);
 	free(pTempData);
 	
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -913,6 +915,9 @@ VALUE RbBitmap::fill_rect(int argc, VALUE *argv, VALUE obj)
 	}
 
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -929,6 +934,10 @@ VALUE RbBitmap::clear()
 	ZeroMemory(pTexData, sizeof(DWORD) * m_bmp.width * m_bmp.height);
 
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -984,6 +993,10 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	BLEND_ARGB_8888(dwColor, color2);
 	pTexData[m_bmp.texw * dy + dx] = color2;
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -1149,7 +1162,8 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 		hge->Texture_Unlock(m_bmp.quad.tex);
 		
 		SelectObject(hScreenDC, hOldFont);
-
+		
+		//	增加 修改计数值
 		++m_modify_count;
 
 	} while (0);
@@ -1236,53 +1250,71 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE *argv, VALUE obj)
 	DWORD color2 = GetObjectPtr<RbColor>(vcolor2)->GetColor();
 	
 	bool vertical = RTEST(vert);
-	int a1, r1, g1, b1, a2, r2, g2, b2;
+	float a1, r1, g1, b1, a2, r2, g2, b2, rateA, rateR, rateG, rateB;;
 	GET_ARGB_8888(color1, a1, r1, g1, b1);
 	GET_ARGB_8888(color2, a2, r2, g2, b2);
 
-	float rateA = (a2 - a1) * 100 / (float)width;
-	float rateR = (r2 - r1) * 100 / (float)width;
-	float rateG = (g2 - g1) * 100 / (float)width;
-	float rateB = (b2 - b1) * 100 / (float)width;
-	
-	a1 *= 100;
-	r1 *= 100;
-	g1 *= 100;
-	b1 *= 100;
+	int v1, v2, value1, value2;
+	if (!vertical) { value1 = width; value2 = height; }
+	else { value1 = height; value2 = width; }
+
+	rateA = (a2 - a1) / value1;
+	rateR = (r2 - r1) / value1;
+	rateG = (g2 - g1) / value1;
+	rateB = (b2 - b1) / value1;
+
+	DWORD* pline = (DWORD*)malloc(value1 * sizeof(DWORD));
+	for (s32 ln = 0; ln < value1; ++ln)
+	{
+		a2 = a1 + ln * rateA;
+		r2 = r1 + ln * rateR;
+		g2 = g1 + ln * rateG;
+		b2 = b1 + ln * rateB;
+		pline[ln] = MAKE_ARGB_8888((BYTE)a2, (BYTE)r2, (BYTE)g2, (BYTE)b2);
+	}
+	//	修正矩形区域
+	if (x < 0)						{ width += x; x = 0; }
+	if (y < 0)						{ height += y; y = 0; }
+	if (m_bmp.texw - x < width)		{ width = m_bmp.texw - x; }
+	if (m_bmp.texh - y < height)	{ height = m_bmp.texh - y; }
 
 	if (!vertical)
 	{
-		DWORD* pline = (DWORD*)malloc(width * sizeof(DWORD));
-		for (s32 lx = 0; lx < width; ++lx)
+		for (s32 lx = x; lx < x + width; ++lx)
 		{
-			pline[lx] = MAKE_ARGB_8888((a1 / 100) % 256, (r1 / 100) % 256, (g1 / 100) % 256, (b1 / 100) % 256);
-			a1 += rateA;//= (a + rateA) % 256;
-			r1 += rateR;// = (r + rateR) % 256;
-			g1 += rateG;// = (g + rateG) % 256;
-			b1 += rateB;// = (b + rateB) % 256;
-		}
-		//	修正矩形区域
-		if (x < 0)						{ width += x; x = 0; }
-		if (y < 0)						{ height += y; y = 0; }
-		if (m_bmp.texw - x < width)		{ width = m_bmp.texw - x; }
-		if (m_bmp.texh - y < height)	{ height = m_bmp.texh - y; }
-		for (s32 ly = y; ly < y + height; ++ly)
-		{
-			for (s32 lx = 0; lx < width; ++lx)
+			color1 = pline[lx - x];
+			//	跳过透明像素
+			if (!GET_ARGB_A(color1))
+				continue;
+			for (s32 ly = y; ly < y + height; ++ly)
 			{
-				color1 = pline[lx];
-				//	跳过透明像素
-				if (!GET_ARGB_A(color1))
-					continue;
 				color2 = pTexData[m_bmp.texw * ly + lx];
 				BLEND_ARGB_8888(color1, color2);
 				pTexData[m_bmp.texw * ly + lx] = color2;
 			}
 		}
-		GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-		free(pline);
 	}
-	
+	else
+	{
+		for (s32 ly = y; ly < y + height; ++ly)
+		{
+			color1 = pline[ly - y];
+			//	跳过透明像素
+			if (!GET_ARGB_A(color1))
+				continue;
+			for (s32 lx = x; lx < x + width; ++lx)
+			{
+				color2 = pTexData[m_bmp.texw * ly + lx];
+				BLEND_ARGB_8888(color1, color2);
+				pTexData[m_bmp.texw * ly + lx] = color2;
+			}
+		}
+	}
+	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	free(pline);
+
+	//	增加 修改计数值
+	++m_modify_count;
 
 	return Qnil;
 }
@@ -1321,6 +1353,9 @@ VALUE RbBitmap::clear_rect(int argc, VALUE *argv, VALUE obj)
 		memset(&pTexData[m_bmp.texw * ly + x], 0, sizeof(DWORD) * width);
 
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	
+	//	增加 修改计数值
+	++m_modify_count;
 
 	return Qnil;
 }
@@ -1399,6 +1434,9 @@ VALUE RbBitmap::blur()
     LocalFree(poutb);
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
     
+	//	增加 修改计数值
+	++m_modify_count;
+
 	//int nRadius = 5;
 	//// 定义变量
 	//long diamet = (nRadius << 1) + 1;				// 采样区域直径,或者方阵的边长
@@ -1497,6 +1535,9 @@ VALUE RbBitmap::flip_h()
 		memcpy(pTexData + (m_bmp.texw * ly), pTempData + (m_bmp.texw * (height - ly - 1)), sizeof(DWORD) * width);
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	free(pTempData);
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
@@ -1518,6 +1559,9 @@ VALUE RbBitmap::flip_v()
 	}
 	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	free(pTempData);
+	//	增加 修改计数值
+	++m_modify_count;
+
 	return Qnil;
 }
 
