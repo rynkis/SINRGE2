@@ -883,6 +883,10 @@ VALUE RbBitmap::fill_rect(int argc, VALUE *argv, VALUE obj)
 	else
 		rb_raise(rb_eArgError, "wrong number of arguments (%d for 2 or 5)", argc);
 
+	//	跳过透明像素
+	if (!GET_ARGB_A(color))
+		return Qnil;
+
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
@@ -902,10 +906,6 @@ VALUE RbBitmap::fill_rect(int argc, VALUE *argv, VALUE obj)
 	{
 		for (s32 ly = y; ly < y + height; ++ly)
 		{
-			//	跳过透明像素
-			if (!GET_ARGB_A(color))
-				continue;
-
 			color2 = pTexData[m_bmp.texw * ly + lx];
 			BLEND_ARGB_8888(color, color2);
 			pTexData[m_bmp.texw * ly + lx] = color2;
@@ -1190,7 +1190,99 @@ VALUE RbBitmap::text_size(VALUE str)
 
 VALUE RbBitmap::gradient_fill_rect(int argc, VALUE *argv, VALUE obj)
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+
+	VALUE vx, vy, vw, vh, vcolor1, vcolor2, vert, rect;
+	int x, y, width, height;
+
+	if (FIXNUM_P(argv[0]))
+	{
+		rb_scan_args(argc, argv, "61", &vx, &vy, &vw, &vh, &vcolor1, &vcolor2, &vert);
+		
+		SafeFixnumValue(vx);
+		SafeFixnumValue(vy);
+		SafeFixnumValue(vw);
+		SafeFixnumValue(vh);
+
+		x = FIX2INT(vx);
+		y = FIX2INT(vy);
+		width = FIX2INT(vw);
+		height = FIX2INT(vh);
+	}
+	else
+	{
+		rb_scan_args(argc, argv, "31", &rect, &vcolor1, &vcolor2, &vert);
+
+		SafeRectValue(argv[0]);
+
+		RbRect* rect = GetObjectPtr<RbRect>(argv[0]);
+		x = rect->x;
+		y = rect->y;
+		width = rect->width;
+		height = rect->height;
+	}
+	
+	if (m_bmp.texw - x <= 0 || m_bmp.texh - y <= 0)
+		return Qfalse;
+
+	DWORD* pTexData = GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	if (!pTexData)
+		return Qfalse;
+
+	SafeColorValue(vcolor1);
+	SafeColorValue(vcolor2);
+	
+	DWORD color1 = GetObjectPtr<RbColor>(vcolor1)->GetColor();
+	DWORD color2 = GetObjectPtr<RbColor>(vcolor2)->GetColor();
+	
+	bool vertical = RTEST(vert);
+	int a1, r1, g1, b1, a2, r2, g2, b2;
+	GET_ARGB_8888(color1, a1, r1, g1, b1);
+	GET_ARGB_8888(color2, a2, r2, g2, b2);
+
+	float rateA = (a2 - a1) * 100 / (float)width;
+	float rateR = (r2 - r1) * 100 / (float)width;
+	float rateG = (g2 - g1) * 100 / (float)width;
+	float rateB = (b2 - b1) * 100 / (float)width;
+	
+	a1 *= 100;
+	r1 *= 100;
+	g1 *= 100;
+	b1 *= 100;
+
+	if (!vertical)
+	{
+		DWORD* pline = (DWORD*)malloc(width * sizeof(DWORD));
+		for (s32 lx = 0; lx < width; ++lx)
+		{
+			pline[lx] = MAKE_ARGB_8888((a1 / 100) % 256, (r1 / 100) % 256, (g1 / 100) % 256, (b1 / 100) % 256);
+			a1 += rateA;//= (a + rateA) % 256;
+			r1 += rateR;// = (r + rateR) % 256;
+			g1 += rateG;// = (g + rateG) % 256;
+			b1 += rateB;// = (b + rateB) % 256;
+		}
+		//	修正矩形区域
+		if (x < 0)						{ width += x; x = 0; }
+		if (y < 0)						{ height += y; y = 0; }
+		if (m_bmp.texw - x < width)		{ width = m_bmp.texw - x; }
+		if (m_bmp.texh - y < height)	{ height = m_bmp.texh - y; }
+		for (s32 ly = y; ly < y + height; ++ly)
+		{
+			for (s32 lx = 0; lx < width; ++lx)
+			{
+				color1 = pline[lx];
+				//	跳过透明像素
+				if (!GET_ARGB_A(color1))
+					continue;
+				color2 = pTexData[m_bmp.texw * ly + lx];
+				BLEND_ARGB_8888(color1, color2);
+				pTexData[m_bmp.texw * ly + lx] = color2;
+			}
+		}
+		GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+		free(pline);
+	}
+	
 
 	return Qnil;
 }
