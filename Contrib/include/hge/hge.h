@@ -97,6 +97,8 @@ typedef DWORD HCHANNEL;
 #define BLEND_DEFAULT		(BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_NOZWRITE)
 #define BLEND_DEFAULT_Z		(BLEND_COLORMUL | BLEND_ALPHABLEND | BLEND_ZWRITE)
 
+#define	BLEND_ALPHASUBTRACT	8	//	SINRGE2
+#define	BLEND_COLORBLNED	16	//	SINRGE2
 
 /*
 ** HGE System state constants
@@ -218,6 +220,7 @@ struct hgeQuad
 	hgeVertex		v[4];
 	HTEXTURE		tex;
 	int				blend;
+	DWORD			blend_color;	//	SINRGE2
 };
 
 
@@ -270,7 +273,7 @@ public:
 	virtual bool			CALL	System_Initiate() = 0;
 	virtual void			CALL	System_Shutdown() = 0;
 	virtual bool			CALL	System_Start() = 0;
-	//virtual bool			CALL	System_Update() = 0;
+	virtual bool			CALL	System_Update() = 0;
 	virtual wchar_t*		CALL	System_GetErrorMessage() = 0;
 	virtual	void			CALL	System_Log(const wchar_t *format, ...) = 0;
 	virtual bool			CALL	System_Launch(const wchar_t *url) = 0;

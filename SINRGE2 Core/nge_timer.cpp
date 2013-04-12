@@ -1,3 +1,4 @@
+#include "RbExport.h"
 #include "nge_timer.h"
 #include <stdlib.h>
 #include <string.h>
@@ -9,6 +10,59 @@ static void TM_start(nge_timer* timer);
 static void TM_stop(nge_timer* timer);
 static void TM_pause(nge_timer* timer);
 static void TM_unpause(nge_timer* timer);
+//fps count
+static uint32_t m_frame = 0;
+static uint32_t m_t0 = 0;
+static char inited = 0;
+static int cacheid = 0;
+static uint8_t tex_ret = 0;
+static nge_timer* fps_timer;
+static float lastFps;
+
+float GetRealFps()
+{
+	int t;
+	float seconds;
+	float realFps;
+	m_frame++;
+	t = nge_get_tick();
+	if ( (t - m_t0) >= 1000) {
+		seconds = (t - m_t0) / 1000.0;
+		lastFps = realFps = m_frame / seconds;
+		m_t0 = t;
+		m_frame = 0;
+		return realFps;
+	}
+	return lastFps;
+}
+
+void LimitFps(uint32_t limit)
+{
+	static uint32_t current_ticks,target_ticks,frame_count,last_ticks,the_delay;
+	static float rate_ticks;
+
+	if (fps_timer == NULL) {
+		fps_timer = nge_timer_create();
+		fps_timer->start(fps_timer);
+		current_ticks = 0;
+		target_ticks  = 0;
+		last_ticks    = 0;
+		frame_count   = 0;
+		rate_ticks    = 1000.0f/limit;
+		return;
+	}
+	frame_count++;
+	current_ticks = fps_timer->get_ticks(fps_timer);
+	target_ticks = last_ticks + (uint32_t) ((float) frame_count * rate_ticks);
+
+	if (current_ticks <= target_ticks) {
+		the_delay = target_ticks - current_ticks;
+		RB_SLEEP(the_delay);
+	} else {
+		frame_count = 0;
+		last_ticks = fps_timer->get_ticks(fps_timer);
+	}
+}
 
 nge_timer* nge_timer_create()
 {

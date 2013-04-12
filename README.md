@@ -1,4 +1,4 @@
-SINRGE2
+﻿SINRGE2 Ver. YAR
 =================
 Copyright (C) 2013 Sherry Lynch(or Shy07) <Gernischt@gmail.com>
 

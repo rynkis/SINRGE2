@@ -8,6 +8,7 @@
 
 //#include "RbExport.h"
 //#include "rge_resource.h"
+#include "nge_timer.h"
 #include "hge_impl.h"
 
 
@@ -195,64 +196,69 @@ void CALL HGE_Impl::System_Shutdown()
 	System_Log(L"The End.");
 }
 
-//bool CALL HGE_Impl::System_Update()
-//{
-//	// loop do
-//	for(;;)
-//	{
-//		// Process window messages
-//		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
-//			if(m_msg.message == WM_QUIT){
-//				bActive=false;
-//				return false;
-//			}
-//			DispatchMessage(&m_msg);				
-//			continue;
-//		}
-//		// If HGE window is focused or we have the "don't suspend" state - process the main loop
-//		if(bActive || bDontSuspend)
-//		{
-//			// Ensure we have at least 1ms time step
-//			// to not confuse user's code with 0
-//			do { dt = timeGetTime() - t0; } while(dt < 1);
-//			// If we reached the time for the next frame
-//			// or we just run in unlimited FPS mode, then
-//			// do the stuff
-//			if(dt >= nFixedDelta)
-//			{
-//				// fDeltaTime = time step in seconds returned by Timer_GetDelta
-//				fDeltaTime = dt/1000.0f;
-//				// Cap too large time steps usually caused by lost focus to avoid jerks
-//				if(fDeltaTime > 0.2f)
-//				{
-//					fDeltaTime = nFixedDelta ? nFixedDelta/1000.0f : 0.01f;
-//				}
-//				// Update time counter returned Timer_GetTime
-//				fTime += fDeltaTime;
-//				// Store current time for the next frame
-//				// and count FPS
-//				t0 = timeGetTime();
-//				if(t0 - t0fps <= 1000) cfps++;
-//				else {nFPS=cfps; cfps=0; t0fps=t0;}
-//				// Do user's stuff
-//			 	if(procRenderFunc) procRenderFunc();
-//				// break the loop
-//				break;
-//			}
-//			// If we have a fixed frame rate and the time
-//			// for the next frame isn't too close, sleep a bit
-//			else
-//			{
-//				if(nFixedDelta && dt/*+3*/ < nFixedDelta) RB_SLEEP(1);
-//			}
-//		}
-//		// If main loop is suspended - just sleep a bit
-//		// (though not too much to allow instant window
-//		// redraw if requested by OS)
-//		else RB_SLEEP(1);
-//	}
-//	return true;
-//}
+bool CALL HGE_Impl::System_Update()
+{
+	// loop do
+	for(;;)
+	{
+		// Process window messages
+		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
+			if(m_msg.message == WM_QUIT){
+				bActive=false;
+				return false;
+			}
+			DispatchMessage(&m_msg);				
+			continue;
+		}
+		// If HGE window is focused or we have the "don't suspend" state - process the main loop
+		if(bActive || bDontSuspend)
+		{
+			if(procRenderFunc)
+				procRenderFunc();
+
+			LimitFps(nHGEFPS);
+		}
+		//	// Ensure we have at least 1ms time step
+		//	// to not confuse user's code with 0
+		//	do { dt = timeGetTime() - t0; } while(dt < 1);
+		//	// If we reached the time for the next frame
+		//	// or we just run in unlimited FPS mode, then
+		//	// do the stuff
+		//	if(dt >= nFixedDelta)
+		//	{
+		//		// fDeltaTime = time step in seconds returned by Timer_GetDelta
+		//		fDeltaTime = dt/1000.0f;
+		//		// Cap too large time steps usually caused by lost focus to avoid jerks
+		//		if(fDeltaTime > 0.2f)
+		//		{
+		//			fDeltaTime = nFixedDelta ? nFixedDelta/1000.0f : 0.01f;
+		//		}
+		//		// Update time counter returned Timer_GetTime
+		//		fTime += fDeltaTime;
+		//		// Store current time for the next frame
+		//		// and count FPS
+		//		t0 = timeGetTime();
+		//		if(t0 - t0fps <= 1000) cfps++;
+		//		else {nFPS=cfps; cfps=0; t0fps=t0;}
+		//		// Do user's stuff
+		//	 	if(procRenderFunc) procRenderFunc();
+		//		// break the loop
+		//		break;
+		//	}
+		//	// If we have a fixed frame rate and the time
+		//	// for the next frame isn't too close, sleep a bit
+		//	else
+		//	{
+		//		if(nFixedDelta && dt/*+3*/ < nFixedDelta) RB_SLEEP(1);
+		//	}
+		//}
+		//// If main loop is suspended - just sleep a bit
+		//// (though not too much to allow instant window
+		//// redraw if requested by OS)
+		//else RB_SLEEP(1);
+	}
+	return true;
+}
 
 bool CALL HGE_Impl::System_Start()
 {

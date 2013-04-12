@@ -132,6 +132,24 @@
     <ClCompile Include="hge\resource.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
+    <ClCompile Include="sin_render_tree.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="RbViewport.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="SinSprite.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="RbPlane.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="sin_display_object.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="RbSeal.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -328,6 +346,21 @@
     </ClInclude>
     <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_render_tree.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="RbViewport.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RbPlane.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="SinSprite.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_display_object.h">
+      <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

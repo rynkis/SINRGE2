@@ -8,6 +8,7 @@ typedef unsigned short	u16;
 typedef signed char		s16;
 typedef unsigned long	u32;
 typedef signed long		s32;
+typedef float			f32;
 
 #define SinArrayCount(ary)	(sizeof(ary) / sizeof((ary)[0]))
 #define SinMax(a, b)				(((a) > (b)) ? (a) : (b))

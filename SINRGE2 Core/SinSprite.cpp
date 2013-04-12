@@ -1,29 +1,29 @@
-/*
-** Haaf's Game Engine 1.7
-** Copyright (C) 2003-2007, Relish Games
-** hge.relishgames.com
-**
-** hgeSprite helper class implementation
-*/
-
-
-#include "hgesprite.h"
+#include "SinSprite.h"
 #include <math.h>
 
 
-HGE *hgeSprite::hge=0;
+HGE *SinSprite::hge=0;
 
 
-hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h)
+SinSprite::SinSprite(/*HTEXTURE texture, float texx, float texy, float w, float h*/)
+	: m_width(0), m_height(0)
+	, m_angle(0.0f)
+	//, m_tex(0)
+	, m_src_rect_dirty(true)
+	, m_ox(0), m_oy(0)
+	, m_zoom_x(1.0f), m_zoom_y(1.0f)
+	, m_flip_x(1.0f), m_flip_y(1.0f), m_flip_hot_spot(false)
+	, m_rx(0), m_ry(0), m_rw(0), m_rh(0)
+	, m_x1(0), m_y1(0), m_x2(0), m_y2(0), m_x3(0), m_y3(0), m_x4(0), m_y4(0)
 {
-	float texx1, texy1, texx2, texy2;
+	//float texx1, texy1, texx2, texy2;
 
 	hge=hgeCreate(HGE_VERSION);
 	
-	tx=texx; ty=texy;
-	width=w; height=h;
+	//tx=texx; ty=texy;
+	//m_width=w; m_height=h;
 
-	if(texture)
+	/*if(texture)
 	{
 		tex_width = (float)hge->Texture_GetWidth(texture);
 		tex_height = (float)hge->Texture_GetHeight(texture);
@@ -32,16 +32,16 @@ hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h)
 	{
 		tex_width = 1.0f;
 		tex_height = 1.0f;
-	}
+	}*/
 
 	hotX=0;
 	hotY=0;
 	bXFlip=false;
 	bYFlip=false;
 	bHSFlip=false;
-	quad.tex=texture;
+	quad.tex=0;//texture;
 
-	texx1=texx/tex_width;
+	/*texx1=texx/tex_width;
 	texy1=texy/tex_height;
 	texx2=(texx+w)/tex_width;
 	texy2=(texy+h)/tex_height;
@@ -49,7 +49,7 @@ hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h)
 	quad.v[0].tx = texx1; quad.v[0].ty = texy1;
 	quad.v[1].tx = texx2; quad.v[1].ty = texy1;
 	quad.v[2].tx = texx2; quad.v[2].ty = texy2;
-	quad.v[3].tx = texx1; quad.v[3].ty = texy2;
+	quad.v[3].tx = texx1; quad.v[3].ty = texy2;*/
 
 	quad.v[0].z = 
 	quad.v[1].z = 
@@ -66,20 +66,20 @@ hgeSprite::hgeSprite(HTEXTURE texture, float texx, float texy, float w, float h)
 	quad.blend_color = 0x00000000;	//	SINRGE2
 }
 
-hgeSprite::hgeSprite(const hgeSprite &spr)
-{
-	memcpy(this, &spr, sizeof(hgeSprite));
-	hge=hgeCreate(HGE_VERSION);
-}
+//SinSprite::SinSprite(const SinSprite &spr)
+//{
+//	memcpy(this, &spr, sizeof(SinSprite));
+//	hge=hgeCreate(HGE_VERSION);
+//}
 
-void hgeSprite::Render(float x, float y)
+void SinSprite::Render(float x, float y)
 {
 	float tempx1, tempy1, tempx2, tempy2;
 
 	tempx1 = x-hotX;
 	tempy1 = y-hotY;
-	tempx2 = x+width-hotX;
-	tempy2 = y+height-hotY;
+	tempx2 = x+m_width-hotX;
+	tempy2 = y+m_height-hotY;
 
 	quad.v[0].x = tempx1; quad.v[0].y = tempy1;
 	quad.v[1].x = tempx2; quad.v[1].y = tempy1;
@@ -90,7 +90,7 @@ void hgeSprite::Render(float x, float y)
 }
 
 
-void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale)
+void SinSprite::RenderEx(float x, float y, float rot, float hscale, float vscale)
 {
 	float tx1, ty1, tx2, ty2;
 	float sint, cost;
@@ -99,8 +99,8 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 
 	tx1 = -hotX*hscale;
 	ty1 = -hotY*vscale;
-	tx2 = (width-hotX)*hscale;
-	ty2 = (height-hotY)*vscale;
+	tx2 = (m_width-hotX)*hscale;
+	ty2 = (m_height-hotY)*vscale;
 
 	if (rot != 0.0f)
 	{
@@ -131,7 +131,7 @@ void hgeSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 }
 
 
-void hgeSprite::RenderStretch(float x1, float y1, float x2, float y2)
+void SinSprite::RenderStretch(float x1, float y1, float x2, float y2)
 {
 	quad.v[0].x = x1; quad.v[0].y = y1;
 	quad.v[1].x = x2; quad.v[1].y = y1;
@@ -142,7 +142,7 @@ void hgeSprite::RenderStretch(float x1, float y1, float x2, float y2)
 }
 
 
-void hgeSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
+void SinSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
 {
 	quad.v[0].x = x0; quad.v[0].y = y0;
 	quad.v[1].x = x1; quad.v[1].y = y1;
@@ -153,7 +153,7 @@ void hgeSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float
 }
 
 
-hgeRect* hgeSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale, hgeRect *rect) const
+hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale, hgeRect *rect) const
 {
 	float tx1, ty1, tx2, ty2;
 	float sint, cost;
@@ -162,8 +162,8 @@ hgeRect* hgeSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, 
 	
 	tx1 = -hotX*hscale;
 	ty1 = -hotY*vscale;
-	tx2 = (width-hotX)*hscale;
-	ty2 = (height-hotY)*vscale;
+	tx2 = (m_width-hotX)*hscale;
+	ty2 = (m_height-hotY)*vscale;
 
 	if (rot != 0.0f)
 	{
@@ -186,17 +186,17 @@ hgeRect* hgeSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, 
 	return rect;
 }
 
-void hgeSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
+void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 {
 	float tx, ty;
 
-	if(bHSFlip && bXFlip) hotX = width - hotX;
-	if(bHSFlip && bYFlip) hotY = height - hotY;
+	if(bHSFlip && bXFlip) hotX = m_width - hotX;
+	if(bHSFlip && bYFlip) hotY = m_height - hotY;
 
 	bHSFlip = bHotSpot;
 	
-	if(bHSFlip && bXFlip) hotX = width - hotX;
-	if(bHSFlip && bYFlip) hotY = height - hotY;
+	if(bHSFlip && bXFlip) hotX = m_width - hotX;
+	if(bHSFlip && bYFlip) hotY = m_height - hotY;
 
 	if(bX != bXFlip)
 	{
@@ -220,7 +220,7 @@ void hgeSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 }
 
 
-void hgeSprite::SetTexture(HTEXTURE tex)
+void SinSprite::SetTexture(HTEXTURE tex)
 {
 	float tx1,ty1,tx2,ty2;
 	float tw,th;
@@ -259,19 +259,34 @@ void hgeSprite::SetTexture(HTEXTURE tex)
 }
 
 
-void hgeSprite::SetTextureRect(float x, float y, float w, float h, bool adjSize)
+void SinSprite::SetTextureRect(int x, int y, int w, int h)
 {
+	//	检测src_rect是否改变
+	if (x != m_rx || y != m_ry || w != m_rw || h != m_rh)
+	{
+		m_rx	= x;
+		m_ry	= y;
+		m_rw	= w;
+		m_rh	= h;
+
+		SetSrcRectDirty();
+	}
+
+	//	如果源矩形没脏则直接返回
+	if (!m_src_rect_dirty)
+		return;
+
 	float tx1, ty1, tx2, ty2;
 	bool bX,bY,bHS;
 
 	tx=x;
 	ty=y;
 	
-	if(adjSize)
-	{
-		width=w;
-		height=h;
-	}
+	/*if(adjSize)
+	{*/
+		m_width=w;
+		m_height=h;
+	//}
 
 	tx1=tx/tex_width; ty1=ty/tex_height;
 	tx2=(tx+w)/tex_width; ty2=(ty+h)/tex_height;
@@ -287,7 +302,7 @@ void hgeSprite::SetTextureRect(float x, float y, float w, float h, bool adjSize)
 }
 
 
-void hgeSprite::SetColor(DWORD col, int i)
+void SinSprite::SetColor(DWORD col, int i)
 {
 	if(i != -1)
 		quad.v[i].col = col;
@@ -295,7 +310,7 @@ void hgeSprite::SetColor(DWORD col, int i)
 		quad.v[0].col = quad.v[1].col = quad.v[2].col = quad.v[3].col = col;
 }
 
-void hgeSprite::SetZ(float z, int i)
+void SinSprite::SetZ(float z, int i)
 {
 	if(i != -1)
 		quad.v[i].z = z;

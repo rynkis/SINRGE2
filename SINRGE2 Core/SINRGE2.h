@@ -1,6 +1,7 @@
 #ifndef __SINRGE2_H__
 #define __SINRGE2_H__
 //#include "rge_resource.h"
+#include "sin_render_tree.h"
 #include <Windows.h>
 #include "hge.h"
 #include "sin_color.h"
@@ -41,12 +42,16 @@ namespace Sin
 	D3DCAPS8*			GetD3DCapsPtr();
 	static DWORD		GetMaxTexW() { return GetD3DCapsPtr()->MaxTextureWidth; }
 	static DWORD		GetMaxTexH() { return GetD3DCapsPtr()->MaxTextureHeight; }
+	RenderState*		GetRenderState();// const { return m_pRenderState; }
+	static unsigned long		GetFrameWidth() { return GetFrmStructPtr()->m_screen_width; }
+	static unsigned long		GetFrameHeight() { return GetFrmStructPtr()->m_screen_height; }
 
 	HGE*				GetHgePtr();
 	void				CreateHge();
+	void				InitRenderSys();
 	bool				HackD3D();
 
-	bool				RenderProc();
+	//bool				RenderProc();
 
 	HWND				GetHwnd();
 	//char*				GetTitle();

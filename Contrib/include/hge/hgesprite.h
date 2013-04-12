@@ -51,6 +51,9 @@ public:
 	float		GetHeight() const { return height; }
 	hgeRect*	GetBoundingBox(float x, float y, hgeRect *rect) const { rect->Set(x-hotX, y-hotY, x-hotX+width, y-hotY+height); return rect; }
 	hgeRect*	GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale,  hgeRect *rect) const;
+	
+	void		SetBlendColor(int color) { quad.blend_color=color; }	//	SINRGE2
+	DWORD		GetBlendColor() const { return quad.blend_color; }		//	SINRGE2
 
 protected:
 	hgeSprite();

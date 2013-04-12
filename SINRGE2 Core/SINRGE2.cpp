@@ -13,13 +13,17 @@
 #include "RbTone.h"
 #include "RbFont.h"
 #include "RbBitmap.h"
+#include "RbViewport.h"
+#include "RbPlane.h"
 #include <fstream>
 #include <iostream>
 
 using namespace Sin;
 
-static SinFrameStruct	m_frm_struct;
-static HGE*				m_pHge = 0;
+static	SinFrameStruct		m_frm_struct;
+static	HGE*				m_pHge = 0;
+
+static	RenderState*		m_pRenderState;
 
 static 	IDirect3D8*			m_ref_d3d;
 static 	IDirect3DDevice8*	m_ref_device;
@@ -127,6 +131,7 @@ namespace
 	void InitExportSinInterface()
 	{
 		InitRbGlobal();
+		InitSeal();
 		InitRbFrame();
 		//InitRbHge();
 		InitRbGraphics();
@@ -137,6 +142,8 @@ namespace
 		RbTone::InitLibrary();
 		RbFont::InitLibrary();
 		RbBitmap::InitLibrary();
+		RbViewport::InitLibrary();
+		RbPlane::InitLibrary();
 	}
 	
 	static VALUE _run_sin_in_protect(VALUE argv)
@@ -274,9 +281,22 @@ HGE* Sin::GetHgePtr()
 	return m_pHge;
 }
 
+RenderState* Sin::GetRenderState()
+{
+	return m_pRenderState;
+}
+
 void Sin::CreateHge()
 {
 	m_pHge = hgeCreate(HGE_VERSION);
+}
+
+void Sin::InitRenderSys()
+{
+	RenderTree::Init();
+
+	m_pRenderState = new RenderState();
+	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
 }
 
 bool Sin::HackD3D()

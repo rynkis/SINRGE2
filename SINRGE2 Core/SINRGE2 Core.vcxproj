@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;AL_LIBTYPE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)Contrib\DXSDK81\include;$(SolutionDir)Contrib\include\hge;$(SolutionDir)Contrib\include;$(ProjectDir);$(ProjectDir)hge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
@@ -114,6 +114,9 @@
     <ClCompile Include="RbFrame.cpp" />
     <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="RbGraphics.cpp" />
+    <ClCompile Include="RbPlane.cpp" />
+    <ClCompile Include="RbSeal.cpp" />
+    <ClCompile Include="RbViewport.cpp" />
     <ClCompile Include="RubyExt\nonblock.c" />
     <ClCompile Include="RbColor.cpp" />
     <ClCompile Include="RbFont.cpp" />
@@ -123,6 +126,9 @@
     <ClCompile Include="SINRGE2.cpp" />
     <ClCompile Include="RubyExt\wait.c" />
     <ClCompile Include="RubyExt\zlib.c" />
+    <ClCompile Include="SinSprite.cpp" />
+    <ClCompile Include="sin_display_object.cpp" />
+    <ClCompile Include="sin_render_tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Contrib\include\hge\hge.h" />
@@ -175,6 +181,9 @@
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="RbBitmap.h" />
+    <ClInclude Include="RbPlane.h" />
+    <ClInclude Include="RbViewport.h" />
+    <ClInclude Include="SinSprite.h" />
     <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />
     <ClInclude Include="hge\hge_impl.h" />
@@ -189,6 +198,8 @@
     <ClInclude Include="RbTone.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SINRGE2.h" />
+    <ClInclude Include="sin_display_object.h" />
+    <ClInclude Include="sin_render_tree.h" />
     <ClInclude Include="sin_types.h" />
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ static VALUE init()
 
 	CreateHge();
 	// Set our render proc
-	//GetHgePtr()->System_SetState(HGE_RENDERFUNC, Sin::RenderProc);
+	GetHgePtr()->System_SetState(HGE_RENDERFUNC, RenderTree::RenderProc);
 	GetHgePtr()->System_SetState(HGE_TEXTUREFILTER, false);
 
 	bool	isFullScreen;
@@ -49,6 +49,8 @@ static VALUE init()
 	//	Save the window's hwnd
 	GetFrmStructPtr()->m_hwnd = GetHgePtr()->System_GetState(HGE_HWND);
 
+	InitRenderSys();
+
 	if (!HackD3D())
 		return Qfalse;
 
@@ -58,6 +60,14 @@ static VALUE init()
 static VALUE quit()
 {
 	rb_exit(EXIT_SUCCESS);
+	return Qnil;
+}
+
+static VALUE update()
+{
+	if(!GetHgePtr()->System_Update())
+		quit();
+
 	return Qnil;
 }
 
@@ -94,8 +104,12 @@ static VALUE end_scene()
 
 void bind_graphics()
 {
+	rb_mGraphics = rb_define_module_under(rb_mSin, "Graphics");
+
 	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
 	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
+
+	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
 	
 	rb_define_module_function(rb_mSin, "begin_scene", RbFunc(begin_scene), -1);
 	rb_define_module_function(rb_mSin, "end_scene", RbFunc(end_scene), 0);

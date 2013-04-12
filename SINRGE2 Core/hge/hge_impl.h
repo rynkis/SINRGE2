@@ -69,7 +69,7 @@ public:
 	virtual bool			CALL	System_Initiate();
 	virtual void			CALL	System_Shutdown();
 	virtual bool			CALL	System_Start();
-	//virtual bool			CALL	System_Update();
+	virtual bool			CALL	System_Update();
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
 	virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
@@ -261,6 +261,7 @@ public:
 
 	
 	MSG					m_msg;			//	SINRGE2
+	DWORD				CurBlendColor;	//	SINRGE2
 
 
 private:

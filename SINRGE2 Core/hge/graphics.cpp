@@ -233,11 +233,24 @@ void CALL HGE_Impl::Gfx_RenderQuad(const hgeQuad *quad)
 {
 	if(VertArray)
 	{
-		if(CurPrimType!=HGEPRIM_QUADS || nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_QUADS || CurTexture!=quad->tex || CurBlendMode!=quad->blend)
+		if(CurPrimType!=HGEPRIM_QUADS ||
+			nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_QUADS ||
+			CurTexture!=quad->tex ||
+			CurBlendMode!=quad->blend || 
+			CurBlendColor != quad->blend_color)	//	SINRGE2
 		{
 			_render_batch();
 
 			CurPrimType=HGEPRIM_QUADS;
+
+			//	+++ SINRGE2 +++
+			if(CurBlendColor != quad->blend_color)
+			{
+				pD3DDevice->SetRenderState(D3DRS_TEXTUREFACTOR, quad->blend_color); 
+				CurBlendColor = quad->blend_color;
+			}
+			//	--- SINRGE2 ---
+
 			if(CurBlendMode != quad->blend) _SetBlendMode(quad->blend);
 			if(quad->tex != CurTexture)
 			{
@@ -594,6 +607,30 @@ void HGE_Impl::_SetBlendMode(int blend)
 		if(blend & BLEND_COLORADD) pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_ADD);
 		else pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_MODULATE);
 	}
+	
+	//	+++ SINRGE2 +++
+ 	if((blend & BLEND_COLORBLNED) != (CurBlendMode & BLEND_COLORBLNED))
+	{
+		if (blend & BLEND_COLORBLNED)
+		{ 
+			pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_BLENDFACTORALPHA);
+		 	pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_TEXTURE);
+			pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
+		}
+		else
+		{
+			pD3DDevice->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);
+		 	pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+			pD3DDevice->SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+		}
+	}
+
+	if((blend & BLEND_ALPHASUBTRACT) != (CurBlendMode & BLEND_ALPHASUBTRACT))
+	{
+		if(blend & BLEND_ALPHASUBTRACT) pD3DDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_REVSUBTRACT);
+		else pD3DDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+	}
+	//	--- SINRGE2 ---
 
 	CurBlendMode = blend;
 }
@@ -628,13 +665,13 @@ bool HGE_Impl::_GfxInit()
 // Get adapter info
 
 	pD3D->GetAdapterIdentifier(D3DADAPTER_DEFAULT, D3DENUM_NO_WHQL_LEVEL, &AdID);
-	System_Log(L"D3D Driver: %s",AdID.Driver);
+	/*System_Log(L"D3D Driver: %s",AdID.Driver);
 	System_Log(L"Description: %s",AdID.Description);
 	System_Log(L"Version: %d.%d.%d.%d",
 			HIWORD(AdID.DriverVersion.HighPart),
 			LOWORD(AdID.DriverVersion.HighPart),
 			HIWORD(AdID.DriverVersion.LowPart),
-			LOWORD(AdID.DriverVersion.LowPart));
+			LOWORD(AdID.DriverVersion.LowPart));*/
 
 // Set up Windowed presentation parameters
 	
@@ -973,6 +1010,8 @@ bool HGE_Impl::_init_lost()
 	CurPrimType=HGEPRIM_QUADS;
 	CurBlendMode = BLEND_DEFAULT;
 	CurTexture = NULL;
+	
+	CurBlendColor = 0x00000000;		//	SINRGE2
 
 	pD3DDevice->SetTransform(D3DTS_VIEW, &matView);
 	pD3DDevice->SetTransform(D3DTS_PROJECTION, &matProj);

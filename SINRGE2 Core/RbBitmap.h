@@ -7,6 +7,7 @@
 
 #include "RbClassBase.h"
 #include "sin_bitmap.h"
+#include "hge.h"
 
 using namespace Sin;
 
@@ -22,9 +23,11 @@ public:
 public:
 	static void				InitLibrary();
 	static bool				AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone);
+	static bool				AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone);
 	static void				ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V);
 	static void				ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B);
 	static bool				GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, HDC hDC);
+
 	static bitmap_p			CloneBitmap(bitmap_p pBmp);
 	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
 	static void				BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight);

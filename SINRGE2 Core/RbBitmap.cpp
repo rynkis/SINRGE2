@@ -243,14 +243,18 @@ __bitmap_create:
 		u32 w = FIX2INT(arg01);
 		u32 h = FIX2INT(arg02);
 
+		if (w > GetMaxTexW() || h > GetMaxTexH())
+			rb_raise(rb_eSINBaseError, "Too large width or height, Graphics card won't support.\n %d x %d", w, h);
+
 		quad.tex = hge->Texture_Create(w, h);
 		if(!quad.tex)
-			rb_raise(rb_eSINBaseError, "Failed to create bitmap: `%d x %d'.", w, h);
+			rb_raise(rb_eSINBaseError, "Failed to create bitmap: %d x %d .", w, h);
 	}
 
 __finish:
 	{
 		quad.blend = BLEND_DEFAULT;
+		quad.blend_color = 0x00000000;
 		for (int i = 0; i < 4; i++)
 		{
 			quad.v[i].z = 0.5f;
@@ -299,7 +303,7 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 
 	DWORD* pSrcTexData = GetHgePtr()->Texture_Lock(pBmp->quad.tex, false);
 	if (!pSrcTexData)
-		goto failed_return;
+		return false;
 
 	for (s32 x = 0; x < pBmp->width; ++x)
 	{
@@ -326,9 +330,81 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 	GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
 
 	return true;
+}
+
+bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone)
+{
+	DWORD* pSrcTexData = 0;
+	DWORD* pDstTexData = 0;
+
+	if (!pSrcBmp->quad.tex)
+		return false;
+
+	if (!pDstTex)
+		return false;
+	
+	HGE* hge = GetHgePtr();
+	
+	int dw = hge->Texture_GetWidth(pDstTex, true);
+	int dh = hge->Texture_GetWidth(pDstTex, true);
+	int dtw = hge->Texture_GetWidth(pDstTex);
+	int dth = hge->Texture_GetWidth(pDstTex);
+
+	/*if (pSrcBmp->width != dw ||
+		pSrcBmp->height != dh ||
+		pSrcBmp->texw != dtw ||
+		pSrcBmp->texh != dth)
+		return false;*/
+
+	if (!dwTone)
+		return true;
+
+	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
+	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
+
+	int gray;
+
+	pSrcTexData = hge->Texture_Lock(pSrcBmp->quad.tex, true);
+
+	if (!pSrcTexData)
+		goto failed_return;
+
+	pDstTexData = hge->Texture_Lock(pDstTex, false);
+
+	if (!pDstTexData)
+		goto failed_return;
+
+	for (int x = 0; x < pSrcBmp->width; ++x)
+	{
+		for (int y = 0; y < pSrcBmp->height; ++y)
+		{
+			GET_ARGB_8888(pSrcTexData[pSrcBmp->texw * y + x], a2, r2, g2, b2);
+			if (a1 == 0)
+			{
+				r2 = sTable768_low[r2 + r1];
+				g2 = sTable768_low[g2 + g1];
+				b2 = sTable768_low[b2 + b1];
+			}
+			else
+			{
+				gray = (r2 * 38 + g2 * 75 + b2 * 15) >> 7;
+
+				r2 = sTable768_low[r1 + r2 + (gray - r2) * a1 / 256];
+				g2 = sTable768_low[g1 + g2 + (gray - g2) * a1 / 256];
+				b2 = sTable768_low[b1 + b2 + (gray - b2) * a1 / 256];
+			}
+			pDstTexData[dtw * y + x] = MAKE_ARGB_8888(a2, r2, g2, b2);
+		}
+	}
+
+	hge->Texture_Unlock(pSrcBmp->quad.tex);
+	hge->Texture_Unlock(pDstTex);
+
+	return true;
 
 failed_return:
-	if (pSrcTexData) GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
+	if (pSrcTexData) hge->Texture_Unlock(pSrcBmp->quad.tex);
+	if (pDstTexData) hge->Texture_Unlock(pDstTex);
 
 	return false;
 }
@@ -810,8 +886,8 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	DWORD* pSrcTexData = hge->Texture_Lock(tmpTex, true);
 	if (!pSrcTexData) return Qfalse;
 	DWORD* pTempData = (DWORD*)malloc(dw * dh * sizeof(DWORD));
-	int mathW = dw + sqrt(sqrt((double)(dw / sw)));
-	int mathH = dh + sqrt(sqrt((double)(dh / sh)));
+	int mathW = dw + ceil(sqrt(sqrt((double)(dw / sw))));
+	int mathH = dh + ceil(sqrt(sqrt((double)(dh / sh))));
 	BilinearZoom(pSrcTexData, pTempData, sw, sh, dw, dh, mathW, mathH);
 
 	DWORD* pDstTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
@@ -1116,7 +1192,6 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 
 			if (dwBufferSize > SinArrayCount(buffer))
 				rb_raise(rb_eSINBaseError, "buffer size too small.");
-			//FetAssert(dwBufferSize <= FetArrayCount(buffer));
 
 			if (dwBufferSize > 0)
 			{
@@ -1567,7 +1642,19 @@ VALUE RbBitmap::flip_v()
 
 VALUE RbBitmap::radial_blur(VALUE angle, VALUE division)
 {
+	check_raise();
+	
+	s32 width = m_bmp.width;
+	s32 height = m_bmp.height;
+	DWORD* pTexData = GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	DWORD* pTempData = (DWORD*)malloc(width * height * sizeof(DWORD));
+
 #pragma message("		Unfinished Function " __FUNCTION__)
+	
+	GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	free(pTempData);
+	//	增加 修改计数值
+	++m_modify_count;
 
 	return Qnil;
 }
