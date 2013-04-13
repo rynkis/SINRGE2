@@ -114,7 +114,9 @@
     <ClCompile Include="RbFrame.cpp" />
     <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="RbGraphics.cpp" />
+    <ClCompile Include="RbInput.cpp" />
     <ClCompile Include="RbPlane.cpp" />
+    <ClCompile Include="RbSprite.cpp" />
     <ClCompile Include="RbViewport.cpp" />
     <ClCompile Include="RubyExt\nonblock.c" />
     <ClCompile Include="RbColor.cpp" />
@@ -180,7 +182,9 @@
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="RbBitmap.h" />
+    <ClInclude Include="RbInput.h" />
     <ClInclude Include="RbPlane.h" />
+    <ClInclude Include="RbSprite.h" />
     <ClInclude Include="RbViewport.h" />
     <ClInclude Include="SinSprite.h" />
     <ClInclude Include="sin_bitmap.h" />

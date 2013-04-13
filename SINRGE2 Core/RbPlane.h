@@ -1,5 +1,5 @@
-#ifndef __C_RGE_PLANE_H__
-#define __C_RGE_PLANE_H__
+#ifndef __RB_PLANE_H__
+#define __RB_PLANE_H__
 
 #include "RbDisplayObject.h"
 #include "hge.h"

@@ -15,6 +15,7 @@
 #include "RbBitmap.h"
 #include "RbViewport.h"
 #include "RbPlane.h"
+#include "RbSprite.h"
 #include <fstream>
 #include <iostream>
 
@@ -48,7 +49,7 @@ namespace
 			rb_str_buf_append(str, rb_default_rs);
 		}
 		
-		MessageBoxW(GetHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetTitleW(), 0);
+		MessageBoxW(m_frm_struct.m_hwnd, Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetTitleW(), 0);
 
 		return Qnil;
 	}
@@ -90,7 +91,7 @@ namespace
 			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
 		}
 		
-		MessageBoxW(GetHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetTitleW(), 0);
+		MessageBoxW(m_frm_struct.m_hwnd, Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetTitleW(), 0);
 
 		return Qnil;
 	}
@@ -131,6 +132,7 @@ namespace
 	void InitExportSinInterface()
 	{
 		InitRbGlobal();
+		InitRbInput();
 		//InitSeal();
 		InitRbFrame();
 		//InitRbHge();
@@ -144,6 +146,7 @@ namespace
 		RbBitmap::InitLibrary();
 		RbViewport::InitLibrary();
 		RbPlane::InitLibrary();
+		RbSprite::InitLibrary();
 	}
 	
 	static VALUE _run_sin_in_protect(VALUE argv)
@@ -177,7 +180,7 @@ namespace
 		else
 			errmsg = rb_sprintf("Script '%s' line %d: %s occurred.\n\n%s", RSTRING_PTR(sourcefile), NUM2INT(sourceline), clsname, msg);
 
-		MessageBoxW(GetHwnd(), Kconv::AnsiToUnicode(RSTRING_PTR(errmsg)), GetTitleW(),  MB_ICONWARNING);
+		MessageBoxW(m_frm_struct.m_hwnd, Kconv::AnsiToUnicode(RSTRING_PTR(errmsg)), GetTitleW(),  MB_ICONWARNING);
 	}
 
 }
@@ -231,7 +234,7 @@ int	Sin::SINRGE2Entry(const char* rubyfile)
     _file.open(rubyfile, std::ios::in);
     if(!_file)
 	{
-		MessageBoxW(GetHwnd(), L"Failed to load script.", GetTitleW(),  MB_ICONWARNING);
+		MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load script.", GetTitleW(),  MB_ICONWARNING);
 		return 1;
 	}
 	_file.close();
@@ -264,11 +267,6 @@ int	Sin::SINRGE2Entry(const char* rubyfile)
 void Sin::SetRubyLibHandle(HINSTANCE hModule)
 {
 	rb_set_lib_handle(hModule);
-}
-
-HWND Sin::GetHwnd()
-{
-	return NULL;
 }
 
 SinFrameStruct* Sin::GetFrmStructPtr()

@@ -1,5 +1,5 @@
-#ifndef __C_RGE_TONE_H__
-#define __C_RGE_TONE_H__
+#ifndef __RB_TONE_H__
+#define __RB_TONE_H__
 
 #ifdef WIN32
 #pragma once

@@ -32,6 +32,9 @@ typedef struct __SinFrameStruct
 
 } SinFrameStruct;
 
+#define SIN_NAME		"SINRGE2"
+#define SIN_VERSION		"Ver. YAR"
+
 namespace Sin
 {
 	SinFrameStruct*		GetFrmStructPtr();
@@ -50,9 +53,6 @@ namespace Sin
 	void				InitRenderSys();
 	bool				HackD3D();
 
-	//bool				RenderProc();
-
-	HWND				GetHwnd();
 	//char*				GetTitle();
 	wchar_t*			GetTitleW();
 	void				SINRGE2Initialize();

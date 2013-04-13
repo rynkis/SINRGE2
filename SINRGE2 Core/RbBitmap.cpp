@@ -1329,7 +1329,7 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE *argv, VALUE obj)
 	GET_ARGB_8888(color1, a1, r1, g1, b1);
 	GET_ARGB_8888(color2, a2, r2, g2, b2);
 
-	int v1, v2, value1, value2;
+	int /*v1, v2, */value1, value2;
 	if (!vertical) { value1 = width; value2 = height; }
 	else { value1 = height; value2 = width; }
 

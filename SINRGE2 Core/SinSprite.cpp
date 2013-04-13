@@ -5,10 +5,9 @@
 HGE *SinSprite::hge=0;
 
 
-SinSprite::SinSprite(/*HTEXTURE texture, float texx, float texy, float w, float h*/)
+SinSprite::SinSprite()
 	: m_width(0), m_height(0)
 	, m_angle(0.0f)
-	//, m_tex(0)
 	, m_src_rect_dirty(true)
 	, m_ox(0), m_oy(0)
 	, m_zoom_x(1.0f), m_zoom_y(1.0f)
@@ -16,40 +15,14 @@ SinSprite::SinSprite(/*HTEXTURE texture, float texx, float texy, float w, float 
 	, m_rx(0), m_ry(0), m_rw(0), m_rh(0)
 	, m_x1(0), m_y1(0), m_x2(0), m_y2(0), m_x3(0), m_y3(0), m_x4(0), m_y4(0)
 {
-	//float texx1, texy1, texx2, texy2;
-
 	hge=hgeCreate(HGE_VERSION);
 	
-	//tx=texx; ty=texy;
-	//m_width=w; m_height=h;
-
-	/*if(texture)
-	{
-		tex_width = (float)hge->Texture_GetWidth(texture);
-		tex_height = (float)hge->Texture_GetHeight(texture);
-	}
-	else
-	{
-		tex_width = 1.0f;
-		tex_height = 1.0f;
-	}*/
-
 	hotX=0;
 	hotY=0;
 	bXFlip=false;
 	bYFlip=false;
 	bHSFlip=false;
-	quad.tex=0;//texture;
-
-	/*texx1=texx/tex_width;
-	texy1=texy/tex_height;
-	texx2=(texx+w)/tex_width;
-	texy2=(texy+h)/tex_height;
-
-	quad.v[0].tx = texx1; quad.v[0].ty = texy1;
-	quad.v[1].tx = texx2; quad.v[1].ty = texy1;
-	quad.v[2].tx = texx2; quad.v[2].ty = texy2;
-	quad.v[3].tx = texx1; quad.v[3].ty = texy2;*/
+	quad.tex=0;
 
 	quad.v[0].z = 
 	quad.v[1].z = 
@@ -65,12 +38,6 @@ SinSprite::SinSprite(/*HTEXTURE texture, float texx, float texy, float w, float 
 
 	quad.blend_color = 0x00000000;	//	SINRGE2
 }
-
-//SinSprite::SinSprite(const SinSprite &spr)
-//{
-//	memcpy(this, &spr, sizeof(SinSprite));
-//	hge=hgeCreate(HGE_VERSION);
-//}
 
 void SinSprite::Render(float x, float y)
 {

@@ -1,5 +1,5 @@
-#ifndef __C_RGE_RECT_H__
-#define __C_RGE_RECT_H__
+#ifndef __RB_RECT_H__
+#define __RB_RECT_H__
 
 #include "RbClassBase.h"
 #include "sin_types.h"

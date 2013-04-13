@@ -1,18 +1,18 @@
-#ifndef __C_RGE_SPRITE_H__
-#define __C_RGE_SPRITE_H__
+#ifndef __RB_SPRITE_H__
+#define __RB_SPRITE_H__
 
-#include "CRgePlane.h"
+#include "RbPlane.h"
 
-class CRgeRect;
+class RbRect;
 
-class CRgeSprite : public CRgePlane
+class RbSprite : public RbPlane
 {
 public:
-	typedef CRgePlane	super;
+	typedef RbPlane	super;
 
 public:
-	CRgeSprite();
-	virtual ~CRgeSprite();
+	RbSprite();
+	virtual ~RbSprite();
 
 public:
 	static void		InitLibrary();
@@ -42,7 +42,7 @@ protected:
 	int				m_flash_hide_spr;					//	是否消去精灵，仅当闪烁颜色指定为nil时才消去精灵。
 	DWORD			m_flash_color;						//	精灵闪烁的颜色值。
 
-	CRgeRect*		m_src_rect_ptr;
+	RbRect*			m_src_rect_ptr;
 
 protected:
 	dm_method(update)

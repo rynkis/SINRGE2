@@ -6,10 +6,9 @@
 ** Core system functions
 */
 
-//#include "RbExport.h"
-//#include "rge_resource.h"
 #include "nge_timer.h"
 #include "hge_impl.h"
+#include "RbInput.h"
 
 
 #define LOWORDINT(n) ((int)((signed short)(LOWORD(n))))
@@ -24,6 +23,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 int			nRef=0;
 HGE_Impl*	pHGE=0;
 
+static int		onFocus				= 1;
+static int		mouseButton			= 0;
+static short	mouseWheel			= 0;
+static bool		mouseMove			= false;
 
 
 //BOOL APIENTRY DllMain(HANDLE, DWORD, LPVOID)
@@ -199,8 +202,8 @@ void CALL HGE_Impl::System_Shutdown()
 bool CALL HGE_Impl::System_Update()
 {
 	// loop do
-	for(;;)
-	{
+	/*for(;;)
+	{*/
 		// Process window messages
 		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
 			if(m_msg.message == WM_QUIT){
@@ -208,7 +211,8 @@ bool CALL HGE_Impl::System_Update()
 				return false;
 			}
 			DispatchMessage(&m_msg);				
-			continue;
+			//continue;
+			return true;
 		}
 		// If HGE window is focused or we have the "don't suspend" state - process the main loop
 		if(bActive || bDontSuspend)
@@ -218,45 +222,7 @@ bool CALL HGE_Impl::System_Update()
 
 			LimitFps(nHGEFPS);
 		}
-		//	// Ensure we have at least 1ms time step
-		//	// to not confuse user's code with 0
-		//	do { dt = timeGetTime() - t0; } while(dt < 1);
-		//	// If we reached the time for the next frame
-		//	// or we just run in unlimited FPS mode, then
-		//	// do the stuff
-		//	if(dt >= nFixedDelta)
-		//	{
-		//		// fDeltaTime = time step in seconds returned by Timer_GetDelta
-		//		fDeltaTime = dt/1000.0f;
-		//		// Cap too large time steps usually caused by lost focus to avoid jerks
-		//		if(fDeltaTime > 0.2f)
-		//		{
-		//			fDeltaTime = nFixedDelta ? nFixedDelta/1000.0f : 0.01f;
-		//		}
-		//		// Update time counter returned Timer_GetTime
-		//		fTime += fDeltaTime;
-		//		// Store current time for the next frame
-		//		// and count FPS
-		//		t0 = timeGetTime();
-		//		if(t0 - t0fps <= 1000) cfps++;
-		//		else {nFPS=cfps; cfps=0; t0fps=t0;}
-		//		// Do user's stuff
-		//	 	if(procRenderFunc) procRenderFunc();
-		//		// break the loop
-		//		break;
-		//	}
-		//	// If we have a fixed frame rate and the time
-		//	// for the next frame isn't too close, sleep a bit
-		//	else
-		//	{
-		//		if(nFixedDelta && dt/*+3*/ < nFixedDelta) RB_SLEEP(1);
-		//	}
-		//}
-		//// If main loop is suspended - just sleep a bit
-		//// (though not too much to allow instant window
-		//// redraw if requested by OS)
-		//else RB_SLEEP(1);
-	}
+	//}
 	return true;
 }
 
@@ -745,8 +711,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	bool bActivating;
 
+	mouseMove = false;
+
 	switch(msg)
 	{	
+		
+        case WM_KILLFOCUS:
+			onFocus = 0;
+			return FALSE;
+        case WM_SETFOCUS:
+			onFocus = 1;
+			return FALSE;
+
 		case WM_CREATE: 
 			return FALSE;
 		
@@ -844,13 +820,33 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		//	pHGE->_BuildEvent(INPUT_MOUSEWHEEL, short(HIWORD(wparam))/120, 0, 0, LOWORDINT(lparam), HIWORDINT(lparam));
 		//	return FALSE;
 
+		
+        case WM_LBUTTONDBLCLK:
+			mouseButton += 64;
+			return FALSE;
+        case WM_RBUTTONDBLCLK:
+			mouseButton += 128;
+			return FALSE;
+        case WM_MBUTTONDBLCLK:
+			mouseButton += 256;
+			return FALSE;
+			
+		case WM_MOUSEMOVE:
+			mouseMove = true;
+			return FALSE;
+        case WM_MOUSEWHEEL:
+            mouseWheel = (short)HIWORD(wparam);
+			return FALSE;
+
 		case WM_SIZE:
 			if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
 			//return FALSE;
 			break;
 
 		case WM_SYSCOMMAND:
-			if(wparam==SC_CLOSE)
+			if (wparam == SC_KEYMENU)
+				return TRUE;
+			else if(wparam==SC_CLOSE)
 			{
 				if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
 				pHGE->bActive=false;
@@ -860,5 +856,30 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+int OnFocus()
+{
+	return onFocus;
+}
+
+int MouseWheel()
+{   
+	return mouseWheel;
+}
+
+int MouseDblClk(int iKey)
+{
+	return mouseButton & (iKey<<6);
+}
+
+int GetMouseMove()
+{
+	return mouseMove;
+}
+
+void HideMouse(bool hide)
+{
+	pHGE->bHideMouse = hide;
 }
 

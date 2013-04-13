@@ -147,6 +147,12 @@
     <ClCompile Include="RbDisplayObject.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
+    <ClCompile Include="RbSprite.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="RbInput.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -357,6 +363,12 @@
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="RbDisplayObject.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RbSprite.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RbInput.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>

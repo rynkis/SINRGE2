@@ -1,5 +1,5 @@
-#ifndef __C_RGE_VIEWPORT_H__
-#define __C_RGE_VIEWPORT_H__
+#ifndef __RB_VIEWPORT_H__
+#define __RB_VIEWPORT_H__
 
 #include "RbDisplayObject.h"
 

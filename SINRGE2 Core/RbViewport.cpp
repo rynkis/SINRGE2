@@ -205,7 +205,7 @@ void RbViewport::render(u32 id)
 		s_pHge->Gfx_RenderQuad(&m_quad);
 	}
 	
-	// 使用减淡混合方式处理视口色调
+	// 使用减淡混合方式处理视口色调，效果会比较诡异，但有总比没有好 = =
 	if (m_tone_ptr->GetColor() != 0)
 	{
 		m_quad.v[0].col = 

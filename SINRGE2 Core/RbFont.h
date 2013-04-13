@@ -1,5 +1,5 @@
-#ifndef __C_RGE_FONT_H__
-#define __C_RGE_FONT_H__
+#ifndef __RB_FONT_H__
+#define __RB_FONT_H__
 
 #ifdef WIN32
 #pragma once

@@ -1,16 +1,15 @@
-#include "CRgeSprite.h"
+#include "RbSprite.h"
+#include "RbBitmap.h"
+#include "RbViewport.h"
+#include "RbColor.h"
+#include "RbTone.h"
+#include "RbRect.h"
 
-#include "RgeSpriteEx.h"
-
-#include "CRgeBitmap.h"
-#include "CRgeViewport.h"
-#include "CRgeColor.h"
-#include "CRgeTone.h"
-#include "CRgeRect.h"
+#include "SinSprite.h"
 
 VALUE rb_cSprite;
 
-CRgeSprite::CRgeSprite()
+RbSprite::RbSprite()
 	: m_mirror(Qfalse)
 	, m_bush_depth(RUBY_0)
 	, m_bush_opacity(128)
@@ -24,11 +23,11 @@ CRgeSprite::CRgeSprite()
 {
 }
 
-CRgeSprite::~CRgeSprite()
+RbSprite::~RbSprite()
 {
 }
 
-void CRgeSprite::InitLibrary()
+void RbSprite::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -37,10 +36,10 @@ void CRgeSprite::InitLibrary()
 	 *	@desc
 	 *		RGE中处理精灵的类。所谓精灵，是为了在游戏画面上显示人物等的基本概念。
 	 */
-	rb_cSprite = rb_define_class_under(rb_mRGE2Core, "Sprite", rb_cObject);
+	rb_cSprite = rb_define_class_under(rb_mSin, "Sprite", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cSprite, ObjAllocate<CRgeSprite>);
+	rb_define_alloc_func(rb_cSprite, ObjAllocate<RbSprite>);
 	rb_define_method(rb_cSprite, "initialize",		(RbFunc)dm_initialize,			-1);
 
 	// instance method
@@ -108,7 +107,7 @@ void CRgeSprite::InitLibrary()
  	rb_define_method(rb_cSprite, "to_s",			(RbFunc)dm_to_string,			0);
 }
 
-void CRgeSprite::mark()
+void RbSprite::mark()
 {
 	super::mark();
 
@@ -123,7 +122,7 @@ void CRgeSprite::mark()
  *	@desc
  *		生成 Sprite 对象。
  */
-VALUE CRgeSprite::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbSprite::initialize(int argc, VALUE *argv, VALUE obj)
 {
 	//	调用Plane的初始化函数
 	super::initialize(argc, argv, obj);
@@ -133,7 +132,7 @@ VALUE CRgeSprite::initialize(int argc, VALUE *argv, VALUE obj)
 
 	VALUE src_rect = rb_class_new_instance(4, __argv, rb_cRect);
 
-	m_src_rect_ptr = GetObjectPtr<CRgeRect>(src_rect);
+	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
 
 	return obj;
 }
@@ -143,7 +142,7 @@ VALUE CRgeSprite::initialize(int argc, VALUE *argv, VALUE obj)
  *
  *	其中 mirror、angle、zoom_x、zoom_y、ox、oy、x、y、src_rect、bitmap 等属性的改变都应该调用该方法进行更新 (bush_depth?)
  */
-//bool CRgeSprite::update_texture_rect_and_position()
+//bool RbSprite::update_texture_rect_and_position()
 //{
 //	s32	left	= m_src_rect_ptr->x;	
 //	s32 right	= m_src_rect_ptr->x + m_src_rect_ptr->width;
@@ -191,11 +190,11 @@ VALUE CRgeSprite::initialize(int argc, VALUE *argv, VALUE obj)
 //
 //	for (int yidx = yBgn, cost_h = 0; yidx <= yEnd; ++yidx)
 //	{
-//		int h = RgeMin(RgeMin(height - cost_h, m_bitmap_ptr->GetSubTextures()[0].height), m_bitmap_ptr->GetSubTextures()[0].height - y);
+//		int h = SinMin(SinMin(height - cost_h, m_bitmap_ptr->GetSubTextures()[0].height), m_bitmap_ptr->GetSubTextures()[0].height - y);
 //
 //		for (int xidx = xBgn, cost_w = 0, sx = x % m_bitmap_ptr->GetSubTextures()[0].width; xidx <= xEnd; ++xidx)
 //		{
-//			int w = RgeMin(RgeMin(width - cost_w, m_bitmap_ptr->GetSubTextures()[0].width), m_bitmap_ptr->GetSubTextures()[0].width - sx);
+//			int w = SinMin(SinMin(width - cost_w, m_bitmap_ptr->GetSubTextures()[0].width), m_bitmap_ptr->GetSubTextures()[0].width - sx);
 //
 //			index = yidx * m_bitmap_ptr->GetCols() + xidx;
 //
@@ -245,7 +244,7 @@ VALUE CRgeSprite::initialize(int argc, VALUE *argv, VALUE obj)
 //	return true;
 //}
 
-void CRgeSprite::render(u32 id)
+void RbSprite::render(u32 id)
 {
 	if (!m_bitmap_ptr)
 		return;
@@ -290,21 +289,21 @@ void CRgeSprite::render(u32 id)
 	}
 
 	//	如果指定了color颜色的情况下
-	if (m_color_ptr->GetColor().value != 0)
+	if (m_color_ptr->GetColor() != 0)
 	{
 		//	并且设置了flash颜色的情况下
 		if (save_blend_color > 0)
 		{
-			if (GETA(m_color_ptr->GetColor().value) > GETA(m_flash_color))
+			if (GETA(m_color_ptr->GetColor()) > GETA(m_flash_color))
 			{
-				save_blend_color = m_color_ptr->GetColor().value;
+				save_blend_color = m_color_ptr->GetColor();
 			}
 		}
 		//	没有设置flash颜色的情况下
 		else
 		{
 			save_blend_mode = m_pSpr->GetBlendMode();
-			save_blend_color = m_color_ptr->GetColor().value;
+			save_blend_color = m_color_ptr->GetColor();
 		}
 	}
 
@@ -321,14 +320,14 @@ void CRgeSprite::render(u32 id)
 	// render the sprite to the screen
 	float x, y;
 
-	if (!m_viewport_ptr || GetRgeSysPtr()->GetRenderState()->IsRenderToTexture())
+	if (!m_viewport_ptr || GetRenderState()->IsRenderToTexture())
 	{
 		x = m_x;
 		y = m_y;
 	}
 	else
 	{
-		const CRgeRect* rect_ptr = m_viewport_ptr->GetRectPtr();
+		const RbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
 
 		x = m_x + rect_ptr->x - m_viewport_ptr->m_ox;
 		y = m_y + rect_ptr->y - m_viewport_ptr->m_oy;
@@ -339,7 +338,7 @@ void CRgeSprite::render(u32 id)
 	{
 		hgeRect bound_rect;
 
-		m_pSpr->GetBoundingBoxEx(x, y, &bound_rect);
+		m_pSpr->GetBoundingBox(x, y, &bound_rect);
 
 		int bush_depth = FIX2INT(m_bush_depth);
 
@@ -350,21 +349,21 @@ void CRgeSprite::render(u32 id)
 
 		int min_x, min_y, max_x, max_y;
 
-		const RgeRenderState::RgeRenderClipRect& clip_rect = GetRgeSysPtr()->GetRenderState()->GetClipRect();
+		const RbRenderState::RbRenderClipRect& clip_rect = GetRenderState()->GetClipRect();
 
 		//	先描绘不透明部分
-		min_x = RgeMax(clip_rect.x, top_rect.x1);
-		min_y = RgeMax(clip_rect.y, top_rect.y1);
+		min_x = SinMax(clip_rect.x, top_rect.x1);
+		min_y = SinMax(clip_rect.y, top_rect.y1);
 
-		max_x = RgeMin(clip_rect.x + clip_rect.width, top_rect.x2);
-		max_y = RgeMin(clip_rect.y + clip_rect.height, top_rect.y2);
+		max_x = SinMin(clip_rect.x + clip_rect.width, top_rect.x2);
+		max_y = SinMin(clip_rect.y + clip_rect.height, top_rect.y2);
 
 		cw = max_x - min_x;
 		ch = max_y - min_y;
 
 		if (cw > 0 && ch > 0)
 		{
-			GetRgeSysPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
+			GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 		//	hge->Gfx_SetClipping(min_x, min_y, cw, ch);
 		//	self->spr->RenderEx(x, y, self->angle, self->zoom_x, self->zoom_y);
@@ -372,28 +371,28 @@ void CRgeSprite::render(u32 id)
 
 		//	其次描绘透明草丛部分
 		// half opacity : simulate bush effect
-		m_pSpr->SetColor(URgeARGB(m_opacity * m_bush_opacity / 255, 255, 255, 255).value);
+		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));//URgeARGB(m_opacity * m_bush_opacity / 255, 255, 255, 255).value);
 		//m_pSpr->SetColor(ARGB(m_opacity / 2,255,255,255));
 
-		min_x = RgeMax(clip_rect.x, bottom_rect.x1);
-		min_y = RgeMax(clip_rect.y, bottom_rect.y1);
+		min_x = SinMax(clip_rect.x, bottom_rect.x1);
+		min_y = SinMax(clip_rect.y, bottom_rect.y1);
 
-		max_x = RgeMin(clip_rect.x + clip_rect.width,	bottom_rect.x2);
-		max_y = RgeMin(clip_rect.y + clip_rect.height,	bottom_rect.y2);
+		max_x = SinMin(clip_rect.x + clip_rect.width,	bottom_rect.x2);
+		max_y = SinMin(clip_rect.y + clip_rect.height,	bottom_rect.y2);
 
 		cw = max_x - min_x;
 		ch = max_y - min_y;
 
 		if (cw > 0 && ch > 0)
 		{
-			GetRgeSysPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
+			GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 			//hge->Gfx_SetClipping(min_x, min_y, cw, ch);
 			//self->spr->RenderEx(x,y,self->angle,self->zoom_x,self->zoom_y);
 		}
 
-		GetRgeSysPtr()->GetRenderState()->Restore();
-		m_pSpr->SetColor(URgeARGB(m_opacity, 255, 255, 255).value);
+		GetRenderState()->Restore();
+		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity, 255, 255, 255));//URgeARGB(m_opacity, 255, 255, 255).value);
 		//// restore the clip region
 		//hge->Gfx_SetClipping(rge->last_clip_rect.x,
 		//					 rge->last_clip_rect.y,
@@ -419,28 +418,28 @@ void CRgeSprite::render(u32 id)
 	}
 }
 
-VALUE CRgeSprite::update()
+VALUE RbSprite::update()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::flash(VALUE color, VALUE duration)
+VALUE RbSprite::flash(VALUE color, VALUE duration)
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::invisible_reason()
+VALUE RbSprite::invisible_reason()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_bitmap(VALUE bitmap)
+VALUE RbSprite::set_bitmap(VALUE bitmap)
 {
 	if (m_disposed) 
 		return Qnil;
@@ -458,12 +457,12 @@ VALUE CRgeSprite::set_bitmap(VALUE bitmap)
 	{
 		SafeBitmapValue(bitmap);
 
-		m_bitmap_ptr = GetObjectPtr<CRgeBitmap>(bitmap);
+		m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
 
-		m_pSpr->SetTexture(m_bitmap_ptr->GetSRgeTexture());
+		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_pSpr->SetSrcRectDirty();
 		
-		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetBmpWidth()), INT2FIX(m_bitmap_ptr->GetBmpHeight()) };
+		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetMemWidth()), INT2FIX(m_bitmap_ptr->GetMemHeight()) };
 
 		rb_funcall2(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, __argv);
 	}
@@ -471,7 +470,7 @@ VALUE CRgeSprite::set_bitmap(VALUE bitmap)
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_ox(VALUE ox)
+VALUE RbSprite::set_ox(VALUE ox)
 {
 	super::set_ox(ox);
 
@@ -481,7 +480,7 @@ VALUE CRgeSprite::set_ox(VALUE ox)
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_oy(VALUE oy)
+VALUE RbSprite::set_oy(VALUE oy)
 {
 	super::set_oy(oy);
 
@@ -491,42 +490,42 @@ VALUE CRgeSprite::set_oy(VALUE oy)
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_src_rect()
+VALUE RbSprite::get_src_rect()
 {
 	return ReturnObject(m_src_rect_ptr);
 }
 
-VALUE CRgeSprite::set_src_rect(VALUE src_rect)
+VALUE RbSprite::set_src_rect(VALUE src_rect)
 {
 	SafeRectValue(src_rect);
-	m_src_rect_ptr = GetObjectPtr<CRgeRect>(src_rect);
+	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_angle()
+VALUE RbSprite::get_angle()
 {
 	return m_angle_rad;
 }
 
-VALUE CRgeSprite::set_angle(VALUE angle)
+VALUE RbSprite::set_angle(VALUE angle)
 {
 	SafeFixnumValue(angle);
 
 	m_angle_rad = angle;
 
-	m_angle = RgeDeg2Rad(360 - FIX2INT(angle));
+	m_angle = SinDeg2Rad(360 - FIX2INT(angle));
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_mirror()
+VALUE RbSprite::get_mirror()
 {
 	return m_mirror;
 }
 
-VALUE CRgeSprite::set_mirror(VALUE mirror)
+VALUE RbSprite::set_mirror(VALUE mirror)
 {
 	m_mirror = Ruby2RbBool(mirror);
 
@@ -536,12 +535,12 @@ VALUE CRgeSprite::set_mirror(VALUE mirror)
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_bush_depth()
+VALUE RbSprite::get_bush_depth()
 {
 	return m_bush_depth;
 }
 
-VALUE CRgeSprite::set_bush_depth(VALUE bush_depth)
+VALUE RbSprite::set_bush_depth(VALUE bush_depth)
 {
 	SafeFixnumValue(bush_depth);
 
@@ -550,73 +549,73 @@ VALUE CRgeSprite::set_bush_depth(VALUE bush_depth)
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_bush_opacity()
+VALUE RbSprite::get_bush_opacity()
 {
 	return INT2FIX(m_bush_opacity);
 }
 
-VALUE CRgeSprite::set_bush_opacity(VALUE bush_opacity)
+VALUE RbSprite::set_bush_opacity(VALUE bush_opacity)
 {
 	SafeFixnumValue(bush_opacity);
 
 	m_bush_opacity = FIX2INT(bush_opacity);
-	m_bush_opacity = RgeBound(m_bush_opacity, 0, 255);
+	m_bush_opacity = SinBound(m_bush_opacity, 0, 255);
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_wave_amp()
+VALUE RbSprite::get_wave_amp()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_wave_amp(VALUE wave_amp)
+VALUE RbSprite::set_wave_amp(VALUE wave_amp)
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_wave_length()
+VALUE RbSprite::get_wave_length()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_wave_length(VALUE wave_length)
+VALUE RbSprite::set_wave_length(VALUE wave_length)
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_wave_speed()
+VALUE RbSprite::get_wave_speed()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_wave_speed(VALUE wave_speed)
+VALUE RbSprite::set_wave_speed(VALUE wave_speed)
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::get_wave_phase()
+VALUE RbSprite::get_wave_phase()
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE CRgeSprite::set_wave_phase(VALUE wave_phase)
+VALUE RbSprite::set_wave_phase(VALUE wave_phase)
 {
-#pragma message("		<<Rge2Core:innerclass>> 未完成 " __FUNCTION__)
+#pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
@@ -624,15 +623,15 @@ VALUE CRgeSprite::set_wave_phase(VALUE wave_phase)
 /*
  *	以下定义ruby方法
  */
-imp_method(CRgeSprite, update)
-imp_method02(CRgeSprite, flash)
-imp_attr_accessor(CRgeSprite, src_rect)
-imp_attr_accessor(CRgeSprite, angle)
-imp_attr_accessor(CRgeSprite, mirror)
-imp_attr_accessor(CRgeSprite, bush_depth)
-imp_attr_accessor(CRgeSprite, bush_opacity)
+imp_method(RbSprite, update)
+imp_method02(RbSprite, flash)
+imp_attr_accessor(RbSprite, src_rect)
+imp_attr_accessor(RbSprite, angle)
+imp_attr_accessor(RbSprite, mirror)
+imp_attr_accessor(RbSprite, bush_depth)
+imp_attr_accessor(RbSprite, bush_opacity)
 
-imp_attr_accessor(CRgeSprite, wave_amp)
-imp_attr_accessor(CRgeSprite, wave_length)
-imp_attr_accessor(CRgeSprite, wave_speed)
-imp_attr_accessor(CRgeSprite, wave_phase)
+imp_attr_accessor(RbSprite, wave_amp)
+imp_attr_accessor(RbSprite, wave_length)
+imp_attr_accessor(RbSprite, wave_speed)
+imp_attr_accessor(RbSprite, wave_phase)

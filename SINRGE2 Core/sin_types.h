@@ -15,5 +15,8 @@ typedef float			f32;
 #define SinMin(a, b)				(((a) < (b)) ? (a) : (b))
 #define SinBound(x, minv, maxv)		((x) < (minv) ? (minv) : ((x) > (maxv) ? (maxv) : (x)))
 
+#define SinRad2Deg(rad)				((rad) * 57.29577951f)
+#define SinDeg2Rad(deg)				((deg) * 0.017453292f)
+
 
 #endif	//	__SIN_TYPES_H__
