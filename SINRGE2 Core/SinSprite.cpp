@@ -17,11 +17,6 @@ SinSprite::SinSprite()
 {
 	hge=hgeCreate(HGE_VERSION);
 	
-	hotX=0;
-	hotY=0;
-	bXFlip=false;
-	bYFlip=false;
-	bHSFlip=false;
 	quad.tex=0;
 
 	quad.v[0].z = 
@@ -41,17 +36,10 @@ SinSprite::SinSprite()
 
 void SinSprite::Render(float x, float y)
 {
-	float tempx1, tempy1, tempx2, tempy2;
-
-	tempx1 = x-hotX;
-	tempy1 = y-hotY;
-	tempx2 = x+m_width-hotX;
-	tempy2 = y+m_height-hotY;
-
-	quad.v[0].x = tempx1; quad.v[0].y = tempy1;
-	quad.v[1].x = tempx2; quad.v[1].y = tempy1;
-	quad.v[2].x = tempx2; quad.v[2].y = tempy2;
-	quad.v[3].x = tempx1; quad.v[3].y = tempy2;
+	quad.v[0].x = m_x1 + x; quad.v[0].y = m_y1 + y;
+	quad.v[1].x = m_x2 + x; quad.v[1].y = m_y2 + y;
+	quad.v[2].x = m_x3 + x; quad.v[2].y = m_y3 + y;
+	quad.v[3].x = m_x4 + x; quad.v[3].y = m_y4 + y;
 
 	hge->Gfx_RenderQuad(&quad);
 }
@@ -64,10 +52,10 @@ void SinSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 
 	if(vscale==0) vscale=hscale;
 
-	tx1 = -hotX*hscale;
-	ty1 = -hotY*vscale;
-	tx2 = (m_width-hotX)*hscale;
-	ty2 = (m_height-hotY)*vscale;
+	tx1 = -m_ox*hscale;
+	ty1 = -m_oy*vscale;
+	tx2 = (m_width-m_ox)*hscale;
+	ty2 = (m_height-m_oy)*vscale;
 
 	if (rot != 0.0f)
 	{
@@ -120,77 +108,85 @@ void SinSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float
 }
 
 
-hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale, hgeRect *rect) const
+hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, hgeRect *rect) const
 {
-	float tx1, ty1, tx2, ty2;
-	float sint, cost;
-
 	rect->Clear();
-	
-	tx1 = -hotX*hscale;
-	ty1 = -hotY*vscale;
-	tx2 = (m_width-hotX)*hscale;
-	ty2 = (m_height-hotY)*vscale;
 
-	if (rot != 0.0f)
-	{
-		cost = cosf(rot);
-		sint = sinf(rot);
-			
-		rect->Encapsulate(tx1*cost - ty1*sint + x, tx1*sint + ty1*cost + y);	
-		rect->Encapsulate(tx2*cost - ty1*sint + x, tx2*sint + ty1*cost + y);	
-		rect->Encapsulate(tx2*cost - ty2*sint + x, tx2*sint + ty2*cost + y);	
-		rect->Encapsulate(tx1*cost - ty2*sint + x, tx1*sint + ty2*cost + y);	
-	}
-	else
-	{
-		rect->Encapsulate(tx1 + x, ty1 + y);
-		rect->Encapsulate(tx2 + x, ty1 + y);
-		rect->Encapsulate(tx2 + x, ty2 + y);
-		rect->Encapsulate(tx1 + x, ty2 + y);
-	}
+	rect->Encapsulate(m_x1 + x, m_y1 + y);
+	rect->Encapsulate(m_x2 + x, m_y2 + y);
+	rect->Encapsulate(m_x3 + x, m_y3 + y);
+	rect->Encapsulate(m_x4 + x, m_y4 + y);
 
 	return rect;
 }
 
+//hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale, hgeRect *rect) const
+//{
+//	float tx1, ty1, tx2, ty2;
+//	float sint, cost;
+//
+//	rect->Clear();
+//	
+//	tx1 = -m_ox*hscale;
+//	ty1 = -m_oy*vscale;
+//	tx2 = (m_width-m_ox)*hscale;
+//	ty2 = (m_height-m_oy)*vscale;
+//
+//	if (rot != 0.0f)
+//	{
+//		cost = cosf(rot);
+//		sint = sinf(rot);
+//			
+//		rect->Encapsulate(tx1*cost - ty1*sint + x, tx1*sint + ty1*cost + y);	
+//		rect->Encapsulate(tx2*cost - ty1*sint + x, tx2*sint + ty1*cost + y);	
+//		rect->Encapsulate(tx2*cost - ty2*sint + x, tx2*sint + ty2*cost + y);	
+//		rect->Encapsulate(tx1*cost - ty2*sint + x, tx1*sint + ty2*cost + y);	
+//	}
+//	else
+//	{
+//		rect->Encapsulate(tx1 + x, ty1 + y);
+//		rect->Encapsulate(tx2 + x, ty1 + y);
+//		rect->Encapsulate(tx2 + x, ty2 + y);
+//		rect->Encapsulate(tx1 + x, ty2 + y);
+//	}
+//
+//	return rect;
+//}
+
 void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 {
-	float tx, ty;
+	float ox = m_ox, oy = m_oy;
 
-	if(bHSFlip && bXFlip) hotX = m_width - hotX;
-	if(bHSFlip && bYFlip) hotY = m_height - hotY;
+	if (m_flip_hot_spot && IsFlipX()) m_ox = m_width - m_ox;
+	if (m_flip_hot_spot && IsFlipY()) m_oy = m_height - m_oy;
 
-	bHSFlip = bHotSpot;
+	m_flip_hot_spot = bHotSpot;
 	
-	if(bHSFlip && bXFlip) hotX = m_width - hotX;
-	if(bHSFlip && bYFlip) hotY = m_height - hotY;
+	if (m_flip_hot_spot && IsFlipX()) m_ox = m_width - m_ox;
+	if (m_flip_hot_spot && IsFlipY()) m_oy = m_height - m_oy;
 
-	if(bX != bXFlip)
+	bool dirty = (ox != m_ox || oy != m_oy);
+
+	if (IsFlipX() != bX)
 	{
-		tx=quad.v[0].tx; quad.v[0].tx=quad.v[1].tx; quad.v[1].tx=tx;
-		ty=quad.v[0].ty; quad.v[0].ty=quad.v[1].ty; quad.v[1].ty=ty;
-		tx=quad.v[3].tx; quad.v[3].tx=quad.v[2].tx; quad.v[2].tx=tx;
-		ty=quad.v[3].ty; quad.v[3].ty=quad.v[2].ty; quad.v[2].ty=ty;
-
-		bXFlip=!bXFlip;
+		m_flip_x *= -1.0f;
+		dirty = true;
 	}
-
-	if(bY != bYFlip)
+	if (IsFlipY() != bY)
 	{
-		tx=quad.v[0].tx; quad.v[0].tx=quad.v[3].tx; quad.v[3].tx=tx;
-		ty=quad.v[0].ty; quad.v[0].ty=quad.v[3].ty; quad.v[3].ty=ty;
-		tx=quad.v[1].tx; quad.v[1].tx=quad.v[2].tx; quad.v[2].tx=tx;
-		ty=quad.v[1].ty; quad.v[1].ty=quad.v[2].ty; quad.v[2].ty=ty;
-
-		bYFlip=!bYFlip;
+		m_flip_y *= -1.0f;
+		dirty = true;
+	}
+	if (dirty)
+	{
+		SetSrcRectDirty();
 	}
 }
 
 
 void SinSprite::SetTexture(HTEXTURE tex)
 {
-	float tx1,ty1,tx2,ty2;
-	float tw,th;
+	float /*tx1,ty1,tx2,ty2,*/tw,th;
 
 	quad.tex=tex;
 
@@ -205,7 +201,12 @@ void SinSprite::SetTexture(HTEXTURE tex)
 		th = 1.0f;
 	}
 
-	if(tw!=tex_width || th!=tex_height)
+	m_width = tw;
+	m_height = th;
+	tex_width = tw;
+	tex_height = th;
+
+	/*if(tw!=tex_width || th!=tex_height)
 	{
 		tx1=quad.v[0].tx*tex_width;
 		ty1=quad.v[0].ty*tex_height;
@@ -222,7 +223,7 @@ void SinSprite::SetTexture(HTEXTURE tex)
 		quad.v[1].tx=tx2; quad.v[1].ty=ty1; 
 		quad.v[2].tx=tx2; quad.v[2].ty=ty2; 
 		quad.v[3].tx=tx1; quad.v[3].ty=ty2; 
-	}
+	}*/
 }
 
 
@@ -243,29 +244,58 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 	if (!m_src_rect_dirty)
 		return;
 
-	float tx1, ty1, tx2, ty2;
-	bool bX,bY,bHS;
+	float tx1, ty1, tx2, ty2, sint, cost;
 
 	tx=x;
 	ty=y;
 	
-	/*if(adjSize)
-	{*/
-		m_width=w;
-		m_height=h;
-	//}
-
 	tx1=tx/tex_width; ty1=ty/tex_height;
 	tx2=(tx+w)/tex_width; ty2=(ty+h)/tex_height;
 
-	quad.v[0].tx=tx1; quad.v[0].ty=ty1; 
-	quad.v[1].tx=tx2; quad.v[1].ty=ty1; 
-	quad.v[2].tx=tx2; quad.v[2].ty=ty2; 
-	quad.v[3].tx=tx1; quad.v[3].ty=ty2; 
+	quad.v[0].tx=tx1; quad.v[0].ty=ty1;
+	quad.v[1].tx=tx2; quad.v[1].ty=ty1;
+	quad.v[2].tx=tx2; quad.v[2].ty=ty2;
+	quad.v[3].tx=tx1; quad.v[3].ty=ty2;
 
-	bX=bXFlip; bY=bYFlip; bHS=bHSFlip;
-	bXFlip=false; bYFlip=false;
-	SetFlip(bX,bY,bHS);
+	if(m_zoom_y==0) m_zoom_y=m_zoom_x;
+
+	tx1 = -m_ox * m_zoom_x * m_flip_x;
+	ty1 = -m_oy * m_zoom_y * m_flip_y;
+	tx2 = (m_width-m_ox) * m_zoom_x * m_flip_x;
+	ty2 = (m_height-m_oy) * m_zoom_y * m_flip_y;
+
+	if (m_angle != 0.0f)
+	{
+		cost = cosf(m_angle);
+		sint = sinf(m_angle);
+		
+		quad.v[0].x  = tx1*cost - ty1*sint + x;
+		quad.v[0].y  = tx1*sint + ty1*cost + y;
+
+		quad.v[1].x  = tx2*cost - ty1*sint + x;
+		quad.v[1].y  = tx2*sint + ty1*cost + y;
+
+		quad.v[2].x  = tx2*cost - ty2*sint + x;
+		quad.v[2].y  = tx2*sint + ty2*cost + y;
+
+		quad.v[3].x  = tx1*cost - ty2*sint + x;
+		quad.v[3].y  = tx1*sint + ty2*cost + y;
+	}
+	else
+	{
+		quad.v[0].x = tx1 + x; quad.v[0].y = ty1 + y;
+		quad.v[1].x = tx2 + x; quad.v[1].y = ty1 + y;
+		quad.v[2].x = tx2 + x; quad.v[2].y = ty2 + y;
+		quad.v[3].x = tx1 + x; quad.v[3].y = ty2 + y;
+	}
+	
+	m_x1 = quad.v[0].x; m_y1 = quad.v[0].y;
+	m_x2 = quad.v[1].x; m_y2 = quad.v[1].y;
+	m_x3 = quad.v[2].x; m_y3 = quad.v[2].y;
+	m_x4 = quad.v[3].x; m_y4 = quad.v[3].y;
+
+	//	取消脏标记
+	m_src_rect_dirty = false;
 }
 
 

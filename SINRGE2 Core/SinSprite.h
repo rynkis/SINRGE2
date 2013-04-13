@@ -13,8 +13,6 @@ class SinSprite
 {
 public:
 	SinSprite();
-	/*SinSprite(HTEXTURE tex, float x, float y, float w, float h);
-	SinSprite(const SinSprite &spr);*/
 	~SinSprite() { hge->Release(); }
 	
 	
@@ -28,7 +26,6 @@ public:
 	void		SetColor(DWORD col, int i=-1);
 	void		SetZ(float z, int i=-1);
 	void		SetBlendMode(int blend) { quad.blend=blend; }
-	void		SetHotSpot(float x, float y) { hotX=x; hotY=y; }
 	void		SetFlip(bool bX, bool bY, bool bHotSpot = false);
 
 	HTEXTURE	GetTexture() const { return quad.tex; }
@@ -36,13 +33,10 @@ public:
 	DWORD		GetColor(int i=0) const { return quad.v[i].col; }
 	float		GetZ(int i=0) const { return quad.v[i].z; }
 	int			GetBlendMode() const { return quad.blend; }
-	void		GetHotSpot(float *x, float *y) const { *x=hotX; *y=hotY; }
-	void		GetFlip(bool *bX, bool *bY) const { *bX=bXFlip; *bY=bYFlip; }
 
 	float		GetWidth()											const { return m_width; }
 	float		GetHeight()											const { return m_height; }
-	hgeRect*	GetBoundingBox(float x, float y, hgeRect *rect) const { rect->Set(x-hotX, y-hotY, x-hotX+m_width, y-hotY+m_height); return rect; }
-	hgeRect*	GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale,  hgeRect *rect) const;
+	hgeRect*	GetBoundingBoxEx(float x, float y, hgeRect *rect)	const;
 	
 	void		SetOX(float ox) { m_ox = ox; }
 	void		SetOY(float oy) { m_oy = oy; }
@@ -71,29 +65,27 @@ protected:
 	hgeQuad		quad;
 	float		tx, ty;
 	float		tex_width, tex_height;
-	float		hotX, hotY;
-	bool		bXFlip, bYFlip, bHSFlip;
 	
 	//	精灵位图的宽度和高度
-	float						m_width, m_height;
+	float		m_width, m_height;
 	
 	//	精灵的旋转、原点、缩放率以及翻转
-	float						m_angle;
-	float						m_ox, m_oy;
-	float						m_zoom_x, m_zoom_y;
-	float						m_flip_x, m_flip_y;
+	float		m_angle;
+	float		m_ox, m_oy;
+	float		m_zoom_x, m_zoom_y;
+	float		m_flip_x, m_flip_y;
 
 	//	是否翻转原点(ox, oy)
-	bool						m_flip_hot_spot;
+	bool		m_flip_hot_spot;
 
 	//	精灵当前的src_rect
-	int							m_rx, m_ry, m_rw, m_rh;
+	int			m_rx, m_ry, m_rw, m_rh;
 
 	//	精灵src_rect的藏标记
-	bool						m_src_rect_dirty;
+	bool		m_src_rect_dirty;
 
 	//	精灵经过选择缩放后的四个顶点的坐标(不包括偏移)
-	float						m_x1, m_y1, m_x2, m_y2, m_x3, m_y3, m_x4, m_y4;
+	float		m_x1, m_y1, m_x2, m_y2, m_x3, m_y3, m_x4, m_y4;
 
 };
 

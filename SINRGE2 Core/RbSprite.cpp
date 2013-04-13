@@ -338,7 +338,7 @@ void RbSprite::render(u32 id)
 	{
 		hgeRect bound_rect;
 
-		m_pSpr->GetBoundingBox(x, y, &bound_rect);
+		m_pSpr->GetBoundingBoxEx(x, y, &bound_rect);
 
 		int bush_depth = FIX2INT(m_bush_depth);
 
@@ -484,7 +484,7 @@ VALUE RbSprite::set_oy(VALUE oy)
 {
 	super::set_oy(oy);
 
-	m_pSpr->SetOX(m_oy);
+	m_pSpr->SetOY(m_oy);
 	m_pSpr->SetSrcRectDirty();
 
 	return Qnil;
