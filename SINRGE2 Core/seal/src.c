@@ -23,7 +23,7 @@ enum
 static const size_t MIN_QUEUE_SIZE     = 2;
 static const size_t MAX_QUEUE_SIZE     = 63;
 static const size_t DEFAULT_QUEUE_SIZE = 3;
-static const size_t DEFAULT_CHUNK_SIZE = MIN_CHUNK_SIZE << 2;
+static const size_t DEFAULT_CHUNK_SIZE = 1048576;//73728;//MIN_CHUNK_SIZE << 2;
 static const size_t MAX_CHUNK_SIZE     = CHUNK_STORAGE_CAP -
                                          CHUNK_STORAGE_CAP % MIN_CHUNK_SIZE;
 

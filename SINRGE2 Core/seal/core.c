@@ -12,20 +12,20 @@ static int per_src_effect_limit = -1;
 void _seal_nop() {}
 void* _seal_nop_func() { return 0; }
 
-_seal_openal_initializer_t* alGenEffects = (void*) _seal_nop;
-_seal_openal_destroyer_t* alDeleteEffects = (void*) _seal_nop;
-_seal_openal_validator_t* alIsEffect = (void*) _seal_nop_func;
-LPALEFFECTF alEffectf = (void*) _seal_nop;
-LPALEFFECTI alEffecti = (void*) _seal_nop;
-LPALGETEFFECTF alGetEffectf = (void*) _seal_nop;
-LPALGETEFFECTI alGetEffecti = (void*) _seal_nop;
-_seal_openal_initializer_t* alGenAuxiliaryEffectSlots = (void*) _seal_nop;
-_seal_openal_destroyer_t* alDeleteAuxiliaryEffectSlots = (void*) _seal_nop;
-_seal_openal_validator_t* alIsAuxiliaryEffectSlot = (void*) _seal_nop_func;
-LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti = (void*) _seal_nop;
-LPALAUXILIARYEFFECTSLOTF alAuxiliaryEffectSlotf = (void*) _seal_nop;
-LPALGETAUXILIARYEFFECTSLOTI alGetAuxiliaryEffectSloti = (void*) _seal_nop;
-LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf = (void*) _seal_nop;
+//_seal_openal_initializer_t* alGenEffects = (void*) _seal_nop;
+//_seal_openal_destroyer_t* alDeleteEffects = (void*) _seal_nop;
+//_seal_openal_validator_t* alIsEffect = (void*) _seal_nop_func;
+//LPALEFFECTF alEffectf = (void*) _seal_nop;
+//LPALEFFECTI alEffecti = (void*) _seal_nop;
+//LPALGETEFFECTF alGetEffectf = (void*) _seal_nop;
+//LPALGETEFFECTI alGetEffecti = (void*) _seal_nop;
+//_seal_openal_initializer_t* alGenAuxiliaryEffectSlots = (void*) _seal_nop;
+//_seal_openal_destroyer_t* alDeleteAuxiliaryEffectSlots = (void*) _seal_nop;
+//_seal_openal_validator_t* alIsAuxiliaryEffectSlot = (void*) _seal_nop_func;
+//LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti = (void*) _seal_nop;
+//LPALAUXILIARYEFFECTSLOTF alAuxiliaryEffectSlotf = (void*) _seal_nop;
+//LPALGETAUXILIARYEFFECTSLOTI alGetAuxiliaryEffectSloti = (void*) _seal_nop;
+//LPALGETAUXILIARYEFFECTSLOTF alGetAuxiliaryEffectSlotf = (void*) _seal_nop;
 
 const char*
 SEAL_API
@@ -34,34 +34,34 @@ seal_get_version(void)
     return "0.1.2";
 }
 
-static
-seal_err_t
-init_ext_proc(void)
-{
-    alGenEffects = alGetProcAddress("alGenEffects");
-    alDeleteEffects = alGetProcAddress("alDeleteEffects");
-    alIsEffect = alGetProcAddress("alIsEffect");
-    alEffectf = alGetProcAddress("alEffectf");
-    alEffecti = alGetProcAddress("alEffecti");
-    alGetEffectf = alGetProcAddress("alGetEffectf");
-    alGetEffecti = alGetProcAddress("alGetEffecti");
-    alGenAuxiliaryEffectSlots = alGetProcAddress("alGenAuxiliaryEffectSlots");
-    alDeleteAuxiliaryEffectSlots =
-        alGetProcAddress("alDeleteAuxiliaryEffectSlots");
-    alIsAuxiliaryEffectSlot = alGetProcAddress("alIsAuxiliaryEffectSlot");
-    alAuxiliaryEffectSloti = alGetProcAddress("alAuxiliaryEffectSloti");
-    alAuxiliaryEffectSlotf = alGetProcAddress("alAuxiliaryEffectSlotf");
-    alGetAuxiliaryEffectSloti = alGetProcAddress("alGetAuxiliaryEffectSloti");
-    alGetAuxiliaryEffectSlotf = alGetProcAddress("alGetAuxiliaryEffectSlotf");
-    if (alGenEffects && alDeleteEffects && alIsEffect && alGetEffectf
-        && alGetEffecti && alEffectf && alGenAuxiliaryEffectSlots
-        && alDeleteAuxiliaryEffectSlots && alIsAuxiliaryEffectSlot
-        && alAuxiliaryEffectSloti && alAuxiliaryEffectSlotf
-        && alGetAuxiliaryEffectSloti && alGetAuxiliaryEffectSlotf)
-        return SEAL_OK;
-    else
-        return SEAL_NO_EXT_FUNC;
-}
+//static
+//seal_err_t
+//init_ext_proc(void)
+//{
+//    alGenEffects = alGetProcAddress("alGenEffects");
+//    alDeleteEffects = alGetProcAddress("alDeleteEffects");
+//    alIsEffect = alGetProcAddress("alIsEffect");
+//    alEffectf = alGetProcAddress("alEffectf");
+//    alEffecti = alGetProcAddress("alEffecti");
+//    alGetEffectf = alGetProcAddress("alGetEffectf");
+//    alGetEffecti = alGetProcAddress("alGetEffecti");
+//    alGenAuxiliaryEffectSlots = alGetProcAddress("alGenAuxiliaryEffectSlots");
+//    alDeleteAuxiliaryEffectSlots =
+//        alGetProcAddress("alDeleteAuxiliaryEffectSlots");
+//    alIsAuxiliaryEffectSlot = alGetProcAddress("alIsAuxiliaryEffectSlot");
+//    alAuxiliaryEffectSloti = alGetProcAddress("alAuxiliaryEffectSloti");
+//    alAuxiliaryEffectSlotf = alGetProcAddress("alAuxiliaryEffectSlotf");
+//    alGetAuxiliaryEffectSloti = alGetProcAddress("alGetAuxiliaryEffectSloti");
+//    alGetAuxiliaryEffectSlotf = alGetProcAddress("alGetAuxiliaryEffectSlotf");
+//    if (alGenEffects && alDeleteEffects && alIsEffect && alGetEffectf
+//        && alGetEffecti && alEffectf && alGenAuxiliaryEffectSlots
+//        && alDeleteAuxiliaryEffectSlots && alIsAuxiliaryEffectSlot
+//        && alAuxiliaryEffectSloti && alAuxiliaryEffectSlotf
+//        && alGetAuxiliaryEffectSloti && alGetAuxiliaryEffectSlotf)
+//        return SEAL_OK;
+//    else
+//        return SEAL_NO_EXT_FUNC;
+//}
 
 static
 void
@@ -120,7 +120,8 @@ seal_startup(const char* device_name)
     }
     alcMakeContextCurrent(context);
 
-    err = init_ext_proc();
+    //err = init_ext_proc();
+	err = SEAL_OK;
     if (err != SEAL_OK)
         goto clean_all;
 
