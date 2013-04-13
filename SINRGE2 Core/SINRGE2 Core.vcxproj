@@ -127,8 +127,8 @@
     <ClCompile Include="RubyExt\wait.c" />
     <ClCompile Include="RubyExt\zlib.c" />
     <ClCompile Include="SinSprite.cpp" />
-    <ClCompile Include="sin_display_object.cpp" />
-    <ClCompile Include="sin_render_tree.cpp" />
+    <ClCompile Include="RbDisplayObject.cpp" />
+    <ClCompile Include="RbRenderTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Contrib\include\hge\hge.h" />
@@ -198,8 +198,8 @@
     <ClInclude Include="RbTone.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SINRGE2.h" />
-    <ClInclude Include="sin_display_object.h" />
-    <ClInclude Include="sin_render_tree.h" />
+    <ClInclude Include="RbDisplayObject.h" />
+    <ClInclude Include="RbRenderTree.h" />
     <ClInclude Include="sin_types.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,8 +1,7 @@
 #ifndef __C_RGE_PLANE_H__
 #define __C_RGE_PLANE_H__
 
-#include "sin_display_object.h"
-//#include "RgeTextureEx.h"
+#include "RbDisplayObject.h"
 #include "hge.h"
 
 class SinSprite;

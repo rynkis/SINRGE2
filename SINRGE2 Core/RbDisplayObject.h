@@ -2,7 +2,7 @@
 #define __DISPLAY_OBJECT_H__
 
 #include "RbClassBase.h"
-#include "sin_render_tree.h"
+#include "RbRenderTree.h"
 
 class RbViewport;
 

@@ -1,7 +1,7 @@
 #ifndef __C_RGE_VIEWPORT_H__
 #define __C_RGE_VIEWPORT_H__
 
-#include "sin_display_object.h"
+#include "RbDisplayObject.h"
 
 class RbRect;
 class RbColor;

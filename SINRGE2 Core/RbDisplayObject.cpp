@@ -1,4 +1,4 @@
-#include "sin_display_object.h"
+#include "RbDisplayObject.h"
 #include "RbViewport.h"
 
 DisplayObject::DisplayObject()
