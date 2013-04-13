@@ -4,25 +4,25 @@
 
 using namespace Sin;
 
-HGE* RenderState::s_pHge = 0;
+HGE* RbRenderState::s_pHge = 0;
 
-RenderNode*	RenderTree::s_pViewportLists		= 0;
-RenderNode*	RenderTree::s_pRenderHead		= 0;
-RenderNode*	RenderTree::s_pRenderTail		= 0;
+RbRenderNode*	RbRenderTree::s_pViewportLists		= 0;
+RbRenderNode*	RbRenderTree::s_pRenderHead		= 0;
+RbRenderNode*	RbRenderTree::s_pRenderTail		= 0;
 
-void RenderTree::Init()
+void RbRenderTree::Init()
 {
 }
 
 /**
  *	äÖÈ¾º¯Êý
  */
-bool RenderTree::RenderProc()
+bool RbRenderTree::RenderProc()
 {
 	if(!NIL_P(rb_errinfo()))
 		return true;
 
-	RenderNode*	p1;
+	RbRenderNode*	p1;
 
 	for (p1 = s_pViewportLists; p1; p1 = p1->next)
 	{
@@ -45,19 +45,19 @@ bool RenderTree::RenderProc()
 	return false;
 }
 
-void RenderTree::ViewportAddToFront(RenderNode* node)
+void RbRenderTree::ViewportAddToFront(RbRenderNode* node)
 {
 	s_pViewportLists = DoubleLinkAddToFront(s_pViewportLists, node);
 }
 
-void RenderTree::ViewportDelete(RenderNode* node)
+void RbRenderTree::ViewportDelete(RbRenderNode* node)
 {
 	s_pViewportLists = DoubleLinkDelete(s_pViewportLists, node);
 }
 
-RenderNode*	RenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
+RbRenderNode*	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
 {
-	RenderNode* node	= ALLOC(RenderNode);
+	RbRenderNode* node	= ALLOC(RbRenderNode);
 	{
 		node->renderproc	= proc;
 		node->value			= value;
@@ -71,10 +71,10 @@ RenderNode*	RenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z,
 	return node;
 }
 
-RenderNode*	RenderTree::DeleteNode(RenderNode *node)
+RbRenderNode*	RbRenderTree::DeleteNode(RbRenderNode *node)
 {
-	RenderNode		*p1;
-	RenderNodePtr	*cur_head, *cur_tail;
+	RbRenderNode	*p1;
+	RbRenderNodePtr	*cur_head, *cur_tail;
 	
 	if (NIL_P(node->viewport))
 	{
@@ -125,10 +125,10 @@ RenderNode*	RenderTree::DeleteNode(RenderNode *node)
 	return p1;
 }
 
-void RenderTree::InsertNode(RenderNode *node)
+void RbRenderTree::InsertNode(RbRenderNode *node)
 {	
-	RenderNode		*p1;
-	RenderNodePtr	*cur_head, *cur_tail;
+	RbRenderNode	*p1;
+	RbRenderNodePtr	*cur_head, *cur_tail;
 	
 	if (NIL_P(node->viewport))
 	{
@@ -178,7 +178,7 @@ void RenderTree::InsertNode(RenderNode *node)
 	}
 }
 
-void RenderTree::DestroyNode(RenderNodePtr* node)
+void RbRenderTree::DestroyNode(RbRenderNodePtr* node)
 {
 	if (*node)
 	{
@@ -192,7 +192,7 @@ void RenderTree::DestroyNode(RenderNodePtr* node)
 	}
 }
 
-void RenderTree::FreeNode(RenderNodePtr* node)
+void RbRenderTree::FreeNode(RbRenderNodePtr* node)
 {
 	if (*node)
 	{
@@ -201,7 +201,7 @@ void RenderTree::FreeNode(RenderNodePtr* node)
 	}
 }
 
-RenderNode* RenderTree::DoubleLinkAddToFront(RenderNode* list, RenderNode* node)
+RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode* list, RbRenderNode* node)
 {
 	if (!node)
 		return list;
@@ -215,7 +215,7 @@ RenderNode* RenderTree::DoubleLinkAddToFront(RenderNode* list, RenderNode* node)
 	return node;
 }
 
-RenderNode* RenderTree::DoubleLinkDelete(RenderNode* list, RenderNode* node)
+RbRenderNode* RbRenderTree::DoubleLinkDelete(RbRenderNode* list, RbRenderNode* node)
 {
 	if (!node)
 		return list;

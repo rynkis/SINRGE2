@@ -141,9 +141,6 @@
     <ClCompile Include="RbPlane.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
-    <ClCompile Include="RbSeal.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="RbRenderTree.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>

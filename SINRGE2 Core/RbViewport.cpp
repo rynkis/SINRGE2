@@ -21,7 +21,7 @@ RbViewport::RbViewport()
 	, m_flash_reduce_count_per_frame(0)
 	, m_flash_hide_spr(0)
 	, m_flash_color(0)
-	, m_node(0), m_node_to_texture(0)
+	, m_node(0)
 	, m_tail(0), m_head(0)
 	, m_rect_ptr(0), m_color_ptr(0), m_tone_ptr(0)
 {
@@ -41,10 +41,7 @@ RbViewport::~RbViewport()
 	for (; m_head; m_head = m_head->next)
 		m_head->viewport = 0;	//	清空视口标记为0
 
-	RenderTree::ViewportDelete(m_node_to_texture);
-	RenderTree::FreeNode(&m_node_to_texture);
-	
-	RenderTree::DestroyNode(&m_node);
+	RbRenderTree::DestroyNode(&m_node);
 
 	s_pHge->Release();
 }
@@ -149,11 +146,8 @@ VALUE RbViewport::initialize(int argc, VALUE *argv, VALUE obj)
 	m_visible = Qtrue;
 
 	//	创建并添加渲染结点
-	m_node = RenderTree::AllocNode(RenderProc, obj, id_render_normal, 0, Qnil);
-	RenderTree::InsertNode(m_node);
-
-	m_node_to_texture = RenderTree::AllocNode(RenderProc, obj, id_render_to_texture, 0, Qnil);
-	RenderTree::ViewportAddToFront(m_node_to_texture);
+	m_node = RbRenderTree::AllocNode(RenderProc, obj, id_render_normal, 0, Qnil);
+	RbRenderTree::InsertNode(m_node);
 
 	m_disposed = false;
 
@@ -166,81 +160,64 @@ void RbViewport::render(u32 id)
 	if (m_flash_duration > 0 && m_flash_hide_spr > 0)
 		return;
 
-	if (id == id_render_normal)
+	//	根据viewport矩形进行裁剪
+	GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
+
+	//	渲染viewport中的所有对象
+	for (RbRenderNode* p = m_head; p; p = p->next)
 	{
-		if (render_to_texture())
-		{
-			//	render viewport self'texture to screen
-		}
-		else
-		{
-			//	根据viewport矩形进行裁剪
-			GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
-
-			//	渲染viewport中的所有对象
-			for (RenderNode* p = m_head; p; p = p->next)
-			{
-				p->renderproc(p->value, p->id);
-			}
-
-			//	取消裁剪 还原屏幕大小
-			GetRenderState()->ClipAndSave(0, 0, GetFrameWidth(), GetFrameHeight());
-		}
-
-		//	视口内对象描绘完毕之后再处理视口的混色闪烁等
-
-		// render it only the icolor isn't zero
-		if (m_color_ptr->GetColor() != 0 || m_flash_duration > 0)
-		{
-			m_quad.v[0].x = (float)m_rect_ptr->x;						m_quad.v[0].y = (float)m_rect_ptr->y;
-			m_quad.v[1].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[1].y = (float)m_rect_ptr->y;
-			m_quad.v[2].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[2].y = (float)m_rect_ptr->y + m_rect_ptr->height;
-			m_quad.v[3].x = (float)m_rect_ptr->x;						m_quad.v[3].y = (float)m_rect_ptr->y + m_rect_ptr->height;
-		}
-
-		//HTARGET render_target = s_pHge->Target_Create(200, 200, false);
-		//HTEXTURE tex = s_pHge->Target_GetTexture(render_target);
-
-		//DWORD *pTexData = s_pHge->Texture_Lock(tex, false);
-
-		//s_pHge->Texture_Unlock(tex);
-
-		//	视口混合颜色
-		if (m_color_ptr->GetColor() != 0)
-		{
-			m_quad.v[0].col = 
-			m_quad.v[1].col = 
-			m_quad.v[2].col = 
-			m_quad.v[3].col = m_color_ptr->GetColor();
-
-			s_pHge->Gfx_RenderQuad(&m_quad);
-		}
-
-		//	视口闪烁颜色
-		if (m_flash_duration > 0)
-		{
-			m_quad.v[0].col = 
-			m_quad.v[1].col = 
-			m_quad.v[2].col = 
-			m_quad.v[3].col = m_flash_color;
-
-			s_pHge->Gfx_RenderQuad(&m_quad);
-		}
+		p->renderproc(p->value, p->id);
 	}
-	else
+
+	//	取消裁剪 还原屏幕大小
+	GetRenderState()->ClipAndSave(0, 0, GetFrameWidth(), GetFrameHeight());
+
+	//	视口内对象描绘完毕之后再处理视口的混色闪烁等
+
+	// render it only the icolor isn't zero
+	if (m_color_ptr->GetColor() != 0 || m_tone_ptr->GetColor() != 0 || m_flash_duration > 0)
 	{
-		if (render_to_texture())
-		{
-			GetRenderState()->SetRenderToTexture(true);
-			//  ><
-			GetRenderState()->SetRenderToTexture(false);
-		}
+		m_quad.v[0].x = (float)m_rect_ptr->x;						m_quad.v[0].y = (float)m_rect_ptr->y;
+		m_quad.v[1].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[1].y = (float)m_rect_ptr->y;
+		m_quad.v[2].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[2].y = (float)m_rect_ptr->y + m_rect_ptr->height;
+		m_quad.v[3].x = (float)m_rect_ptr->x;						m_quad.v[3].y = (float)m_rect_ptr->y + m_rect_ptr->height;
 	}
-}
 
-bool RbViewport::render_to_texture() const
-{
-	return (m_head != 0 && m_tone_ptr->GetColor() != 0);
+	//	视口混合颜色
+	if (m_color_ptr->GetColor() != 0)
+	{
+		m_quad.v[0].col = 
+		m_quad.v[1].col = 
+		m_quad.v[2].col = 
+		m_quad.v[3].col = m_color_ptr->GetColor();
+
+		s_pHge->Gfx_RenderQuad(&m_quad);
+	}
+
+	//	视口闪烁颜色
+	if (m_flash_duration > 0)
+	{
+		m_quad.v[0].col = 
+		m_quad.v[1].col = 
+		m_quad.v[2].col = 
+		m_quad.v[3].col = m_flash_color;
+
+		s_pHge->Gfx_RenderQuad(&m_quad);
+	}
+	
+	// 使用减淡混合方式处理视口色调
+	if (m_tone_ptr->GetColor() != 0)
+	{
+		m_quad.v[0].col = 
+		m_quad.v[1].col = 
+		m_quad.v[2].col = 
+		m_quad.v[3].col = m_tone_ptr->GetColor();
+		m_quad.blend = BLEND_COLORMUL;
+			
+		s_pHge->Gfx_RenderQuad(&m_quad);
+
+		m_quad.blend = BLEND_DEFAULT;
+	}
 }
 
 VALUE RbViewport::get_rect()
@@ -287,7 +264,7 @@ VALUE RbViewport::set_z(VALUE z)
 	{
 		m_z = FIX2INT(z);
 		m_node->z = m_z;
-		RenderTree::InsertNode(RenderTree::DeleteNode(m_node));
+		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
 	}
 
 	return Qnil;

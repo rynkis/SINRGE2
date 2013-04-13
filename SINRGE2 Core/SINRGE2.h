@@ -41,7 +41,7 @@ namespace Sin
 	D3DCAPS8*			GetD3DCapsPtr();
 	static DWORD		GetMaxTexW() { return GetD3DCapsPtr()->MaxTextureWidth; }
 	static DWORD		GetMaxTexH() { return GetD3DCapsPtr()->MaxTextureHeight; }
-	RenderState*		GetRenderState();// const { return m_pRenderState; }
+	RbRenderState*		GetRenderState();// const { return m_pRenderState; }
 	static unsigned long		GetFrameWidth() { return GetFrmStructPtr()->m_screen_width; }
 	static unsigned long		GetFrameHeight() { return GetFrmStructPtr()->m_screen_height; }
 

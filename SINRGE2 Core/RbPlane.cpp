@@ -39,7 +39,7 @@ RbPlane::~RbPlane()
 	
 	SAFE_DELETE(m_pSpr);
 
-	RenderTree::DestroyNode(&m_node);
+	RbRenderTree::DestroyNode(&m_node);
 }
 
 void RbPlane::InitLibrary()
@@ -122,8 +122,8 @@ VALUE RbPlane::initialize(int argc, VALUE *argv, VALUE obj)
 	}
 
 	//	创建并添加渲染结点
-	m_node = RenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
-	RenderTree::InsertNode(m_node);
+	m_node = RbRenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
+	RbRenderTree::InsertNode(m_node);
 
 	m_visible = Qtrue;
 
@@ -415,7 +415,7 @@ VALUE RbPlane::set_z(VALUE z)
 	{
 		m_z = FIX2INT(z);
 		m_node->z = m_z;
-		RenderTree::InsertNode(RenderTree::DeleteNode(m_node));
+		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
 	}
 
 	return Qnil;
@@ -433,9 +433,9 @@ VALUE RbPlane::set_viewport(VALUE viewport)
 		m_viewport_ptr = GetObjectPtr<RbViewport>(viewport);
 	}
 
-	RenderTree::DeleteNode(m_node);
+	RbRenderTree::DeleteNode(m_node);
 	m_node->viewport = viewport;
-	RenderTree::InsertNode(m_node);
+	RbRenderTree::InsertNode(m_node);
 
 	return Qnil;
 }

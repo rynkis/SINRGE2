@@ -13,7 +13,7 @@ static VALUE init()
 
 	CreateHge();
 	// Set our render proc
-	GetHgePtr()->System_SetState(HGE_RENDERFUNC, RenderTree::RenderProc);
+	GetHgePtr()->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
 	GetHgePtr()->System_SetState(HGE_TEXTUREFILTER, false);
 
 	bool	isFullScreen;

@@ -115,7 +115,6 @@
     <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="RbGraphics.cpp" />
     <ClCompile Include="RbPlane.cpp" />
-    <ClCompile Include="RbSeal.cpp" />
     <ClCompile Include="RbViewport.cpp" />
     <ClCompile Include="RubyExt\nonblock.c" />
     <ClCompile Include="RbColor.cpp" />

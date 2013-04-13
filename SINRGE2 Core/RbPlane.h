@@ -38,7 +38,7 @@ protected:
 	void			process_tone_texture();
 
 protected:
-	RenderNode*		m_node;
+	RbRenderNode*	m_node;
 
 	u32				m_opacity;
 	VALUE			m_blend_type;	//	（0：正常，1：加法，2：减法）。 ！Ruby层面的0、1、2。

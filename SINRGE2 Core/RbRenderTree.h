@@ -11,17 +11,17 @@
 
 using namespace Sin;
 
-class RenderState
+class RbRenderState
 {
 public:
-	typedef struct __RenderClipRect
+	typedef struct __RbRenderClipRect
 	{
 		int x;
 		int y;
 		int width;
 		int height;
 
-		__RenderClipRect() : x(0), y(0), width(0), height(0) {}
+		__RbRenderClipRect() : x(0), y(0), width(0), height(0) {}
 
 		void set(int _x, int _y, int _w, int _h)
 		{
@@ -31,16 +31,16 @@ public:
 			height	= _h;
 		}
 
-	} RenderClipRect;
+	} RbRenderClipRect;
 
 public:
-	RenderState()
+	RbRenderState()
 		: m_render2texture(false)
 	{
 		s_pHge = hgeCreate(HGE_VERSION);
 	}
 
-	~RenderState()
+	~RbRenderState()
 	{
 		s_pHge->Release();
 	}
@@ -67,7 +67,7 @@ public:
 		Clip(x, y, w, h);
 	}
 
-	inline const RenderClipRect& GetClipRect() const { return m_rect; }
+	inline const RbRenderClipRect& GetClipRect() const { return m_rect; }
 
 	inline void	SetRenderToTexture(bool b)
 	{
@@ -80,7 +80,7 @@ public:
 	}
 
 private:
-	RenderClipRect				m_rect;
+	RbRenderClipRect			m_rect;
 	bool						m_render2texture;
 
 	static HGE*					s_pHge;
@@ -91,7 +91,7 @@ private:
  */
 typedef	void (*RbRenderProc)(VALUE, u32);
 
-typedef struct __RenderNode
+typedef struct __RbRenderNode
 {
 	RbRenderProc				renderproc;	//	渲染函数指针
 	VALUE						value;		//	该结点对ruby对象的引用，比如Sprite、Window等。
@@ -99,38 +99,38 @@ typedef struct __RenderNode
 	s32							z;			//	该结点在渲染树中的z坐标值。该值越大的显示在越上面。
 	VALUE						viewport;	//	结点所在视口，如果该值为Qnil的情况下，则结点直接在窗口中渲染，否则在Viewport中渲染。
 
-	struct __RenderNode*		prev;		//	上一个结点指针。
-	struct __RenderNode*		next;		//	下一个结点指针。
-} RenderNode, *RenderNodePtr;
+	struct __RbRenderNode*		prev;		//	上一个结点指针。
+	struct __RbRenderNode*		next;		//	下一个结点指针。
+} RbRenderNode, *RbRenderNodePtr;
 
-class RenderTree
+class RbRenderTree
 {
 public:
-	static void				Init();
+	static void					Init();
 
 public:
-	static bool				RenderProc();
+	static bool					RenderProc();
 
 public:
-	static void				ViewportAddToFront(RenderNode* node);
-	static void				ViewportDelete(RenderNode* node);
+	static void					ViewportAddToFront(RbRenderNode* node);
+	static void					ViewportDelete(RbRenderNode* node);
 
-	static RenderNode*		AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport);
+	static RbRenderNode*		AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport);
 
-	static RenderNode*		DeleteNode(RenderNode *node);
-	static void				InsertNode(RenderNode *node);
+	static RbRenderNode*		DeleteNode(RbRenderNode *node);
+	static void					InsertNode(RbRenderNode *node);
 
-	static void				DestroyNode(RenderNodePtr* node);
-	static void				FreeNode(RenderNodePtr* node);
-
-private:
-	static RenderNode*		DoubleLinkAddToFront(RenderNode* list, RenderNode* node);
-	static RenderNode*		DoubleLinkDelete(RenderNode* list, RenderNode* node);
+	static void					DestroyNode(RbRenderNodePtr* node);
+	static void					FreeNode(RbRenderNodePtr* node);
 
 private:
-	static RenderNode*		s_pRenderHead;
-	static RenderNode*		s_pRenderTail;
-	static RenderNode*		s_pViewportLists;
+	static RbRenderNode*		DoubleLinkAddToFront(RbRenderNode* list, RbRenderNode* node);
+	static RbRenderNode*		DoubleLinkDelete(RbRenderNode* list, RbRenderNode* node);
+
+private:
+	static RbRenderNode*		s_pRenderHead;
+	static RbRenderNode*		s_pRenderTail;
+	static RbRenderNode*		s_pViewportLists;
 };
 
 #endif	//	__RGE_RENDER_TREE_H__

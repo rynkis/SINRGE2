@@ -23,7 +23,7 @@ using namespace Sin;
 static	SinFrameStruct		m_frm_struct;
 static	HGE*				m_pHge = 0;
 
-static	RenderState*		m_pRenderState;
+static	RbRenderState*		m_pRenderState;
 
 static 	IDirect3D8*			m_ref_d3d;
 static 	IDirect3DDevice8*	m_ref_device;
@@ -131,7 +131,7 @@ namespace
 	void InitExportSinInterface()
 	{
 		InitRbGlobal();
-		InitSeal();
+		//InitSeal();
 		InitRbFrame();
 		//InitRbHge();
 		InitRbGraphics();
@@ -281,7 +281,7 @@ HGE* Sin::GetHgePtr()
 	return m_pHge;
 }
 
-RenderState* Sin::GetRenderState()
+RbRenderState* Sin::GetRenderState()
 {
 	return m_pRenderState;
 }
@@ -293,9 +293,9 @@ void Sin::CreateHge()
 
 void Sin::InitRenderSys()
 {
-	RenderTree::Init();
+	RbRenderTree::Init();
 
-	m_pRenderState = new RenderState();
+	m_pRenderState = new RbRenderState();
 	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
 }
 
