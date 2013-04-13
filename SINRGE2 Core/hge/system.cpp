@@ -201,28 +201,22 @@ void CALL HGE_Impl::System_Shutdown()
 
 bool CALL HGE_Impl::System_Update()
 {
-	// loop do
-	/*for(;;)
-	{*/
-		// Process window messages
-		if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){ 
-			if(m_msg.message == WM_QUIT){
-				bActive=false;
-				return false;
-			}
-			DispatchMessage(&m_msg);				
-			//continue;
-			return true;
+	// Process window messages
+	if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){
+		if(m_msg.message == WM_QUIT){
+			bActive=false;
+			return false;
 		}
-		// If HGE window is focused or we have the "don't suspend" state - process the main loop
-		if(bActive || bDontSuspend)
-		{
-			if(procRenderFunc)
-				procRenderFunc();
+		DispatchMessage(&m_msg);
+	}
+	// If HGE window is focused or we have the "don't suspend" state - process the main loop
+	if(bActive || bDontSuspend)
+	{
+		if(procRenderFunc)
+			procRenderFunc();
 
-			LimitFps(nHGEFPS);
-		}
-	//}
+		LimitFps(nHGEFPS);
+	}
 	return true;
 }
 
