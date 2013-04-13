@@ -1,4 +1,4 @@
-﻿SINRGE2 Ver. YAR
+SINRGE2 Ver. YAR
 =================
 Copyright (C) 2013 Sherry Lynch(or Shy07) <Gernischt@gmail.com>
 
@@ -19,7 +19,7 @@ SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lync
 依赖
 ==================
 
-Ruby 2.0.0 p0 http://www.ruby-lang.org/en/
+Ruby 2.0.0 p0 http://www.ruby-lang.org/en/  
 --附加依赖：zlib
 
 HGE 1.81 http://hge.relishgames.com/doc/index.html  
