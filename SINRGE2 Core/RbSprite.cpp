@@ -509,11 +509,11 @@ VALUE RbSprite::get_angle()
 
 VALUE RbSprite::set_angle(VALUE angle)
 {
-	SafeFixnumValue(angle);
+	SafeNumericValue(angle);
 
 	m_angle_rad = angle;
 
-	m_angle = SinDeg2Rad(360 - FIX2INT(angle));
+	m_angle = SinDeg2Rad(360.0f - NUM2INT(angle));
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
 

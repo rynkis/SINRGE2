@@ -5,19 +5,12 @@ using namespace Sin;
 
 static VALUE rb_mFrame;
 
-//static bool		inited			= false;
-//static char*	gameTitle		= "SINRGE2";
-static wchar_t*	gameTitleW		= L"SINRGE2";
-static wchar_t	titleWithFps[MAX_PATH];
-
-//char* Sin::GetTitle()
-//{
-//	return gameTitle;
-//}
+static wchar_t	gameTitleW[MAX_PATH];
+static wchar_t*	defaultTitle	= L"SINRGE2";
 
 wchar_t* Sin::GetTitleW()
 {
-	return gameTitleW;
+	return  gameTitleW[0] ? gameTitleW : defaultTitle;
 }
 
 static VALUE peek_message()
@@ -43,23 +36,6 @@ static VALUE get_real_fps()
 	return rb_float_new(GetRealFps());
 }
 
-static VALUE limit_fps(int argc, VALUE* argv)
-{
-    VALUE rint;
-
-    rb_scan_args(argc, argv, "01", &rint);
-	LimitFps(NIL_P(rint) ? 60 : NUM2INT(rint));
-
-    return Qnil;
-}
-
-static VALUE show_fps()
-{
-	wsprintfW(titleWithFps, L"%s - %d FPS", gameTitleW, (int)GetRealFps());
-	SetWindowTextW(GetFrmStructPtr()->m_hwnd, titleWithFps);
-	return Qnil;
-}
-
 static VALUE get_hwnd()
 {
 	return LONG2FIX(GetFrmStructPtr()->m_hwnd);
@@ -67,27 +43,15 @@ static VALUE get_hwnd()
 
 static VALUE get_title()
 {
-	int len = WideCharToMultiByte(CP_UTF8, 0, gameTitleW, -1, NULL, 0, NULL, NULL);
-	char* tempTitle = (char*)malloc(len);
-	WideCharToMultiByte(CP_UTF8, 0, gameTitleW, -1, tempTitle, len, NULL, NULL);
-	return rb_str_new2(tempTitle);
+	return rb_str_new2(Kconv::UnicodeToUTF8(gameTitleW));
 }
 
 static VALUE set_title(int argc, VALUE title)
 {
-	/*if (inited)
-		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeStringValue(title);
 
-	char* tempTitle = RSTRING_PTR(title);
-	
-	int len = MultiByteToWideChar(CP_UTF8, 0, tempTitle, -1, NULL, 0);
-	gameTitleW = (wchar_t*)malloc(len);
-	MultiByteToWideChar(CP_UTF8, 0, tempTitle, -1, gameTitleW, len);
-
-	/*len = WideCharToMultiByte(CP_ACP, 0, gameTitleW, -1, NULL, 0, NULL, NULL);
-	gameTitle = (char*)malloc(len);
-	WideCharToMultiByte(CP_ACP, 0, gameTitleW, -1, gameTitle, len, NULL, NULL);*/
+	wchar_t* tempTitle = Kconv::UTF8ToUnicode(RSTRING_PTR(title));
+	wcscpy_s(gameTitleW, tempTitle);
 	return Qnil;
 }
 
@@ -186,9 +150,9 @@ void bind_frame()
 	rb_define_module_function(rb_mFrame, "set_size",	RbFunc(set_width_and_height), 2);
 
 	//rb_define_module_function(rb_mFrame, "peek_message", RbFunc(peek_message), 0);
-	rb_define_module_function(rb_mSin, "limit_fps", RbFunc(limit_fps), -1);
+	//rb_define_module_function(rb_mSin, "limit_fps", RbFunc(limit_fps), -1);
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
-	rb_define_module_function(rb_mSin, "show_fps", RbFunc(show_fps), 0);
+	//rb_define_module_function(rb_mSin, "show_fps", RbFunc(show_fps), 0);
 	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
 }
 

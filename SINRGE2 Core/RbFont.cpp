@@ -11,11 +11,12 @@ VALUE rb_cFont;
 	if(FIX2INT(_size) > 96) rb_raise(rb_eArgError, "bad value for size, the max value is 96.");	\
 } while(0)
 
-VALUE RbFont::__default_name__	= Qnil;
-VALUE RbFont::__default_size__	= Qnil;
-VALUE RbFont::__default_bold__	= Qnil;
+VALUE RbFont::__default_name__		= Qnil;
+VALUE RbFont::__default_size__		= Qnil;
+VALUE RbFont::__default_bold__		= Qnil;
 VALUE RbFont::__default_italic__	= Qnil;
-VALUE RbFont::__default_color__	= Qnil;
+VALUE RbFont::__default_color__		= Qnil;
+VALUE RbFont::__default_shadow__	= Qnil;
 
 RbFont::RbFont()
 	: m_hFont(0)
@@ -67,6 +68,7 @@ void RbFont::InitLibrary()
 	__default_bold__	= Qfalse;
 	__default_italic__	= Qfalse;
 	__default_color__	= rb_class_new_instance(3, __argv, rb_cColor);
+	__default_shadow__	= Qtrue;
 
 	rb_gc_register_address(&__default_name__);
 	rb_gc_register_address(&__default_color__);
@@ -86,6 +88,8 @@ void RbFont::InitLibrary()
 	rb_define_method(rb_cFont, "italic=",	(RbFunc)dm_set_italic,	1);
 	rb_define_method(rb_cFont, "color",		(RbFunc)dm_get_color,	0);
 	rb_define_method(rb_cFont, "color=",	(RbFunc)dm_set_color,	1);
+	rb_define_method(rb_cFont, "shadow",	(RbFunc)dm_get_shadow,	0);
+	rb_define_method(rb_cFont, "shadow=",	(RbFunc)dm_set_shadow,	1);
 
 	// class attribute
 	rb_define_singleton_method(rb_cFont, "default_name",	(RbFunc)dm_get_default_name,	0);
@@ -98,6 +102,8 @@ void RbFont::InitLibrary()
 	rb_define_singleton_method(rb_cFont, "default_italic=",	(RbFunc)dm_set_default_italic,	1);
 	rb_define_singleton_method(rb_cFont, "default_color",	(RbFunc)dm_get_default_color,	0);
 	rb_define_singleton_method(rb_cFont, "default_color=",	(RbFunc)dm_set_default_color,	1);
+	rb_define_singleton_method(rb_cFont, "default_shadow",	(RbFunc)dm_get_default_shadow,	0);
+	rb_define_singleton_method(rb_cFont, "default_shadow=",	(RbFunc)dm_set_default_shadow,	1);
 
 	// supplement
  	rb_define_method(rb_cFont, "to_s",	(RbFunc)dm_to_string,	0);
@@ -133,6 +139,7 @@ VALUE RbFont::initialize(int argc, VALUE *argv, VALUE obj)
 	m_size			= argc > 1 ? argv[1] : dm_get_default_size(rb_cFont);
 	m_bold			= dm_get_default_bold(rb_cFont);
 	m_italic		= dm_get_default_italic(rb_cFont);
+	m_shadow		= dm_get_default_shadow(rb_cFont);
 
 	VALUE color		= RbColor::dm_clone(dm_get_default_color(rb_cFont));
 	m_color_ptr		= GetObjectPtr<RbColor>(color);
@@ -269,6 +276,17 @@ VALUE RbFont::set_color(VALUE color)
 	return Qnil;
 }
 
+VALUE RbFont::get_shadow()
+{
+	return m_shadow;
+}
+
+VALUE RbFont::set_shadow(VALUE shadow)
+{
+	m_shadow = Ruby2RbBool(shadow);
+	return Qnil;
+}
+
 /*
  *	以下定义ruby方法
  */
@@ -277,6 +295,7 @@ imp_attr_accessor(RbFont, size)
 imp_attr_accessor(RbFont, bold)
 imp_attr_accessor(RbFont, italic)
 imp_attr_accessor(RbFont, color)
+imp_attr_accessor(RbFont, shadow)
 
 VALUE RbFont::dm_get_default_name(VALUE obj)
 {
@@ -333,5 +352,16 @@ VALUE RbFont::dm_set_default_color(VALUE obj, VALUE attr)
 {
 	SafeColorValue(attr);
 	__default_color__ = attr;
+	return Qnil;
+}
+
+VALUE RbFont::dm_get_default_shadow(VALUE obj)
+{
+	return __default_shadow__;
+}
+
+VALUE RbFont::dm_set_default_shadow(VALUE obj, VALUE attr)
+{
+	__default_shadow__ = Ruby2RbBool(attr);
 	return Qnil;
 }

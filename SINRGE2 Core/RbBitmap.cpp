@@ -613,6 +613,20 @@ VALUE RbBitmap::hue_change(VALUE hue)
 	iHue %= 360;
 	if (iHue < 0)	iHue += 360;
 
+	/*double rad = iHue * M_PI / 180;
+	double cos = cosf(rad);
+	double sin = sinf(rad);
+	double temp = (1.0 - cos)/3.0;
+	float ta = (float)(temp + cos);
+	float tb = (float)(temp - sqrt(0.33333) * sin);
+	float tc = (float)(temp + sqrt(0.33333) * sin);
+
+	float matrix[] = {
+				ta, tb, tc,
+				tc, ta, tb,
+				tb, tc, ta
+		};*/
+
 	float h, s, l;
 	BYTE a, r, g, b;
 
@@ -623,6 +637,9 @@ VALUE RbBitmap::hue_change(VALUE hue)
 		for (s32 y = 0; y < m_bmp.height; ++y)
 		{
 			GET_ARGB_8888(pTexData[m_bmp.texw * y + x], a, r, g, b);
+			/*r = (BYTE)SinBound(r*matrix[0]+g*matrix[1]+b*matrix[2], 0, 255);
+			g = (BYTE)SinBound(r*matrix[3]+g*matrix[4]+b*matrix[5], 0, 255);
+			b = (BYTE)SinBound(r*matrix[6]+g*matrix[7]+b*matrix[8], 0, 255);*/
 			ColorSpaceRGB2HSV(r, g, b, h, s, l);
 			h += iHue;
 			ColorSpaceHSV2RGB(h, s, l, r, g, b);
@@ -1125,8 +1142,12 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 		return Qfalse;
 
 	DWORD draw_color = m_font_ptr->GetColorPtr()->GetColor();
-	if (!GET_ARGB_A(draw_color))
+	BYTE da, dr, dg, db;
+	GET_ARGB_8888(draw_color, da, dr, dg, db);
+	if (!da)
 		return Qfalse;
+
+	bool shadow = m_font_ptr->IsShadow();
 
 	DWORD color1, color2 = 0;
 
@@ -1207,8 +1228,8 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 					for (UINT y = 0; y < gm.gmBlackBoxY; ++y)
 					{
 						//	过滤掉越界的像素
-						tmp_x = x  + gm.gmptGlyphOrigin.x + iCharOffset + ix + offset_x;
-						tmp_y = y  + tm.tmAscent - gm.gmptGlyphOrigin.y + iy + offset_y;
+						tmp_x = x + gm.gmptGlyphOrigin.x + iCharOffset + ix + offset_x;
+						tmp_y = y + tm.tmAscent - gm.gmptGlyphOrigin.y + iy + offset_y;
 						if (tmp_x < 0 || tmp_x >= m_bmp.texw || tmp_y < 0 || tmp_y >= m_bmp.texh)
 							continue;
 
@@ -1217,12 +1238,21 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 						if (!tmp_gray)
 							continue;
 
-						tmp_gray = (BYTE)((float)tmp_gray * GET_ARGB_A(draw_color) / 255);
+						tmp_gray = (BYTE)((float)tmp_gray * da / 255);
 						if (!tmp_gray)
 							continue;
 
+						if (shadow)
+						{
+							//	处理阴影颜色
+							color1 = MAKE_ARGB_8888(tmp_gray, 0, 0, 0);
+							color2 = pTexData[(tmp_y + 1) * m_bmp.texw + tmp_x + 1];
+							BLEND_ARGB_8888(color1, color2);
+							pTexData[(tmp_y + 1) * m_bmp.texw + tmp_x + 1] = color2;
+						}
+
 						//	处理像素颜色
-						color1 = MAKE_ARGB_8888(tmp_gray, GET_ARGB_R(draw_color), GET_ARGB_G(draw_color), GET_ARGB_B(draw_color));
+						color1 = MAKE_ARGB_8888(tmp_gray, dr, dg, db);
 						color2 = pTexData[tmp_y * m_bmp.texw + tmp_x];
 						BLEND_ARGB_8888(color1, color2);
 						pTexData[tmp_y * m_bmp.texw + tmp_x] = color2;

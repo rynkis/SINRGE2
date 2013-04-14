@@ -4,11 +4,11 @@
 
 using namespace Sin;
 
-static VALUE		mInput;
+static VALUE			mInput;
 
-static int			mouse_posX				= 0;
-static int			mouse_posY				= 0;
-static bool			in_screen				= false;
+static int				mouse_posX				= 0;
+static int				mouse_posY				= 0;
+static bool				in_screen				= false;
 
 namespace
 {
@@ -80,7 +80,7 @@ namespace
 
 /*
 **	call-seq:
-**		NGE::Input.update	-> nil
+**		SIN::Input.update	-> nil
 **
 */
 static VALUE update_input()
@@ -107,7 +107,7 @@ static VALUE update_input()
 
 /*
 **	call-seq:
-**		NGE::Input.mouse_over?	-> bool
+**		SIN::Input.mouse_over?	-> bool
 **
 */
 static VALUE mouse_over()
@@ -117,7 +117,7 @@ static VALUE mouse_over()
 
 /*
 **	call-seq:
-**		NGE::Input.press?(vk)	-> bool
+**		SIN::Input.press?(vk)	-> bool
 **
 */
 static VALUE is_press(int argv, VALUE key)
@@ -128,7 +128,7 @@ static VALUE is_press(int argv, VALUE key)
 
 /*
 **	call-seq:
-**		NGE::Input.trigger?(vk)	-> bool
+**		SIN::Input.trigger?(vk)	-> bool
 **
 */
 static VALUE is_trigger(int argv, VALUE key)
@@ -139,7 +139,7 @@ static VALUE is_trigger(int argv, VALUE key)
 
 /*
 **	call-seq:
-**		NGE::Input.repeat?(vk)	-> bool
+**		SIN::Input.repeat?(vk)	-> bool
 **
 */
 static VALUE is_repeat(int argv, VALUE key)
@@ -150,7 +150,7 @@ static VALUE is_repeat(int argv, VALUE key)
 
 /*
 **	call-seq:
-**		NGE::Input.click?(vk)	-> bool
+**		SIN::Input.click?(vk)	-> bool
 **
 */
 static VALUE is_click(int argv, VALUE key)
@@ -161,7 +161,76 @@ static VALUE is_click(int argv, VALUE key)
 
 /*
 **	call-seq:
-**		NGE::Input.show_mouse(show)	-> nil
+**		SIN::Input.dir4	-> fixnum
+**
+*/
+static VALUE get_dir4()
+{
+	if (vk_is_press(VK_DOWN) || vk_is_press(VK_NUMPAD2))
+		return INT2FIX(2);
+	if (vk_is_press(VK_LEFT) || vk_is_press(VK_NUMPAD4))
+		return INT2FIX(4);
+	if (vk_is_press(VK_RIGHT) || vk_is_press(VK_NUMPAD6))
+		return INT2FIX(6);
+	if (vk_is_press(VK_UP) || vk_is_press(VK_NUMPAD8))
+		return INT2FIX(8);
+	
+	return RUBY_0;
+}
+
+/*
+**	call-seq:
+**		SIN::Input.dir8	-> fixnum
+**
+*/
+static VALUE get_dir8()
+{
+	if (vk_is_press(VK_LEFT))
+	{
+		if (vk_is_press(VK_DOWN))
+			return INT2FIX(1);
+		if (vk_is_press(VK_UP))
+			return INT2FIX(7);
+		return INT2FIX(4);
+	}
+	if (vk_is_press(VK_DOWN))
+	{
+		if (vk_is_press(VK_LEFT))
+			return INT2FIX(1);
+		if (vk_is_press(VK_RIGHT))
+			return INT2FIX(3);
+		return INT2FIX(2);
+	}
+	if (vk_is_press(VK_RIGHT))
+	{
+		if (vk_is_press(VK_DOWN))
+			return INT2FIX(3);
+		if (vk_is_press(VK_UP))
+			return INT2FIX(9);
+		return INT2FIX(6);
+	}
+	if (vk_is_press(VK_UP))
+	{
+		if (vk_is_press(VK_LEFT))
+			return INT2FIX(7);
+		if (vk_is_press(VK_RIGHT))
+			return INT2FIX(9);
+		return INT2FIX(8);
+	}
+	if (vk_is_press(VK_NUMPAD1))
+		return INT2FIX(1);
+	if (vk_is_press(VK_NUMPAD3))
+		return INT2FIX(3);
+	if (vk_is_press(VK_NUMPAD7))
+		return INT2FIX(7);
+	if (vk_is_press(VK_NUMPAD9))
+		return INT2FIX(9);
+	
+	return get_dir4();
+}
+/*
+**	call-seq:
+**		SIN::Input.show_mouse(show)	-> nil
 **
 */
 static VALUE show_mouse(int argv, VALUE show)
@@ -172,7 +241,7 @@ static VALUE show_mouse(int argv, VALUE show)
 
 /*
 **	call-seq:
-**		NGE::Input.on_focus?	-> bool
+**		SIN::Input.on_focus?	-> bool
 **
 */
 static VALUE on_focus()
@@ -182,7 +251,7 @@ static VALUE on_focus()
 
 /*
 **	call-seq:
-**		NGE::Input.mouse_wheel	-> fixnum
+**		SIN::Input.mouse_wheel	-> fixnum
 **
 */
 static VALUE mouse_wheel()
@@ -192,7 +261,7 @@ static VALUE mouse_wheel()
 
 /*
 **	call-seq:
-**		NGE::Input.dblclk?(vk)	-> bool
+**		SIN::Input.dblclk?(vk)	-> bool
 **
 */
 static VALUE mouse_dblclk(int argv, VALUE key)
@@ -203,7 +272,7 @@ static VALUE mouse_dblclk(int argv, VALUE key)
 
 /*
 **	call-seq:
-**		NGE::Input.mouse_pos	-> array
+**		SIN::Input.mouse_pos	-> array
 **
 */
 static VALUE get_mouse_pos()
@@ -233,6 +302,8 @@ static void bind_input()
 	rb_define_module_function(mInput, "trigger?", RbFunc(is_trigger), 1);
 	rb_define_module_function(mInput, "repeat?", RbFunc(is_repeat), 1);
 	rb_define_module_function(mInput, "click?", RbFunc(is_click), 1);
+	rb_define_module_function(mInput, "dir4", RbFunc(get_dir4), 0);
+	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 }
 
 void Sin::InitRbInput()

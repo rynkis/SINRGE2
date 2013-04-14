@@ -18,11 +18,11 @@
 /*
  * 如果定义了该宏则使用Ruby解释器默认的内存管理器进行对象分配和释放，否则不使用。
  */
-#define RGE_USE_RUBY_MM		1
+#define SIN_USE_RUBY_MM		1
 
-#ifdef RGE_USE_RUBY_MM
+#ifdef SIN_USE_RUBY_MM
 #include <new>
-#endif	//	RGE_USE_RUBY_MM
+#endif	//	SIN_USE_RUBY_MM
 
 /*
  *	定义ruby类实例方法（对应各种参数数目）
@@ -208,7 +208,7 @@
 /**
  *	RbClassBase
  *
- *		SIN中Ruby对象的顶层基类。
+ *		Ruby对象的顶层基类。
  */
 class RbClassBase
 {
@@ -217,9 +217,9 @@ public:
 	virtual ~RbClassBase() {}														//	Ruby对象Free函数（子类应该重载）
 
 public:
-	inline bool			IsCppObject() const { return NIL_P(__obj); }			//	是否是C++对象判断
-	inline VALUE		GetObject() const { return __obj; }						//	获取自身Ruby对象
-	inline void			MarkObject() const { rb_gc_mark(__obj); }				//	标记自身Ruby对象
+	inline bool			IsCppObject() const { return NIL_P(__obj); }				//	是否是C++对象判断
+	inline VALUE		GetObject() const { return __obj; }							//	获取自身Ruby对象
+	inline void			MarkObject() const { rb_gc_mark(__obj); }					//	标记自身Ruby对象
 
 	static inline VALUE	ReturnObject(RbClassBase* p)								//	安全返回Ruby对象
 	{
@@ -233,8 +233,8 @@ public:
 	}
 
 protected:
-	virtual void	mark(){}													//	Ruby对象Mark函数（子类应该重载）
-	virtual VALUE	initialize(int, VALUE*, VALUE obj) { return obj; }			//	Ruby对象initialize函数（子类应该重载）
+	virtual void	mark(){}														//	Ruby对象Mark函数（子类应该重载）
+	virtual VALUE	initialize(int, VALUE*, VALUE obj) { return obj; }				//	Ruby对象initialize函数（子类应该重载）
 	virtual VALUE	clone()			{ return rb_obj_clone(__obj); }
 	virtual VALUE	dup()			{ return rb_obj_dup(__obj); }
 	virtual VALUE	_dump(VALUE)	{ return Qnil; }
