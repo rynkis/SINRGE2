@@ -32,12 +32,13 @@ public:
 	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
 	static void				BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight);
 	
+	static bool				ScreenToBitmap(bitmap_p pBmp);
 
 public:
 	u32						GetWidth()					const { return m_bmp.width; }
 	u32						GetHeight()					const { return m_bmp.height; }
-	u32						GetMemWidth()				const { return m_bmp.texw; }
-	u32						GetMemHeight()				const { return m_bmp.texh; }
+	/*u32						GetMemWidth()				const { return m_bmp.texw; }
+	u32						GetMemHeight()				const { return m_bmp.texh; }*/
 	bitmap_p				GetBitmapPtr()				{ return &m_bmp; }
 
 	int						GetModifyCount()			const { return m_modify_count; }

@@ -1,4 +1,5 @@
 #include "RbExport.h"
+#include "RbBitmap.h"
 #include "SINRGE2.h"
 //#include "sin_graphics.h"
 
@@ -71,23 +72,60 @@ static VALUE update()
 	return Qnil;
 }
 
-static VALUE begin_scene(int argc, VALUE* argv)
-{
-	VALUE clear;
-    rb_scan_args(argc, argv, "01", &clear);
-	
-	GetHgePtr()->Gfx_BeginScene();
-	if (!RTEST(clear))
-		GetHgePtr()->Gfx_Clear(0);
+//static VALUE begin_scene(int argc, VALUE* argv)
+//{
+//	VALUE clear;
+//    rb_scan_args(argc, argv, "01", &clear);
+//	
+//	GetHgePtr()->Gfx_BeginScene();
+//	if (!RTEST(clear))
+//		GetHgePtr()->Gfx_Clear(0);
+//
+//	return Qnil;
+//}
+//
+//static VALUE end_scene()
+//{
+//	GetHgePtr()->Gfx_SetClipping();
+//	GetHgePtr()->Gfx_EndScene();
+//	return Qnil;
+//}
 
+static VALUE wait(int argc, VALUE duration)
+{
+	SafeFixnumValue(duration);
+	int dt = FIX2INT(duration);
+	do
+	{
+		update();
+		dt--;
+	} while (dt);
 	return Qnil;
 }
 
-static VALUE end_scene()
+static VALUE width()
 {
-	GetHgePtr()->Gfx_SetClipping();
-	GetHgePtr()->Gfx_EndScene();
-	return Qnil;
+	return LONG2FIX(GetFrmStructPtr()->m_screen_width);
+}
+
+static VALUE height()
+{
+	return LONG2FIX(GetFrmStructPtr()->m_screen_height);
+}
+
+static VALUE snap_to_bitmap()
+{
+	VALUE __argv[] = {INT2FIX(2), INT2FIX(2)};
+	VALUE bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
+	RbBitmap* pRbBmp = (RbBitmap*)DATA_PTR(bitmap);
+	if (RbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
+		return bitmap;
+	else
+	{
+		pRbBmp->~RbBitmap();
+		bitmap = NULL;
+		return Qnil;
+	}
 }
 
 //static VALUE image_to_screen(int argc, VALUE img, VALUE x, VALUE y)
@@ -108,11 +146,15 @@ void bind_graphics()
 
 	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
 	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
-
-	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
 	
-	rb_define_module_function(rb_mSin, "begin_scene", RbFunc(begin_scene), -1);
-	rb_define_module_function(rb_mSin, "end_scene", RbFunc(end_scene), 0);
+	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
+	rb_define_module_function(rb_mGraphics, "wait", RbFunc(wait), 1);
+	rb_define_module_function(rb_mGraphics, "width", RbFunc(width), 0);
+	rb_define_module_function(rb_mGraphics, "height", RbFunc(height), 0);
+	rb_define_module_function(rb_mGraphics, "snap_to_bitmap", RbFunc(snap_to_bitmap), 0);
+	
+	//rb_define_module_function(rb_mSin, "begin_scene", RbFunc(begin_scene), -1);
+	//rb_define_module_function(rb_mSin, "end_scene", RbFunc(end_scene), 0);
 	//rb_define_module_function(rb_mSin, "image_to_screen", RbFunc(image_to_screen), 3);
 }
 

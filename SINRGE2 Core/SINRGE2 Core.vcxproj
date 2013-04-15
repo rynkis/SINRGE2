@@ -89,6 +89,7 @@
       <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/lib/seal/seal.lib;$(SolutionDir)Contrib/lib/seal/OpenAL32.lib;$(SolutionDir)Contrib/lib/seal/libogg.lib;$(SolutionDir)Contrib/lib/seal/libvorbis.lib;$(SolutionDir)Contrib/lib/seal/libmpg123.lib;winmm.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libci.lib</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
+      <StackReserveSize>0</StackReserveSize>
     </Link>
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
@@ -118,7 +119,9 @@
     <ClCompile Include="RbGraphics.cpp" />
     <ClCompile Include="RbInput.cpp" />
     <ClCompile Include="RbPlane.cpp" />
+    <ClCompile Include="RbSeal.cpp" />
     <ClCompile Include="RbSprite.cpp" />
+    <ClCompile Include="RbTable.cpp" />
     <ClCompile Include="RbViewport.cpp" />
     <ClCompile Include="RubyExt\nonblock.c" />
     <ClCompile Include="RbColor.cpp" />
@@ -187,6 +190,7 @@
     <ClInclude Include="RbInput.h" />
     <ClInclude Include="RbPlane.h" />
     <ClInclude Include="RbSprite.h" />
+    <ClInclude Include="RbTable.h" />
     <ClInclude Include="RbViewport.h" />
     <ClInclude Include="SinSprite.h" />
     <ClInclude Include="sin_bitmap.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="SINRGE2.h" />
     <ClInclude Include="RbDisplayObject.h" />
     <ClInclude Include="RbRenderTree.h" />
+    <ClInclude Include="sin_common.h" />
     <ClInclude Include="sin_types.h" />
   </ItemGroup>
   <ItemGroup>

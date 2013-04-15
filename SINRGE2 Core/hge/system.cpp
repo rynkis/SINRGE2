@@ -115,35 +115,35 @@ bool CALL HGE_Impl::System_Initiate()
 
 	// Create window
 
-	width=nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME)*2;
-	height=nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME)*2 + GetSystemMetrics(SM_CYCAPTION);
+	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
 
-	rectW.left=(GetSystemMetrics(SM_CXSCREEN)-width)/2;
-	rectW.top=(GetSystemMetrics(SM_CYSCREEN)-height)/2 - GetSystemMetrics(SM_CYCAPTION);
-	rectW.right=rectW.left+width;
-	rectW.bottom=rectW.top+height;
-	styleW=WS_POPUP|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_VISIBLE; //WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX;
+	rectW.left = (GetSystemMetrics(SM_CXSCREEN)-width) / 2;
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);;//(GetSystemMetrics(SM_CYSCREEN)-height) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.right = rectW.left + width;
+	rectW.bottom = rectW.top +height;
+	styleW = WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE; //WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX;
 
-	rectFS.left=0;
-	rectFS.top=0;
-	rectFS.right=nScreenWidth;
-	rectFS.bottom=nScreenHeight;
-	styleFS=WS_POPUP|WS_VISIBLE; //WS_POPUP
+	rectFS.left = 0;
+	rectFS.top = 0;
+	rectFS.right = nScreenWidth;
+	rectFS.bottom = nScreenHeight;
+	styleFS = WS_POPUP | WS_VISIBLE; //WS_POPUP
 
-	if(hwndParent)
+	/*if (hwndParent)
 	{
-		rectW.left=0;
-		rectW.top=0;
-		rectW.right=nScreenWidth;
-		rectW.bottom=nScreenHeight;
-		styleW=WS_CHILD|WS_VISIBLE; 
-		bWindowed=true;
-	}
+		rectW.left = 0;
+		rectW.top = 0;
+		rectW.right = nScreenWidth;
+		rectW.bottom = nScreenHeight;
+		styleW = WS_CHILD | WS_VISIBLE; 
+		bWindowed = true;
+	}*/
 
-	if(bWindowed)
-		hwnd = CreateWindowEx(0, WINDOW_CLASS_NAME, szWinTitle, styleW,
-				rectW.left, rectW.top, rectW.right-rectW.left, rectW.bottom-rectW.top,
-				hwndParent, NULL, hInstance, NULL);
+	if (bWindowed)
+		hwnd = CreateWindowEx(WS_EX_WINDOWEDGE, WINDOW_CLASS_NAME, szWinTitle, styleW,
+				rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top,
+				NULL, NULL, hInstance, NULL);
 	else
 		hwnd = CreateWindowEx(WS_EX_TOPMOST, WINDOW_CLASS_NAME, szWinTitle, styleFS,
 				0, 0, 0, 0,
@@ -587,34 +587,87 @@ bool CALL HGE_Impl::System_Launch(const wchar_t *url)
 	else return false;
 }
 
-//void CALL HGE_Impl::System_Snapshot(const wchar_t *filename)
-//{
-//#pragma message("		Unfinished Function " __FUNCTION__)
-//	//LPDIRECT3DSURFACE8 pSurf;
-//	////wchar_t *shotname, tempname[_MAX_PATH];
-//	////int i;
+bool CALL HGE_Impl::System_Snapshot(const DWORD* pData, int& width, int& height)
+{
+	HDC hScreenDC = GetDC(NULL);
+    HDC hCaptureDC = CreateCompatibleDC(hScreenDC);
+	HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hScreenDC, nScreenWidth, nScreenHeight); 
+    SelectObject(hCaptureDC, hCaptureBitmap);
+    BitBlt(hCaptureDC, 0, 0, nScreenWidth, nScreenHeight, hScreenDC, 0, 0, SRCCOPY); 
+	
+	BITMAP bitmap;
+	GetObject(hCaptureBitmap, sizeof(BITMAP), &bitmap);
+	if (!bitmap.bmBits) goto failed_return;
+
+	//if (bitmap.bmBitsPixel = 32)
+	printf("bitmap.bmBitsPixel %d", bitmap.bmBitsPixel);
+
+	width = bitmap.bmWidth;
+	height = bitmap.bmHeight;
+
+	//pData = (DWORD*)malloc(width * height * sizeof(DWORD));
+	memcpy(&pData, bitmap.bmBits, width * height * sizeof(DWORD));
+	/*for (int i = 0 ; i < height ; ++i)
+	{
+		pData[]*/
+		/*memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
+			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));*/
+	//}
+
+    ReleaseDC(NULL, hScreenDC);
+    DeleteDC(hCaptureDC);
+    DeleteObject(hCaptureBitmap);
+
+	return true;
+
+failed_return:
+	if (hScreenDC)
+		ReleaseDC(NULL, hScreenDC);
+	if (hCaptureDC)
+		DeleteDC(hCaptureDC);
+	if (hCaptureBitmap)
+		DeleteObject(hCaptureBitmap);
+
+	return false;
+//	if(!pD3DDevice)
+//		return false;
 //
-//	//if(!filename)
-//	//{
-//	//	/*i=0;
-//	//	shotname=Resource_EnumFiles(L"shot???.bmp");
-//	//	while(shotname)
-//	//	{
-//	//		i++;
-//	//		shotname=Resource_EnumFiles();
-//	//	}
-//	//	wsprintf(tempname, L"shot%03d.bmp", i);
-//	//	filename=Resource_MakePath(tempname);*/
-//	//	return;
-//	//}
+//	LPDIRECT3DSURFACE8 pSurf;
+//	//pD3DDevice->CreateImageSurface(nScreenWidth, nScreenHeight, D3DFMT_A8R8G8B8, &pSurf);
+//	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
+//	//if (FAILED(pD3DDevice->GetFrontBuffer(pSurf)))
+//		goto __failed_return;
 //
-//	//if(pD3DDevice)
-//	//{
-//	//	pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf);
-//	//	D3DXSaveSurfaceToFile(filename, D3DXIFF_BMP, pSurf, NULL, NULL);
-//	//	pSurf->Release();
-//	//}
-//}
+//	D3DSURFACE_DESC surfaceDesc;
+//	if (FAILED(pSurf->GetDesc(&surfaceDesc)))
+//		goto __failed_return;
+//	
+//	width = surfaceDesc.Width;
+//	height = surfaceDesc.Height;
+//	
+//
+//	//D3DXSaveSurfaceToFile(L"snap.bmp", D3DXIFF_BMP, pSurf, NULL, NULL);
+//
+//	D3DLOCKED_RECT lockedRect;
+//	if (FAILED(pSurf->LockRect(&lockedRect, 0, D3DLOCK_READONLY)))
+//		goto __failed_return;
+//	
+//	pData = (DWORD*)malloc(width * height * sizeof(DWORD));
+//	/*for (int i = 0 ; i < nScreenHeight ; ++i)
+//	{
+//		memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
+//			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));
+//	}*/
+//	
+//	pSurf->UnlockRect();
+//	pSurf->Release();
+//	return true;
+//
+//__failed_return:
+//	if (pSurf)
+//		pSurf->Release();
+//	return false;
+}
 
 //////// Implementation ////////
 

@@ -199,12 +199,12 @@ void RbPlane::render(u32 id)
 	process_tone_texture();
 
 	//	ÉèÖÃÔ´¾ØÐÎ
-	m_pSpr->SetTextureRect(0, 0, m_bitmap_ptr->GetMemWidth(), m_bitmap_ptr->GetMemHeight());
+	m_pSpr->SetTextureRect(0, 0, m_bitmap_ptr->GetWidth(), m_bitmap_ptr->GetHeight());
 
 	//	äÖÈ¾
 	{
-		int zoom_w = (int)(m_bitmap_ptr->GetMemWidth() * m_pSpr->GetZoomX());
-		int zoom_h = (int)(m_bitmap_ptr->GetMemHeight() * m_pSpr->GetZoomY());
+		int zoom_w = (int)(m_bitmap_ptr->GetWidth() * m_pSpr->GetZoomX());
+		int zoom_h = (int)(m_bitmap_ptr->GetHeight() * m_pSpr->GetZoomY());
 
 		int ox = (int)m_ox % zoom_w;
 		int oy = (int)m_oy % zoom_h;
@@ -268,9 +268,9 @@ void RbPlane::process_tone_texture()
 		if (m_tone_tex)
 			hge->Texture_Free(m_tone_tex);
 
-		m_tone_tex = hge->Texture_Create(m_bitmap_ptr->GetMemWidth(), m_bitmap_ptr->GetMemHeight());
+		m_tone_tex = hge->Texture_Create(m_bitmap_ptr->GetWidth(), m_bitmap_ptr->GetHeight());
 		if (!m_tone_tex)
-			rb_raise(rb_eSINBaseError,"Create Texture Error !");
+			rb_raise(rb_eSinError,"Create Texture Error !");
 
 		if (RbBitmap::AdjustTexturesToneDouble(m_bitmap_ptr->GetBitmapPtr(), m_tone_tex, m_ref_tone))
 		{

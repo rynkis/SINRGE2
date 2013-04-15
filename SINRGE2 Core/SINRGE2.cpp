@@ -16,6 +16,7 @@
 #include "RbViewport.h"
 #include "RbPlane.h"
 #include "RbSprite.h"
+#include "RbTable.h"
 #include <fstream>
 #include <iostream>
 
@@ -116,6 +117,16 @@ namespace
 
 		return Qnil;
 	}
+	
+	static VALUE load_data(int argc, VALUE filename)
+	{
+		SafeStringValue(filename);
+		VALUE rbread = rb_file_open(RSTRING_PTR(filename), "rb");
+		VALUE rbdata = rb_marshal_load(rbread);
+		(void)rb_io_close(rbread);
+	
+		return rbdata;
+	}
 
 	void InitRubyInnerClassExt()
 	{
@@ -123,6 +134,7 @@ namespace
 		rb_define_global_function("msgbox",			(RbFunc)rdf_msgbox,			-1);
 		rb_define_global_function("p",				(RbFunc)rdf_p,				-1);
 		rb_define_global_function("print",			(RbFunc)rdf_print,			-1);
+
 		ruby_Init_Fiber_as_Coroutine();
 		Init_zlib();
 		Init_nonblock();
@@ -133,7 +145,7 @@ namespace
 	{
 		InitRbGlobal();
 		InitRbInput();
-		//InitSeal();
+		InitSeal();
 		InitRbFrame();
 		//InitRbHge();
 		InitRbGraphics();
@@ -147,6 +159,9 @@ namespace
 		RbViewport::InitLibrary();
 		RbPlane::InitLibrary();
 		RbSprite::InitLibrary();
+		RbTable::InitLibrary();
+		
+		rb_define_module_function(rb_mSin, "load_data",	RbFunc(load_data), 1);
 	}
 	
 	static VALUE _run_sin_in_protect(VALUE argv)
@@ -155,8 +170,16 @@ namespace
 		const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
 		const VALUE	line_no = INT2FIX(1);
 		
-		const VALUE script	= rb_ary_entry(argv, 0);
-		const VALUE f_name	= rb_ary_entry(argv, 1);
+		const VALUE f_name	= rb_ary_entry(argv, 0);
+		const VALUE script	= rb_ary_entry(argv, 1);
+
+		/*int xsize = NUM2INT(rb_attr_get(script, rb_intern("xsize")));
+		int ysize = NUM2INT(rb_attr_get(script, rb_intern("ysize")));
+		int zsize = NUM2INT(rb_attr_get(script, rb_intern("zsize")));
+
+		RbTable* table = (RbTable*)DATA_PTR(script);
+		VALUE* scData = table->GetDataPtr();*/
+
 		//(void)rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
 		return rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);//Qnil;
 	}
@@ -201,10 +224,7 @@ void Sin::SINRGE2Initialize()
 		ruby_incpush("./");
 		ruby_script("SINRGE2");
 	}
-
 	m_frm_struct.Default();
-	//ResManager::Instance()->Init();
-
 	///<	内部类扩展
 	InitRubyInnerClassExt();
 	///<	导出Sin内部接口
@@ -241,7 +261,7 @@ int	Sin::SINRGE2Entry(const char* rubyfile)
 
 	int state = 0;
 
-	VALUE rbread = rb_file_open(rubyfile, "rb");
+	/*VALUE rbread = rb_file_open(rubyfile, "rb");
 	VALUE script = rb_funcall(rbread, rb_intern("read"), 0);
 	(void)rb_io_close(rbread);
 	VALUE name	 = rb_str_new2(rubyfile);
@@ -249,16 +269,35 @@ int	Sin::SINRGE2Entry(const char* rubyfile)
 	VALUE argv = rb_ary_new2(2);
 	rb_ary_push(argv, script);
 	rb_ary_push(argv, name);
-	rb_ary_freeze(argv);
+	rb_ary_freeze(argv);*/
 
-	VALUE result = rb_protect(_run_sin_in_protect, argv, &state);
+	//VALUE result = rb_protect(_run_sin_in_protect, argv, &state);
 
-	if (state)
+	VALUE rbdata = load_data(1, rb_str_new2(rubyfile));
+
+	int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
+
+	VALUE ary, f_name, script;
+	VALUE argv = rb_ary_new2(2);
+	//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
+	for (int pos = 0; pos < arylen; ++pos)
 	{
-		VALUE err = rb_errinfo();
-		if (!rb_obj_is_kind_of(err, rb_eSystemExit))
+		ary = rb_ary_entry(rbdata, pos);
+		f_name = rb_ary_entry(ary, 0);
+		script = rb_ary_entry(ary, 1);
+		//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
+		rb_ary_clear(argv);
+		rb_ary_push(argv, f_name);
+		rb_ary_push(argv, script);
+		VALUE result = rb_protect(_run_sin_in_protect, rb_ary_entry(rbdata, pos), &state);
+
+		if (state)
 		{
-			_on_failed(err);
+			VALUE err = rb_errinfo();
+			if (!rb_obj_is_kind_of(err, rb_eSystemExit))
+			{
+				_on_failed(err);
+			}
 		}
 	}
 	return state;

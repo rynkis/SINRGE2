@@ -10,6 +10,31 @@ typedef unsigned long	u32;
 typedef signed long		s32;
 typedef float			f32;
 
+typedef struct __SinFrameStruct
+{
+	bool	m_fullscreen_start;
+	bool	m_forbid_fullscreen;
+	bool	m_forbid_switch;
+
+	u32		m_screen_width;
+	u32		m_screen_height;
+
+	HWND	m_hwnd;
+
+	__SinFrameStruct()
+		: m_fullscreen_start(false), m_forbid_fullscreen(false), m_forbid_switch(false),
+			m_screen_width(0), m_screen_height(0), m_hwnd(NULL)
+	{
+	}
+
+	void Default()
+	{
+		m_screen_width	= 800;
+		m_screen_height = 600;
+	}
+
+} SinFrameStruct;
+
 #define SinArrayCount(ary)	(sizeof(ary) / sizeof((ary)[0]))
 #define SinMax(a, b)				(((a) > (b)) ? (a) : (b))
 #define SinMin(a, b)				(((a) < (b)) ? (a) : (b))

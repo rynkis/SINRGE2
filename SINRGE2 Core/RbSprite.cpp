@@ -462,7 +462,7 @@ VALUE RbSprite::set_bitmap(VALUE bitmap)
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_pSpr->SetSrcRectDirty();
 		
-		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetMemWidth()), INT2FIX(m_bitmap_ptr->GetMemHeight()) };
+		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetWidth()), INT2FIX(m_bitmap_ptr->GetHeight()) };
 
 		rb_funcall2(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, __argv);
 	}
@@ -530,8 +530,6 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 	m_mirror = Ruby2RbBool(mirror);
 
 	m_pSpr->SetFlip(RTEST(m_mirror), m_pSpr->IsFlipY(), true);
-	//m_pSpr->SetSrcRectDirty();	//	SetFlip会自动设置藏标记
-
 	return Qnil;
 }
 
