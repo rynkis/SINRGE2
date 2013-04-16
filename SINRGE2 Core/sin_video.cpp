@@ -115,10 +115,8 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 /**
  *	开始播放视频
  */
-void CVideoMgr::PlayMovie(/*DWORD* pDstBitmapAddr, */long iVolume)
+void CVideoMgr::PlayMovie(long iVolume)
 {
-	//m_pDstBitmapAddr		= pDstBitmapAddr;
-
 	if (m_pMediaControl)	m_pMediaControl->Run();
 	if (m_pBasicAudio)		m_pBasicAudio->put_Volume(iVolume);
 }
@@ -212,7 +210,6 @@ void CVideoMgr::StopMovie()
 
 	m_iVideoWidth = 0;
 	m_iVideoHeight = 0;
-	//m_pDstBitmapAddr = 0;
 	m_is_occupying = false;
 
 	if (m_pTempBuffer)

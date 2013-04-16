@@ -58,7 +58,7 @@ private:
 
 public:
 	bool					LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHeight);
-	void					PlayMovie(/*DWORD* pDstBitmapAddr, */long iVolume);
+	void					PlayMovie(long iVolume);
 	bool					IsMoviePlaying();
 	void					UpdateMovieTexture(DWORD* pDstBitmapAddr);
 	void					StopMovie();
@@ -89,7 +89,6 @@ private:
 	ISampleGrabber*			m_pSampleGrabber;
 	IBasicAudio*			m_pBasicAudio;
 
-	//DWORD*					m_pDstBitmapAddr;
 	BYTE*					m_pTempBuffer;
 	long					m_iVideoWidth;
 	long					m_iVideoHeight;

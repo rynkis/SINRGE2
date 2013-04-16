@@ -672,7 +672,7 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 	check_raise();
 
 	if (GetVideoMgr()->IsOccupying())
-		rb_raise(rb_eSinError, "Movie Player is occupying.");
+		rb_raise(rb_eSinError, "Video Player is occupying.\n You must stop first.");
 
 	VALUE filename, volume;
 
