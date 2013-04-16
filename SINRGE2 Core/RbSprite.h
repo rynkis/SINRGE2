@@ -58,8 +58,8 @@ protected:
 	dm_method(get_volume)
 	dm_method01(set_volume)
 	dm_method(replay_at_finish)
-	dm_method(stop)
-	dm_method(rewind)
+	dm_method(stop_movie)
+	dm_method(rewind_movie)
 
 	dm_method(update)
 	dm_method02(flash)

@@ -112,8 +112,8 @@ void RbSprite::InitLibrary()
 	rb_define_method(rb_cSprite, "volume",			(RbFunc)dm_get_volume,			0);
 	rb_define_method(rb_cSprite, "volume=",			(RbFunc)dm_set_volume,			1);
 	rb_define_method(rb_cSprite, "replay_at_finish",(RbFunc)dm_replay_at_finish,	0);
-	rb_define_method(rb_cSprite, "stop",			(RbFunc)dm_stop,				0);
-	rb_define_method(rb_cSprite, "rewind",			(RbFunc)dm_rewind,				0);
+	rb_define_method(rb_cSprite, "stop_movie",		(RbFunc)dm_stop_movie,			0);
+	rb_define_method(rb_cSprite, "rewind_movie",	(RbFunc)dm_rewind_movie,		0);
 
 	// supplement
  	rb_define_method(rb_cSprite, "to_s",			(RbFunc)dm_to_string,			0);
@@ -460,17 +460,13 @@ VALUE RbSprite::update()
 {
 	check_raise();
 
-	if (m_movie_playing)
-	{
-		if (!GetVideoMgr()->IsMoviePlaying())
-			return Qfalse;
-		
-		HGE* hge = GetAppPtr()->GetHgePtr();
-		DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
-		GetVideoMgr()->UpdateMovieTexture(pTexData);
-		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
-	}
-
+	if (!m_movie_playing)
+		return Qfalse;
+	
+	HGE* hge = GetAppPtr()->GetHgePtr();
+	DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
+	GetVideoMgr()->UpdateMovieTexture(pTexData);
+	hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 	return Qnil;
 }
 
@@ -728,11 +724,15 @@ VALUE RbSprite::is_playing()
 
 VALUE RbSprite::get_volume()
 {
+	if (!m_movie_playing)
+		return Qnil;
 	return LONG2FIX(GetVideoMgr()->GetVolume());
 }
 
 VALUE RbSprite::set_volume(VALUE volume)
 {
+	if (!m_movie_playing)
+		return Qfalse;
 	SafeFixnumValue(volume);
 	GetVideoMgr()->SetVolume(FIX2LONG(volume));
 	return Qnil;
@@ -750,7 +750,7 @@ VALUE RbSprite::replay_at_finish()
 	return Qnil;
 }
 
-VALUE RbSprite::stop()
+VALUE RbSprite::stop_movie()
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -761,8 +761,10 @@ VALUE RbSprite::stop()
 	return Qnil;
 }
 
-VALUE RbSprite::rewind()
+VALUE RbSprite::rewind_movie()
 {
+	if (!m_movie_playing)
+		return Qfalse;
 	GetVideoMgr()->RewindMovie();
 	return Qnil;
 }
@@ -777,8 +779,8 @@ imp_method(RbSprite, get_volume)
 imp_method01(RbSprite, set_volume)
 imp_method(RbSprite, is_playing)
 imp_method(RbSprite, replay_at_finish)
-imp_method(RbSprite, stop)
-imp_method(RbSprite, rewind)
+imp_method(RbSprite, stop_movie)
+imp_method(RbSprite, rewind_movie)
 
 imp_method(RbSprite, update)
 imp_method02(RbSprite, flash)
