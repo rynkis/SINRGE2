@@ -2,9 +2,10 @@
 #include "RbColor.h"
 #include "RbTone.h"
 #include "RbRect.h"
-#include "SINRGE2.h"
+//#include "SINRGE2.h"
+#include "sin_app.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 VALUE rb_cViewport;
 
@@ -161,7 +162,7 @@ void RbViewport::render(u32 id)
 		return;
 
 	//	根据viewport矩形进行裁剪
-	GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
+	GetAppPtr()->GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
 
 	//	渲染viewport中的所有对象
 	for (RbRenderNode* p = m_head; p; p = p->next)
@@ -170,7 +171,7 @@ void RbViewport::render(u32 id)
 	}
 
 	//	取消裁剪 还原屏幕大小
-	GetRenderState()->ClipAndSave(0, 0, GetFrameWidth(), GetFrameHeight());
+	GetAppPtr()->GetRenderState()->ClipAndSave(0, 0, GetAppPtr()->GetFrameWidth(), GetAppPtr()->GetFrameHeight());
 
 	//	视口内对象描绘完毕之后再处理视口的混色闪烁等
 

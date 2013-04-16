@@ -757,7 +757,7 @@ bool HGE_Impl::_GfxInit()
 
 	_AdjustWindow();
 
-	System_Log(L"Mode: %d x %d x %s\n",nScreenWidth,nScreenHeight,szFormats[_format_id(Format)]);
+	//System_Log(L"Mode: %d x %d x %s\n",nScreenWidth,nScreenHeight,szFormats[_format_id(Format)]);
 
 // Create vertex batch buffer
 

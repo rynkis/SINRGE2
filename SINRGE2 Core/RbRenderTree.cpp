@@ -1,12 +1,13 @@
 #include "RbRenderTree.h"
 #include "RbViewport.h"
-#include "SINRGE2.h"
+//#include "SINRGE2.h"
+#include "sin_app.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 HGE* RbRenderState::s_pHge = 0;
 
-RbRenderNode*	RbRenderTree::s_pViewportLists		= 0;
+RbRenderNode*	RbRenderTree::s_pViewportLists	= 0;
 RbRenderNode*	RbRenderTree::s_pRenderHead		= 0;
 RbRenderNode*	RbRenderTree::s_pRenderTail		= 0;
 
@@ -29,7 +30,7 @@ bool RbRenderTree::RenderProc()
 		p1->renderproc(p1->value, p1->id);
 	}
 
-	HGE* pHGE = GetHgePtr();
+	HGE* pHGE = GetAppPtr()->GetHgePtr();
 
 	pHGE->Gfx_BeginScene();
 	pHGE->Gfx_Clear(0);

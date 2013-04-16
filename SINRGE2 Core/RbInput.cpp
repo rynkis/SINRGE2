@@ -1,10 +1,11 @@
 #include "RbInput.h"
 #include "RbExport.h"
-#include "SINRGE2.h"
+//#include "SINRGE2.h"
+#include "sin_app.h"
 
-using namespace Sin;
+//using namespace Sin;
 
-static VALUE			mInput;
+VALUE			mInput;
 
 static int				mouse_posX				= 0;
 static int				mouse_posY				= 0;
@@ -83,9 +84,9 @@ namespace
 **		SIN::Input.update	-> nil
 **
 */
-static VALUE update_input()
+VALUE MRbInput::update_input()
 {
-	HWND hwnd = GetFrmStructPtr()->m_hwnd;
+	HWND hwnd = GetAppPtr()->GetMainHwnd();
 	if (hwnd)
 	{
 		POINT point;
@@ -110,7 +111,7 @@ static VALUE update_input()
 **		SIN::Input.mouse_over?	-> bool
 **
 */
-static VALUE mouse_over()
+VALUE MRbInput::mouse_over()
 {
 	return in_screen ? Qtrue : Qfalse;
 }
@@ -120,7 +121,7 @@ static VALUE mouse_over()
 **		SIN::Input.press?(vk)	-> bool
 **
 */
-static VALUE is_press(int argv, VALUE key)
+VALUE MRbInput::is_press(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
 	return vk_is_press(FIX2INT(key)) ? Qtrue : Qfalse;
@@ -131,7 +132,7 @@ static VALUE is_press(int argv, VALUE key)
 **		SIN::Input.trigger?(vk)	-> bool
 **
 */
-static VALUE is_trigger(int argv, VALUE key)
+VALUE MRbInput::is_trigger(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
 	return vk_is_trigger(FIX2INT(key)) ? Qtrue : Qfalse;
@@ -142,7 +143,7 @@ static VALUE is_trigger(int argv, VALUE key)
 **		SIN::Input.repeat?(vk)	-> bool
 **
 */
-static VALUE is_repeat(int argv, VALUE key)
+VALUE MRbInput::is_repeat(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
 	return vk_is_repeat(FIX2INT(key)) ? Qtrue : Qfalse;
@@ -153,7 +154,7 @@ static VALUE is_repeat(int argv, VALUE key)
 **		SIN::Input.click?(vk)	-> bool
 **
 */
-static VALUE is_click(int argv, VALUE key)
+VALUE MRbInput::is_click(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
 	return vk_is_click(FIX2INT(key)) ? Qtrue : Qfalse;
@@ -164,7 +165,7 @@ static VALUE is_click(int argv, VALUE key)
 **		SIN::Input.dir4	-> fixnum
 **
 */
-static VALUE get_dir4()
+VALUE MRbInput::get_dir4()
 {
 	if (vk_is_press(VK_DOWN) || vk_is_press(VK_NUMPAD2))
 		return INT2FIX(2);
@@ -183,7 +184,7 @@ static VALUE get_dir4()
 **		SIN::Input.dir8	-> fixnum
 **
 */
-static VALUE get_dir8()
+VALUE MRbInput::get_dir8()
 {
 	if (vk_is_press(VK_LEFT))
 	{
@@ -233,7 +234,7 @@ static VALUE get_dir8()
 **		SIN::Input.show_mouse(show)	-> nil
 **
 */
-static VALUE show_mouse(int argv, VALUE show)
+VALUE MRbInput::show_mouse(int argc, VALUE show)
 {
 	HideMouse(!RTEST(show));
 	return Qnil;
@@ -244,7 +245,7 @@ static VALUE show_mouse(int argv, VALUE show)
 **		SIN::Input.on_focus?	-> bool
 **
 */
-static VALUE on_focus()
+VALUE MRbInput::on_focus()
 {
 	return OnFocus() ? Qtrue : Qfalse;
 }
@@ -254,7 +255,7 @@ static VALUE on_focus()
 **		SIN::Input.mouse_wheel	-> fixnum
 **
 */
-static VALUE mouse_wheel()
+VALUE MRbInput::mouse_wheel()
 {
 	return rb_int_new(MouseWheel());
 }
@@ -264,7 +265,7 @@ static VALUE mouse_wheel()
 **		SIN::Input.dblclk?(vk)	-> bool
 **
 */
-static VALUE mouse_dblclk(int argv, VALUE key)
+VALUE MRbInput::mouse_dblclk(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
 	return MouseDblClk(FIX2INT(key));
@@ -275,7 +276,7 @@ static VALUE mouse_dblclk(int argv, VALUE key)
 **		SIN::Input.mouse_pos	-> array
 **
 */
-static VALUE get_mouse_pos()
+VALUE MRbInput::get_mouse_pos()
 {
 	VALUE ary;
 
@@ -287,7 +288,7 @@ static VALUE get_mouse_pos()
 	return ary;
 }
 
-static void bind_input()
+void MRbInput::InitLibrary()
 {
 	mInput = rb_define_module_under(rb_mSin, "Input");
 
@@ -306,7 +307,7 @@ static void bind_input()
 	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 }
 
-void Sin::InitRbInput()
-{
-	bind_input();
-}
+//void Sin::InitRbInput()
+//{
+//	bind_input();
+//}

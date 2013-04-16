@@ -1,7 +1,6 @@
 #ifndef __SIN_TYPES_H__
 #define __SIN_TYPES_H__
 
-
 typedef	unsigned char	u8;
 typedef signed char		s8;
 typedef unsigned short	u16;
@@ -12,18 +11,24 @@ typedef float			f32;
 
 typedef struct __SinFrameStruct
 {
-	bool	m_fullscreen_start;
-	bool	m_forbid_fullscreen;
-	bool	m_forbid_switch;
+	bool		m_fullscreen_start;
+	bool		m_forbid_fullscreen;
+	bool		m_forbid_switch;
 
-	u32		m_screen_width;
-	u32		m_screen_height;
+	u32			m_screen_width;
+	u32			m_screen_height;
 
-	HWND	m_hwnd;
+	HWND		m_hwnd;
+
+	wchar_t		m_title[MAX_PATH];
 
 	__SinFrameStruct()
-		: m_fullscreen_start(false), m_forbid_fullscreen(false), m_forbid_switch(false),
-			m_screen_width(0), m_screen_height(0), m_hwnd(NULL)
+		: m_fullscreen_start(false)
+		, m_forbid_fullscreen(false)
+		, m_forbid_switch(false)
+		, m_screen_width(0)
+		, m_screen_height(0)
+		, m_hwnd(NULL)
 	{
 	}
 
@@ -31,6 +36,7 @@ typedef struct __SinFrameStruct
 	{
 		m_screen_width	= 800;
 		m_screen_height = 600;
+		wcscpy_s(m_title, L"SINRGE2");
 	}
 
 } SinFrameStruct;

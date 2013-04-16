@@ -1,9 +1,12 @@
+#include "sin_color.h"
 #include "RbSprite.h"
 #include "RbBitmap.h"
 #include "RbViewport.h"
 #include "RbColor.h"
 #include "RbTone.h"
 #include "RbRect.h"
+#include "sin_app.h"
+#include "sin_video.h"
 
 #include "SinSprite.h"
 
@@ -20,6 +23,7 @@ RbSprite::RbSprite()
 	, m_flash_hide_spr(0)
 	, m_flash_color(0)
 	, m_src_rect_ptr(0)
+	, m_movie_playing(false)
 {
 }
 
@@ -102,6 +106,14 @@ void RbSprite::InitLibrary()
 	rb_define_method(rb_cSprite, "wave_speed=",		(RbFunc)dm_set_wave_speed,		1);
 	rb_define_method(rb_cSprite, "wave_phase",		(RbFunc)dm_get_wave_phase,		0);
 	rb_define_method(rb_cSprite, "wave_phase=",		(RbFunc)dm_set_wave_phase,		1);
+	
+	rb_define_method(rb_cSprite, "play_movie",		(RbFunc)dm_play_movie,			-1);
+	rb_define_method(rb_cSprite, "playing?",		(RbFunc)dm_is_playing,			0);
+	rb_define_method(rb_cSprite, "volume",			(RbFunc)dm_get_volume,			0);
+	rb_define_method(rb_cSprite, "volume=",			(RbFunc)dm_set_volume,			1);
+	rb_define_method(rb_cSprite, "replay_at_finish",(RbFunc)dm_replay_at_finish,	0);
+	rb_define_method(rb_cSprite, "stop",			(RbFunc)dm_stop,				0);
+	rb_define_method(rb_cSprite, "rewind",			(RbFunc)dm_rewind,				0);
 
 	// supplement
  	rb_define_method(rb_cSprite, "to_s",			(RbFunc)dm_to_string,			0);
@@ -134,7 +146,33 @@ VALUE RbSprite::initialize(int argc, VALUE *argv, VALUE obj)
 
 	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
 
+	m_disposed = false;
 	return obj;
+}
+
+void RbSprite::check_raise()
+{
+	if (m_disposed)
+		rb_raise(rb_eSinError, "disposed sprite");
+}
+
+VALUE RbSprite::dispose()
+{
+	if (m_disposed)
+		return Qnil;
+
+	if (m_movie_playing)
+		GetVideoMgr()->StopMovie();
+	m_bitmap_ptr = 0;
+
+	m_disposed = true;
+
+	return Qnil;
+}
+
+VALUE RbSprite::is_disposed()
+{
+	return C2RbBool(m_disposed);
 }
 
 /**
@@ -320,7 +358,7 @@ void RbSprite::render(u32 id)
 	// render the sprite to the screen
 	float x, y;
 
-	if (!m_viewport_ptr || GetRenderState()->IsRenderToTexture())
+	if (!m_viewport_ptr || GetAppPtr()->GetRenderState()->IsRenderToTexture())
 	{
 		x = m_x;
 		y = m_y;
@@ -349,7 +387,7 @@ void RbSprite::render(u32 id)
 
 		int min_x, min_y, max_x, max_y;
 
-		const RbRenderState::RbRenderClipRect& clip_rect = GetRenderState()->GetClipRect();
+		const RbRenderState::RbRenderClipRect& clip_rect = GetAppPtr()->GetRenderState()->GetClipRect();
 
 		//	先描绘不透明部分
 		min_x = SinMax(clip_rect.x, top_rect.x1);
@@ -363,7 +401,7 @@ void RbSprite::render(u32 id)
 
 		if (cw > 0 && ch > 0)
 		{
-			GetRenderState()->Clip(min_x, min_y, cw, ch);
+			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 		//	hge->Gfx_SetClipping(min_x, min_y, cw, ch);
 		//	self->spr->RenderEx(x, y, self->angle, self->zoom_x, self->zoom_y);
@@ -385,13 +423,13 @@ void RbSprite::render(u32 id)
 
 		if (cw > 0 && ch > 0)
 		{
-			GetRenderState()->Clip(min_x, min_y, cw, ch);
+			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 			//hge->Gfx_SetClipping(min_x, min_y, cw, ch);
 			//self->spr->RenderEx(x,y,self->angle,self->zoom_x,self->zoom_y);
 		}
 
-		GetRenderState()->Restore();
+		GetAppPtr()->GetRenderState()->Restore();
 		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity, 255, 255, 255));//URgeARGB(m_opacity, 255, 255, 255).value);
 		//// restore the clip region
 		//hge->Gfx_SetClipping(rge->last_clip_rect.x,
@@ -420,7 +458,18 @@ void RbSprite::render(u32 id)
 
 VALUE RbSprite::update()
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+
+	if (m_movie_playing)
+	{
+		if (!GetVideoMgr()->IsMoviePlaying())
+			return Qfalse;
+		
+		HGE* hge = GetAppPtr()->GetHgePtr();
+		DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
+		GetVideoMgr()->UpdateMovieTexture(pTexData);
+		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
+	}
 
 	return Qnil;
 }
@@ -441,7 +490,7 @@ VALUE RbSprite::invisible_reason()
 
 VALUE RbSprite::set_bitmap(VALUE bitmap)
 {
-	if (m_disposed) 
+	if (m_disposed)
 		return Qnil;
 
 	// 设置位图修改计数值为-1
@@ -618,9 +667,119 @@ VALUE RbSprite::set_wave_phase(VALUE wave_phase)
 	return Qnil;
 }
 
+VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
+{
+	check_raise();
+
+	if (GetVideoMgr()->IsOccupying())
+		rb_raise(rb_eSinError, "Movie Player is occupying.");
+
+	VALUE filename, volume;
+
+	if (rb_scan_args(argc, argv, "11", &filename, &volume) == 1)
+		volume = INT2FIX(0);
+	else
+		SafeFixnumValue(volume);
+
+	SafeStringValue(filename);
+
+	int width, height;
+	HGE* hge = GetAppPtr()->GetHgePtr();
+
+	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
+		return Qfalse;
+
+	VALUE __argv1[] = {INT2FIX(width), INT2FIX(height)};
+	VALUE bitmap = rb_class_new_instance(2, __argv1, rb_cBitmap);
+
+	// 设置位图修改计数值为-1
+	m_ref_bitmap_modify_count = -1;
+
+	SafeBitmapValue(bitmap);
+	m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
+	m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
+	m_pSpr->SetSrcRectDirty();
+	VALUE __argv2[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetWidth()), INT2FIX(m_bitmap_ptr->GetHeight()) };
+	rb_funcall2(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, __argv2);
+
+	if (!m_bitmap_ptr->GetBitmapPtr()->quad.tex)
+	{
+		GetVideoMgr()->StopMovie();
+		return Qfalse;
+	}
+	GetVideoMgr()->PlayMovie(FIX2LONG(volume));
+	m_movie_playing = true;
+	return Qnil;
+}
+
+VALUE RbSprite::is_playing()
+{
+	if (!m_movie_playing)
+		return Qfalse;
+
+	if (GetVideoMgr()->IsMoviePlaying())
+		return Qtrue;
+
+	GetVideoMgr()->StopMovie();
+	m_bitmap_ptr = 0;
+	m_movie_playing = false;
+	return Qfalse;
+}
+
+VALUE RbSprite::get_volume()
+{
+	return LONG2FIX(GetVideoMgr()->GetVolume());
+}
+
+VALUE RbSprite::set_volume(VALUE volume)
+{
+	SafeFixnumValue(volume);
+	GetVideoMgr()->SetVolume(FIX2LONG(volume));
+	return Qnil;
+}
+
+VALUE RbSprite::replay_at_finish()
+{
+	if (!m_movie_playing)
+		return Qfalse;
+
+	if (GetVideoMgr()->IsMoviePlaying())
+		return Qtrue;
+
+	GetVideoMgr()->RewindMovie();
+	return Qnil;
+}
+
+VALUE RbSprite::stop()
+{
+	if (!m_movie_playing)
+		return Qfalse;
+
+	GetVideoMgr()->StopMovie();
+	m_bitmap_ptr = 0;
+	m_movie_playing = false;
+	return Qnil;
+}
+
+VALUE RbSprite::rewind()
+{
+	GetVideoMgr()->RewindMovie();
+	return Qnil;
+}
+
 /*
  *	以下定义ruby方法
  */
+imp_method(RbSprite, dispose)
+imp_method(RbSprite, is_disposed)
+imp_method_vargs(RbSprite, play_movie)
+imp_method(RbSprite, get_volume)
+imp_method01(RbSprite, set_volume)
+imp_method(RbSprite, is_playing)
+imp_method(RbSprite, replay_at_finish)
+imp_method(RbSprite, stop)
+imp_method(RbSprite, rewind)
+
 imp_method(RbSprite, update)
 imp_method02(RbSprite, flash)
 imp_attr_accessor(RbSprite, src_rect)

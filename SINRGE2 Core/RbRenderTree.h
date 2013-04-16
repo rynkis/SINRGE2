@@ -9,7 +9,7 @@
 #include "sin_types.h"
 #include "hge.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 class RbRenderState
 {

@@ -7,7 +7,7 @@
 
 #include "RbClassBase.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 class RbColor;
 

@@ -7,9 +7,9 @@
 
 #include "RbClassBase.h"
 #include "sin_bitmap.h"
-#include "hge.h"
+#include "sin_types.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 class RbRect;
 class RbFont;
@@ -84,9 +84,11 @@ protected:
 	dm_method(blur)
 	dm_method02(radial_blur)
 	
-	dm_method(render)
+	//dm_method(render)
 	dm_method(flip_h)
 	dm_method(flip_v)
+	/*dm_method_vargs(play_movie)
+	dm_method(update_movie)*/
 
 	attr_reader(rect)
 	attr_reader(width)

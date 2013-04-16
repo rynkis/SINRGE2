@@ -29,6 +29,9 @@ protected:
 	virtual VALUE	set_oy(VALUE oy);
 
 	virtual	VALUE	set_bitmap(VALUE bmp);
+	
+protected:
+	void			check_raise();
 
 protected:
 	VALUE			m_mirror;
@@ -41,10 +44,23 @@ protected:
 	int				m_flash_reduce_count_per_frame;		//	精灵闪烁每帧降低的透明度
 	int				m_flash_hide_spr;					//	是否消去精灵，仅当闪烁颜色指定为nil时才消去精灵。
 	DWORD			m_flash_color;						//	精灵闪烁的颜色值。
+	
+	bool			m_disposed;
+	bool			m_movie_playing;
 
 	RbRect*			m_src_rect_ptr;
 
 protected:
+	dm_method(dispose)
+	dm_method(is_disposed)
+	dm_method_vargs(play_movie)
+	dm_method(is_playing)
+	dm_method(get_volume)
+	dm_method01(set_volume)
+	dm_method(replay_at_finish)
+	dm_method(stop)
+	dm_method(rewind)
+
 	dm_method(update)
 	dm_method02(flash)
 	attr_accessor(src_rect)

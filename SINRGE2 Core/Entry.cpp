@@ -1,12 +1,18 @@
-#include "SINRGE2.h"
-
-using namespace Sin;
+extern "C"
+{
+#include "ruby.h"
+}
+#include "sin_app.h"
 
 BOOL APIENTRY DllMain(HINSTANCE dll, DWORD reason, LPVOID reserved)
 {
     if (reason == DLL_PROCESS_ATTACH)
-		SetRubyLibHandle(dll);
+		rb_set_lib_handle(dll);
 
     return TRUE;
 }
 
+int SINRGE2Entry()
+{
+	return CApplication().Run();
+}

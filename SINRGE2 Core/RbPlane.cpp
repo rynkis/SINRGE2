@@ -6,9 +6,10 @@
 #include "RbRect.h"
 #include "RbPlane.h"
 #include "SinSprite.h"
-#include "SINRGE2.h"
+//#include "SINRGE2.h"
+#include "sin_app.h"
 
-using namespace Sin;
+//using namespace Sin;
 
 VALUE rb_cPlane;
 
@@ -35,7 +36,7 @@ RbPlane::RbPlane()
 RbPlane::~RbPlane()
 {
 	if (m_tone_tex)
-		GetHgePtr()->Texture_Free(m_tone_tex);
+		GetAppPtr()->GetHgePtr()->Texture_Free(m_tone_tex);
 	
 	SAFE_DELETE(m_pSpr);
 
@@ -175,10 +176,10 @@ void RbPlane::render(u32 id)
 
 		// render the sprite to the screen
 		
-		if (!m_viewport_ptr || GetRenderState()->IsRenderToTexture())
+		if (!m_viewport_ptr || GetAppPtr()->GetRenderState()->IsRenderToTexture())
 		{
-			wrap_w = GetFrameWidth();
-			wrap_h = GetFrameHeight();
+			wrap_w = GetAppPtr()->GetFrameWidth();
+			wrap_h = GetAppPtr()->GetFrameHeight();
 
 			ofs_x = 0;
 			ofs_y = 0;
@@ -237,7 +238,7 @@ void RbPlane::process_tone_texture()
 {
 	bool change = false;
 
-	HGE* hge = GetHgePtr();
+	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	if (m_tone_ptr->GetColor() != m_ref_tone)
 	{
@@ -252,7 +253,7 @@ void RbPlane::process_tone_texture()
 		{
 			m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 			if (m_tone_tex)
-				GetHgePtr()->Texture_Free(m_tone_tex);
+				GetAppPtr()->GetHgePtr()->Texture_Free(m_tone_tex);
 		}
 	}
 	else if (m_ref_bitmap_modify_count != m_bitmap_ptr->GetModifyCount())

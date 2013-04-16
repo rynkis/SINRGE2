@@ -5,14 +5,15 @@
 #pragma once
 #endif
 
-#include "SINRGE2.h"
+#include "hge.h"
+//#include "SINRGE2.h"
 
 typedef struct tagBitmap{
 	hgeQuad		quad;
-	int			width;    /**< Í¼Æ¬Ô­¿í */
-	int			height;   /**< Í¼Æ¬Ô­¸ß */
-	//int			texw;     /**< Í¼Æ¬ÌùÍ¼¿í */
-	//int			texh;     /**< Í¼Æ¬ÌùÍ¼¸ß */
+	int			width;   /**< Í¼Æ¬ÌùÍ¼¿í */
+	int			height;  /**< Í¼Æ¬ÌùÍ¼¸ß */
+	int			owidth;    /**< Í¼Æ¬Ô­¿í */
+	int			oheight;   /**< Í¼Æ¬Ô­¸ß */
 	//float		rcentrex; /**< Í¼ÏñÖÐÐÄx */
 	//float		rcentrey; /**< Í¼ÏñÖÐÐÄy */
 }bitmap_t, *bitmap_p;

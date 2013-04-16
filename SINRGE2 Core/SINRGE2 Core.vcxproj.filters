@@ -22,9 +22,6 @@
     <Filter Include="源文件\hge">
       <UniqueIdentifier>{6d16a844-e49c-4606-a80a-87ef71bca29a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\hge">
-      <UniqueIdentifier>{a082db01-d929-4763-8835-b439cff8bf88}</UniqueIdentifier>
-    </Filter>
     <Filter Include="头文件\ruby">
       <UniqueIdentifier>{d1d4607f-edb8-4bb6-9643-5b498a026bf2}</UniqueIdentifier>
     </Filter>
@@ -39,6 +36,15 @@
     </Filter>
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{71f14302-2fb7-47b5-888e-1fd7f2a82759}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\hgedx9">
+      <UniqueIdentifier>{52a0e077-9c44-49af-b7ad-ad85140c6008}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\hgedx9">
+      <UniqueIdentifier>{90aa1114-7e13-457b-9454-d158c0c08d8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\hge">
+      <UniqueIdentifier>{ece89693-0f0e-498f-af10-c35fc274eff1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,12 +123,6 @@
     <ClCompile Include="nge_timer.cpp">
       <Filter>源文件\nge</Filter>
     </ClCompile>
-    <ClCompile Include="RbGraphics.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbFrame.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="SINRGE2.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
@@ -157,6 +157,60 @@
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="RbSeal.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\graphics.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgecolor.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgedistort.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgeparticle.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgepmanager.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgerect.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgesprite.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgestrings.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\hgevector.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\ini.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\power.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\random.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\resource.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\system.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="hgedx9\timer.cpp">
+      <Filter>源文件\hgedx9</Filter>
+    </ClCompile>
+    <ClCompile Include="sin_video.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="sin_app.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="RbSinCore.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
   </ItemGroup>
@@ -272,33 +326,6 @@
     <ClInclude Include="hge\hge_impl.h">
       <Filter>源文件\hge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hge.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgeanim.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgecolor.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgedistort.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgeparticle.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgerect.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgesprite.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgestrings.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\hge\hgevector.h">
-      <Filter>头文件\hge</Filter>
-    </ClInclude>
     <ClInclude Include="RbExport.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
@@ -382,6 +409,78 @@
     </ClInclude>
     <ClInclude Include="sin_common.h">
       <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hge.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hge_gapi.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgeanim.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgecolor.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgedistort.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgeparticle.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgerect.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgesprite.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgestrings.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\include\hgevector.h">
+      <Filter>头文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hgedx9\hge_impl.h">
+      <Filter>源文件\hgedx9</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hge.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgeanim.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgecolor.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgedistort.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgeparticle.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgerect.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgesprite.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgestrings.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgevector.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_video.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_app.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="RbSeal.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RbSinCore.h">
+      <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

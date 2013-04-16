@@ -42,7 +42,7 @@ hgeStringTable::hgeStringTable(const wchar_t *filename)
 	// check header
 	if(memcmp(desc, STRHEADERTAG, sizeof(STRHEADERTAG)-1))
 	{
-		hge->System_Log(STRFORMATERROR, filename);
+		//hge->System_Log(STRFORMATERROR, filename);
 		delete[] desc;	
 		return;
 	}
@@ -80,12 +80,12 @@ hgeStringTable::hgeStringTable(const wchar_t *filename)
 
 		// skip whitespaces to '='
 		while(isspace(*pdesc)) pdesc++;
-		if(*pdesc!='=')	{ hge->System_Log(STRFORMATERROR, filename); break; }
+		if(*pdesc!='=')	{ /*hge->System_Log(STRFORMATERROR, filename);*/ break; }
 		pdesc++;
 
 		// skip whitespaces to '"'
 		while(isspace(*pdesc)) pdesc++;
-		if(*pdesc!='"')	{ hge->System_Log(STRFORMATERROR, filename); break;	}
+		if(*pdesc!='"')	{ /*hge->System_Log(STRFORMATERROR, filename);*/ break;	}
 		pdesc++;
 
 		// parse string value till the closing '"' -> str_value

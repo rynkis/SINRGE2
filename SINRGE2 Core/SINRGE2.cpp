@@ -31,6 +31,8 @@ static 	IDirect3D8*			m_ref_d3d;
 static 	IDirect3DDevice8*	m_ref_device;
 static 	D3DCAPS8			m_d3d_caps;
 
+class	CVideoMgr*			m_pVideoMgr;			///<	AVI²¥·Å
+
 namespace
 {
 	/*
