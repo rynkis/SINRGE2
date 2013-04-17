@@ -5,11 +5,8 @@
 #include "RbTone.h"
 #include "RbRect.h"
 #include "RbPlane.h"
-#include "SinSprite.h"
-//#include "SINRGE2.h"
+#include "sin_sprite.h"
 #include "sin_app.h"
-
-//using namespace Sin;
 
 VALUE rb_cPlane;
 

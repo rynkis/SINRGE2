@@ -1,11 +1,8 @@
-//#include "RbExport.h"
 #include "RbSeal.h"
 extern "C"
 {
 #include "seal.h"
 }
-
-//using namespace Sin;
 
 static const char WAV_SYM[] = "wav";
 static const char OV_SYM[]	= "ov";
@@ -2082,11 +2079,3 @@ void MRbSeal::InitLibrary()
 {
 	Init_seal();
 }
-
-//namespace Sin
-//{
-//	void InitSeal()
-//	{
-//		Init_seal();
-//	}
-//}

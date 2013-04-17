@@ -7,8 +7,7 @@
 #include "RbRect.h"
 #include "sin_app.h"
 #include "sin_video.h"
-
-#include "SinSprite.h"
+#include "sin_sprite.h"
 
 VALUE rb_cSprite;
 
@@ -460,14 +459,15 @@ VALUE RbSprite::update()
 {
 	check_raise();
 
-	if (!m_movie_playing)
-		return Qfalse;
-	
-	HGE* hge = GetAppPtr()->GetHgePtr();
-	DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
-	GetVideoMgr()->UpdateMovieTexture(pTexData);
-	hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
-	return Qnil;
+	if (m_movie_playing)
+	{
+		HGE* hge = GetAppPtr()->GetHgePtr();
+		DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
+		GetVideoMgr()->UpdateMovieTexture(pTexData);
+		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
+		return Qnil;
+	}
+	return Qfalse;
 }
 
 VALUE RbSprite::flash(VALUE color, VALUE duration)
@@ -667,8 +667,8 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 {
 	check_raise();
 
-	if (GetVideoMgr()->IsOccupying())
-		rb_raise(rb_eSinError, "Video Player is occupying.\n You must stop first.");
+	if (GetVideoMgr()->IsOccupied())
+		rb_raise(rb_eSinError, "Video Player is occupied.\n You must stop first.");
 
 	VALUE filename, volume;
 
@@ -683,7 +683,7 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
-		return Qfalse;
+		rb_raise(rb_eSinError, "Falied to load video: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
 
 	VALUE __argv1[] = {INT2FIX(width), INT2FIX(height)};
 	VALUE bitmap = rb_class_new_instance(2, __argv1, rb_cBitmap);

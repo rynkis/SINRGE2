@@ -70,6 +70,7 @@ public:
 	virtual void			CALL	System_Shutdown();
 	virtual bool			CALL	System_Start();
 	virtual bool			CALL	System_Update();
+	virtual bool			CALL	System_PeekMessage();
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
 	virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
@@ -101,9 +102,9 @@ public:
 	virtual int				CALL	Random_Int(int min, int max);
 	virtual float			CALL	Random_Float(float min, float max);
 
-	virtual float			CALL	Timer_GetTime();
+	/*virtual float			CALL	Timer_GetTime();
 	virtual float			CALL	Timer_GetDelta();
-	virtual int				CALL	Timer_GetFPS();
+	virtual int				CALL	Timer_GetFPS();*/
 
 	/*virtual void		CALL	Input_GetMousePos(float *x, float *y);
 	virtual void		CALL	Input_SetMousePos(float x, float y);
@@ -252,17 +253,23 @@ public:
 
 
 	// Timer
-	float				fTime;
+	/*float				fTime;
 	float				fDeltaTime;
 	DWORD				nFixedDelta;
 	int					nFPS;
 	DWORD				t0, t0fps, dt;
-	int					cfps;
-
+	int					cfps;*/
 	
-	MSG					m_msg;			//	SINRGE2
-	DWORD				CurBlendColor;	//	SINRGE2
-
+	//	+++SINRGE2+++
+	wchar_t				szTitleFps[MAX_PATH];
+	int					mouseButton;
+	short				mouseWheel;
+	bool				mouseMove;
+	bool				bShowFps;
+	bool				bOnFocus;
+	MSG					m_msg;
+	DWORD				CurBlendColor;
+	//	+++SINRGE2+++
 
 private:
 	HGE_Impl();

@@ -128,10 +128,6 @@ VALUE RbRect::_dump(VALUE depth)
 
 VALUE RbRect::empty()
 {
-	//VALUE __argv[] = {RUBY_0, RUBY_0, RUBY_0, RUBY_0};
-
-	//return initialize(4, __argv, __obj);
-
 	vx = vy = vw = vh = RUBY_0;
 
 	x		= FIX2INT(vx);

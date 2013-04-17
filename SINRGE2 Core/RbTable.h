@@ -5,7 +5,6 @@
 #pragma once
 #endif
 
-
 #include "RbClassBase.h"
 
 class RbTable : public RbClassBase

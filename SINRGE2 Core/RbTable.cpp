@@ -1,9 +1,5 @@
 #include "RbTable.h"
 #include "sin_types.h"
-//#include "SINRGE2.h"
-
-//using namespace Sin;
-
 
 VALUE rb_cTable;
 

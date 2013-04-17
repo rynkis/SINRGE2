@@ -2,6 +2,7 @@
 #include "nge_timer.h"
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 static uint32_t TM_get_ticks(nge_timer* timer);
 static uint32_t TM_is_started(nge_timer* timer);
@@ -17,18 +18,17 @@ static char inited = 0;
 static int cacheid = 0;
 static uint8_t tex_ret = 0;
 static nge_timer* fps_timer;
-static float lastFps;
+static int lastFps;
 
-float GetRealFps()
+int GetRealFps()
 {
-	int t;
-	float seconds;
-	float realFps;
+	static int t, realFps;
+	static float seconds;
 	m_frame++;
 	t = nge_get_tick();
 	if ( (t - m_t0) >= 1000) {
 		seconds = (t - m_t0) / 1000.0;
-		lastFps = realFps = m_frame / seconds;
+		lastFps = realFps = ceil(m_frame / seconds);
 		m_t0 = t;
 		m_frame = 0;
 		return realFps;

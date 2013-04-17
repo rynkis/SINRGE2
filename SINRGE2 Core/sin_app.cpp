@@ -107,15 +107,20 @@ namespace
 		VALUE rbread = rb_file_open(RSTRING_PTR(filename), "rb");
 		VALUE rbdata = rb_marshal_load(rbread);
 		(void)rb_io_close(rbread);
-	
+		
 		return rbdata;
 	}
 }
+
+static const wchar_t* pDefaultConsole	= L"0";
+static const wchar_t* pDefaultScripts	= L"Data\\Scripts.rbdata";
+
 
 /***
  *	全局单例静态变量定义
  */
 CApplication* CApplication::s_pApp = 0;
+
 
 /***
  *	构造函数
@@ -128,12 +133,14 @@ CApplication::CApplication()
 
 	, m_ref_d3d(0)
 	, m_ref_device(0)
+	, m_with_console(false)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
 	szIniPath[0] = 0;
 	szScripts[0] = 0;
 	memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
+	m_sys_timer = nge_timer_create();
 }
 
 /***
@@ -149,6 +156,13 @@ CApplication::~CApplication()
  */
 void CApplication::Dispose()
 {
+	if (m_pHge)
+	{
+		m_pHge->System_Shutdown();
+		m_pHge->Release();
+		m_pHge = 0;
+	}
+
 	if (m_pVideoMgr)
 	{
 		m_pVideoMgr->Destroy();
@@ -168,16 +182,11 @@ void CApplication::GraphicsUpdate()
 		Quit();
 }
 
-void CApplication::SetTitle(const wchar_t* title)
-{
-	wcscpy_s(m_frm_struct.m_title, title);
-}
-
 int CApplication::Run()
 {
 	AppInitialize();
 	GetRuntimeInfos();
-
+	m_sys_timer->start(m_sys_timer);
     return RunScript();
 }
 
@@ -374,19 +383,25 @@ void CApplication::GetRuntimeInfos()
 	szIniPath[len - 2] = L'n';
 	szIniPath[len - 3] = L'i';
 	
+	wchar_t szConsole[MAX_PATH];
 	// ini文件存在
 	if (IsFileExist(szIniPath))
 	{
-		GetPrivateProfileStringW(L"Setting", L"Scripts", L"Data\\Scripts.rbdata", szScripts, MAX_PATH, szIniPath);
+		GetPrivateProfileStringW(L"Setting", L"Scripts", pDefaultScripts, szScripts, MAX_PATH, szIniPath);
+		GetPrivateProfileStringW(L"Setting", L"Console", pDefaultConsole, szConsole, MAX_PATH, szIniPath);
 	}
 	else
 	{
-		wcscpy_s(szScripts, L"Data\\Scripts.rbdata");
+		wcscpy_s(szScripts, pDefaultScripts);
+		wcscpy_s(szConsole, pDefaultConsole);
 	}
 
 	len = WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, NULL, 0, NULL, FALSE);
 	pScripts = new char[len];
 	WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, pScripts, len, NULL, FALSE);
+
+	if (szConsole[0] != '0')
+		m_with_console = true;
 }
 
 /**
@@ -433,8 +448,16 @@ void CApplication::InitRubyInnerClassExt()
 {
 	rb_define_global_function("msgbox_p",		(RbFunc)rdf_msgboxp,		-1);
 	rb_define_global_function("msgbox",			(RbFunc)rdf_msgbox,			-1);
-	rb_define_global_function("p",				(RbFunc)rdf_p,				-1);
-	rb_define_global_function("print",			(RbFunc)rdf_print,			-1);
+	if (m_with_console)
+	{
+		rb_define_global_function("p",			(RbFunc)rdf_p,				-1);
+		rb_define_global_function("print",		(RbFunc)rdf_print,			-1);
+	}
+	else
+	{
+		rb_define_global_function("p",			(RbFunc)rdf_msgboxp,		-1);
+		rb_define_global_function("print",		(RbFunc)rdf_msgbox,			-1);
+	}
 
 	ruby_Init_Fiber_as_Coroutine();
 	Init_zlib();
@@ -447,14 +470,7 @@ void CApplication::InitExportSinInterface()
 	MRbSinCore::InitLibrary();
 	MRbInput::InitLibrary();
 	MRbSeal::InitLibrary();
-	//InitRbGlobal();
-	//InitRbInput();
-	//InitSeal();
-	//InitRbFrame();
-	////InitRbHge();
-	//InitRbGraphics();
-	//InitRbImage();
-
+	
 	RbRect::InitLibrary();
 	RbColor::InitLibrary();
 	RbTone::InitLibrary();

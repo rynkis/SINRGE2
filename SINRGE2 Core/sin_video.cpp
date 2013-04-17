@@ -104,7 +104,7 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 	pOutHeight		= vih->bmiHeader.biHeight;
 
 	m_pTempBuffer	= (BYTE*)malloc(m_iVideoWidth * m_iVideoHeight * 4);
-	m_is_occupying = true;
+	m_is_occupied = true;
 
     ///<	释放媒体类型
 	AuxFreeMediaType(mtt);
@@ -185,7 +185,7 @@ void CVideoMgr::UpdateMovieTexture(DWORD* pDstBitmapAddr)
 			b = m_pTempBuffer[i];
 			g = m_pTempBuffer[i + 1];
 			r = m_pTempBuffer[i + 2];
-			pDstBitmapAddr[v + lx] = b | (g << 8) | (r << 16) | (255 << 24);
+			pDstBitmapAddr[v + lx] = 0xFF000000 + (r << 16) + (g << 8) + b;//b | (g << 8) | (r << 16) | (255 << 24);
 		}
 	}
 }
@@ -210,7 +210,7 @@ void CVideoMgr::StopMovie()
 
 	m_iVideoWidth = 0;
 	m_iVideoHeight = 0;
-	m_is_occupying = false;
+	m_is_occupied = false;
 
 	if (m_pTempBuffer)
 		free(m_pTempBuffer);
@@ -489,12 +489,10 @@ CVideoMgr::CVideoMgr()
 	, m_pSampleGrabber(0)
 	, m_pBasicAudio(0)
 
-	//, m_pDstBitmapAddr(0)
-
 	, m_iVideoWidth(0)
 	, m_iVideoHeight(0)
 	, m_pTempBuffer(0)
-	, m_is_occupying(0)
+	, m_is_occupied(false)
 {
 	s_pVideoMgr = this;
 }

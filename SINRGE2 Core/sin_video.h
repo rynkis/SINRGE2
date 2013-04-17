@@ -65,7 +65,7 @@ public:
 	void					RewindMovie();
 	long					GetVolume() const;
 	void					SetVolume(long iVolume);
-	bool					IsOccupying() const { return m_is_occupying; };
+	bool					IsOccupied() const { return m_is_occupied; };
 
 private:
 	void					CollectFilterPins(IBaseFilter* pFilter, ListPinPtr& vInPins, ListPinPtr& vOutPins);
@@ -92,7 +92,7 @@ private:
 	BYTE*					m_pTempBuffer;
 	long					m_iVideoWidth;
 	long					m_iVideoHeight;
-	bool					m_is_occupying;
+	bool					m_is_occupied;
 
 public:
 	CVideoMgr();

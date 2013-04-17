@@ -3,6 +3,7 @@
 
 #include "RbRenderTree.h"
 #include "hge.h"
+#include "nge_timer.h"
 #include <d3d8.h>
 
 /***
@@ -19,6 +20,8 @@ public:
 	inline IDirect3DDevice8*	GetD3DDevicePtr() const { return m_ref_device; }
 	inline unsigned long		GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline unsigned long		GetFrameHeight() const { return m_frm_struct.m_screen_height; }
+
+	inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
 
 	inline DWORD				GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
 	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
@@ -43,8 +46,6 @@ public:
 
 	void						Quit();
 	void						GraphicsUpdate();
-
-	void						SetTitle(const wchar_t* title);
 
 private:
 	void						ShowError(const wchar_t* szFormat, ...);
@@ -71,6 +72,7 @@ private:
 	wchar_t						szScripts[MAX_PATH];
 	
 	char*						pScripts;
+	bool						m_with_console;
 
 	HGE*						m_pHge;
 	RbRenderState*				m_pRenderState;
@@ -79,6 +81,8 @@ private:
 	IDirect3D8*					m_ref_d3d;
 	IDirect3DDevice8*			m_ref_device;
 	D3DCAPS8					m_d3d_caps;
+
+	nge_timer*					m_sys_timer;
 
 private:
 	class CVideoMgr*			m_pVideoMgr;			///<	AVI²¥·Å

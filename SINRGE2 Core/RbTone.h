@@ -7,8 +7,6 @@
 
 #include "RbColor.h"
 
-//using namespace Sin;
-
 class RbTone : public RbColor
 {
 public:

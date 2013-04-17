@@ -4,8 +4,6 @@
 #include "RbClassBase.h"
 #include "sin_types.h"
 
-//using namespace Sin;
-
 class RbRect : public RbClassBase
 {
 public:

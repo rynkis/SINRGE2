@@ -42,7 +42,7 @@ void nge_timer_free(nge_timer* timer);
  */
 uint32_t nge_get_tick();
 
-float GetRealFps();
+int GetRealFps();
 
 void LimitFps(uint32_t limit);
 

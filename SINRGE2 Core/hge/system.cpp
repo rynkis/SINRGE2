@@ -23,11 +23,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 int			nRef=0;
 HGE_Impl*	pHGE=0;
 
-static int		onFocus				= 1;
-static int		mouseButton			= 0;
-static short	mouseWheel			= 0;
-static bool		mouseMove			= false;
-
 
 HGE* CALL hgeCreate(int ver)
 {
@@ -158,10 +153,10 @@ bool CALL HGE_Impl::System_Initiate()
 
 	//System_Log(L"Init done.\n");
 
-	fTime=0.0f;
+	/*fTime=0.0f;
 	t0=t0fps=timeGetTime();
 	dt=cfps=0;
-	nFPS=0;
+	nFPS=0;*/
 
 	// Done
 
@@ -189,14 +184,8 @@ void CALL HGE_Impl::System_Shutdown()
 
 bool CALL HGE_Impl::System_Update()
 {
-	// Process window messages
-	if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){
-		if(m_msg.message == WM_QUIT){
-			bActive=false;
-			return false;
-		}
-		DispatchMessage(&m_msg);
-	}
+	if (!System_PeekMessage())
+		return false;
 	// If HGE window is focused or we have the "don't suspend" state - process the main loop
 	if(bActive || bDontSuspend)
 	{
@@ -204,6 +193,25 @@ bool CALL HGE_Impl::System_Update()
 			procRenderFunc();
 
 		LimitFps(nHGEFPS);
+
+		if (bShowFps)
+		{
+			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetRealFps());
+			SetWindowText(hwnd, szTitleFps);
+		}
+	}
+	return true;
+}
+
+bool CALL HGE_Impl::System_PeekMessage()
+{
+	// Process window messages
+	if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){
+		if(m_msg.message == WM_QUIT){
+			bActive=false;
+			return false;
+		}
+		DispatchMessage(&m_msg);
 	}
 	return true;
 }
@@ -321,8 +329,8 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 									}
 								}
 								nHGEFPS=value;
-								if(nHGEFPS>0) nFixedDelta=int(1000.0f/value);
-								else nFixedDelta=0;
+								/*if(nHGEFPS>0) nFixedDelta=int(1000.0f/value);
+								else nFixedDelta=0;*/
 								break;
 	}
 }
@@ -560,9 +568,9 @@ HGE_Impl::HGE_Impl()
 	textures=0;
 
 	nHGEFPS=HGEFPS_UNLIMITED;
-	fTime=0.0f;
+	/*fTime=0.0f;
 	fDeltaTime=0.0f;
-	nFPS=0;
+	nFPS=0;*/
 	
 	procRenderFunc=0;
 	procFocusLostFunc=0;
@@ -579,7 +587,7 @@ HGE_Impl::HGE_Impl()
 	szLogFile[0]=0;
 	szIniFile[0]=0;
 	
-	nFixedDelta=0;
+	//nFixedDelta=0;
 	bHideMouse=true;
 	bDontSuspend=false;
 	hwndParent=0;
@@ -592,6 +600,15 @@ HGE_Impl::HGE_Impl()
 	int i;
 	for(i=wcslen(szAppPath)-1; i>0; i--) if(szAppPath[i]=='\\') break;
 	szAppPath[i+1]=0;
+	
+	// +++SINRGE2+++
+	szTitleFps[0] = 0;
+	mouseButton = 0;
+	mouseWheel = 0;
+	mouseMove = false;
+	bShowFps = false;
+	bOnFocus = true;
+	// +++SINRGE2+++
 }
 
 void HGE_Impl::_PostError(wchar_t *error)
@@ -618,28 +635,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	bool bActivating;
 
-	mouseMove = false;
+	pHGE->mouseMove = false;
 
 	switch(msg)
-	{	
-		
-        case WM_KILLFOCUS:
-			onFocus = 0;
-			return FALSE;
-        case WM_SETFOCUS:
-			onFocus = 1;
-			return FALSE;
+	{
+	case WM_KILLFOCUS:
+		pHGE->bOnFocus = false;
+		return FALSE;
+	case WM_SETFOCUS:
+		pHGE->bOnFocus = true;
+		return FALSE;
 
-		case WM_CREATE: 
-			return FALSE;
+	case WM_CREATE: 
+		return FALSE;
 		
-		case WM_PAINT:
-			if(pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
-			break;
+	case WM_PAINT:
+		if(pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
+		break;
 
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			return FALSE;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		return FALSE;
 
 /*
 		case WM_ACTIVATEAPP:
@@ -647,90 +663,97 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
 			return FALSE;
 */
-		case WM_ACTIVATE:
-			// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
-			// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
-			bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
-			if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+	case WM_ACTIVATE:
+		// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
+		// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
+		bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
+		if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+		return FALSE;
+
+
+	case WM_SETCURSOR:
+		if(pHGE->bActive && LOWORD(lparam)==HTCLIENT && pHGE->bHideMouse) SetCursor(NULL);
+		else SetCursor(LoadCursor(NULL, IDC_ARROW));
+		return FALSE;
+
+	case WM_SYSKEYDOWN:
+		if (wparam == VK_F1)
+		{
+			pHGE->bShowFps = !pHGE->bShowFps;
+			if (!pHGE->bShowFps)
+				SetWindowText(pHGE->hwnd, pHGE->szWinTitle);
 			return FALSE;
-
-
-		case WM_SETCURSOR:
-			if(pHGE->bActive && LOWORD(lparam)==HTCLIENT && pHGE->bHideMouse) SetCursor(NULL);
-			else SetCursor(LoadCursor(NULL, IDC_ARROW));
-			return FALSE;
-
-		case WM_SYSKEYDOWN:
-			if(wparam == VK_F4)
-			{
-				if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
-				return DefWindowProc(hwnd, msg, wparam, lparam);
-			}
-			else if(wparam == VK_RETURN)
-			{
-				pHGE->System_SetState(HGE_WINDOWED, !pHGE->System_GetState(HGE_WINDOWED));
+		}
+		else if(wparam == VK_F4)
+		{
+			if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
+			return DefWindowProc(hwnd, msg, wparam, lparam);
+		}
+		else if(wparam == VK_RETURN)
+		{
+			pHGE->System_SetState(HGE_WINDOWED, !pHGE->System_GetState(HGE_WINDOWED));
 				return FALSE;
-			}
-			return FALSE;
+		}
+		return FALSE;
 
-        case WM_LBUTTONDBLCLK:
-			mouseButton += 64;
-			return FALSE;
-        case WM_RBUTTONDBLCLK:
-			mouseButton += 128;
-			return FALSE;
-        case WM_MBUTTONDBLCLK:
-			mouseButton += 256;
-			return FALSE;
+	case WM_LBUTTONDBLCLK:
+		pHGE->mouseButton += 64;
+		return FALSE;
+	case WM_RBUTTONDBLCLK:
+		pHGE->mouseButton += 128;
+		return FALSE;
+	case WM_MBUTTONDBLCLK:
+		pHGE->mouseButton += 256;
+		return FALSE;
 			
-		case WM_MOUSEMOVE:
-			mouseMove = true;
-			return FALSE;
-        case WM_MOUSEWHEEL:
-            mouseWheel = (short)HIWORD(wparam);
-			return FALSE;
+	case WM_MOUSEMOVE:
+		pHGE->mouseMove = true;
+		return FALSE;
+	case WM_MOUSEWHEEL:
+		pHGE->mouseWheel = (short)HIWORD(wparam);
+		return FALSE;
 
-		case WM_SIZE:
-			if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
-			//return FALSE;
-			break;
+	case WM_SIZE:
+		if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
+		//return FALSE;
+		break;
 
-		case WM_SYSCOMMAND:
-			if (wparam == SC_KEYMENU)
-				return TRUE;
-			else if(wparam==SC_CLOSE)
-			{
-				if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
-				pHGE->bActive=false;
-				return DefWindowProc(hwnd, msg, wparam, lparam);
-			}
-			break;
+	case WM_SYSCOMMAND:
+		if (wparam == SC_KEYMENU)
+			return TRUE;
+		else if(wparam==SC_CLOSE)
+		{
+			if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
+			pHGE->bActive=false;
+			return DefWindowProc(hwnd, msg, wparam, lparam);
+		}
+		break;
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-int OnFocus()
+bool MRbInput::OnFocus()
 {
-	return onFocus;
+	return pHGE->bOnFocus;
 }
 
-int MouseWheel()
+int MRbInput::MouseWheel()
 {   
-	return mouseWheel;
+	return pHGE->mouseWheel;
 }
 
-int MouseDblClk(int iKey)
+int MRbInput::MouseDblClk(int iKey)
 {
-	return mouseButton & (iKey<<6);
+	return pHGE->mouseButton & (iKey<<6);
 }
 
-int GetMouseMove()
+int MRbInput::GetMouseMove()
 {
-	return mouseMove;
+	return pHGE->mouseMove;
 }
 
-void HideMouse(bool hide)
+void MRbInput::HideMouse(bool hide)
 {
 	pHGE->bHideMouse = hide;
 }

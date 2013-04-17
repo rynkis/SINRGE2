@@ -44,7 +44,6 @@ public:
 	void		SetZoomY(float y) { m_zoom_y = y; }
 	void		SetAngle(float rad) { m_angle = rad; }
 	void		SetSrcRectDirty(bool v = true) { m_src_rect_dirty = v; }
-	//void		SetFlip(bool bX, bool bY, bool bHotSpot = false);
 
 	void		SetBlendColor(int color) { quad.blend_color=color; }	//	SINRGE2
 	DWORD		GetBlendColor() const { return quad.blend_color; }		//	SINRGE2
@@ -59,7 +58,6 @@ public:
 	inline bool IsFlipY()											const { return m_flip_y < 0.0f; }
 
 protected:
-	//SinSprite();
 	static HGE	*hge;
 
 	hgeQuad		quad;

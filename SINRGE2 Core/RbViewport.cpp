@@ -2,10 +2,7 @@
 #include "RbColor.h"
 #include "RbTone.h"
 #include "RbRect.h"
-//#include "SINRGE2.h"
 #include "sin_app.h"
-
-//using namespace Sin;
 
 VALUE rb_cViewport;
 

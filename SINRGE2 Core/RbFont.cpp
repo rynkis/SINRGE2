@@ -1,7 +1,5 @@
 #include "RbFont.h"
 #include "RbColor.h"
-//#include "SINRGE2.h"
-//#include "sin_app.h"
 
 VALUE rb_cFont;
 

@@ -1,11 +1,8 @@
 #include "RbInput.h"
 #include "RbExport.h"
-//#include "SINRGE2.h"
 #include "sin_app.h"
 
-//using namespace Sin;
-
-VALUE			mInput;
+VALUE mInput;
 
 static int				mouse_posX				= 0;
 static int				mouse_posY				= 0;
@@ -39,7 +36,7 @@ namespace
 		for (int vk = 0; vk < 256; ++vk)
 		{
 			///<	获取状态
-			vk_state = (OnFocus() ? GetAsyncKeyState(vk) : 0);
+			vk_state = (MRbInput::OnFocus() ? GetAsyncKeyState(vk) : 0);
 			///<	记录上一帧状态
 			s_iLastRepeatCount[vk] = s_iRepeatCount[vk];
 			///<	更新状态
@@ -306,8 +303,3 @@ void MRbInput::InitLibrary()
 	rb_define_module_function(mInput, "dir4", RbFunc(get_dir4), 0);
 	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 }
-
-//void Sin::InitRbInput()
-//{
-//	bind_input();
-//}

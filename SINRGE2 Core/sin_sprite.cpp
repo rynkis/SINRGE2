@@ -1,4 +1,4 @@
-#include "SinSprite.h"
+#include "sin_sprite.h"
 #include <math.h>
 
 
@@ -120,39 +120,6 @@ hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, hgeRect *rect) const
 	return rect;
 }
 
-//hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, float rot, float hscale, float vscale, hgeRect *rect) const
-//{
-//	float tx1, ty1, tx2, ty2;
-//	float sint, cost;
-//
-//	rect->Clear();
-//	
-//	tx1 = -m_ox*hscale;
-//	ty1 = -m_oy*vscale;
-//	tx2 = (m_width-m_ox)*hscale;
-//	ty2 = (m_height-m_oy)*vscale;
-//
-//	if (rot != 0.0f)
-//	{
-//		cost = cosf(rot);
-//		sint = sinf(rot);
-//			
-//		rect->Encapsulate(tx1*cost - ty1*sint + x, tx1*sint + ty1*cost + y);	
-//		rect->Encapsulate(tx2*cost - ty1*sint + x, tx2*sint + ty1*cost + y);	
-//		rect->Encapsulate(tx2*cost - ty2*sint + x, tx2*sint + ty2*cost + y);	
-//		rect->Encapsulate(tx1*cost - ty2*sint + x, tx1*sint + ty2*cost + y);	
-//	}
-//	else
-//	{
-//		rect->Encapsulate(tx1 + x, ty1 + y);
-//		rect->Encapsulate(tx2 + x, ty1 + y);
-//		rect->Encapsulate(tx2 + x, ty2 + y);
-//		rect->Encapsulate(tx1 + x, ty2 + y);
-//	}
-//
-//	return rect;
-//}
-
 void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 {
 	float ox = m_ox, oy = m_oy;
@@ -186,7 +153,7 @@ void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 
 void SinSprite::SetTexture(HTEXTURE tex)
 {
-	float /*tx1,ty1,tx2,ty2,*/tw,th;
+	float tw,th;
 
 	quad.tex=tex;
 
@@ -205,25 +172,6 @@ void SinSprite::SetTexture(HTEXTURE tex)
 	m_height = th;
 	tex_width = tw;
 	tex_height = th;
-
-	/*if(tw!=tex_width || th!=tex_height)
-	{
-		tx1=quad.v[0].tx*tex_width;
-		ty1=quad.v[0].ty*tex_height;
-		tx2=quad.v[2].tx*tex_width;
-		ty2=quad.v[2].ty*tex_height;
-
-		tex_width=tw;
-		tex_height=th;
-
-		tx1/=tw; ty1/=th;
-		tx2/=tw; ty2/=th;
-
-		quad.v[0].tx=tx1; quad.v[0].ty=ty1; 
-		quad.v[1].tx=tx2; quad.v[1].ty=ty1; 
-		quad.v[2].tx=tx2; quad.v[2].ty=ty2; 
-		quad.v[3].tx=tx1; quad.v[3].ty=ty2; 
-	}*/
 }
 
 

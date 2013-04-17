@@ -6,14 +6,9 @@
 #include "RbFont.h"
 #include "RbTone.h"
 #include "sin_app.h"
-//#include "SINRGE2.h"
-
 #include <math.h>
 #include <d3dx8tex.h>
 
-//#include "sin_video.h"
-
-//using namespace Sin;
 
 VALUE rb_cBitmap;
 
@@ -134,11 +129,8 @@ void RbBitmap::InitLibrary()
 	rb_define_method(rb_cBitmap, "blur",				(RbFunc)dm_blur ,				0);
 	rb_define_method(rb_cBitmap, "radial_blur",			(RbFunc)dm_radial_blur,			2);
 	
-	//rb_define_method(rb_cBitmap, "render",				(RbFunc)dm_render ,				0);
 	rb_define_method(rb_cBitmap, "flip_h",				(RbFunc)dm_flip_h ,				0);
 	rb_define_method(rb_cBitmap, "flip_v",				(RbFunc)dm_flip_v ,				0);
-	/*rb_define_method(rb_cBitmap, "play_movie",			(RbFunc)dm_play_movie ,			-1);
-	rb_define_method(rb_cBitmap, "update_movie",		(RbFunc)dm_update_movie ,		0);*/
 
 	// object attribute
 	rb_define_method(rb_cBitmap, "width",				(RbFunc)dm_get_width,			0);
@@ -499,9 +491,6 @@ bool RbBitmap::GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, H
 	{
 		cx = size.cx;
 		cy = size.cy;
-		//pSize = &size;
-		/*pOutRect->width		= size.cx;
-		pOutRect->height	= size.cy;*/
 	}
 
 	SelectObject(hScreenDC, Save);
@@ -808,7 +797,7 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
 	SafeRectValue(src_rect);
-	//SafeFixnumValue(opacity);
+
 	bitmap_p des = &m_bmp;
 	RbRect* srcRect = GetObjectPtr<RbRect>(src_rect);
 	int sx = srcRect->x;
@@ -817,7 +806,7 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	int sh = srcRect->height;
 	int dx = FIX2INT(x);
 	int dy = FIX2INT(y);
-	int op;// = (NIL_P(opacity) ? 255 : FIX2INT(opacity));
+	int op;
 	if (NIL_P(opacity))
 		op = 255;
 	else
@@ -857,8 +846,8 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		pTempData = pSrcTexData;
 	}
 	DWORD* pDstTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(des->quad.tex,false);
-	/*if (!pTempData || !pDstTexData)
-		return Qfalse;*/
+	if (!pTempData || !pDstTexData)
+		return Qfalse;
 	DWORD color1, color2;
 	BYTE a, r, g, b;
 	int v;
@@ -919,7 +908,7 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	int sy = srcRect->y;
 	int sw = srcRect->width;
 	int sh = srcRect->height;
-	int op;// = (NIL_P(opacity) ? 255 : FIX2INT(opacity));
+	int op;
 	if (NIL_P(opacity))
 		op = 255;
 	else
@@ -1198,8 +1187,9 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 		return Qfalse;
 
 	DWORD draw_color = m_font_ptr->GetColorPtr()->GetColor();
-	BYTE da, dr, dg, db;
-	GET_ARGB_8888(draw_color, da, dr, dg, db);
+	BYTE da = GET_ARGB_A(draw_color);//, dr, dg, db;
+	DWORD drgb = draw_color & 0x00FFFFFF;
+	//GET_ARGB_8888(draw_color, da, dr, dg, db);
 	if (!da)
 		return Qfalse;
 
@@ -1305,7 +1295,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 						{
 							v = h + tmp_x + 1;
 							//	处理阴影颜色
-							color1 = MAKE_ARGB_8888(tmp_gray, 0, 0, 0);
+							color1 = tmp_gray<<24;
 							color2 = pTexData[v];
 							BLEND_ARGB_8888(color1, color2);
 							pTexData[v] = color2;
@@ -1313,7 +1303,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 
 						v = i + tmp_x;
 						//	处理像素颜色
-						color1 = MAKE_ARGB_8888(tmp_gray, dr, dg, db);
+						color1 = drgb + (tmp_gray<<24);
 						color2 = pTexData[v];
 						BLEND_ARGB_8888(color1, color2);
 						pTexData[v] = color2;
@@ -1433,7 +1423,7 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE *argv, VALUE obj)
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (m_bmp.width - x < width)		{ width = m_bmp.width - x; }
+	if (m_bmp.width - x < width)	{ width = m_bmp.width - x; }
 	if (m_bmp.height - y < height)	{ height = m_bmp.height - y; }
 
 	if (!vertical)
@@ -1660,28 +1650,6 @@ VALUE RbBitmap::blur()
 	return Qnil;
 }
 
-//VALUE RbBitmap::render()
-//{
-//	check_raise();
-//
-//	float tempx1, tempy1, tempx2, tempy2;
-//	bitmap_p texture = &m_bmp;
-//
-//	tempx1 = 0;
-//	tempy1 = 0;
-//	tempx2 = 0 + texture->width;
-//	tempy2 = 0 + texture->height;
-//
-//	texture->quad.v[0].x = tempx1; texture->quad.v[0].y = tempy1;
-//	texture->quad.v[1].x = tempx2; texture->quad.v[1].y = tempy1;
-//	texture->quad.v[2].x = tempx2; texture->quad.v[2].y = tempy2;
-//	texture->quad.v[3].x = tempx1; texture->quad.v[3].y = tempy2;
-//
-//	GetAppPtr()->GetHgePtr()->Gfx_RenderQuad(&texture->quad);
-//
-//	return Qnil;
-//}
-
 VALUE RbBitmap::flip_h()
 {
 	check_raise();
@@ -1851,61 +1819,6 @@ failed_return:
 	return Qfalse;
 }
 
-//VALUE RbBitmap::play_movie(int argc, VALUE *argv, VALUE obj)
-//{
-//	check_raise();
-//
-//	VALUE filename, volume;
-//
-//	if (rb_scan_args(argc, argv, "11", &filename, &volume) == 1)
-//		volume = INT2FIX(0);
-//	else
-//		SafeFixnumValue(volume);
-//
-//	SafeStringValue(filename);
-//
-//	int width, height;
-//	HGE* hge = GetAppPtr()->GetHgePtr();
-//
-//	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
-//		return Qfalse;
-//
-//	if (m_bmp.quad.tex)
-//		hge->Texture_Free(m_bmp.quad.tex);
-//
-//	m_bmp.quad.tex = hge->Texture_Create(width, height);
-//	if (!m_bmp.quad.tex)
-//	{
-//		GetVideoMgr()->StopMovie();
-//		return Qfalse;
-//	}
-//	m_bmp.width = hge->Texture_GetWidth(m_bmp.quad.tex);
-//	m_bmp.height = hge->Texture_GetHeight(m_bmp.quad.tex);
-//	m_bmp.owidth = width;
-//	m_bmp.oheight = height;
-//
-//	VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(width), INT2FIX(height)};
-//	VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
-//	m_rect_ptr = GetObjectPtr<RbRect>(rect);
-//
-//	GetVideoMgr()->PlayMovie(FIX2LONG(volume));
-//	return Qnil;
-//}
-//
-//VALUE RbBitmap::update_movie()
-//{
-//	check_raise();
-//
-//	if (!GetVideoMgr()->IsMoviePlaying())
-//		return Qfalse;
-//	
-//	HGE* hge = GetAppPtr()->GetHgePtr();
-//	DWORD* pTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
-//	GetVideoMgr()->UpdateMovieTexture(pTexData);
-//	hge->Texture_Unlock(m_bmp.quad.tex);
-//	return Qnil;
-//}
-
 imp_method(RbBitmap, dispose)
 imp_method(RbBitmap, is_disposed)
 imp_method_vargs(RbBitmap, save_to_file)
@@ -1927,11 +1840,8 @@ imp_method_vargs(RbBitmap, clear_rect)
 imp_method(RbBitmap, blur)
 imp_method02(RbBitmap, radial_blur)
 
-//imp_method(RbBitmap, render)
 imp_method(RbBitmap, flip_h)
 imp_method(RbBitmap, flip_v)
-//imp_method_vargs(RbBitmap, play_movie)
-//imp_method(RbBitmap, update_movie)
 
 imp_attr_reader(RbBitmap, rect)
 imp_attr_reader(RbBitmap, width)

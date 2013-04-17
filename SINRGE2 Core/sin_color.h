@@ -1,9 +1,9 @@
 #ifndef _SIN_COLOR_H_
 #define _SIN_COLOR_H_
 
-#define MAKE_ARGB_8888(a, r, g, b)  (b | (g << 8) | (r << 16) | (a << 24))
+#define MAKE_ARGB_8888(a, r, g, b)  ((a << 24) + (r << 16) + (g << 8) + b)//(b | (g << 8) | (r << 16) | (a << 24))
 #define GET_ARGB_8888(col, a, r, g, b)	{ \
-	a = (col >> 24) & 0xFF;\
+	a = (col >> 24);\
 	r = (col >> 16) & 0xFF;\
 	g = (col >> 8) & 0xFF;\
 	b = (col & 0xFF);\
@@ -11,7 +11,12 @@
 #define GET_ARGB_B(col)	(col&0xFF)
 #define GET_ARGB_G(col)	((col>>8)&0xFF)
 #define GET_ARGB_R(col)	((col>>16)&0xFF)
-#define GET_ARGB_A(col)	((col>>24)&0xFF)
+#define GET_ARGB_A(col)	((col>>24))
+
+#define SET_ARGB_A(col,a)		((col & 0x00FFFFFF) + (a<<24))
+#define SET_ARGB_R(col,r)		((col & 0xFF00FFFF) + (r<<16))
+#define SET_ARGB_G(col,g)		((col & 0xFFFF00FF) + (g<<8))
+#define SET_ARGB_B(col,b)		((col & 0xFFFFFF00) + b)
 
 #define BLEND_ARGB_8888(src, des) {\
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;\

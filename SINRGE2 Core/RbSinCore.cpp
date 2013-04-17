@@ -57,25 +57,15 @@ VALUE MRbSinCore::wait(int argc, VALUE duration)
 
 VALUE MRbSinCore::peek_message()
 {
-	MSG msg;
-	if (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE))
-	{
-		if (msg.message == WM_QUIT)
-		{
-			return Qfalse;
-		}
-		else
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-	}
-	return Qtrue;
+	if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
+		GetAppPtr()->Quit();
+
+	return Qnil;
 }
 
 VALUE MRbSinCore::get_real_fps()
 {
-	return rb_float_new(GetRealFps());
+	return INT2FIX(GetRealFps());
 }
 
 VALUE MRbSinCore::get_hwnd()
@@ -93,8 +83,7 @@ VALUE MRbSinCore::set_title(int argc, VALUE title)
 	SafeStringValue(title);
 
 	wchar_t* tempTitle = Kconv::UTF8ToUnicode(RSTRING_PTR(title));
-	//wcscpy_s(GetAppPtr()->, tempTitle);
-	GetAppPtr()->SetTitle(tempTitle);
+	wcscpy_s(GetAppPtr()->m_frm_struct.m_title, tempTitle);
 	return Qnil;
 }
 
@@ -108,7 +97,6 @@ VALUE MRbSinCore::set_width(int argc, VALUE width)
 	/*if (inited)
 		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(width);
-	//GetFrmStructPtr()->m_screen_width = FIX2INT(width);
 	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
 	return Qnil;
 }
@@ -123,7 +111,6 @@ VALUE MRbSinCore::set_height(int argc, VALUE height)
 	/*if (inited)
 		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(height);
-	//GetFrmStructPtr()->m_screen_height = FIX2INT(height);
 	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
 	return Qnil;
 }
@@ -215,17 +202,6 @@ void MRbSinCore::InitLibrary()
 
 	rb_define_module_function(rb_mFrame, "set_size",	RbFunc(set_width_and_height), 2);
 
-	//rb_define_module_function(rb_mFrame, "peek_message", RbFunc(peek_message), 0);
-	//rb_define_module_function(rb_mSin, "limit_fps", RbFunc(limit_fps), -1);
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
-	//rb_define_module_function(rb_mSin, "show_fps", RbFunc(show_fps), 0);
 	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
 }
-
-//namespace Sin
-//{
-//	void InitRbFrame()
-//	{
-//		bind_frame();
-//	}
-//}

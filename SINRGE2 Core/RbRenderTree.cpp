@@ -1,9 +1,6 @@
 #include "RbRenderTree.h"
 #include "RbViewport.h"
-//#include "SINRGE2.h"
 #include "sin_app.h"
-
-//using namespace Sin;
 
 HGE* RbRenderState::s_pHge = 0;
 

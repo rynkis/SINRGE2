@@ -112,7 +112,6 @@
     <ClCompile Include="hge\power.cpp" />
     <ClCompile Include="hge\random.cpp" />
     <ClCompile Include="hge\system.cpp" />
-    <ClCompile Include="hge\timer.cpp" />
     <ClCompile Include="Kconv.cpp" />
     <ClCompile Include="RbSinCore.cpp" />
     <ClCompile Include="nge_timer.cpp" />
@@ -129,7 +128,7 @@
     <ClCompile Include="RbTone.cpp" />
     <ClCompile Include="RubyExt\wait.c" />
     <ClCompile Include="RubyExt\zlib.c" />
-    <ClCompile Include="SinSprite.cpp" />
+    <ClCompile Include="sin_sprite.cpp" />
     <ClCompile Include="RbDisplayObject.cpp" />
     <ClCompile Include="RbRenderTree.cpp" />
     <ClCompile Include="sin_app.cpp" />
@@ -193,7 +192,7 @@
     <ClInclude Include="RbSprite.h" />
     <ClInclude Include="RbTable.h" />
     <ClInclude Include="RbViewport.h" />
-    <ClInclude Include="SinSprite.h" />
+    <ClInclude Include="sin_sprite.h" />
     <ClInclude Include="sin_app.h" />
     <ClInclude Include="sin_bitmap.h" />
     <ClInclude Include="sin_color.h" />

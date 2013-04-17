@@ -40,14 +40,11 @@
     <Filter Include="头文件\hge">
       <UniqueIdentifier>{ece89693-0f0e-498f-af10-c35fc274eff1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\Kconv">
+      <UniqueIdentifier>{4a0c2493-e64c-4262-b344-5feef9aab6bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Entry.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Kconv.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="hge\graphics.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
@@ -61,9 +58,6 @@
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="hge\system.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="hge\timer.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="RbColor.cpp">
@@ -123,9 +117,6 @@
     <ClCompile Include="RbViewport.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
-    <ClCompile Include="SinSprite.cpp">
-      <Filter>源文件\SINRGE2</Filter>
-    </ClCompile>
     <ClCompile Include="RbPlane.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
@@ -155,6 +146,15 @@
     </ClCompile>
     <ClCompile Include="RbSinCore.cpp">
       <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Entry.cpp">
+      <Filter>源文件\Kconv</Filter>
+    </ClCompile>
+    <ClCompile Include="Kconv.cpp">
+      <Filter>源文件\Kconv</Filter>
+    </ClCompile>
+    <ClCompile Include="sin_sprite.cpp">
+      <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,12 +272,6 @@
     <ClInclude Include="RbExport.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
-    <ClInclude Include="AutoBuffer.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Kconv.h">
-      <Filter>源文件</Filter>
-    </ClInclude>
     <ClInclude Include="RbClassBase.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
@@ -328,9 +322,6 @@
     </ClInclude>
     <ClInclude Include="RbPlane.h">
       <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="SinSprite.h">
-      <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
     <ClInclude Include="RbRenderTree.h">
       <Filter>源文件\RbClass</Filter>
@@ -388,6 +379,15 @@
     </ClInclude>
     <ClInclude Include="RbSinCore.h">
       <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoBuffer.h">
+      <Filter>源文件\Kconv</Filter>
+    </ClInclude>
+    <ClInclude Include="Kconv.h">
+      <Filter>源文件\Kconv</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_sprite.h">
+      <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
