@@ -63,7 +63,6 @@ protected:
 protected:
 	dm_method(dispose)
 	dm_method(is_disposed)
-	dm_method_vargs(save_to_file)
 	dm_method01(hue_change)
 	dm_method01(brightness_change)
 	dm_method_vargs(tone_change)
@@ -84,6 +83,7 @@ protected:
 	
 	dm_method(flip_h)
 	dm_method(flip_v)
+	dm_method_vargs(save_to_file)
 
 	attr_reader(rect)
 	attr_reader(width)
