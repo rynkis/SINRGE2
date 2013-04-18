@@ -11,26 +11,6 @@ class DisplayObject : public RbClassBase
 public:
 	DisplayObject();
 	virtual	~DisplayObject() {}
-
-protected:
-	typedef enum __InvisibleReason
-	{
-		IR_OBJECT_DISPOSED = 0,
-		IR_OBJECT_INVISIBLE,
-		IR_VIEWPORT_DISPOSED,
-
-		IR_BITMAP_NIL,
-		IR_BITMAP_DISPOSED,
-		
-		IR_NEGATIVE_ZOOMX,
-		IR_NEGATIVE_ZOOMY,
-
-		IR_FLASH_COLOR_NIL,
-
-		IR_UNKNOWN,
-
-		IR_MAX
-	} InvisibleReason;
 	
 protected:
 	static	void	RenderProc(VALUE obj, u32 id);
@@ -55,7 +35,6 @@ public:
 protected:
 	dm_method(dispose)
 	dm_method(is_disposed)
-	dm_method(invisible_reason)
 
 	attr_accessor(x)
 	attr_accessor(y)

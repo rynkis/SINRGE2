@@ -23,6 +23,7 @@ RbSprite::RbSprite()
 	, m_flash_color(0)
 	, m_src_rect_ptr(0)
 	, m_movie_playing(false)
+	, m_blend_type(0)
 {
 }
 
@@ -50,8 +51,6 @@ void RbSprite::InitLibrary()
 	rb_define_method(rb_cSprite, "disposed?",		(RbFunc)dm_is_disposed,			0);
 	rb_define_method(rb_cSprite, "flash",			(RbFunc)dm_flash,				2);
 	rb_define_method(rb_cSprite, "update",			(RbFunc)dm_update,				0);
-
-	rb_define_method(rb_cSprite, "invisible_reason",	(RbFunc)dm_invisible_reason,	0);
 
 	// object attribute
 	rb_define_method(rb_cSprite, "viewport",		(RbFunc)dm_get_viewport,		0);
@@ -174,113 +173,6 @@ VALUE RbSprite::is_disposed()
 	return C2RbBool(m_disposed);
 }
 
-/**
- *	更新纹理矩形以及相关坐标位置
- *
- *	其中 mirror、angle、zoom_x、zoom_y、ox、oy、x、y、src_rect、bitmap 等属性的改变都应该调用该方法进行更新 (bush_depth?)
- */
-//bool RbSprite::update_texture_rect_and_position()
-//{
-//	s32	left	= m_src_rect_ptr->x;	
-//	s32 right	= m_src_rect_ptr->x + m_src_rect_ptr->width;
-//	s32 top		= m_src_rect_ptr->y;	
-//	s32 bottom	= m_src_rect_ptr->y + m_src_rect_ptr->height;
-//
-//	if (m_src_rect_ptr->width <= 0 || m_src_rect_ptr->height <= 0)
-//		return false;
-//
-//	if (right < 0 || left > m_bitmap_ptr->GetBmpWidth() || bottom < 0 || top > m_bitmap_ptr->GetBmpHeight())
-//		return false;
-//
-//	if (left < 0)								left	= 0;
-//	if (right > m_bitmap_ptr->GetBmpWidth())	right	= m_bitmap_ptr->GetBmpWidth();
-//	if (top < 0)								top		= 0;
-//	if (bottom > m_bitmap_ptr->GetBmpHeight())	bottom	= m_bitmap_ptr->GetBmpHeight();
-//
-//	s32 x		= left;
-//	s32 y		= top;
-//	s32 width	= right - left;
-//	s32 height	= bottom - top;
-//
-//	int xBgn	= x / m_bitmap_ptr->GetSubTextures()[0].width;
-//	int yBgn	= y / m_bitmap_ptr->GetSubTextures()[0].height;
-//
-//	int xEnd	= (x + width - 1) / m_bitmap_ptr->GetSubTextures()[0].width;
-//	int yEnd	= (y + height - 1) / m_bitmap_ptr->GetSubTextures()[0].height;
-//
-//	for (u32 idx = 0; idx < m_uSpriteCnt; ++idx)
-//		m_pSpriteArrs[idx]->SetRenderFlag(false);
-//
-//	//	translation、scaling、rotation
-//	float fcos = cosf(m_angle);
-//	float fsin = sinf(m_angle);
-//
-//#define __TRANSLATION_SCALING_X(mx)	(((mx) - m_ox) * m_zoom_x)
-//#define __TRANSLATION_SCALING_Y(my)	(((my) - m_oy) * m_zoom_y)
-//#define __ROTATION_X(__x, __y)		((float)(((__x) * fcos - (__y) * fsin + m_x)))
-//#define __ROTATION_Y(__x, __y)		((float)(((__x) * fsin + (__y) * fcos + m_y)))
-//
-//	int	index;
-//
-//	float tmp_x1, tmp_x2, tmp_y1, tmp_y2;
-//	float fx1, fy1, fx2, fy2, fx3, fy3, fx4, fy4;
-//
-//	for (int yidx = yBgn, cost_h = 0; yidx <= yEnd; ++yidx)
-//	{
-//		int h = SinMin(SinMin(height - cost_h, m_bitmap_ptr->GetSubTextures()[0].height), m_bitmap_ptr->GetSubTextures()[0].height - y);
-//
-//		for (int xidx = xBgn, cost_w = 0, sx = x % m_bitmap_ptr->GetSubTextures()[0].width; xidx <= xEnd; ++xidx)
-//		{
-//			int w = SinMin(SinMin(width - cost_w, m_bitmap_ptr->GetSubTextures()[0].width), m_bitmap_ptr->GetSubTextures()[0].width - sx);
-//
-//			index = yidx * m_bitmap_ptr->GetCols() + xidx;
-//
-//			m_pSpriteArrs[index]->SetTextureRect(sx, y, w, h, true);
-//
-//			tmp_x1	= __TRANSLATION_SCALING_X(cost_w);
-//			tmp_y1	= __TRANSLATION_SCALING_Y(cost_h);
-//			tmp_x2	= __TRANSLATION_SCALING_X(cost_w + w);
-//			tmp_y2	= __TRANSLATION_SCALING_Y(cost_h + h);
-//
-//			fx1	= __ROTATION_X(tmp_x1, tmp_y1);
-//			fy1 = __ROTATION_Y(tmp_x1, tmp_y1);
-//			fx2 = __ROTATION_X(tmp_x2, tmp_y1);
-//			fy2 = __ROTATION_Y(tmp_x2, tmp_y1);
-//			fx3 = __ROTATION_X(tmp_x2, tmp_y2);
-//			fy3 = __ROTATION_Y(tmp_x2, tmp_y2);
-//			fx4 = __ROTATION_X(tmp_x1, tmp_y2);
-//			fy4 = __ROTATION_Y(tmp_x1, tmp_y2);
-//
-//			if (xidx != xBgn)
-//			{
-//				m_pSpriteArrs[yidx * m_bitmap_ptr->GetCols() + xidx - 1]->GetV23(&fx1, &fy1, &fx4, &fy4);
-//			}
-//
-//			if (yidx != yBgn)
-//			{
-//				m_pSpriteArrs[(yidx - 1) * m_bitmap_ptr->GetCols() + xidx]->GetV34(&fx2, &fy2, &fx1, &fy1);
-//			}
-//
-//			m_pSpriteArrs[index]->Set4V(fx1, fy1, fx2, fy2, fx3, fy3, fx4, fy4);
-//
-//			m_pSpriteArrs[index]->SetRenderFlag(true);
-//
-//			cost_w += w;
-//			sx = 0;
-//		}
-//
-//		cost_h += h;
-//		y = 0;
-//	}
-//
-//#undef __ROTATION_Y
-//#undef __ROTATION_X
-//#undef __TRANSLATION_SCALING_Y
-//#undef __TRANSLATION_SCALING_X
-//
-//	return true;
-//}
-
 void RbSprite::render(u32 id)
 {
 	if (!m_bitmap_ptr)
@@ -294,16 +186,11 @@ void RbSprite::render(u32 id)
 	if (m_flash_duration > 0 && m_flash_hide_spr > 0)
 		return;
 
-	////	如果缩放比例小于0则直接返回
-	//if (m_zoom_x <= 0.0f || m_zoom_y <= 0.0f)
-	//	return;
-
 	//	处理色调
 	process_tone_texture();
 
 	//	设置源矩形
 	m_pSpr->SetTextureRect(m_src_rect_ptr->x, m_src_rect_ptr->y, m_src_rect_ptr->width, m_src_rect_ptr->height);
-
 
 	//	关于精灵混合颜色的管理：
 
@@ -315,7 +202,7 @@ void RbSprite::render(u32 id)
 	//	如果没指定flash颜色的情况下：
 	//		如果指定了color颜色则以color颜色混合，否则不混合。
 
-	int		save_blend_mode = -1;
+	s32		save_blend_mode = -1;
 	DWORD	save_blend_color = 0;
 
 	//	如果指定了flash颜色的情况下
@@ -339,16 +226,29 @@ void RbSprite::render(u32 id)
 		//	没有设置flash颜色的情况下
 		else
 		{
-			save_blend_mode = m_pSpr->GetBlendMode();
+			if (m_blend_type == 1)
+				save_blend_mode = BLEND_COLORADD;
+			else if (m_blend_type == 2)
+				save_blend_mode = BLEND_ALPHASUBTRACT;
+			else
+				save_blend_mode = m_pSpr->GetBlendMode();
+
 			save_blend_color = m_color_ptr->GetColor();
 		}
 	}
-
+	
 	//	混合颜色的处理
 	if (save_blend_mode > 0)
 	{
 		m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
 		m_pSpr->SetBlendColor(save_blend_color);
+	}
+	else
+	{
+		if (m_blend_type == 1)
+			m_pSpr->SetBlendMode(BLEND_COLORMUL);
+		else if (m_blend_type == 2)
+			m_pSpr->SetBlendMode(BLEND_ALPHASUBTRACT);
 	}
 
 	// set the sprite's opacity
@@ -402,13 +302,11 @@ void RbSprite::render(u32 id)
 		{
 			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
-		//	hge->Gfx_SetClipping(min_x, min_y, cw, ch);
-		//	self->spr->RenderEx(x, y, self->angle, self->zoom_x, self->zoom_y);
 		}
 
 		//	其次描绘透明草丛部分
 		// half opacity : simulate bush effect
-		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));//URgeARGB(m_opacity * m_bush_opacity / 255, 255, 255, 255).value);
+		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));
 		//m_pSpr->SetColor(ARGB(m_opacity / 2,255,255,255));
 
 		min_x = SinMax(clip_rect.x, bottom_rect.x1);
@@ -424,21 +322,10 @@ void RbSprite::render(u32 id)
 		{
 			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
-			//hge->Gfx_SetClipping(min_x, min_y, cw, ch);
-			//self->spr->RenderEx(x,y,self->angle,self->zoom_x,self->zoom_y);
 		}
 
 		GetAppPtr()->GetRenderState()->Restore();
-		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity, 255, 255, 255));//URgeARGB(m_opacity, 255, 255, 255).value);
-		//// restore the clip region
-		//hge->Gfx_SetClipping(rge->last_clip_rect.x,
-		//					 rge->last_clip_rect.y,
-		//					 rge->last_clip_rect.w,
-		//					 rge->last_clip_rect.h);
-
-		//// restore the opacity
-		//self->spr->SetColor(ARGB(self->opacity,255,255,255));
-
+		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity, 255, 255, 255));
 	} 
 	else
 	{
@@ -471,13 +358,6 @@ VALUE RbSprite::update()
 }
 
 VALUE RbSprite::flash(VALUE color, VALUE duration)
-{
-#pragma message("		Unfinished Function " __FUNCTION__)
-
-	return Qnil;
-}
-
-VALUE RbSprite::invisible_reason()
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
@@ -575,6 +455,19 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 	m_mirror = Ruby2RbBool(mirror);
 
 	m_pSpr->SetFlip(RTEST(m_mirror), m_pSpr->IsFlipY(), true);
+	return Qnil;
+}
+
+VALUE RbSprite::get_blend_type()
+{
+	return INT2FIX(m_blend_type);
+}
+
+VALUE RbSprite::set_blend_type(VALUE blend_type)
+{
+	SafeFixnumValue(blend_type);
+	m_blend_type = FIX2INT(blend_type);
+	SinBound(m_blend_type, 0, 2);
 	return Qnil;
 }
 
@@ -787,6 +680,8 @@ imp_method02(RbSprite, flash)
 imp_attr_accessor(RbSprite, src_rect)
 imp_attr_accessor(RbSprite, angle)
 imp_attr_accessor(RbSprite, mirror)
+imp_attr_accessor(RbSprite, blend_type)
+
 imp_attr_accessor(RbSprite, bush_depth)
 imp_attr_accessor(RbSprite, bush_opacity)
 

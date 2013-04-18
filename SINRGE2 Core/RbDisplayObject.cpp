@@ -43,11 +43,6 @@ VALUE DisplayObject::is_disposed()
 	return C2RbBool(m_disposed);
 }
 
-VALUE DisplayObject::invisible_reason()
-{
-	return Qnil;
-}
-
 VALUE DisplayObject::get_x()
 {
 	return rb_float_new(m_x);
@@ -132,7 +127,6 @@ VALUE DisplayObject::set_viewport(VALUE viewport)
  */
 imp_method(DisplayObject, dispose)
 imp_method(DisplayObject, is_disposed)
-imp_method(DisplayObject, invisible_reason)
 
 imp_attr_accessor(DisplayObject, x)
 imp_attr_accessor(DisplayObject, y)

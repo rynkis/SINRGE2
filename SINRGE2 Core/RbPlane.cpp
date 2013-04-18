@@ -52,8 +52,6 @@ void RbPlane::InitLibrary()
 	rb_define_method(rb_cPlane, "dispose",		(RbFunc)dm_dispose,			0);
 	rb_define_method(rb_cPlane, "disposed?",	(RbFunc)dm_is_disposed,		0);
 
-	rb_define_method(rb_cPlane, "invisible_reason",	(RbFunc)dm_invisible_reason,		0);
-
 	// object attribute
 	rb_define_method(rb_cPlane, "viewport",		(RbFunc)dm_get_viewport,	0);
 	rb_define_method(rb_cPlane, "viewport=",	(RbFunc)dm_set_viewport,	1);
@@ -285,15 +283,21 @@ void RbPlane::process_tone_texture()
 	}
 }
 
-/*
- *	以下为ruby方法的c实现
- */
-VALUE RbPlane::invisible_reason()
+VALUE RbPlane::dispose()
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	if (m_disposed)
+		return Qnil;
 
+	m_bitmap_ptr = 0;
+	m_disposed = true;
 	return Qnil;
 }
+
+VALUE RbPlane::is_disposed()
+{
+	return C2RbBool(m_disposed);
+}
+
 
 VALUE RbPlane::get_bitmap()
 {
@@ -441,6 +445,9 @@ VALUE RbPlane::set_viewport(VALUE viewport)
 /*
  *	以下定义ruby方法
  */
+imp_method(RbPlane, dispose)
+imp_method(RbPlane, is_disposed)
+
 imp_attr_accessor(RbPlane, bitmap)
 imp_attr_accessor(RbPlane, zoom_x)
 imp_attr_accessor(RbPlane, zoom_y)

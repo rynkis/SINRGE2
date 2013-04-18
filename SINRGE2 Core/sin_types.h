@@ -26,19 +26,12 @@ typedef struct __SinFrameStruct
 		: m_fullscreen_start(false)
 		, m_forbid_fullscreen(false)
 		, m_forbid_switch(false)
-		, m_screen_width(0)
-		, m_screen_height(0)
 		, m_hwnd(NULL)
-	{
-	}
-
-	void Default()
 	{
 		m_screen_width	= 800;
 		m_screen_height = 600;
 		wcscpy_s(m_title, L"SINRGE2");
 	}
-
 } SinFrameStruct;
 
 #define SinArrayCount(ary)	(sizeof(ary) / sizeof((ary)[0]))

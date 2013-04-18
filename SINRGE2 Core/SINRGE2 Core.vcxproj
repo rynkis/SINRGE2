@@ -113,6 +113,7 @@
     <ClCompile Include="hge\random.cpp" />
     <ClCompile Include="hge\system.cpp" />
     <ClCompile Include="Kconv.cpp" />
+    <ClCompile Include="RbParticleSystem.cpp" />
     <ClCompile Include="RbSinCore.cpp" />
     <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="RbInput.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="hge\include\hgestrings.h" />
     <ClInclude Include="hge\include\hgevector.h" />
     <ClInclude Include="RbBitmap.h" />
+    <ClInclude Include="RbParticleSystem.h" />
     <ClInclude Include="RbSinCore.h" />
     <ClInclude Include="RbInput.h" />
     <ClInclude Include="RbPlane.h" />

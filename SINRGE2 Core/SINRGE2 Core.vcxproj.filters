@@ -156,6 +156,9 @@
     <ClCompile Include="sin_sprite.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
+    <ClCompile Include="RbParticleSystem.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -388,6 +391,9 @@
     </ClInclude>
     <ClInclude Include="sin_sprite.h">
       <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="RbParticleSystem.h">
+      <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

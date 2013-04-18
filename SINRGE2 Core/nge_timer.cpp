@@ -2,7 +2,6 @@
 #include "nge_timer.h"
 #include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 static uint32_t TM_get_ticks(nge_timer* timer);
 static uint32_t TM_is_started(nge_timer* timer);
@@ -26,9 +25,10 @@ int GetRealFps()
 	static float seconds;
 	m_frame++;
 	t = nge_get_tick();
-	if ( (t - m_t0) >= 1000) {
+	if ( (t - m_t0) >= 1000)
+	{
 		seconds = (t - m_t0) / 1000.0;
-		lastFps = realFps = ceil(m_frame / seconds);
+		lastFps = realFps = m_frame / seconds;
 		m_t0 = t;
 		m_frame = 0;
 		return realFps;
@@ -41,7 +41,8 @@ void LimitFps(uint32_t limit)
 	static uint32_t current_ticks,target_ticks,frame_count,last_ticks,the_delay;
 	static float rate_ticks;
 
-	if (fps_timer == NULL) {
+	if (fps_timer == NULL)
+	{
 		fps_timer = nge_timer_create();
 		fps_timer->start(fps_timer);
 		current_ticks = 0;
@@ -55,10 +56,13 @@ void LimitFps(uint32_t limit)
 	current_ticks = fps_timer->get_ticks(fps_timer);
 	target_ticks = last_ticks + (uint32_t) ((float) frame_count * rate_ticks);
 
-	if (current_ticks <= target_ticks) {
+	if (current_ticks <= target_ticks)
+	{
 		the_delay = target_ticks - current_ticks;
 		RB_SLEEP(the_delay);
-	} else {
+	}
+	else
+	{
 		frame_count = 0;
 		last_ticks = fps_timer->get_ticks(fps_timer);
 	}

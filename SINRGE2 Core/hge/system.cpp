@@ -192,13 +192,12 @@ bool CALL HGE_Impl::System_Update()
 		if(procRenderFunc)
 			procRenderFunc();
 
-		LimitFps(nHGEFPS);
-
 		if (bShowFps)
 		{
 			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetRealFps());
 			SetWindowText(hwnd, szTitleFps);
 		}
+		LimitFps(nHGEFPS);
 	}
 	return true;
 }
@@ -441,8 +440,9 @@ void CALL HGE_Impl::System_Log(const wchar_t *szFormat, ...)
 		va_start(ap, szFormat);
 		vswprintf_s(szError, szFormat, ap);
 		va_end(ap);
-
+		
 		wprintf(szError);
+		printf("\n");
 		return;
 	}
 

@@ -21,7 +21,7 @@ public:
 	inline unsigned long		GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline unsigned long		GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
-	inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
+	//inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
 
 	inline DWORD				GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
 	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
@@ -40,12 +40,14 @@ private:
 public:
 	int							Run();
 	bool						InitVideo();
-	void						AppInitialize();
+	void						InitRuby();
 	int							Eval(const char* script);
 	int							RunScript();
 
 	void						Quit();
 	void						GraphicsUpdate();
+
+	u32							GetTick();
 
 private:
 	void						ShowError(const wchar_t* szFormat, ...);

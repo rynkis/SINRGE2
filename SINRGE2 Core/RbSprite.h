@@ -23,8 +23,6 @@ protected:
 
 	virtual	void	render(u32 id);
 
-	virtual VALUE	invisible_reason();
-
 	virtual VALUE	set_ox(VALUE ox);
 	virtual VALUE	set_oy(VALUE oy);
 
@@ -39,6 +37,8 @@ protected:
 	u32				m_bush_opacity;
 	VALUE			m_angle_rad;
 	float			m_angle;
+	
+	int				m_blend_type;
 
 	int				m_flash_duration;					//	精灵闪烁帧数
 	int				m_flash_reduce_count_per_frame;		//	精灵闪烁每帧降低的透明度
@@ -66,6 +66,8 @@ protected:
 	attr_accessor(src_rect)
 	attr_accessor(angle)
 	attr_accessor(mirror)
+	attr_accessor(blend_type)
+
 	attr_accessor(bush_depth)
 	attr_accessor(bush_opacity)
 

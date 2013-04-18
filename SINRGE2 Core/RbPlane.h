@@ -2,7 +2,7 @@
 #define __RB_PLANE_H__
 
 #include "RbDisplayObject.h"
-#include "hge.h"
+//#include "hge.h"
 
 class SinSprite;
 
@@ -27,8 +27,6 @@ protected:
 	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
 
 	virtual	void	render(u32 id);
-
-	virtual VALUE	invisible_reason();
 
 	virtual VALUE	set_z(VALUE z);
 	virtual VALUE	set_viewport(VALUE viewport);
@@ -55,6 +53,9 @@ protected:
 	RbTone*			m_tone_ptr;
 
 protected:
+	dm_method(dispose)
+	dm_method(is_disposed)
+
 	attr_accessor(bitmap)
 	attr_accessor(zoom_x)
 	attr_accessor(zoom_y)

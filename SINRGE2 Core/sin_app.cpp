@@ -10,6 +10,7 @@
 #include "RbPlane.h"
 #include "RbSprite.h"
 #include "RbTable.h"
+#include "RbParticleSystem.h"
 #include "sin_app.h"
 #include "sin_video.h"
 
@@ -184,8 +185,10 @@ void CApplication::GraphicsUpdate()
 
 int CApplication::Run()
 {
-	AppInitialize();
+	InitRuby();
 	GetRuntimeInfos();
+	InitRubyInnerClassExt();
+	InitExportSinInterface();
 	m_sys_timer->start(m_sys_timer);
     return RunScript();
 }
@@ -242,7 +245,7 @@ int CApplication::RunScript()
 	return ruby_cleanup(state);//state;
 }
 
-void CApplication::AppInitialize()
+void CApplication::InitRuby()
 {
 	///<	初始化解释器
 	int		argc = 0;
@@ -258,11 +261,6 @@ void CApplication::AppInitialize()
 		ruby_incpush("./");
 		ruby_script("SINRGE2");
 	}
-	m_frm_struct.Default();
-	///<	内部类扩展
-	InitRubyInnerClassExt();
-	///<	导出Sin内部接口
-	InitExportSinInterface();
 }
 
 bool CApplication::InitVideo()
@@ -298,7 +296,7 @@ bool CApplication::InitVideo()
 	m_pHge->System_SetState(HGE_FPS, 60);
 	
 	if(!m_pHge->System_Initiate())
-		return Qfalse;
+		return false;
 	
 	//	start HGE system 
 	m_pHge->System_Start();
@@ -330,13 +328,9 @@ bool CApplication::InitVideo()
 	// video
 	m_pVideoMgr = new CVideoMgr();
 	if (!m_pVideoMgr)
-	{
 		goto failed_return;
-	}
 	if (!m_pVideoMgr->Init())
-	{
 		goto failed_return;
-	}
 
 	return true;
 
@@ -402,6 +396,11 @@ void CApplication::GetRuntimeInfos()
 
 	if (szConsole[0] != '0')
 		m_with_console = true;
+}
+
+u32 CApplication::GetTick()
+{
+	return m_sys_timer->get_ticks(m_sys_timer);
 }
 
 /**
@@ -480,6 +479,7 @@ void CApplication::InitExportSinInterface()
 	RbPlane::InitLibrary();
 	RbSprite::InitLibrary();
 	RbTable::InitLibrary();
+	RbParticleSystem::InitLibrary();
 		
 	rb_define_module_function(rb_mSin, "load_data",	RbFunc(load_data), 1);
 }
