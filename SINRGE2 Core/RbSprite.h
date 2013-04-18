@@ -38,7 +38,7 @@ protected:
 	VALUE			m_angle_rad;
 	float			m_angle;
 	
-	int				m_blend_type;
+	//int				m_blend_type;
 
 	int				m_flash_duration;					//	精灵闪烁帧数
 	int				m_flash_reduce_count_per_frame;		//	精灵闪烁每帧降低的透明度
@@ -49,10 +49,12 @@ protected:
 	bool			m_movie_playing;
 
 	RbRect*			m_src_rect_ptr;
+	RbTone*			m_tone_ptr;
 
 protected:
 	dm_method(dispose)
 	dm_method(is_disposed)
+
 	dm_method_vargs(play_movie)
 	dm_method(is_playing)
 	dm_method(get_volume)
@@ -60,13 +62,16 @@ protected:
 	dm_method(replay_at_finish)
 	dm_method(stop_movie)
 	dm_method(rewind_movie)
-
+	
 	dm_method(update)
+	dm_method(get_width)
+	dm_method(get_height)
 	dm_method02(flash)
+
 	attr_accessor(src_rect)
 	attr_accessor(angle)
 	attr_accessor(mirror)
-	attr_accessor(blend_type)
+	//attr_accessor(blend_type)
 
 	attr_accessor(bush_depth)
 	attr_accessor(bush_opacity)

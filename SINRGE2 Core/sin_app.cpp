@@ -1,6 +1,6 @@
-#include "RbSinCore.h"
-#include "RbInput.h"
-#include "RbSeal.h"
+#include "MRbSinCore.h"
+#include "MRbInput.h"
+#include "MRbSeal.h"
 #include "RbRect.h"
 #include "RbColor.h"
 #include "RbTone.h"
@@ -242,7 +242,7 @@ int CApplication::RunScript()
 			}
 		}
 	}
-	return ruby_cleanup(state);//state;
+	return state;//ruby_cleanup(state);
 }
 
 void CApplication::InitRuby()

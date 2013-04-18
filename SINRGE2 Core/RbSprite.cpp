@@ -22,8 +22,10 @@ RbSprite::RbSprite()
 	, m_flash_hide_spr(0)
 	, m_flash_color(0)
 	, m_src_rect_ptr(0)
-	, m_movie_playing(false)
-	, m_blend_type(0)
+	, m_movie_playing(false)/*
+	, m_ref_tone(0x0)
+	, m_tone_tex(0)*/
+	//, m_blend_type(0)
 {
 }
 
@@ -51,6 +53,8 @@ void RbSprite::InitLibrary()
 	rb_define_method(rb_cSprite, "disposed?",		(RbFunc)dm_is_disposed,			0);
 	rb_define_method(rb_cSprite, "flash",			(RbFunc)dm_flash,				2);
 	rb_define_method(rb_cSprite, "update",			(RbFunc)dm_update,				0);
+	rb_define_method(rb_cSprite, "width",			(RbFunc)dm_get_width,			0);
+	rb_define_method(rb_cSprite, "height",			(RbFunc)dm_get_height,			0);
 
 	// object attribute
 	rb_define_method(rb_cSprite, "viewport",		(RbFunc)dm_get_viewport,		0);
@@ -458,18 +462,28 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 	return Qnil;
 }
 
-VALUE RbSprite::get_blend_type()
+VALUE RbSprite::get_width()
 {
-	return INT2FIX(m_blend_type);
+	return LONG2FIX(m_src_rect_ptr->width);
 }
 
-VALUE RbSprite::set_blend_type(VALUE blend_type)
+VALUE RbSprite::get_height()
 {
-	SafeFixnumValue(blend_type);
-	m_blend_type = FIX2INT(blend_type);
-	SinBound(m_blend_type, 0, 2);
-	return Qnil;
+	return LONG2FIX(m_src_rect_ptr->height);
 }
+
+//VALUE RbSprite::get_blend_type()
+//{
+//	return INT2FIX(m_blend_type);
+//}
+//
+//VALUE RbSprite::set_blend_type(VALUE blend_type)
+//{
+//	SafeFixnumValue(blend_type);
+//	m_blend_type = FIX2INT(blend_type);
+//	SinBound(m_blend_type, 0, 2);
+//	return Qnil;
+//}
 
 VALUE RbSprite::get_bush_depth()
 {
@@ -676,11 +690,14 @@ imp_method(RbSprite, stop_movie)
 imp_method(RbSprite, rewind_movie)
 
 imp_method(RbSprite, update)
+imp_method(RbSprite, get_width)
+imp_method(RbSprite, get_height)
 imp_method02(RbSprite, flash)
+
 imp_attr_accessor(RbSprite, src_rect)
 imp_attr_accessor(RbSprite, angle)
 imp_attr_accessor(RbSprite, mirror)
-imp_attr_accessor(RbSprite, blend_type)
+//imp_attr_accessor(RbSprite, blend_type)
 
 imp_attr_accessor(RbSprite, bush_depth)
 imp_attr_accessor(RbSprite, bush_opacity)

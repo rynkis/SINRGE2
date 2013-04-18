@@ -32,14 +32,13 @@ protected:
 	virtual VALUE	set_viewport(VALUE viewport);
 
 protected:
-	//inline bool		use_linear_render_mode() const;
 	void			process_tone_texture();
 
 protected:
 	RbRenderNode*	m_node;
 
 	u32				m_opacity;
-	VALUE			m_blend_type;	//	（0：正常，1：加法，2：减法）。 ！Ruby层面的0、1、2。
+	int				m_blend_type;
 
 	// 保存位图修改计数值和先前色调值
 	s32				m_ref_bitmap_modify_count;

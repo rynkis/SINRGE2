@@ -15,7 +15,7 @@ VALUE rb_cPlane;
  */
 RbPlane::RbPlane()
 	: m_opacity(255)
-	, m_blend_type(RUBY_0)
+	, m_blend_type(0)
 	, m_ref_bitmap_modify_count(-1)
 	, m_ref_tone(0x0)
 	, m_tone_tex(0)
@@ -161,9 +161,28 @@ void RbPlane::render(u32 id)
 	{
 		if (m_color_ptr->GetColor() != 0)
 		{
-			save_blend_mode = m_pSpr->GetBlendMode();
-			m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
+			if (m_blend_type == 1)
+				save_blend_mode = BLEND_COLORADD;
+			else if (m_blend_type == 2)
+				save_blend_mode = BLEND_ALPHASUBTRACT;
+			else
+				save_blend_mode = m_pSpr->GetBlendMode();
+			//save_blend_mode = m_pSpr->GetBlendMode();
+			//m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
 			m_pSpr->SetBlendColor(m_color_ptr->GetColor());
+		}
+	
+		//	混合颜色的处理
+		if (save_blend_mode > 0)
+		{
+			m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
+		}
+		else
+		{
+			if (m_blend_type == 1)
+				m_pSpr->SetBlendMode(BLEND_COLORMUL);
+			else if (m_blend_type == 2)
+				m_pSpr->SetBlendMode(BLEND_ALPHASUBTRACT);
 		}
 
 		// set the sprite's opacity
@@ -376,12 +395,13 @@ VALUE RbPlane::set_opacity(VALUE opacity)
 
 VALUE RbPlane::get_blend_type()
 {
-	return m_blend_type;
+	return INT2FIX(m_blend_type);
 }
 
 VALUE RbPlane::set_blend_type(VALUE blend_type)
 {
-	m_blend_type = blend_type;
+	SafeFixnumValue(blend_type);
+	m_blend_type = FIX2INT(blend_type);
 	return Qnil;
 }
 

@@ -129,13 +129,7 @@
     <ClCompile Include="RbSprite.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
-    <ClCompile Include="RbInput.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="RbTable.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbSeal.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="sin_video.cpp">
@@ -143,9 +137,6 @@
     </ClCompile>
     <ClCompile Include="sin_app.cpp">
       <Filter>源文件\SINRGE2</Filter>
-    </ClCompile>
-    <ClCompile Include="RbSinCore.cpp">
-      <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="Entry.cpp">
       <Filter>源文件\Kconv</Filter>
@@ -157,6 +148,15 @@
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
     <ClCompile Include="RbParticleSystem.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MRbInput.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MRbSinCore.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="MRbSeal.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
   </ItemGroup>
@@ -335,9 +335,6 @@
     <ClInclude Include="RbSprite.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
-    <ClInclude Include="RbInput.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="RbTable.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
@@ -377,12 +374,6 @@
     <ClInclude Include="sin_app.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="RbSeal.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbSinCore.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="AutoBuffer.h">
       <Filter>源文件\Kconv</Filter>
     </ClInclude>
@@ -393,6 +384,15 @@
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
     <ClInclude Include="RbParticleSystem.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MRbInput.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MRbSinCore.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MRbSeal.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>

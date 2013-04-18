@@ -342,15 +342,15 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 	
 	HGE* hge = GetAppPtr()->GetHgePtr();
 	
-	int dw = hge->Texture_GetWidth(pDstTex, true);
-	int dh = hge->Texture_GetHeight(pDstTex, true);
+	/*int dw = hge->Texture_GetWidth(pDstTex, true);
+	int dh = hge->Texture_GetHeight(pDstTex, true);*/
 	int dtw = hge->Texture_GetWidth(pDstTex);
 	int dth = hge->Texture_GetHeight(pDstTex);
 
 	if (pSrcBmp->width != dtw ||
-		pSrcBmp->height != dth ||
+		pSrcBmp->height != dth/* ||
 		pSrcBmp->owidth != dw ||
-		pSrcBmp->oheight != dh)
+		pSrcBmp->oheight != dh*/)
 		return false;
 
 	if (!dwTone)

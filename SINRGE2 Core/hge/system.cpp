@@ -6,7 +6,7 @@
 ** Core system functions
 */
 
-#include "RbInput.h"
+#include "MRbInput.h"
 #include "nge_timer.h"
 #include "hge_impl.h"
 
