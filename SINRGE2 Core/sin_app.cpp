@@ -116,7 +116,7 @@ namespace
 }
 
 static const wchar_t* pDefaultConsole	= L"0";
-static const wchar_t* pDefaultScripts	= L"Data\\Scripts.rbdata";
+static const wchar_t* pDefaultScripts	= L"main.rb";
 
 
 /***
@@ -205,42 +205,56 @@ int CApplication::RunScript()
 
 	int state = 0;
 
-	/*VALUE rbread = rb_file_open(rubyfile, "rb");
-	VALUE script = rb_funcall(rbread, rb_intern("read"), 0);
-	(void)rb_io_close(rbread);
-	VALUE name	 = rb_str_new2(rubyfile);
-
-	VALUE argv = rb_ary_new2(2);
-	rb_ary_push(argv, script);
-	rb_ary_push(argv, name);
-	rb_ary_freeze(argv);*/
-
-	//VALUE result = rb_protect(_run_sin_in_protect, argv, &state);
-
-	VALUE rbdata = load_data(1, rb_str_new2(pScripts));
-
-	int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
-
-	VALUE ary, f_name, script;
-	VALUE argv = rb_ary_new2(2);
-	//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
-	for (int pos = 0; pos < arylen; ++pos)
+	int len = strlen(pScripts);
+	if (pScripts[len - 1] == 'b' && pScripts[len -2] == 'r')
 	{
-		ary = rb_ary_entry(rbdata, pos);
-		f_name = rb_ary_entry(ary, 0);
-		script = rb_ary_entry(ary, 1);
-		//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
-		rb_ary_clear(argv);
-		rb_ary_push(argv, f_name);
-		rb_ary_push(argv, script);
-		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
+		VALUE rbread = rb_file_open(pScripts, "rb");
+		VALUE script = rb_funcall(rbread, rb_intern("read"), 0);
+		(void)rb_io_close(rbread);
+		VALUE name	 = rb_str_new2(pScripts);
 
+		VALUE argv = rb_ary_new2(2);
+		rb_ary_push(argv, name);
+		rb_ary_push(argv, script);
+		rb_ary_freeze(argv);
+
+		VALUE result = rb_protect(RunScriptInProtect, argv, &state);
 		if (state)
 		{
 			VALUE err = rb_errinfo();
 			if (!rb_obj_is_kind_of(err, rb_eSystemExit))
 			{
 				OnFailed(err);
+			}
+		}
+	}
+	else
+	{
+		VALUE rbdata = load_data(1, rb_str_new2(pScripts));
+
+		int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
+
+		VALUE ary, f_name, script;
+		VALUE argv = rb_ary_new2(2);
+		//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
+		for (int pos = 0; pos < arylen; ++pos)
+		{
+			ary = rb_ary_entry(rbdata, pos);
+			f_name = rb_ary_entry(ary, 0);
+			script = rb_ary_entry(ary, 1);
+			//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
+			rb_ary_clear(argv);
+			rb_ary_push(argv, f_name);
+			rb_ary_push(argv, script);
+			VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
+
+			if (state)
+			{
+				VALUE err = rb_errinfo();
+				if (!rb_obj_is_kind_of(err, rb_eSystemExit))
+				{
+					OnFailed(err);
+				}
 			}
 		}
 	}
@@ -263,100 +277,6 @@ void CApplication::InitRuby()
 		ruby_incpush("./");
 		ruby_script("SINRGE2");
 	}
-}
-
-bool CApplication::InitVideo()
-{
-	m_pHge = hgeCreate(HGE_VERSION);
-	// Set our render proc
-	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
-	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
-
-	bool	isFullScreen;
-
-	if (m_frm_struct.m_forbid_fullscreen)
-		isFullScreen = false;
-	else
-	{
-		if (m_frm_struct.m_fullscreen_start)
-			isFullScreen = true;
-		else
-		{
-			isFullScreen = int(m_frm_struct.m_screen_width) >= GetSystemMetrics(SM_CXSCREEN) && 
-				int(m_frm_struct.m_screen_height) >= GetSystemMetrics(SM_CYSCREEN);
-		}
-	}
-	 //Set the window title
-	m_pHge->System_SetState(HGE_TITLE, m_frm_struct.m_title);
-	// Set our frame's width
-	m_pHge->System_SetState(HGE_SCREENWIDTH, m_frm_struct.m_screen_width);
-	// Set our frame's height
-	m_pHge->System_SetState(HGE_SCREENHEIGHT, m_frm_struct.m_screen_height);
-	// Run in windowed mode, Default window size is 800x600
- 	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
-	// Set default FPS
-	m_pHge->System_SetState(HGE_FPS, 60);
-	
-	if(!m_pHge->System_Initiate())
-		return false;
-	
-	//	start HGE system 
-	m_pHge->System_Start();
-	//	Save the window's hwnd
-	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
-
-	RbRenderTree::Init();
-
-	m_pRenderState = new RbRenderState();
-	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
-
-	//	Hack the D3D pointer & D3DDevice pointer
-	HTEXTURE pTmpTex = m_pHge->Texture_Create(2, 2); 
-	if (!pTmpTex)
-		goto failed_return;
-
-	if (FAILED((reinterpret_cast<LPDIRECT3DTEXTURE8>(pTmpTex))->GetDevice(&m_ref_device)))
-		goto failed_return;
-
-	if (FAILED(m_ref_device->GetDirect3D(&m_ref_d3d)))
-		goto failed_return;
-
-	if (FAILED(m_ref_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_caps)))
-		goto failed_return;
-
-	m_pHge->Texture_Free(pTmpTex);
-	pTmpTex = NULL;
-
-	// video
-	m_pVideoMgr = new CVideoMgr();
-	if (!m_pVideoMgr)
-		goto failed_return;
-	if (!m_pVideoMgr->Init())
-		goto failed_return;
-
-	return true;
-
-failed_return:
-	if (pTmpTex)
-	{
-		m_pHge->Texture_Free(pTmpTex);
-		pTmpTex = NULL;
-	}
-	return false;
-}
-
-int CApplication::Eval(const char* script)
-{
-	int status = -1;
-
-	rb_eval_string_protect(script, &status);
-
-	if ( status )
-	{
-		rb_eval_string_protect("print $!", &status);
-		return 1;
-	}
-	return 0;
 }
 
 void CApplication::GetRuntimeInfos()
@@ -400,50 +320,48 @@ void CApplication::GetRuntimeInfos()
 		m_with_console = true;
 }
 
-u32 CApplication::GetTick()
+int CApplication::Eval(const char* script)
 {
-	return m_sys_timer->get_ticks(m_sys_timer);
+	int status = -1;
+
+	rb_eval_string_protect(script, &status);
+
+	if ( status )
+	{
+		rb_eval_string_protect("print $!", &status);
+		return 1;
+	}
+	return 0;
 }
 
-/**
- *	显示错误
- */
-void CApplication::ShowError(const wchar_t* szFormat, ...)
-{
-	wchar_t szError[1024];
+//u32 CApplication::GetTick()
+//{
+//	return m_sys_timer->get_ticks(m_sys_timer);
+//}
 
-	va_list ap;
-	va_start(ap, szFormat);
-	vswprintf_s(szError, szFormat, ap);
-	va_end(ap);
-
-	MessageBoxW(m_frm_struct.m_hwnd, szError, m_frm_struct.m_title, MB_ICONERROR);
-}
-
-void CApplication::ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...)
-{
-	wchar_t szError[1024];
-
-	va_list ap;
-	va_start(ap, szFormat);
-	vswprintf_s(szError, szFormat, ap);
-	va_end(ap);
-
-	MessageBoxW(hWnd, szError, szTitle, MB_ICONERROR);
-}
-
-/**
- *	判断指定文件是否存在
- */
-bool CApplication::IsFileExist(const wchar_t* pFileName)
-{
-	return (GetFileAttributesW(pFileName) != INVALID_FILE_ATTRIBUTES);
-}
-
-bool CApplication::IsFileExist(const char* pFileName)
-{
-	return (GetFileAttributesA(pFileName) != INVALID_FILE_ATTRIBUTES);
-}
+//void CApplication::ShowError(const wchar_t* szFormat, ...)
+//{
+//	wchar_t szError[1024];
+//
+//	va_list ap;
+//	va_start(ap, szFormat);
+//	vswprintf_s(szError, szFormat, ap);
+//	va_end(ap);
+//
+//	MessageBoxW(m_frm_struct.m_hwnd, szError, m_frm_struct.m_title, MB_ICONERROR);
+//}
+//
+//void CApplication::ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...)
+//{
+//	wchar_t szError[1024];
+//
+//	va_list ap;
+//	va_start(ap, szFormat);
+//	vswprintf_s(szError, szFormat, ap);
+//	va_end(ap);
+//
+//	MessageBoxW(hWnd, szError, szTitle, MB_ICONERROR);
+//}
 
 void CApplication::InitRubyInnerClassExt()
 {
@@ -526,4 +444,97 @@ void CApplication::OnFailed(VALUE err)
 		errmsg = rb_sprintf("Script '%s' line %d: %s occurred.\n\n%s", RSTRING_PTR(sourcefile), NUM2INT(sourceline), clsname, msg);
 
 	MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::AnsiToUnicode(RSTRING_PTR(errmsg)), GetAppPtr()->GetTitle(),  MB_ICONWARNING);
+}
+
+bool CApplication::InitVideo()
+{
+	m_pHge = hgeCreate(HGE_VERSION);
+	// Set our render proc
+	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
+	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
+
+	bool	isFullScreen;
+
+	if (m_frm_struct.m_forbid_fullscreen)
+		isFullScreen = false;
+	else
+	{
+		if (m_frm_struct.m_fullscreen_start)
+			isFullScreen = true;
+		else
+		{
+			isFullScreen = int(m_frm_struct.m_screen_width) >= GetSystemMetrics(SM_CXSCREEN) && 
+				int(m_frm_struct.m_screen_height) >= GetSystemMetrics(SM_CYSCREEN);
+		}
+	}
+	 //Set the window title
+	m_pHge->System_SetState(HGE_TITLE, m_frm_struct.m_title);
+	// Set our frame's width
+	m_pHge->System_SetState(HGE_SCREENWIDTH, m_frm_struct.m_screen_width);
+	// Set our frame's height
+	m_pHge->System_SetState(HGE_SCREENHEIGHT, m_frm_struct.m_screen_height);
+	// Run in windowed mode, Default window size is 800x600
+ 	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
+	// Set default FPS
+	m_pHge->System_SetState(HGE_FPS, 60);
+	
+	if(!m_pHge->System_Initiate())
+		return false;
+	
+	//	start HGE system 
+	m_pHge->System_Start();
+	//	Save the window's hwnd
+	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
+
+	RbRenderTree::Init();
+
+	m_pRenderState = new RbRenderState();
+	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
+
+	//	Hack the D3D pointer & D3DDevice pointer
+	HTEXTURE pTmpTex = m_pHge->Texture_Create(2, 2); 
+	if (!pTmpTex)
+		goto failed_return;
+
+	if (FAILED((reinterpret_cast<LPDIRECT3DTEXTURE8>(pTmpTex))->GetDevice(&m_ref_device)))
+		goto failed_return;
+
+	if (FAILED(m_ref_device->GetDirect3D(&m_ref_d3d)))
+		goto failed_return;
+
+	if (FAILED(m_ref_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_caps)))
+		goto failed_return;
+
+	m_pHge->Texture_Free(pTmpTex);
+	pTmpTex = NULL;
+
+	// video
+	m_pVideoMgr = new CVideoMgr();
+	if (!m_pVideoMgr)
+		goto failed_return;
+	if (!m_pVideoMgr->Init())
+		goto failed_return;
+
+	return true;
+
+failed_return:
+	if (pTmpTex)
+	{
+		m_pHge->Texture_Free(pTmpTex);
+		pTmpTex = NULL;
+	}
+	return false;
+}
+
+/**
+ *	判断指定文件是否存在
+ */
+bool CApplication::IsFileExist(const wchar_t* pFileName)
+{
+	return (GetFileAttributesW(pFileName) != INVALID_FILE_ATTRIBUTES);
+}
+
+bool CApplication::IsFileExist(const char* pFileName)
+{
+	return (GetFileAttributesA(pFileName) != INVALID_FILE_ATTRIBUTES);
 }

@@ -571,28 +571,25 @@ void RbBitmap::BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, in
 
 bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 {
-	DWORD* pSrcData = (DWORD*)malloc(GetAppPtr()->GetFrameWidth() * GetAppPtr()->GetFrameHeight() * sizeof(DWORD));
 	int width, height;
 	HGE* hge = GetAppPtr()->GetHgePtr();
+	DWORD* pSrcData = hge->System_Snapshot(width, height);
 
-	if (!hge->System_Snapshot(pSrcData, width, height))
+	if (!pSrcData)
 		return false;
 
 	if (pBmp->quad.tex)
 		GetAppPtr()->GetHgePtr()->Texture_Free(pBmp->quad.tex);
 
-	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), GetAppPtr()->GetFrameHeight());
+	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
 	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
-	memcpy(pDesData, pSrcData, width * height * sizeof(DWORD));
+	for (int ly = 0; ly < height; ++ly)
+		memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(DWORD));
 	hge->Texture_Unlock(pBmp->quad.tex);
 	free(pSrcData);
 
-	pBmp->width		= width;//hge->Texture_GetWidth(pBmp->quad.tex, true);
+	pBmp->width		= GetAppPtr()->GetFrameWidth();//hge->Texture_GetWidth(pBmp->quad.tex, true);
 	pBmp->height	= height;//hge->Texture_GetHeight(pBmp->quad.tex, true);
-	/*pBmp->texw		= hge->Texture_GetWidth(pBmp->quad.tex);
-	pBmp->texh		= hge->Texture_GetHeight(pBmp->quad.tex);*/
-	/*pBmp->rcentrex	= pBmp->width * 1.0f / 2;
-	pBmp->rcentrey	= pBmp->height * 1.0f / 2;*/
 
 	return true;
 }

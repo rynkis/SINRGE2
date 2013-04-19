@@ -129,9 +129,6 @@
     <ClCompile Include="sin_app.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
-    <ClCompile Include="Entry.cpp">
-      <Filter>源文件\Kconv</Filter>
-    </ClCompile>
     <ClCompile Include="Kconv.cpp">
       <Filter>源文件\Kconv</Filter>
     </ClCompile>
@@ -149,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="MRbSeal.cpp">
       <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Entry.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -47,7 +47,7 @@ public:
 	void						Quit();
 	void						GraphicsUpdate();
 
-	u32							GetTick();
+	u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
 
 private:
 	void						ShowError(const wchar_t* szFormat, ...);
@@ -65,8 +65,8 @@ public:
 	static bool					IsFileExist(const wchar_t* pFileName);
 	static bool					IsFileExist(const char* pFileName);
 
-	static void					ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...);
-	static void					ShowErrorMsg(HWND hWnd, const char* szTitle, const char* szFormat, ...);
+	/*static void					ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...);
+	static void					ShowErrorMsg(HWND hWnd, const char* szTitle, const char* szFormat, ...);*/
 
 private:
 	wchar_t						szAppPath[MAX_PATH];

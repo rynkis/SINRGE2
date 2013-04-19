@@ -85,7 +85,7 @@ public:
 	virtual wchar_t*		CALL	System_GetErrorMessage();
 	virtual	void			CALL	System_Log(const wchar_t *format, ...);
 	virtual bool			CALL	System_Launch(const wchar_t *url);
-	virtual bool			CALL	System_Snapshot(const DWORD* pBits, int& width,int& height);
+	virtual DWORD*			CALL	System_Snapshot(int& width,int& height);
 
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0);
 	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx);

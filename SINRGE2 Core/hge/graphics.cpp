@@ -729,6 +729,8 @@ bool HGE_Impl::_GfxInit()
 	d3dppFS.MultiSampleType  = D3DMULTISAMPLE_NONE;
 	d3dppFS.hDeviceWindow    = hwnd;
 	d3dppFS.Windowed         = FALSE;
+	
+	d3dppFS.Flags			 = D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;	// SINRGE2
 
 	d3dppFS.SwapEffect       = D3DSWAPEFFECT_FLIP;
 	d3dppFS.FullScreen_RefreshRateInHz = D3DPRESENT_RATE_DEFAULT;
