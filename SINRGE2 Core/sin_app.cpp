@@ -33,7 +33,8 @@ namespace
 			rb_str_buf_append(str, rb_inspect(argv[i]));
 			rb_str_buf_append(str, rb_default_rs);
 		}
-		
+		// 清除多余消息队列
+		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
 
 		return Qnil;
@@ -75,7 +76,8 @@ namespace
 		{
 			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
 		}
-		
+		// 清除多余消息队列
+		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
 
 		return Qnil;
@@ -394,7 +396,7 @@ void CApplication::GetRuntimeInfos()
 	pScripts = new char[len];
 	WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, pScripts, len, NULL, FALSE);
 
-	if (szConsole[0] != '0')
+	if (szConsole[0] == '1')
 		m_with_console = true;
 }
 

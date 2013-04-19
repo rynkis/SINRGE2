@@ -231,6 +231,7 @@ public:
 	virtual bool			CALL	System_Start() = 0;
 	virtual bool			CALL	System_Update() = 0;
 	virtual bool			CALL	System_PeekMessage() = 0;
+	virtual void			CALL	System_Resize(int width, int height) = 0;
 	virtual wchar_t*		CALL	System_GetErrorMessage() = 0;
 	virtual	void			CALL	System_Log(const wchar_t *format, ...) = 0;
 	virtual bool			CALL	System_Launch(const wchar_t *url) = 0;

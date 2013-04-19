@@ -691,6 +691,8 @@ bool HGE_Impl::_GfxInit()
 	d3dppW.hDeviceWindow    = hwnd;
 	d3dppW.Windowed         = TRUE;
 
+	d3dppW.Flags			= D3DPRESENTFLAG_LOCKABLE_BACKBUFFER;	// SINRGE2
+
 	if(nHGEFPS==HGEFPS_VSYNC) d3dppW.SwapEffect = D3DSWAPEFFECT_COPY_VSYNC;
 	else					  d3dppW.SwapEffect = D3DSWAPEFFECT_COPY;
 

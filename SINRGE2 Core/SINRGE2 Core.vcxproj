@@ -102,8 +102,12 @@
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
     <ClCompile Include="hge\hgedistort.cpp" />
-    <ClCompile Include="hge\hgeparticle.cpp" />
-    <ClCompile Include="hge\hgepmanager.cpp" />
+    <ClCompile Include="hge\hgeparticle.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="hge\hgepmanager.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="hge\hgerect.cpp" />
     <ClCompile Include="hge\hgesprite.cpp" />
     <ClCompile Include="hge\hgestrings.cpp" />

@@ -1,5 +1,5 @@
-#ifndef __RGE_RENDER_TREE_H__
-#define __RGE_RENDER_TREE_H__
+#ifndef __RB_RENDER_TREE_H__
+#define __RB_RENDER_TREE_H__
 
 #ifdef WIN32
 #pragma once
@@ -131,4 +131,4 @@ private:
 	static RbRenderNode*		s_pViewportLists;
 };
 
-#endif	//	__RGE_RENDER_TREE_H__
+#endif	//	__RB_RENDER_TREE_H__

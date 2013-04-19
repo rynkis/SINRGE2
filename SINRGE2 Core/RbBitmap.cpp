@@ -153,17 +153,6 @@ void RbBitmap::mark()
 	rb_gc_mark(m_filename);
 }
 
-/**
- *	@call
- *		Bitmap.new(filename[, colorkey])	-> bitmap 对象。
- *		Bitmap.new(width, height)			-> bitmap 对象。
- *
- *	@desc
- *		读取 filename 指定的图像文件生成 Bitmap 对象，可以指定透明颜色。或直接生成指定尺寸的位图对象。
- *
- *	@excp
- *		如果指定的文件加载失败会抛出RGEError异常。
- */
 VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 {
 	VALUE arg01, arg02;
@@ -582,7 +571,7 @@ void RbBitmap::BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, in
 
 bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 {
-	/*DWORD* pSrcData = (DWORD*)malloc(GetFrmStructPtr()->m_screen_width * GetFrmStructPtr()->m_screen_height * sizeof(DWORD));
+	DWORD* pSrcData = (DWORD*)malloc(GetAppPtr()->GetFrameWidth() * GetAppPtr()->GetFrameHeight() * sizeof(DWORD));
 	int width, height;
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
@@ -592,14 +581,14 @@ bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 	if (pBmp->quad.tex)
 		GetAppPtr()->GetHgePtr()->Texture_Free(pBmp->quad.tex);
 
-	pBmp->quad.tex = hge->Texture_Create(GetFrmStructPtr()->m_screen_width, GetFrmStructPtr()->m_screen_height);
+	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), GetAppPtr()->GetFrameHeight());
 	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
 	memcpy(pDesData, pSrcData, width * height * sizeof(DWORD));
 	hge->Texture_Unlock(pBmp->quad.tex);
 	free(pSrcData);
 
-	pBmp->width		= hge->Texture_GetWidth(pBmp->quad.tex, true);
-	pBmp->height	= hge->Texture_GetHeight(pBmp->quad.tex, true);*/
+	pBmp->width		= width;//hge->Texture_GetWidth(pBmp->quad.tex, true);
+	pBmp->height	= height;//hge->Texture_GetHeight(pBmp->quad.tex, true);
 	/*pBmp->texw		= hge->Texture_GetWidth(pBmp->quad.tex);
 	pBmp->texh		= hge->Texture_GetHeight(pBmp->quad.tex);*/
 	/*pBmp->rcentrex	= pBmp->width * 1.0f / 2;
@@ -851,9 +840,9 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 	DWORD color1, color2;
 	BYTE a, r, g, b;
 	int v;
-	for (s32 lx = sx; lx < sw; ++lx)
+	for (int lx = sx; lx < sx + sw; ++lx)
 	{
-		for (s32 ly = sy; ly < sh; ++ly)
+		for (int ly = sy; ly < sy + sh; ++ly)
 		{
 			v = des->width * (ly - sy + dy) + lx - sx + dx;
 			color1 = pTempData[src->width * ly + lx];

@@ -1,5 +1,5 @@
-#ifndef __CLASS_RGE_BITMAP_H__
-#define __CLASS_RGE_BITMAP_H__
+#ifndef __CLASS_RB_BITMAP_H__
+#define __CLASS_RB_BITMAP_H__
 
 #ifdef WIN32
 #pragma once
@@ -92,4 +92,4 @@ protected:
 	attr_accessor(font)
 };
 
-#endif	//	__CLASS_RGE_BITMAP_H__
+#endif	//	__CLASS_RB_BITMAP_H__

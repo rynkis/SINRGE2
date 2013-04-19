@@ -35,13 +35,6 @@ RbSprite::~RbSprite()
 
 void RbSprite::InitLibrary()
 {
-	/**
-	 *	@classname
-	 *		Sprite
-	 *
-	 *	@desc
-	 *		RGE中处理精灵的类。所谓精灵，是为了在游戏画面上显示人物等的基本概念。
-	 */
 	rb_cSprite = rb_define_class_under(rb_mSin, "Sprite", rb_cObject);
 
 	// special method

@@ -107,9 +107,9 @@ bool CALL HGE_Impl::System_Initiate()
 	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
 
 	rectW.left = (GetSystemMetrics(SM_CXSCREEN)-width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);;//(GetSystemMetrics(SM_CYSCREEN)-height) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);//(GetSystemMetrics(SM_CYSCREEN)-height) / 2 - GetSystemMetrics(SM_CYCAPTION);
 	rectW.right = rectW.left + width;
-	rectW.bottom = rectW.top +height;
+	rectW.bottom = rectW.top + height;
 	styleW = WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE; //WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX;
 
 	rectFS.left = 0;
@@ -197,15 +197,15 @@ bool CALL HGE_Impl::System_Update()
 			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetRealFps());
 			SetWindowText(hwnd, szTitleFps);
 		}
-		LimitFps(nHGEFPS);
 	}
+	LimitFps(nHGEFPS);
 	return true;
 }
 
 bool CALL HGE_Impl::System_PeekMessage()
 {
 	// Process window messages
-	if(PeekMessage(&m_msg,NULL,0,0,PM_REMOVE)){
+	if(PeekMessage(&m_msg, NULL, 0, 0, PM_REMOVE)){
 		if(m_msg.message == WM_QUIT){
 			bActive=false;
 			return false;
@@ -465,84 +465,105 @@ bool CALL HGE_Impl::System_Launch(const wchar_t *url)
 
 bool CALL HGE_Impl::System_Snapshot(const DWORD* pData, int& width, int& height)
 {
-	HDC hScreenDC = GetDC(NULL);
-    HDC hCaptureDC = CreateCompatibleDC(hScreenDC);
-	HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hScreenDC, nScreenWidth, nScreenHeight); 
-    SelectObject(hCaptureDC, hCaptureBitmap);
-    BitBlt(hCaptureDC, 0, 0, nScreenWidth, nScreenHeight, hScreenDC, 0, 0, SRCCOPY); 
-	
-	BITMAP bitmap;
-	GetObject(hCaptureBitmap, sizeof(BITMAP), &bitmap);
-	if (!bitmap.bmBits) goto failed_return;
-
-	//if (bitmap.bmBitsPixel = 32)
-	printf("bitmap.bmBitsPixel %d", bitmap.bmBitsPixel);
-
-	width = bitmap.bmWidth;
-	height = bitmap.bmHeight;
-
-	//pData = (DWORD*)malloc(width * height * sizeof(DWORD));
-	memcpy(&pData, bitmap.bmBits, width * height * sizeof(DWORD));
-	/*for (int i = 0 ; i < height ; ++i)
-	{
-		pData[]*/
-		/*memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
-			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));*/
-	//}
-
-    ReleaseDC(NULL, hScreenDC);
-    DeleteDC(hCaptureDC);
-    DeleteObject(hCaptureBitmap);
-
-	return true;
-
-failed_return:
-	if (hScreenDC)
-		ReleaseDC(NULL, hScreenDC);
-	if (hCaptureDC)
-		DeleteDC(hCaptureDC);
-	if (hCaptureBitmap)
-		DeleteObject(hCaptureBitmap);
-
-	return false;
-//	if(!pD3DDevice)
-//		return false;
-//
-//	LPDIRECT3DSURFACE8 pSurf;
-//	//pD3DDevice->CreateImageSurface(nScreenWidth, nScreenHeight, D3DFMT_A8R8G8B8, &pSurf);
-//	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
-//	//if (FAILED(pD3DDevice->GetFrontBuffer(pSurf)))
-//		goto __failed_return;
-//
-//	D3DSURFACE_DESC surfaceDesc;
-//	if (FAILED(pSurf->GetDesc(&surfaceDesc)))
-//		goto __failed_return;
+//	HDC hScreenDC = GetDC(NULL);
+//    HDC hCaptureDC = CreateCompatibleDC(hScreenDC);
+//	HBITMAP hCaptureBitmap = CreateCompatibleBitmap(hScreenDC, nScreenWidth, nScreenHeight); 
+//    SelectObject(hCaptureDC, hCaptureBitmap);
+//    BitBlt(hCaptureDC, 0, 0, nScreenWidth, nScreenHeight, hScreenDC, 0, 0, SRCCOPY); 
 //	
-//	width = surfaceDesc.Width;
-//	height = surfaceDesc.Height;
-//	
+//	BITMAP bitmap;
+//	GetObject(hCaptureBitmap, sizeof(BITMAP), &bitmap);
+//	if (!bitmap.bmBits) goto failed_return;
 //
-//	//D3DXSaveSurfaceToFile(L"snap.bmp", D3DXIFF_BMP, pSurf, NULL, NULL);
+//	//if (bitmap.bmBitsPixel = 32)
+//	printf("bitmap.bmBitsPixel %d", bitmap.bmBitsPixel);
 //
-//	D3DLOCKED_RECT lockedRect;
-//	if (FAILED(pSurf->LockRect(&lockedRect, 0, D3DLOCK_READONLY)))
-//		goto __failed_return;
-//	
-//	pData = (DWORD*)malloc(width * height * sizeof(DWORD));
-//	/*for (int i = 0 ; i < nScreenHeight ; ++i)
+//	width = bitmap.bmWidth;
+//	height = bitmap.bmHeight;
+//
+//	//pData = (DWORD*)malloc(width * height * sizeof(DWORD));
+//	memcpy(&pData, bitmap.bmBits, width * height * sizeof(DWORD));
+//	/*for (int i = 0 ; i < height ; ++i)
 //	{
-//		memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
-//			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));
-//	}*/
-//	
-//	pSurf->UnlockRect();
-//	pSurf->Release();
+//		pData[]*/
+//		/*memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
+//			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));*/
+//	//}
+//
+//    ReleaseDC(NULL, hScreenDC);
+//    DeleteDC(hCaptureDC);
+//    DeleteObject(hCaptureBitmap);
+//
 //	return true;
 //
-//__failed_return:
-//	if (pSurf)
-//		pSurf->Release();
+//failed_return:
+//	if (hScreenDC)
+//		ReleaseDC(NULL, hScreenDC);
+//	if (hCaptureDC)
+//		DeleteDC(hCaptureDC);
+//	if (hCaptureBitmap)
+//		DeleteObject(hCaptureBitmap);
+//
 //	return false;
+	if(!pD3DDevice)
+		return false;
+
+	LPDIRECT3DSURFACE8 pSurf;
+	//pD3DDevice->CreateImageSurface(nScreenWidth, nScreenHeight, D3DFMT_A8R8G8B8, &pSurf);
+	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
+	//if (FAILED(pD3DDevice->GetFrontBuffer(pSurf)))
+		goto __failed_return;
+
+	D3DSURFACE_DESC surfaceDesc;
+	if (FAILED(pSurf->GetDesc(&surfaceDesc)))
+		goto __failed_return;
+	
+	width = surfaceDesc.Width;
+	height = surfaceDesc.Height;
+	
+	//D3DXSaveSurfaceToFile(L"snap.bmp", D3DXIFF_BMP, pSurf, NULL, NULL);
+
+	D3DLOCKED_RECT lockedRect;
+	if (FAILED(pSurf->LockRect(&lockedRect, 0, D3DLOCK_READONLY)))
+		goto __failed_return;
+	
+	//pData = (DWORD*)malloc(width * height * sizeof(DWORD));
+	for (int ly = 0; ly < height; ++ly)
+	{
+		memcpy(&pData + (width * ly), &lockedRect.pBits + (lockedRect.Pitch * ly), sizeof(DWORD) * width);
+		/*memcpy( (void*)(pData + (nScreenHeight - i) * nScreenWidth * sizeof(DWORD)),
+			(&lockedRect.pBits + i * lockedRect.Pitch), nScreenWidth * sizeof(DWORD));*/
+	}
+	pSurf->UnlockRect();
+	pSurf->Release();
+	return true;
+
+__failed_return:
+	if (pSurf)
+		pSurf->Release();
+	return false;
+}
+
+void CALL HGE_Impl::System_Resize(int width, int height)
+{
+	nScreenWidth = width;
+	nScreenHeight = height;
+
+	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+
+	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.right = rectW.left + width;
+	rectW.bottom = rectW.top + height;
+
+	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
+
+	d3dppW.BackBufferWidth = nScreenWidth;
+	d3dppW.BackBufferHeight = nScreenHeight;
+
+	_SetProjectionMatrix(nScreenWidth, nScreenHeight);
+	_GfxRestore();
 }
 
 //////// Implementation ////////
@@ -695,6 +716,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				return FALSE;
 		}
 		return FALSE;
+	case WM_KEYDOWN:
+		return FALSE;
+	case WM_SYSKEYUP:
+		return FALSE;
+	case WM_KEYUP:
+		return FALSE;
 
 	case WM_LBUTTONDBLCLK:
 		pHGE->mouseButton += 64;
@@ -713,10 +740,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		pHGE->mouseWheel = (short)HIWORD(wparam);
 		return FALSE;
 
-	case WM_SIZE:
-		if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
-		//return FALSE;
-		break;
+	//case WM_SIZE:
+	//	if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
+	//	//return FALSE;
+	//	break;
 
 	case WM_SYSCOMMAND:
 		if (wparam == SC_KEYMENU)
