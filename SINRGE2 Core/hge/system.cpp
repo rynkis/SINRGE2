@@ -6,9 +6,12 @@
 ** Core system functions
 */
 
+#include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "nge_timer.h"
 #include "hge_impl.h"
+#include "sin_color.h"
+#include "sin_app.h"
 
 
 #define LOWORDINT(n) ((int)((signed short)(LOWORD(n))))
@@ -497,6 +500,33 @@ __failed_return:
 	return 0;
 }
 
+HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
+{
+	int width, height;
+	DWORD* pTexData = System_Snapshot(width, height);
+	if (!pTexData) return 0;
+	HTEXTURE tex = Texture_Create(nScreenWidth, height);
+	DWORD* pDesData = Texture_Lock(tex, false);
+	int v, i;
+	BYTE a, r, g, b;
+	for (int ly = 0; ly < height; ++ly)
+	{
+		v = ly * width;
+		i = GetAppPtr()->GetFrameWidth() * ly;
+		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
+		{
+			GET_ARGB_8888(pTexData[v + lx], a, r, g, b);
+			pDesData[i + lx] = MAKE_ARGB_8888(255, r, g, b);
+		}
+	}
+	/*for (int ly = 0; ly < height; ++ly)
+		memcpy(pDesData + nScreenWidth * ly, pTexData + width * ly, nScreenWidth * sizeof(DWORD));*/
+	Texture_Unlock(tex);
+	//HTEXTURE tex = Texture_Load((wchar_t*)texData, width * height * sizeof(DWORD));
+	free(pTexData);
+	return tex;
+}
+
 void CALL HGE_Impl::System_Resize(int width, int height)
 {
 	nScreenWidth = width;
@@ -582,6 +612,8 @@ HGE_Impl::HGE_Impl()
 	mouseMove = false;
 	bShowFps = false;
 	bOnFocus = true;
+	bFreeze = false;
+	freezeTex = 0;
 	// +++SINRGE2+++
 }
 
@@ -711,6 +743,112 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+void MRbSinCore::Freeze()
+{
+	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
+	pHGE->freezeTex = 0;
+	pHGE->freezeTex = pHGE->Texture_CreateFromScreen();
+	pHGE->bFreeze = true;
+}
+
+void MRbSinCore::Unfreeze()
+{
+	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
+	pHGE->freezeTex = 0;
+	pHGE->bFreeze = false;
+}
+
+void MRbSinCore::Transition(int duration, const wchar_t *filename)
+{
+	if (!pHGE->freezeTex) return;
+	if (duration <= 0)
+	{
+		pHGE->bFreeze = false;
+		GetAppPtr()->GraphicsUpdate();
+		return;
+	}
+	if (!filename)
+	{
+		if (pHGE->procRenderFunc) pHGE->procRenderFunc();
+		HTEXTURE desTex = pHGE->Texture_CreateFromScreen();
+		if (!desTex) return;
+		float tempx1, tempy1, tempx2, tempy2;
+
+		tempx1 = 0;
+		tempy1 = 0;
+		tempx2 = pHGE->nScreenWidth;
+		tempy2 = pHGE->nScreenHeight;
+
+		hgeQuad srcQuad, desQuad;
+		srcQuad.tex = pHGE->freezeTex;
+		srcQuad.blend = BLEND_DEFAULT;
+		srcQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			srcQuad.v[i].z = 0.5f;
+			srcQuad.v[i].col = 0xffffffff;
+		}
+		srcQuad.v[0].tx = 0; srcQuad.v[0].ty = 0;
+		srcQuad.v[1].tx = 1; srcQuad.v[1].ty = 0;
+		srcQuad.v[2].tx = 1; srcQuad.v[2].ty = 1;
+		srcQuad.v[3].tx = 0; srcQuad.v[3].ty = 1;
+		
+		srcQuad.v[0].x = tempx1; srcQuad.v[0].y = tempy1;
+		srcQuad.v[1].x = tempx2; srcQuad.v[1].y = tempy1;
+		srcQuad.v[2].x = tempx2; srcQuad.v[2].y = tempy2;
+		srcQuad.v[3].x = tempx1; srcQuad.v[3].y = tempy2;
+		
+		desQuad.tex = desTex;
+		desQuad.blend = BLEND_DEFAULT;
+		desQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			desQuad.v[i].z = 0.5f;
+			desQuad.v[i].col = 0xffffffff;
+		}
+		desQuad.v[0].tx = 0; desQuad.v[0].ty = 0;
+		desQuad.v[1].tx = 1; desQuad.v[1].ty = 0;
+		desQuad.v[2].tx = 1; desQuad.v[2].ty = 1;
+		desQuad.v[3].tx = 0; desQuad.v[3].ty = 1;
+		
+		desQuad.v[0].x = tempx1; desQuad.v[0].y = tempy1;
+		desQuad.v[1].x = tempx2; desQuad.v[1].y = tempy1;
+		desQuad.v[2].x = tempx2; desQuad.v[2].y = tempy2;
+		desQuad.v[3].x = tempx1; desQuad.v[3].y = tempy2;
+
+		float rate = 255.0f / duration;
+		BYTE al = 0;
+		pHGE->bFreeze = false;
+		for (int d = 0; d < duration; ++d)
+		{
+			al += rate;
+			desQuad.v[0].col =
+			desQuad.v[1].col =
+			desQuad.v[2].col =
+			desQuad.v[3].col = 0x00ffffff + (al << 24);
+
+			if (!pHGE->System_PeekMessage())
+				GetAppPtr()->Quit();
+			if(pHGE->bActive || pHGE->bDontSuspend)
+			{
+				pHGE->Gfx_BeginScene();
+				pHGE->Gfx_RenderQuad(&srcQuad);
+				pHGE->Gfx_RenderQuad(&desQuad);
+				pHGE->Gfx_EndScene();
+
+				if (pHGE->bShowFps)
+				{
+					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+				}
+			}
+			LimitFps(pHGE->nHGEFPS);
+		}
+		pHGE->Texture_Free(desTex);
+		pHGE->Texture_Free(pHGE->freezeTex);
+	}
 }
 
 bool MRbInput::OnFocus()

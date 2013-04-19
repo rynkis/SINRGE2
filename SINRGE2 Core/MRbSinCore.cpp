@@ -56,6 +56,30 @@ VALUE MRbSinCore::snap_to_bitmap()
 	}
 }
 
+VALUE MRbSinCore::freeze()
+{
+	Freeze();
+	return Qnil;
+}
+
+VALUE MRbSinCore::transition(int argc, VALUE *argv)
+{
+	int duration = FIXNUM_P(argv[0]) ? FIX2INT(argv[0]) : 8;
+	wchar_t *filename;// = RB_TYPE_P((argv[1], rb_cString) ? 
+	if (NIL_P(argv[1]))
+	{
+		filename = 0;
+	}
+	else
+	{
+		SafeStringValue(argv[1]);
+		char *str = RSTRING_PTR(argv[1]);
+		filename = Kconv::UTF8ToUnicode(str);
+	}
+	Transition(duration, filename);
+	return Qnil;
+}
+
 VALUE MRbSinCore::peek_message()
 {
 	if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
@@ -184,6 +208,8 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mGraphics, "width", RbFunc(get_width), 0);
 	rb_define_module_function(rb_mGraphics, "height", RbFunc(get_height), 0);
 	rb_define_module_function(rb_mGraphics, "snap_to_bitmap", RbFunc(snap_to_bitmap), 0);
+	rb_define_module_function(rb_mGraphics, "freeze", RbFunc(freeze), 0);
+	rb_define_module_function(rb_mGraphics, "transition", RbFunc(transition), -1);
 	rb_define_module_function(rb_mGraphics, "resize_screen", RbFunc(resize_screen), 2);
 
 	rb_mFrame = rb_define_module_under(rb_mSin, "Frame");

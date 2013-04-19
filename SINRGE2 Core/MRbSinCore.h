@@ -11,12 +11,19 @@ struct MRbSinCore
 {
 	static void	InitLibrary();
 
+	static void Freeze();
+	static void Unfreeze();
+
+	static void Transition(int duration, const wchar_t *filename);
+
 	static VALUE init();
 	static VALUE quit();
 	
 	static VALUE update();
 	static VALUE wait(int argc, VALUE duration);
 	static VALUE snap_to_bitmap();
+	static VALUE freeze();
+	static VALUE transition(int argc, VALUE *argv);
 
 	static VALUE get_hwnd();
 	static VALUE get_title();

@@ -297,6 +297,7 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target) = 0;
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height) = 0;
+	virtual HTEXTURE		CALL	Texture_CreateFromScreen() = 0;
 	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0) = 0;
 	virtual void			CALL	Texture_Free(HTEXTURE tex) = 0;
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false) = 0;

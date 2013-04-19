@@ -180,6 +180,7 @@ void CALL HGE_Impl::Gfx_EndScene()
 {
 	_render_batch(true);
 	pD3DDevice->EndScene();
+	if (bFreeze) return;	// SINRGE2
 	if(!pCurTarget) pD3DDevice->Present( NULL, NULL, NULL, NULL );
 }
 

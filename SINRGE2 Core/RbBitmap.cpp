@@ -509,7 +509,7 @@ HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp
 	//	ÐÞÕý¾ØÐÎÇøÓò
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (pBmp->width - x < width)		{ width = pBmp->width - x; }
+	if (pBmp->width - x < width)	{ width = pBmp->width - x; }
 	if (pBmp->height - y < height)	{ height = pBmp->height - y; }
 
 	if (width <= 0 || height <= 0)
@@ -583,8 +583,20 @@ bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 
 	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
 	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
+	
+	int v, i;
+	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
-		memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(DWORD));
+	{
+		v = ly * width;
+		i = GetAppPtr()->GetFrameWidth() * ly;
+		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
+		{
+			GET_ARGB_8888(pSrcData[v + lx], a, r, g, b);
+			pDesData[i + lx] = MAKE_ARGB_8888(255, r, g, b);
+		}
+	}
+		//memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(DWORD));
 	hge->Texture_Unlock(pBmp->quad.tex);
 	free(pSrcData);
 

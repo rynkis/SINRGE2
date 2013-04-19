@@ -135,6 +135,7 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target);
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height);
+	virtual HTEXTURE		CALL	Texture_CreateFromScreen();
 	//virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false);
 	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0);
 	virtual void			CALL	Texture_Free(HTEXTURE tex);
@@ -270,6 +271,8 @@ public:
 	bool				bOnFocus;
 	MSG					m_msg;
 	DWORD				CurBlendColor;
+	bool				bFreeze;
+	HTEXTURE			freezeTex;
 	//	+++SINRGE2+++
 
 private:
