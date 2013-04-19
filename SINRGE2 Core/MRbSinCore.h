@@ -24,7 +24,9 @@ struct MRbSinCore
 	static VALUE get_width();
 	static VALUE get_height();
 	static VALUE resize_screen(int argc, VALUE width, VALUE height);
-
+	
+	static VALUE set_start_width(int argc, VALUE width);
+	static VALUE set_start_height(int argc, VALUE height);
 	static VALUE get_fs_start();
 	static VALUE set_fs_start(int argc, VALUE fs_start);
 	static VALUE get_forbid_fs();

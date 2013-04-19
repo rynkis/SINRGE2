@@ -78,19 +78,10 @@
     <ClCompile Include="hge\hgedistort.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
-    <ClCompile Include="hge\hgeparticle.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="hge\hgepmanager.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
     <ClCompile Include="hge\hgerect.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="hge\hgesprite.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="hge\hgestrings.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
     <ClCompile Include="hge\hgevector.cpp">

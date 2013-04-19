@@ -93,28 +93,28 @@ VALUE MRbSinCore::get_width()
 	return rb_int_new(GetAppPtr()->GetFrameWidth());
 }
 
-//VALUE MRbSinCore::set_width(int argc, VALUE width)
-//{
-//	/*if (inited)
-//		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
-//	SafeFixnumValue(width);
-//	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
-//	return Qnil;
-//}
-
 VALUE MRbSinCore::get_height()
 {
 	return rb_int_new(GetAppPtr()->m_frm_struct.m_screen_height);
 }
 
-//VALUE MRbSinCore::set_height(int argc, VALUE height)
-//{
-//	/*if (inited)
-//		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
-//	SafeFixnumValue(height);
-//	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
-//	return Qnil;
-//}
+VALUE MRbSinCore::set_start_width(int argc, VALUE width)
+{
+	/*if (inited)
+		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
+	SafeFixnumValue(width);
+	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
+	return Qnil;
+}
+
+VALUE MRbSinCore::set_start_height(int argc, VALUE height)
+{
+	/*if (inited)
+		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
+	SafeFixnumValue(height);
+	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
+	return Qnil;
+}
 
 VALUE MRbSinCore::resize_screen(int argc, VALUE width, VALUE height)
 {
@@ -199,6 +199,8 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "forbid_fullscreen=",	RbFunc(set_forbid_fs), 1);
 	rb_define_module_function(rb_mFrame, "forbid_switch",		RbFunc(get_forbid_switch), 0);
 	rb_define_module_function(rb_mFrame, "forbid_switch=",		RbFunc(set_forbid_switch), 1);
+	rb_define_module_function(rb_mFrame, "start_width=",		RbFunc(set_start_width), 1);
+	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
 	
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
 	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
