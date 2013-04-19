@@ -818,8 +818,8 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 		desQuad.v[2].x = tempx2; desQuad.v[2].y = tempy2;
 		desQuad.v[3].x = tempx1; desQuad.v[3].y = tempy2;
 
-		float rate = 255.0f / duration;
-		BYTE al = 0;
+		float rate = 255.0 / duration;
+		float al = 0;
 		pHGE->bFreeze = false;
 		for (int d = 0; d < duration; ++d)
 		{
@@ -827,7 +827,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 			desQuad.v[0].col =
 			desQuad.v[1].col =
 			desQuad.v[2].col =
-			desQuad.v[3].col = 0x00ffffff + (al << 24);
+			desQuad.v[3].col = 0x00ffffff + ((BYTE)al << 24);
 
 			if (!pHGE->System_PeekMessage())
 				GetAppPtr()->Quit();
