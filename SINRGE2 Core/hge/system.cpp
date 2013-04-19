@@ -753,12 +753,12 @@ void MRbSinCore::Freeze()
 	pHGE->bFreeze = true;
 }
 
-void MRbSinCore::Unfreeze()
-{
-	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
-	pHGE->freezeTex = 0;
-	pHGE->bFreeze = false;
-}
+//void MRbSinCore::Unfreeze()
+//{
+//	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
+//	pHGE->freezeTex = 0;
+//	pHGE->bFreeze = false;
+//}
 
 void MRbSinCore::Transition(int duration, const wchar_t *filename)
 {

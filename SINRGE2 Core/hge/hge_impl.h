@@ -273,6 +273,7 @@ public:
 	DWORD				CurBlendColor;
 	bool				bFreeze;
 	HTEXTURE			freezeTex;
+	DWORD				tempFlags;
 	//	+++SINRGE2+++
 
 private:
