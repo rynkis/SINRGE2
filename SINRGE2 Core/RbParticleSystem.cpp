@@ -22,6 +22,7 @@ RbParticleSystem::RbParticleSystem()
 	, m_ref_bitmap_modify_count(0)
 	, m_bitmap_ptr(0)
 	, mlast(0)
+	, m_blend_type(0)
 {
 	memset(&info, 0, sizeof(info));
 	vecLocation.x = vecPrevLocation.x = 0.0f;
@@ -30,7 +31,7 @@ RbParticleSystem::RbParticleSystem()
 	memset(particles, 0, sizeof(particles));
 
 	m_pSpr = new hgeSprite(0, 0, 0, 0, 0);
-	m_pSpr->SetBlendMode(BLEND_COLORMUL);
+	m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
 	m_pSpr->SetTextureRect(0, 0, 32, 32, true);
 	m_pSpr->SetHotSpot(16, 16);
 }
@@ -70,6 +71,8 @@ void RbParticleSystem::InitLibrary()
 
 	rb_define_method(rb_cParticleSystem, "bitmap",			(RbFunc)dm_get_bitmap,			0);
 	rb_define_method(rb_cParticleSystem, "bitmap=",			(RbFunc)dm_set_bitmap,			1);
+	rb_define_method(rb_cParticleSystem, "blend_type",		(RbFunc)dm_get_blend_type,		0);
+	rb_define_method(rb_cParticleSystem, "blend_type=",		(RbFunc)dm_set_blend_type,		1);
 
 	// supplement
  	rb_define_method(rb_cParticleSystem, "to_s",			(RbFunc)dm_to_string,			0);
@@ -355,7 +358,7 @@ void RbParticleSystem::render(u32 id)
 
 	// render the sprite to the screen
 	float x = 0.0f, y = 0.0f;
-
+	
 	if (m_viewport_ptr)
 	{
 		const RbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
@@ -443,6 +446,29 @@ VALUE RbParticleSystem::set_viewport(VALUE viewport)
 	return Qnil;
 }
 
+VALUE RbParticleSystem::get_blend_type()
+{
+	return INT2FIX(m_blend_type);
+}
+
+VALUE RbParticleSystem::set_blend_type(VALUE blend_type)
+{
+	SafeFixnumValue(blend_type);
+
+	if (m_blend_type != FIX2INT(blend_type))
+	{
+		m_blend_type = FIX2INT(blend_type);
+
+		if (m_blend_type == 1)
+			m_pSpr->SetBlendMode(BLEND_COLORADD);
+		else if (m_blend_type == 2)
+			m_pSpr->SetBlendMode(BLEND_DEFAULT);
+		else
+			m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
+	}
+	return Qnil;
+}
+
 /*
  *	以下定义ruby方法
  */
@@ -456,3 +482,4 @@ imp_method_vargs(RbParticleSystem, stop)
 imp_method_vargs(RbParticleSystem, move_to)
 
 imp_attr_accessor(RbParticleSystem, bitmap)
+imp_attr_accessor(RbParticleSystem, blend_type)

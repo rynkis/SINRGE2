@@ -43,6 +43,7 @@ protected:
 	s32						m_ref_bitmap_modify_count;
 	
 	int						mlast;
+	int						m_blend_type;
 
 	hgeParticleSystemInfo	info;
 
@@ -75,6 +76,7 @@ protected:
 	dm_method_vargs(move_to)
 
 	attr_accessor(bitmap)
+	attr_accessor(blend_type)
 };
 
 #endif //__RB_PARTICLE_SYS_H__

@@ -192,10 +192,6 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "hwnd",	RbFunc(get_hwnd), 0);
 	rb_define_module_function(rb_mFrame, "title",	RbFunc(get_title), 0);
 	rb_define_module_function(rb_mFrame, "title=",	RbFunc(set_title), 1);
-	/*rb_define_module_function(rb_mFrame, "width",	RbFunc(get_width), 0);
-	rb_define_module_function(rb_mFrame, "width=",	RbFunc(set_width), 1);
-	rb_define_module_function(rb_mFrame, "height",	RbFunc(get_height), 0);
-	rb_define_module_function(rb_mFrame, "height=",	RbFunc(set_height), 1);*/
 
 	rb_define_module_function(rb_mFrame, "fullscreen_start",	RbFunc(get_fs_start), 0);
 	rb_define_module_function(rb_mFrame, "fullscreen_start=",	RbFunc(set_fs_start), 1);

@@ -110,7 +110,7 @@ VALUE MRbInput::update_input()
 */
 VALUE MRbInput::mouse_over()
 {
-	return in_screen ? Qtrue : Qfalse;
+	return C2RbBool(in_screen);
 }
 
 /*
@@ -121,7 +121,7 @@ VALUE MRbInput::mouse_over()
 VALUE MRbInput::is_press(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return vk_is_press(FIX2INT(key)) ? Qtrue : Qfalse;
+	return C2RbBool(vk_is_press(FIX2INT(key)));
 }
 
 /*
@@ -132,7 +132,7 @@ VALUE MRbInput::is_press(int argc, VALUE key)
 VALUE MRbInput::is_trigger(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return vk_is_trigger(FIX2INT(key)) ? Qtrue : Qfalse;
+	return C2RbBool(vk_is_trigger(FIX2INT(key)));
 }
 
 /*
@@ -143,7 +143,7 @@ VALUE MRbInput::is_trigger(int argc, VALUE key)
 VALUE MRbInput::is_repeat(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return vk_is_repeat(FIX2INT(key)) ? Qtrue : Qfalse;
+	return C2RbBool(vk_is_repeat(FIX2INT(key)));
 }
 
 /*
@@ -154,7 +154,7 @@ VALUE MRbInput::is_repeat(int argc, VALUE key)
 VALUE MRbInput::is_click(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return vk_is_click(FIX2INT(key)) ? Qtrue : Qfalse;
+	return C2RbBool(vk_is_click(FIX2INT(key)) && in_screen);
 }
 
 /*
@@ -244,7 +244,7 @@ VALUE MRbInput::show_mouse(int argc, VALUE show)
 */
 VALUE MRbInput::on_focus()
 {
-	return OnFocus() ? Qtrue : Qfalse;
+	return C2RbBool(OnFocus());
 }
 
 /*
@@ -265,7 +265,7 @@ VALUE MRbInput::mouse_wheel()
 VALUE MRbInput::mouse_dblclk(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return MouseDblClk(FIX2INT(key));
+	return C2RbBool(MouseDblClk(FIX2INT(key)) && in_screen);
 }
 
 /*
