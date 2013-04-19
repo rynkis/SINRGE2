@@ -2,7 +2,6 @@
 #define __RB_PARTICLE_SYS_H__
 
 #include "RbDisplayObject.h"
-//#include "hge.h"
 #include "hgeparticle.h"
 
 class hgeSprite;
@@ -39,12 +38,11 @@ protected:
 	void			check_raise();
 
 protected:
-	RbRenderNode*	m_node;
+	RbRenderNode*			m_node;
 	
-	// 保存位图修改计数值和先前色调值
-	s32				m_ref_bitmap_modify_count;
+	s32						m_ref_bitmap_modify_count;
 	
-	int				mlast;
+	int						mlast;
 
 	hgeParticleSystemInfo	info;
 
@@ -62,15 +60,9 @@ protected:
 
 	hgeParticle				particles[MAX_PARTICLES];
 
+	hgeSprite*				m_pSpr;
 
-
-
-
-
-	hgeSprite*		m_pSpr;
-	//hgeParticleSystem* m_ptsys_ptr;
-
-	RbBitmap*		m_bitmap_ptr;
+	RbBitmap*				m_bitmap_ptr;
 
 protected:
 	dm_method(dispose)

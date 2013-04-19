@@ -31,7 +31,7 @@ RbParticleSystem::RbParticleSystem()
 
 	m_pSpr = new hgeSprite(0, 0, 0, 0, 0);
 	m_pSpr->SetBlendMode(BLEND_COLORMUL);
-	m_pSpr->SetTextureRect(0, 0, 32, 32);
+	m_pSpr->SetTextureRect(0, 0, 32, 32, true);
 	m_pSpr->SetHotSpot(16, 16);
 }
 
@@ -146,7 +146,7 @@ VALUE RbParticleSystem::update()
 {
 	check_raise();
 
-	float fDeltaTime = (GetAppPtr()->GetTick() - mlast) / 1000.0;
+	float fDeltaTime = (float)((GetAppPtr()->GetTick() - mlast) / 1000.0);
 	mlast = GetAppPtr()->GetTick();
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
