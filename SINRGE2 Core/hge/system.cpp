@@ -470,6 +470,10 @@ DWORD* CALL HGE_Impl::System_Snapshot(int& width, int& height)
 {
 	if(!pD3DDevice) return 0;
 
+	bFreeze = true;
+	if (procRenderFunc) procRenderFunc();
+	bFreeze = false;
+
 	LPDIRECT3DSURFACE8 pSurf;
 	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
 		goto __failed_return;
@@ -749,8 +753,9 @@ void MRbSinCore::Freeze()
 {
 	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
 	pHGE->freezeTex = 0;
-	pHGE->freezeTex = pHGE->Texture_CreateFromScreen();
 	pHGE->bFreeze = true;
+	if (pHGE->procRenderFunc) pHGE->procRenderFunc();
+	pHGE->freezeTex = pHGE->Texture_CreateFromScreen();
 }
 
 //void MRbSinCore::Unfreeze()
@@ -771,7 +776,6 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 	}
 	if (!filename)
 	{
-		if (pHGE->procRenderFunc) pHGE->procRenderFunc();
 		HTEXTURE desTex = pHGE->Texture_CreateFromScreen();
 		if (!desTex) return;
 		float tempx1, tempy1, tempx2, tempy2;
@@ -821,9 +825,8 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 		float rate = 255.0 / duration;
 		float al = 0;
 		pHGE->bFreeze = false;
-		for (int d = 0; d < duration; ++d)
+		do//for (int d = 0; d < duration; ++d)
 		{
-			al += rate;
 			desQuad.v[0].col =
 			desQuad.v[1].col =
 			desQuad.v[2].col =
@@ -834,6 +837,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 			if(pHGE->bActive || pHGE->bDontSuspend)
 			{
 				pHGE->Gfx_BeginScene();
+				pHGE->Gfx_Clear(0);
 				pHGE->Gfx_RenderQuad(&srcQuad);
 				pHGE->Gfx_RenderQuad(&desQuad);
 				pHGE->Gfx_EndScene();
@@ -845,7 +849,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 				}
 			}
 			LimitFps(pHGE->nHGEFPS);
-		}
+			al += rate;
+			duration--;
+		} while (duration > 0);
 		pHGE->Texture_Free(desTex);
 		pHGE->Texture_Free(pHGE->freezeTex);
 	}
