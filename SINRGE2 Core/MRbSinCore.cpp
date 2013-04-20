@@ -13,7 +13,13 @@ VALUE MRbSinCore::init()
 {
 	if (GetAppPtr()->InitVideo())
 		return Qfalse;
-
+	// 为了避免窗口在打开过程中就开始写屏，等待30秒
+	int dt = 1800;
+	do
+	{
+		GetAppPtr()->GraphicsUpdate();
+		dt--;
+	} while (dt);
 	return Qtrue;
 }
 
@@ -35,7 +41,7 @@ VALUE MRbSinCore::wait(int argc, VALUE duration)
 	int dt = FIX2INT(duration);
 	do
 	{
-		update();
+		GetAppPtr()->GraphicsUpdate();
 		dt--;
 	} while (dt);
 	return Qnil;
@@ -80,6 +86,20 @@ VALUE MRbSinCore::transition(int argc, VALUE *argv)
 	return Qnil;
 }
 
+VALUE MRbSinCore::get_brightness()
+{
+	return INT2FIX(GetAppPtr()->GetBrightness());
+}
+
+VALUE MRbSinCore::set_brightness(int argc, VALUE value)
+{
+	SafeFixnumValue(value);
+	int brightness = FIX2INT(value);
+	brightness = SinBound(brightness, 0, 255);
+	GetAppPtr()->SetBrightness(brightness);
+	return INT2FIX(brightness);
+}
+
 VALUE MRbSinCore::peek_message()
 {
 	if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
@@ -109,7 +129,7 @@ VALUE MRbSinCore::set_title(int argc, VALUE title)
 
 	wchar_t* tempTitle = Kconv::UTF8ToUnicode(RSTRING_PTR(title));
 	wcscpy_s(GetAppPtr()->m_frm_struct.m_title, tempTitle);
-	return Qnil;
+	return title;
 }
 
 VALUE MRbSinCore::get_width()
@@ -128,7 +148,7 @@ VALUE MRbSinCore::set_start_width(int argc, VALUE width)
 		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(width);
 	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
-	return Qnil;
+	return width;
 }
 
 VALUE MRbSinCore::set_start_height(int argc, VALUE height)
@@ -137,7 +157,7 @@ VALUE MRbSinCore::set_start_height(int argc, VALUE height)
 		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(height);
 	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
-	return Qnil;
+	return height;
 }
 
 VALUE MRbSinCore::resize_screen(int argc, VALUE width, VALUE height)
@@ -160,7 +180,7 @@ VALUE MRbSinCore::get_fs_start()
 VALUE MRbSinCore::set_fs_start(int argc, VALUE fs_start)
 {
 	GetAppPtr()->m_frm_struct.m_fullscreen_start = RTEST(fs_start);
-	return Qnil;
+	return fs_start;
 }
 
 VALUE MRbSinCore::get_forbid_fs()
@@ -171,7 +191,7 @@ VALUE MRbSinCore::get_forbid_fs()
 VALUE MRbSinCore::set_forbid_fs(int argc, VALUE forbid_fs)
 {
 	GetAppPtr()->m_frm_struct.m_forbid_fullscreen = RTEST(forbid_fs);
-	return Qnil;
+	return forbid_fs;
 }
 
 VALUE MRbSinCore::get_forbid_switch()
@@ -182,7 +202,7 @@ VALUE MRbSinCore::get_forbid_switch()
 VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 {
 	GetAppPtr()->m_frm_struct.m_forbid_switch = RTEST(forbid_switch);
-	return Qnil;
+	return forbid_switch;
 }
 
 void MRbSinCore::InitLibrary()
@@ -211,6 +231,9 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mGraphics, "freeze", RbFunc(freeze), 0);
 	rb_define_module_function(rb_mGraphics, "transition", RbFunc(transition), -1);
 	rb_define_module_function(rb_mGraphics, "resize_screen", RbFunc(resize_screen), 2);
+
+	rb_define_module_function(rb_mGraphics, "brightness", RbFunc(get_brightness), 0);
+	rb_define_module_function(rb_mGraphics, "brightness=", RbFunc(set_brightness), 1);
 
 	rb_mFrame = rb_define_module_under(rb_mSin, "Frame");
 	//rb_iv_set(rb_mFrame,"__title__", rb_str_freeze(rb_str_new2(SIN_DEFAULT_TITLE_NAME)));

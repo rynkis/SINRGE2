@@ -137,6 +137,8 @@ CApplication::CApplication()
 	, m_ref_d3d(0)
 	, m_ref_device(0)
 	, m_with_console(false)
+	, m_brightness(255)
+	, m_saved_brghtness(255)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
@@ -144,6 +146,19 @@ CApplication::CApplication()
 	szScripts[0] = 0;
 	memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
 	m_sys_timer = nge_timer_create();
+	
+	m_quad.v[0].z = 
+	m_quad.v[1].z = 
+	m_quad.v[2].z = 
+	m_quad.v[3].z = 0.5f;
+ 	m_quad.tex	  = 0;
+	m_quad.blend = BLEND_DEFAULT;
+	m_quad.blend_color = 0x00000000;
+
+	m_quad.v[0].x = 0;									m_quad.v[0].y = 0;
+	m_quad.v[1].x = (float)m_frm_struct.m_screen_width;	m_quad.v[1].y = 0;
+	m_quad.v[2].x = (float)m_frm_struct.m_screen_width;	m_quad.v[2].y = (float)m_frm_struct.m_screen_height;
+	m_quad.v[3].x = 0;									m_quad.v[3].y = (float)m_frm_struct.m_screen_height;
 }
 
 /***
@@ -183,6 +198,26 @@ void CApplication::GraphicsUpdate()
 {
     if (!m_pHge->System_Update())
 		Quit();
+}
+
+void CApplication::SystemUpdate()
+{
+	if (!m_pHge->System_PeekMessage())
+		Quit();
+}
+
+void CApplication::BrightnessUpdate()
+{
+	if (m_saved_brghtness != m_brightness)
+	{
+		m_quad.v[0].col =
+		m_quad.v[1].col =
+		m_quad.v[2].col =
+		m_quad.v[3].col = ((255 - m_brightness) << 24);
+		m_saved_brghtness = m_brightness;
+	}
+	if (m_brightness == 255) return;
+	m_pHge->Gfx_RenderQuad(&m_quad);
 }
 
 int CApplication::Run()

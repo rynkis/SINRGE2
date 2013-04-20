@@ -68,7 +68,7 @@ VALUE RbRect::set_x(VALUE nx)
 	vx	= nx;
 	x	= FIX2INT(nx);
 
-	return Qnil;
+	return nx;
 }
 
 VALUE RbRect::get_y()
@@ -83,7 +83,7 @@ VALUE RbRect::set_y(VALUE ny)
 	vy	= ny;
 	y	= FIX2INT(ny);
 
-	return Qnil;
+	return ny;
 }
 
 VALUE RbRect::get_width()
@@ -98,7 +98,7 @@ VALUE RbRect::set_width(VALUE nw)
 	vw		= nw;
 	width	= FIX2INT(nw);
 
-	return Qnil;
+	return nw;
 }
 
 VALUE RbRect::get_height()
@@ -113,7 +113,7 @@ VALUE RbRect::set_height(VALUE nh)
 	vh		= nh;
 	height	= FIX2INT(nh);
 
-	return Qnil;
+	return nh;
 }
 
 VALUE RbRect::set(int argc, VALUE *argv, VALUE obj)

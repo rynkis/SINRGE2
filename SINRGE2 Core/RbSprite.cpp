@@ -389,7 +389,7 @@ VALUE RbSprite::set_bitmap(VALUE bitmap)
 		rb_funcall2(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, __argv);
 	}
 
-	return Qnil;
+	return bitmap;
 }
 
 VALUE RbSprite::set_ox(VALUE ox)
@@ -399,7 +399,7 @@ VALUE RbSprite::set_ox(VALUE ox)
 	m_pSpr->SetOX(m_ox);
 	m_pSpr->SetSrcRectDirty();
 
-	return Qnil;
+	return ox;
 }
 
 VALUE RbSprite::set_oy(VALUE oy)
@@ -409,7 +409,7 @@ VALUE RbSprite::set_oy(VALUE oy)
 	m_pSpr->SetOY(m_oy);
 	m_pSpr->SetSrcRectDirty();
 
-	return Qnil;
+	return oy;
 }
 
 VALUE RbSprite::get_src_rect()
@@ -439,7 +439,7 @@ VALUE RbSprite::set_angle(VALUE angle)
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
 
-	return Qnil;
+	return angle;
 }
 
 VALUE RbSprite::get_mirror()
@@ -452,7 +452,7 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 	m_mirror = Ruby2RbBool(mirror);
 
 	m_pSpr->SetFlip(RTEST(m_mirror), m_pSpr->IsFlipY(), true);
-	return Qnil;
+	return mirror;
 }
 
 VALUE RbSprite::get_width()
@@ -489,7 +489,7 @@ VALUE RbSprite::set_bush_depth(VALUE bush_depth)
 
 	m_bush_depth = bush_depth;
 
-	return Qnil;
+	return bush_depth;
 }
 
 VALUE RbSprite::get_bush_opacity()
@@ -504,7 +504,7 @@ VALUE RbSprite::set_bush_opacity(VALUE bush_opacity)
 	m_bush_opacity = FIX2INT(bush_opacity);
 	m_bush_opacity = SinBound(m_bush_opacity, 0, 255);
 
-	return Qnil;
+	return bush_opacity;
 }
 
 VALUE RbSprite::get_wave_amp()
@@ -635,7 +635,7 @@ VALUE RbSprite::set_volume(VALUE volume)
 		return Qfalse;
 	SafeFixnumValue(volume);
 	GetVideoMgr()->SetVolume(FIX2LONG(volume));
-	return Qnil;
+	return volume;
 }
 
 VALUE RbSprite::replay_at_finish()

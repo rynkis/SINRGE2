@@ -15,8 +15,8 @@ typedef struct __SinFrameStruct
 	bool		m_forbid_fullscreen;
 	bool		m_forbid_switch;
 
-	u32			m_screen_width;
-	u32			m_screen_height;
+	int			m_screen_width;
+	int			m_screen_height;
 
 	HWND		m_hwnd;
 

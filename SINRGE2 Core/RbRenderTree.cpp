@@ -37,6 +37,8 @@ bool RbRenderTree::RenderProc()
 		p1->renderproc(p1->value, p1->id);
 	}
 
+	GetAppPtr()->BrightnessUpdate();
+
 	pHGE->Gfx_SetClipping();
 	pHGE->Gfx_EndScene();
 

@@ -410,7 +410,7 @@ VALUE RbParticleSystem::set_bitmap(VALUE bitmap)
 		m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 	}
-	return Qnil;
+	return bitmap;
 }
 
 VALUE RbParticleSystem::set_z(VALUE z)
@@ -424,7 +424,7 @@ VALUE RbParticleSystem::set_z(VALUE z)
 		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
 	}
 
-	return Qnil;
+	return z;
 }
 
 VALUE RbParticleSystem::set_viewport(VALUE viewport)
@@ -443,7 +443,7 @@ VALUE RbParticleSystem::set_viewport(VALUE viewport)
 	m_node->viewport = viewport;
 	RbRenderTree::InsertNode(m_node);
 
-	return Qnil;
+	return viewport;
 }
 
 VALUE RbParticleSystem::get_blend_type()
@@ -466,7 +466,7 @@ VALUE RbParticleSystem::set_blend_type(VALUE blend_type)
 		else
 			m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
 	}
-	return Qnil;
+	return blend_type;
 }
 
 /*

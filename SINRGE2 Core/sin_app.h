@@ -18,8 +18,10 @@ public:
 	inline RbRenderState*		GetRenderState() const { return m_pRenderState; }
 	inline IDirect3D8*			GetD3DPtr() const { return m_ref_d3d; }
 	inline IDirect3DDevice8*	GetD3DDevicePtr() const { return m_ref_device; }
-	inline unsigned long		GetFrameWidth() const { return m_frm_struct.m_screen_width; }
-	inline unsigned long		GetFrameHeight() const { return m_frm_struct.m_screen_height; }
+	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
+	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
+
+	inline int					GetBrightness() const { return m_brightness; }
 
 	//inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
 
@@ -46,6 +48,10 @@ public:
 
 	void						Quit();
 	void						GraphicsUpdate();
+	void						SystemUpdate();
+	void						BrightnessUpdate();
+
+	void						SetBrightness(int brightness) { m_brightness = brightness; };
 
 	u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
 
@@ -85,6 +91,10 @@ private:
 	D3DCAPS8					m_d3d_caps;
 
 	nge_timer*					m_sys_timer;
+
+	hgeQuad						m_quad;
+	int							m_brightness;
+	int							m_saved_brghtness;
 
 private:
 	class CVideoMgr*			m_pVideoMgr;			///<	AVI²¥·Å

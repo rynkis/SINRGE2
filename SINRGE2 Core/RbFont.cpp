@@ -194,7 +194,7 @@ VALUE RbFont::set_name(VALUE name)
 	}
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
-	return Qnil;
+	return name;
 }
 
 VALUE RbFont::get_size()
@@ -221,7 +221,7 @@ VALUE RbFont::set_size(VALUE size)
 	}
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
-	return Qnil;
+	return size;
 }
 
 VALUE RbFont::get_bold()
@@ -249,7 +249,7 @@ VALUE RbFont::set_bold(VALUE bold)
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
 
-	return Qnil;
+	return bold;
 }
 
 VALUE RbFont::get_italic()
@@ -276,7 +276,7 @@ VALUE RbFont::set_italic(VALUE italic)
 	}
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
-	return Qnil;
+	return italic;
 }
 
 VALUE RbFont::get_color()
@@ -288,7 +288,7 @@ VALUE RbFont::set_color(VALUE color)
 {
 	SafeColorValue(color);
 	m_color_ptr = GetObjectPtr<RbColor>(color);
-	return Qnil;
+	return color;
 }
 
 VALUE RbFont::get_shadow()
@@ -299,7 +299,7 @@ VALUE RbFont::get_shadow()
 VALUE RbFont::set_shadow(VALUE shadow)
 {
 	m_shadow = Ruby2RbBool(shadow);
-	return Qnil;
+	return shadow;
 }
 
 /*

@@ -1755,7 +1755,7 @@ VALUE RbBitmap::set_font(VALUE font)
 
 	SafeFontValue(font);
 	m_font_ptr = GetObjectPtr<RbFont>(font);
-	return Qnil;
+	return font;
 }
 
 VALUE RbBitmap::save_to_file(int argc, VALUE *argv, VALUE obj)

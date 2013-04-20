@@ -130,7 +130,7 @@ VALUE RbColor::set_red(VALUE red)
 	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_red	= INT2FIX(m_r);
 
-	return Qnil;
+	return m_red;
 }
 VALUE RbColor::get_green()
 {
@@ -146,7 +146,7 @@ VALUE RbColor::set_green(VALUE green)
 	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_green	= INT2FIX(m_g);
 
-	return Qnil;
+	return m_green;
 }
 VALUE RbColor::get_blue()
 {
@@ -162,7 +162,7 @@ VALUE RbColor::set_blue(VALUE blue)
 	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_blue	= INT2FIX(m_b);
 
-	return Qnil;
+	return m_blue;
 }
 
 VALUE RbColor::get_alpha()
@@ -179,7 +179,7 @@ VALUE RbColor::set_alpha(VALUE alpha)
 	m_color = MAKE_ARGB_8888(m_r, m_g, m_b, m_a);
 	m_alpha	= INT2FIX(m_a);
 
-	return Qnil;
+	return m_alpha;
 }
 
 /*

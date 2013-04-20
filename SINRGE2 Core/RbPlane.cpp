@@ -345,7 +345,7 @@ VALUE RbPlane::set_bitmap(VALUE bitmap)
 		m_pSpr->SetSrcRectDirty();
 	}
 
-	return Qnil;
+	return bitmap;
 }
 
 VALUE RbPlane::get_zoom_x()
@@ -360,7 +360,7 @@ VALUE RbPlane::set_zoom_x(VALUE zoom_x)
 	m_pSpr->SetZoomX((float)NUM2DBL(zoom_x));
 	m_pSpr->SetSrcRectDirty();
 
-	return Qnil;
+	return zoom_x;
 }
 
 VALUE RbPlane::get_zoom_y()
@@ -375,7 +375,7 @@ VALUE RbPlane::set_zoom_y(VALUE zoom_y)
 	m_pSpr->SetZoomY((float)NUM2DBL(zoom_y));
 	m_pSpr->SetSrcRectDirty(true);
 
-	return Qnil;
+	return zoom_y;
 }
 
 VALUE RbPlane::get_opacity()
@@ -390,7 +390,7 @@ VALUE RbPlane::set_opacity(VALUE opacity)
 	m_opacity = FIX2INT(opacity);
 	m_opacity = SinBound(m_opacity, 0, 255);
 
-	return Qnil;
+	return opacity;
 }
 
 VALUE RbPlane::get_blend_type()
@@ -402,7 +402,7 @@ VALUE RbPlane::set_blend_type(VALUE blend_type)
 {
 	SafeFixnumValue(blend_type);
 	m_blend_type = FIX2INT(blend_type);
-	return Qnil;
+	return blend_type;
 }
 
 VALUE RbPlane::get_color()
@@ -414,7 +414,7 @@ VALUE RbPlane::set_color(VALUE color)
 {
 	SafeColorValue(color);
 	m_color_ptr = GetObjectPtr<RbColor>(color);
-	return Qnil;
+	return color;
 }
 
 VALUE RbPlane::get_tone()
@@ -426,7 +426,7 @@ VALUE RbPlane::set_tone(VALUE tone)
 {
 	SafeToneValue(tone);
 	m_tone_ptr = GetObjectPtr<RbTone>(tone);
-	return Qnil;
+	return tone;
 }
 
 VALUE RbPlane::set_z(VALUE z)
@@ -440,7 +440,7 @@ VALUE RbPlane::set_z(VALUE z)
 		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
 	}
 
-	return Qnil;
+	return z;
 }
 
 VALUE RbPlane::set_viewport(VALUE viewport)
@@ -459,7 +459,7 @@ VALUE RbPlane::set_viewport(VALUE viewport)
 	m_node->viewport = viewport;
 	RbRenderTree::InsertNode(m_node);
 
-	return Qnil;
+	return viewport;
 }
 
 /*

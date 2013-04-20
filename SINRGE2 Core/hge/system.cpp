@@ -470,10 +470,13 @@ DWORD* CALL HGE_Impl::System_Snapshot(int& width, int& height)
 {
 	if(!pD3DDevice) return 0;
 
-	bool olderFeStatus = bFreeze;
-	bFreeze = true;
-	if (procRenderFunc) procRenderFunc();
-	bFreeze = olderFeStatus;
+	if (!bFreeze)
+	{
+		bFreeze = true;
+		procRenderFunc();
+		bFreeze = false;
+	}
+	else procRenderFunc();
 
 	LPDIRECT3DSURFACE8 pSurf;
 	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
@@ -520,6 +523,7 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 		i = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
+			if (!System_PeekMessage()) GetAppPtr()->Quit();
 			GET_ARGB_8888(pTexData[v + lx], a, r, g, b);
 			pDesData[i + lx] = MAKE_ARGB_8888(255, r, g, b);
 		}
@@ -754,9 +758,8 @@ void MRbSinCore::Freeze()
 {
 	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
 	pHGE->freezeTex = 0;
-	pHGE->bFreeze = true;
-	if (pHGE->procRenderFunc) pHGE->procRenderFunc();
 	pHGE->freezeTex = pHGE->Texture_CreateFromScreen();
+	pHGE->bFreeze = true;
 }
 
 //void MRbSinCore::Unfreeze()
@@ -826,7 +829,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 		float rate = 255.0 / duration;
 		float al = 0;
 		pHGE->bFreeze = false;
-		do//for (int d = 0; d < duration; ++d)
+		do
 		{
 			desQuad.v[0].col =
 			desQuad.v[1].col =
@@ -838,7 +841,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 			if(pHGE->bActive || pHGE->bDontSuspend)
 			{
 				pHGE->Gfx_BeginScene();
-				pHGE->Gfx_Clear(0);
+				//pHGE->Gfx_Clear(0);
 				pHGE->Gfx_RenderQuad(&srcQuad);
 				pHGE->Gfx_RenderQuad(&desQuad);
 				pHGE->Gfx_EndScene();

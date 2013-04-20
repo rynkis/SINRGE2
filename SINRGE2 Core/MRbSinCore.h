@@ -25,6 +25,9 @@ struct MRbSinCore
 	static VALUE freeze();
 	static VALUE transition(int argc, VALUE *argv);
 
+	static VALUE get_brightness();
+	static VALUE set_brightness(int argc, VALUE brightness);
+
 	static VALUE get_hwnd();
 	static VALUE get_title();
 	static VALUE set_title(int argc, VALUE title);

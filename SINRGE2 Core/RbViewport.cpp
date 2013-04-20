@@ -227,7 +227,7 @@ VALUE RbViewport::set_rect(VALUE rect)
 {
 	SafeRectValue(rect);
 	m_rect_ptr = GetObjectPtr<RbRect>(rect);
-	return Qnil;
+	return rect;
 }
 
 VALUE RbViewport::get_color()
@@ -239,7 +239,7 @@ VALUE RbViewport::set_color(VALUE color)
 {
 	SafeColorValue(color);
 	m_color_ptr = GetObjectPtr<RbColor>(color);
-	return Qnil;
+	return color;
 }
 
 VALUE RbViewport::get_tone()
@@ -251,7 +251,7 @@ VALUE RbViewport::set_tone(VALUE tone)
 {
 	SafeToneValue(tone);
 	m_tone_ptr = GetObjectPtr<RbTone>(tone);
-	return Qnil;
+	return tone;
 }
 
 VALUE RbViewport::set_z(VALUE z)
@@ -265,7 +265,7 @@ VALUE RbViewport::set_z(VALUE z)
 		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
 	}
 
-	return Qnil;
+	return z;
 }
 
 VALUE RbViewport::update()
