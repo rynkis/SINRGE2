@@ -779,91 +779,10 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 		GetAppPtr()->GraphicsUpdate();
 		return;
 	}
-	if (!filename)
+	if (filename)
 	{
-		HTEXTURE desTex = pHGE->Texture_CreateFromScreen();
-		if (!desTex) return;
-		float tempx1, tempy1, tempx2, tempy2;
-
-		tempx1 = 0;
-		tempy1 = 0;
-		tempx2 = pHGE->nScreenWidth;
-		tempy2 = pHGE->nScreenHeight;
-
-		hgeQuad srcQuad, desQuad;
-		srcQuad.tex = pHGE->freezeTex;
-		srcQuad.blend = BLEND_DEFAULT;
-		srcQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			srcQuad.v[i].z = 0.5f;
-			srcQuad.v[i].col = 0xffffffff;
-		}
-		srcQuad.v[0].tx = 0; srcQuad.v[0].ty = 0;
-		srcQuad.v[1].tx = 1; srcQuad.v[1].ty = 0;
-		srcQuad.v[2].tx = 1; srcQuad.v[2].ty = 1;
-		srcQuad.v[3].tx = 0; srcQuad.v[3].ty = 1;
-		
-		srcQuad.v[0].x = tempx1; srcQuad.v[0].y = tempy1;
-		srcQuad.v[1].x = tempx2; srcQuad.v[1].y = tempy1;
-		srcQuad.v[2].x = tempx2; srcQuad.v[2].y = tempy2;
-		srcQuad.v[3].x = tempx1; srcQuad.v[3].y = tempy2;
-		
-		desQuad.tex = desTex;
-		desQuad.blend = BLEND_DEFAULT;
-		desQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			desQuad.v[i].z = 0.5f;
-			desQuad.v[i].col = 0xffffffff;
-		}
-		desQuad.v[0].tx = 0; desQuad.v[0].ty = 0;
-		desQuad.v[1].tx = 1; desQuad.v[1].ty = 0;
-		desQuad.v[2].tx = 1; desQuad.v[2].ty = 1;
-		desQuad.v[3].tx = 0; desQuad.v[3].ty = 1;
-		
-		desQuad.v[0].x = tempx1; desQuad.v[0].y = tempy1;
-		desQuad.v[1].x = tempx2; desQuad.v[1].y = tempy1;
-		desQuad.v[2].x = tempx2; desQuad.v[2].y = tempy2;
-		desQuad.v[3].x = tempx1; desQuad.v[3].y = tempy2;
-
-		float rate = 255.0 / duration;
-		float al = 0;
-		pHGE->bFreeze = false;
-		do
-		{
-			al += rate;
-			desQuad.v[0].col =
-			desQuad.v[1].col =
-			desQuad.v[2].col =
-			desQuad.v[3].col = 0x00ffffff + ((BYTE)al << 24);
-
-			if (!pHGE->System_PeekMessage())
-				GetAppPtr()->Quit();
-			if(pHGE->bActive || pHGE->bDontSuspend)
-			{
-				pHGE->Gfx_BeginScene();
-				//pHGE->Gfx_Clear(0);
-				pHGE->Gfx_RenderQuad(&srcQuad);
-				pHGE->Gfx_RenderQuad(&desQuad);
-				pHGE->Gfx_EndScene();
-
-				if (pHGE->bShowFps)
-				{
-					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
-					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
-				}
-			}
-			LimitFps(pHGE->nHGEFPS);
-			duration--;
-		} while (duration);
-		pHGE->Texture_Free(desTex);
-		pHGE->Texture_Free(pHGE->freezeTex);
-	}
-	else
-	{
-		HTEXTURE desTex = pHGE->Texture_CreateFromScreen();
-		if (!desTex) return;
+		HTEXTURE newTex = pHGE->Texture_CreateFromScreen();
+		if (!newTex) return;
 		int suffix_idx;
 		HTEXTURE midTex = RbBitmap::LoadTexture(filename, 0, suffix_idx);
 		float tempx1, tempy1, tempx2, tempy2;
@@ -873,31 +792,50 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 		tempx2 = pHGE->nScreenWidth;
 		tempy2 = pHGE->nScreenHeight;
 
-		hgeQuad srcQuad;
-		srcQuad.tex = pHGE->freezeTex;
-		srcQuad.blend = BLEND_DEFAULT;
-		srcQuad.blend_color = 0x00000000;
+		hgeQuad frzQuad, newQuad;
+		frzQuad.tex = pHGE->freezeTex;
+		frzQuad.blend = BLEND_DEFAULT;
+		frzQuad.blend_color = 0x00000000;
 		for (int i = 0; i < 4; i++)
 		{
-			srcQuad.v[i].z = 0.5f;
-			srcQuad.v[i].col = 0xffffffff;
+			frzQuad.v[i].z = 0.5f;
+			frzQuad.v[i].col = 0xffffffff;
 		}
-		srcQuad.v[0].tx = 0; srcQuad.v[0].ty = 0;
-		srcQuad.v[1].tx = 1; srcQuad.v[1].ty = 0;
-		srcQuad.v[2].tx = 1; srcQuad.v[2].ty = 1;
-		srcQuad.v[3].tx = 0; srcQuad.v[3].ty = 1;
+		frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
+		frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
+		frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
+		frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
 		
-		srcQuad.v[0].x = tempx1; srcQuad.v[0].y = tempy1;
-		srcQuad.v[1].x = tempx2; srcQuad.v[1].y = tempy1;
-		srcQuad.v[2].x = tempx2; srcQuad.v[2].y = tempy2;
-		srcQuad.v[3].x = tempx1; srcQuad.v[3].y = tempy2;
+		frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
+		frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
+		frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
+		frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
+
+		newQuad.tex = newTex;
+		newQuad.blend = BLEND_DEFAULT;
+		newQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			newQuad.v[i].z = 0.5f;
+			newQuad.v[i].col = 0xffffffff;
+		}
+		newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
+		newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
+		newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
+		newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
+		
+		newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
+		newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
+		newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
+		newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
 
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);
 		float rate = 255.0 / duration;
 		float gray = 0;
 		BYTE bGray;
-		//DWORD color1, color2;
+		BYTE a1, r1, g1, b1, r2;
+		float a2;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
 		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
@@ -906,8 +844,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 			gray += rate;
 			bGray = (BYTE)gray;
 			
-			DWORD* pSrcTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
-			DWORD* pDesTexData = pHGE->Texture_Lock(desTex, true);
+			DWORD* pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
 			int tempW1, tempW2;
 			for (int ly = 0; ly < dh; ++ly)
 			{
@@ -915,35 +852,48 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 				tempW2 = ly * pHGE->nScreenWidth;
 				for (int lx = 0; lx < mw; ++lx)
 				{
-					if (GET_ARGB_R(pMidTexData[tempW1 + lx]) == bGray)
+					r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
+					if (r2 <= bGray)
 					{
-						pSrcTexData[tempW2 + lx] = pDesTexData[tempW2 + lx];
+						if (vague > 0)
+						{
+							a2 = 255 - 255 / vague * (bGray - r2);
+							a2 = SinBound(a2, 0, 255);
+						}
+						else a2 = 0;
+
+						GET_ARGB_8888(pFrzTexData[tempW2 + lx], a1, r1, g1, b1)
+						pFrzTexData[tempW2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 
 						if ((pHGE->nScreenWidth - mw) > lx)
 						{
-							pSrcTexData[tempW2 + lx + mw] = pDesTexData[tempW2 + lx + mw];
+							GET_ARGB_8888(pFrzTexData[tempW2 + lx + mw], a1, r1, g1, b1)
+							pFrzTexData[tempW2 + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 						}
 						
 						if ((pHGE->nScreenHeight - mh) > ly)
 						{
-							pSrcTexData[(ly + mh) * pHGE->nScreenWidth + lx] = pDesTexData[(ly + mh) * pHGE->nScreenWidth + lx];
+							GET_ARGB_8888(pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx], a1, r1, g1, b1)
+							pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
 							if ((pHGE->nScreenWidth - mw) > lx)
 							{
-								pSrcTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = pDesTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw];
+								GET_ARGB_8888(pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw], a1, r1, g1, b1)
+								pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 							}
 						}
 					}
 				}
 			}
 			pHGE->Texture_Unlock(pHGE->freezeTex);
-			pHGE->Texture_Unlock(desTex);
 
 			if (!pHGE->System_PeekMessage())
 				GetAppPtr()->Quit();
 			if(pHGE->bActive || pHGE->bDontSuspend)
 			{
 				pHGE->Gfx_BeginScene();
-				pHGE->Gfx_RenderQuad(&srcQuad);
+				pHGE->Gfx_RenderQuad(&newQuad);
+				pHGE->Gfx_RenderQuad(&frzQuad);
 				pHGE->Gfx_EndScene();
 
 				if (pHGE->bShowFps)
@@ -955,7 +905,88 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 			LimitFps(pHGE->nHGEFPS);
 			duration--;
 		} while (duration);
-		pHGE->Texture_Free(desTex);
+		pHGE->Texture_Free(newTex);
+		pHGE->Texture_Free(pHGE->freezeTex);
+	}
+	else
+	{
+		HTEXTURE newTex = pHGE->Texture_CreateFromScreen();
+		if (!newTex) return;
+		float tempx1, tempy1, tempx2, tempy2;
+
+		tempx1 = 0;
+		tempy1 = 0;
+		tempx2 = pHGE->nScreenWidth;
+		tempy2 = pHGE->nScreenHeight;
+
+		hgeQuad frzQuad, newQuad;
+		frzQuad.tex = pHGE->freezeTex;
+		frzQuad.blend = BLEND_DEFAULT;
+		frzQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			frzQuad.v[i].z = 0.5f;
+			frzQuad.v[i].col = 0xffffffff;
+		}
+		frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
+		frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
+		frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
+		frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
+		
+		frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
+		frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
+		frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
+		frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
+		
+		newQuad.tex = newTex;
+		newQuad.blend = BLEND_DEFAULT;
+		newQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			newQuad.v[i].z = 0.5f;
+			newQuad.v[i].col = 0xffffffff;
+		}
+		newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
+		newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
+		newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
+		newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
+		
+		newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
+		newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
+		newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
+		newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
+
+		float rate = 255.0 / duration;
+		float al = 0;
+		pHGE->bFreeze = false;
+		do
+		{
+			al += rate;
+			newQuad.v[0].col =
+			newQuad.v[1].col =
+			newQuad.v[2].col =
+			newQuad.v[3].col = 0x00ffffff + ((BYTE)al << 24);
+
+			if (!pHGE->System_PeekMessage())
+				GetAppPtr()->Quit();
+			if(pHGE->bActive || pHGE->bDontSuspend)
+			{
+				pHGE->Gfx_BeginScene();
+				//pHGE->Gfx_Clear(0);
+				pHGE->Gfx_RenderQuad(&frzQuad);
+				pHGE->Gfx_RenderQuad(&newQuad);
+				pHGE->Gfx_EndScene();
+
+				if (pHGE->bShowFps)
+				{
+					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+				}
+			}
+			LimitFps(pHGE->nHGEFPS);
+			duration--;
+		} while (duration);
+		pHGE->Texture_Free(newTex);
 		pHGE->Texture_Free(pHGE->freezeTex);
 	}
 }
