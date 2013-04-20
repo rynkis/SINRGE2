@@ -73,7 +73,7 @@ VALUE MRbSinCore::transition(int argc, VALUE *argv)
 {
 	int duration = FIXNUM_P(argv[0]) ? FIX2INT(argv[0]) : 8;
 	wchar_t *filename;// = RB_TYPE_P((argv[1], rb_cString) ?
-	int vague = FIXNUM_P(argv[2]) ? FIX2INT(argv[2]) : 40;
+	float vague = FIXNUM_P(argv[2]) ? (float)FIX2INT(argv[2]) : 40.0f;
 	if (NIL_P(argv[1]))
 	{
 		filename = 0;

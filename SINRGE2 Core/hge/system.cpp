@@ -770,192 +770,205 @@ void MRbSinCore::Freeze()
 //	pHGE->bFreeze = false;
 //}
 
-void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
+void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 {
 	if (!pHGE->freezeTex) return;
+
 	if (duration <= 0)
 	{
 		pHGE->bFreeze = false;
 		GetAppPtr()->GraphicsUpdate();
 		return;
 	}
+	
+	HTEXTURE newTex = pHGE->Texture_CreateFromScreen();
+	if (!newTex) return;
+	float tempx1, tempy1, tempx2, tempy2;
+
+	tempx1 = 0;
+	tempy1 = 0;
+	tempx2 = pHGE->nScreenWidth;
+	tempy2 = pHGE->nScreenHeight;
+
+	hgeQuad frzQuad, newQuad;
+	frzQuad.tex = pHGE->freezeTex;
+	frzQuad.blend = BLEND_DEFAULT;
+	frzQuad.blend_color = 0x00000000;
+	for (int i = 0; i < 4; i++)
+	{
+		frzQuad.v[i].z = 0.5f;
+		frzQuad.v[i].col = 0xffffffff;
+	}
+	frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
+	frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
+	frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
+	frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
+		
+	frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
+	frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
+	frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
+	frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
+
+	newQuad.tex = newTex;
+	newQuad.blend = BLEND_DEFAULT;
+	newQuad.blend_color = 0x00000000;
+	for (int i = 0; i < 4; i++)
+	{
+		newQuad.v[i].z = 0.5f;
+		newQuad.v[i].col = 0xffffffff;
+	}
+	newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
+	newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
+	newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
+	newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
+		
+	newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
+	newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
+	newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
+	newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
+
 	if (filename)
 	{
-		HTEXTURE newTex = pHGE->Texture_CreateFromScreen();
-		if (!newTex) return;
 		int suffix_idx;
 		HTEXTURE midTex = RbBitmap::LoadTexture(filename, 0, suffix_idx);
-		float tempx1, tempy1, tempx2, tempy2;
-
-		tempx1 = 0;
-		tempy1 = 0;
-		tempx2 = pHGE->nScreenWidth;
-		tempy2 = pHGE->nScreenHeight;
-
-		hgeQuad frzQuad, newQuad;
-		frzQuad.tex = pHGE->freezeTex;
-		frzQuad.blend = BLEND_DEFAULT;
-		frzQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			frzQuad.v[i].z = 0.5f;
-			frzQuad.v[i].col = 0xffffffff;
-		}
-		frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
-		frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
-		frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
-		frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
-		
-		frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
-		frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
-		frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
-		frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
-
-		newQuad.tex = newTex;
-		newQuad.blend = BLEND_DEFAULT;
-		newQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			newQuad.v[i].z = 0.5f;
-			newQuad.v[i].col = 0xffffffff;
-		}
-		newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
-		newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
-		newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
-		newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
-		
-		newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
-		newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
-		newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
-		newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
 
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);
-		float rate = 255.0 / duration;
-		float gray = 0;
-		BYTE bGray;
-		BYTE a1, r1, g1, b1, r2;
-		float a2;
+		float a2, gray = 0, rate = 255.0 / duration;;
+		BYTE /*bGray, */a1, r1, g1, b1, r2;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
 		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
-		do
+		int tempW1, tempW2;
+
+		if (vague > 0)
 		{
-			gray += rate;
-			bGray = (BYTE)gray;
-			
-			DWORD* pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
-			int tempW1, tempW2;
-			for (int ly = 0; ly < dh; ++ly)
+			do
 			{
-				tempW1 = ly * mw;
-				tempW2 = ly * pHGE->nScreenWidth;
-				for (int lx = 0; lx < mw; ++lx)
+				gray += rate;
+				//bGray = (BYTE)gray;
+				
+				DWORD* pNewTexData = pHGE->Texture_Lock(newTex, false);
+				for (int ly = 0; ly < dh; ++ly)
 				{
-					r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
-					if (r2 <= bGray)
+					tempW1 = ly * mw;
+					tempW2 = ly * pHGE->nScreenWidth;
+					for (int lx = 0; lx < mw; ++lx)
 					{
-						if (vague > 0)
+						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
+						if ((BYTE)gray < r2)
 						{
-							a2 = 255 - 255 / vague * (bGray - r2);
+							a2 = 255.0 - 255.0 / vague * (r2 - gray);
 							a2 = SinBound(a2, 0, 255);
-						}
-						else a2 = 0;
 
-						GET_ARGB_8888(pFrzTexData[tempW2 + lx], a1, r1, g1, b1)
-						pFrzTexData[tempW2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-
-						if ((pHGE->nScreenWidth - mw) > lx)
-						{
-							GET_ARGB_8888(pFrzTexData[tempW2 + lx + mw], a1, r1, g1, b1)
-							pFrzTexData[tempW2 + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-						}
-						
-						if ((pHGE->nScreenHeight - mh) > ly)
-						{
-							GET_ARGB_8888(pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx], a1, r1, g1, b1)
-							pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+							GET_ARGB_8888(pNewTexData[tempW2 + lx], a1, r1, g1, b1);
+							pNewTexData[tempW2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 
 							if ((pHGE->nScreenWidth - mw) > lx)
 							{
-								GET_ARGB_8888(pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw], a1, r1, g1, b1)
-								pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+								GET_ARGB_8888(pNewTexData[tempW2 + lx + mw], a1, r1, g1, b1);
+								pNewTexData[tempW2 + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+							}
+						
+							if ((pHGE->nScreenHeight - mh) > ly)
+							{
+								GET_ARGB_8888(pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx], a1, r1, g1, b1);
+								pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
+								if ((pHGE->nScreenWidth - mw) > lx)
+								{
+									GET_ARGB_8888(pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw], a1, r1, g1, b1);
+									pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+								}
 							}
 						}
 					}
 				}
-			}
-			pHGE->Texture_Unlock(pHGE->freezeTex);
+				pHGE->Texture_Unlock(newTex);
 
-			if (!pHGE->System_PeekMessage())
-				GetAppPtr()->Quit();
-			if(pHGE->bActive || pHGE->bDontSuspend)
-			{
-				pHGE->Gfx_BeginScene();
-				pHGE->Gfx_RenderQuad(&newQuad);
-				pHGE->Gfx_RenderQuad(&frzQuad);
-				pHGE->Gfx_EndScene();
-
-				if (pHGE->bShowFps)
+				if (!pHGE->System_PeekMessage())
+					GetAppPtr()->Quit();
+				if(pHGE->bActive || pHGE->bDontSuspend)
 				{
-					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
-					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+					pHGE->Gfx_BeginScene();
+					pHGE->Gfx_RenderQuad(&frzQuad);
+					pHGE->Gfx_RenderQuad(&newQuad);
+					pHGE->Gfx_EndScene();
+
+					if (pHGE->bShowFps)
+					{
+						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+						SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+					}
 				}
-			}
-			LimitFps(pHGE->nHGEFPS);
-			duration--;
-		} while (duration);
-		pHGE->Texture_Free(newTex);
-		pHGE->Texture_Free(pHGE->freezeTex);
+				LimitFps(pHGE->nHGEFPS);
+				duration--;
+			} while (duration);
+		}
+		else
+		{
+			do
+			{
+				gray += rate;
+				//bGray = (BYTE)gray;
+			
+				DWORD* pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
+				for (int ly = 0; ly < dh; ++ly)
+				{
+					tempW1 = ly * mw;
+					tempW2 = ly * pHGE->nScreenWidth;
+					for (int lx = 0; lx < mw; ++lx)
+					{
+						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
+						if ((BYTE)gray > r2)
+						{
+							/*a2 = 255.0 - 255.0 / vague * (r2 - gray);
+							a2 = SinBound(a2, 0, 255);*/
+
+							pFrzTexData[tempW2 + lx] = 0;
+
+							if ((pHGE->nScreenWidth - mw) > lx)
+							{
+								pFrzTexData[tempW2 + lx + mw] = 0;
+							}
+						
+							if ((pHGE->nScreenHeight - mh) > ly)
+							{
+								pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx] = 0;
+
+								if ((pHGE->nScreenWidth - mw) > lx)
+								{
+									pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = 0;
+								}
+							}
+						}
+					}
+				}
+				pHGE->Texture_Unlock(pHGE->freezeTex);
+
+				if (!pHGE->System_PeekMessage())
+					GetAppPtr()->Quit();
+				if(pHGE->bActive || pHGE->bDontSuspend)
+				{
+					pHGE->Gfx_BeginScene();
+					pHGE->Gfx_RenderQuad(&newQuad);
+					pHGE->Gfx_RenderQuad(&frzQuad);
+					pHGE->Gfx_EndScene();
+
+					if (pHGE->bShowFps)
+					{
+						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+						SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+					}
+				}
+				LimitFps(pHGE->nHGEFPS);
+				duration--;
+			} while (duration);
+		}
+
 	}
 	else
 	{
-		HTEXTURE newTex = pHGE->Texture_CreateFromScreen();
-		if (!newTex) return;
-		float tempx1, tempy1, tempx2, tempy2;
-
-		tempx1 = 0;
-		tempy1 = 0;
-		tempx2 = pHGE->nScreenWidth;
-		tempy2 = pHGE->nScreenHeight;
-
-		hgeQuad frzQuad, newQuad;
-		frzQuad.tex = pHGE->freezeTex;
-		frzQuad.blend = BLEND_DEFAULT;
-		frzQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			frzQuad.v[i].z = 0.5f;
-			frzQuad.v[i].col = 0xffffffff;
-		}
-		frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
-		frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
-		frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
-		frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
-		
-		frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
-		frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
-		frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
-		frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
-		
-		newQuad.tex = newTex;
-		newQuad.blend = BLEND_DEFAULT;
-		newQuad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			newQuad.v[i].z = 0.5f;
-			newQuad.v[i].col = 0xffffffff;
-		}
-		newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
-		newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
-		newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
-		newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
-		
-		newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
-		newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
-		newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
-		newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
-
 		float rate = 255.0 / duration;
 		float al = 0;
 		pHGE->bFreeze = false;
@@ -986,9 +999,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 			LimitFps(pHGE->nHGEFPS);
 			duration--;
 		} while (duration);
-		pHGE->Texture_Free(newTex);
-		pHGE->Texture_Free(pHGE->freezeTex);
 	}
+	pHGE->Texture_Free(newTex);
+	pHGE->Texture_Free(pHGE->freezeTex);
 }
 
 bool MRbInput::OnFocus()

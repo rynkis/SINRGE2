@@ -14,7 +14,7 @@ struct MRbSinCore
 	static void Freeze();
 	//static void Unfreeze();
 
-	static void Transition(int duration, const wchar_t *filename, int vague);
+	static void Transition(int duration, const wchar_t *filename, float vague);
 
 	static VALUE init();
 	static VALUE quit();
