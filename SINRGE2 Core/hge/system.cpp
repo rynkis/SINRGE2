@@ -470,9 +470,10 @@ DWORD* CALL HGE_Impl::System_Snapshot(int& width, int& height)
 {
 	if(!pD3DDevice) return 0;
 
+	bool olderFeStatus = bFreeze;
 	bFreeze = true;
 	if (procRenderFunc) procRenderFunc();
-	bFreeze = false;
+	bFreeze = olderFeStatus;
 
 	LPDIRECT3DSURFACE8 pSurf;
 	if (FAILED(pD3DDevice->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &pSurf)))
