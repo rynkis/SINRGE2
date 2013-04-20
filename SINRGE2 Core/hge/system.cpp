@@ -836,31 +836,31 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 		int mh = pHGE->Texture_GetHeight(midTex);
 		float a2, gray = 0, rate = 255.0 / duration;;
 		BYTE /*bGray, */a1, r1, g1, b1, r2;
+		int dw = pHGE->nScreenWidth < mh ? pHGE->nScreenWidth : mw;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
 		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
 		int tempW1, tempW2;
 
-		if (vague > 0)
+		if (vague > 1)
 		{
 			do
 			{
-				gray += rate;
-				//bGray = (BYTE)gray;
-				
 				DWORD* pNewTexData = pHGE->Texture_Lock(newTex, false);
 				for (int ly = 0; ly < dh; ++ly)
 				{
 					tempW1 = ly * mw;
 					tempW2 = ly * pHGE->nScreenWidth;
-					for (int lx = 0; lx < mw; ++lx)
+					for (int lx = 0; lx < dw; ++lx)
 					{
 						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
 						if ((BYTE)gray < r2)
 						{
-							a2 = 255.0 - 255.0 / vague * (r2 - gray);
-							a2 = SinBound(a2, 0, 255);
-
+							a2 = 255.0 - 255.0 / vague * (r2 - gray);					// 基础数值，这算法我自己都不知道如何吐槽了，待完善 = =
+							if (vague < 24) a2 += (12 + rate * rate) * (16 - vague);	// 模糊小于一定程度时，大幅提升透明度
+							else a2 += 12 + rate * rate;								// 通常模糊程度加以小幅修正
+							a2 = SinBound(a2, 0, 255);									// 控制透明度范围。备忘：许多像素达不到255，说明有算法问题。
+							
 							GET_ARGB_8888(pNewTexData[tempW2 + lx], a1, r1, g1, b1);
 							pNewTexData[tempW2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 
@@ -882,6 +882,25 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 								}
 							}
 						}
+						/*else
+						{
+							pNewTexData[tempW2 + lx] = 0;
+
+							if ((pHGE->nScreenWidth - mw) > lx)
+							{
+								pNewTexData[tempW2 + lx + mw] = 0;
+							}
+						
+							if ((pHGE->nScreenHeight - mh) > ly)
+							{
+								pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx] = 0;
+
+								if ((pHGE->nScreenWidth - mw) > lx)
+								{
+									pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = 0;
+								}
+							}
+						}*/
 					}
 				}
 				pHGE->Texture_Unlock(newTex);
@@ -903,6 +922,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				}
 				LimitFps(pHGE->nHGEFPS);
 				duration--;
+				gray += rate;
 			} while (duration);
 		}
 		else
