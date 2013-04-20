@@ -14,25 +14,26 @@ struct MRbSinCore
 	static void Freeze();
 	//static void Unfreeze();
 
-	static void Transition(int duration, const wchar_t *filename);
+	static void Transition(int duration, const wchar_t *filename, int vague);
 
 	static VALUE init();
 	static VALUE quit();
 	
 	static VALUE update();
 	static VALUE wait(int argc, VALUE duration);
-	static VALUE snap_to_bitmap();
+	static VALUE fadeout(int argc, VALUE duration);
+	static VALUE fadein(int argc, VALUE duration);
 	static VALUE freeze();
 	static VALUE transition(int argc, VALUE *argv);
-
+	static VALUE snap_to_bitmap();
+	static VALUE get_width();
+	static VALUE get_height();
 	static VALUE get_brightness();
 	static VALUE set_brightness(int argc, VALUE brightness);
 
 	static VALUE get_hwnd();
 	static VALUE get_title();
 	static VALUE set_title(int argc, VALUE title);
-	static VALUE get_width();
-	static VALUE get_height();
 	static VALUE resize_screen(int argc, VALUE width, VALUE height);
 	
 	static VALUE set_start_width(int argc, VALUE width);

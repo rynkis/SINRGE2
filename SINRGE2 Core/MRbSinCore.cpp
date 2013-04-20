@@ -3,6 +3,7 @@
 #include "RbBitmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
+#include <math.h>
 
 VALUE rb_mFrame;
 VALUE rb_mSin;
@@ -71,7 +72,8 @@ VALUE MRbSinCore::freeze()
 VALUE MRbSinCore::transition(int argc, VALUE *argv)
 {
 	int duration = FIXNUM_P(argv[0]) ? FIX2INT(argv[0]) : 8;
-	wchar_t *filename;// = RB_TYPE_P((argv[1], rb_cString) ? 
+	wchar_t *filename;// = RB_TYPE_P((argv[1], rb_cString) ?
+	int vague = FIXNUM_P(argv[2]) ? FIX2INT(argv[2]) : 40;
 	if (NIL_P(argv[1]))
 	{
 		filename = 0;
@@ -82,13 +84,13 @@ VALUE MRbSinCore::transition(int argc, VALUE *argv)
 		char *str = RSTRING_PTR(argv[1]);
 		filename = Kconv::UTF8ToUnicode(str);
 	}
-	Transition(duration, filename);
+	Transition(duration, filename, vague);
 	return Qnil;
 }
 
 VALUE MRbSinCore::get_brightness()
 {
-	return INT2FIX(GetAppPtr()->GetBrightness());
+	return INT2FIX(GetAppPtr()->m_brightness);
 }
 
 VALUE MRbSinCore::set_brightness(int argc, VALUE value)
@@ -96,8 +98,68 @@ VALUE MRbSinCore::set_brightness(int argc, VALUE value)
 	SafeFixnumValue(value);
 	int brightness = FIX2INT(value);
 	brightness = SinBound(brightness, 0, 255);
-	GetAppPtr()->SetBrightness(brightness);
+	GetAppPtr()->m_brightness = brightness;
 	return INT2FIX(brightness);
+}
+
+VALUE MRbSinCore::fadeout(int argv, VALUE duration)
+{
+	SafeFixnumValue(duration);
+	int dt = FIX2INT(duration);
+	int brightness = GetAppPtr()->m_brightness;
+	if (!brightness)
+	{
+		do
+		{
+			GetAppPtr()->GraphicsUpdate();
+			dt--;
+		} while (dt);
+	}
+	else
+	{
+		float rate = (brightness - 0) / (float)dt;
+		float brt = (float)brightness;
+		do
+		{
+			brt -= rate;
+			brightness = ceil(brt);
+			brightness = SinBound(brightness, 0, 255);
+			GetAppPtr()->m_brightness = brightness;
+			GetAppPtr()->GraphicsUpdate();
+			dt--;
+		} while (dt);
+	}
+	return Qnil;
+}
+
+VALUE MRbSinCore::fadein(int argv, VALUE duration)
+{
+	SafeFixnumValue(duration);
+	int dt = FIX2INT(duration);
+	int brightness = GetAppPtr()->m_brightness;
+	if (brightness == 255)
+	{
+		do
+		{
+			GetAppPtr()->GraphicsUpdate();
+			dt--;
+		} while (dt);
+	}
+	else
+	{
+		float rate = (255 - brightness) / (float)dt;
+		float brt = (float)brightness;
+		do
+		{
+			brt += rate;
+			brightness = ceil(brt);
+			brightness = SinBound(brightness, 0, 255);
+			GetAppPtr()->m_brightness = brightness;
+			GetAppPtr()->GraphicsUpdate();
+			dt--;
+		} while (dt);
+	}
+	return Qnil;
 }
 
 VALUE MRbSinCore::peek_message()
@@ -208,7 +270,7 @@ VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 void MRbSinCore::InitLibrary()
 {
 	rb_mSin = rb_define_module("SINRGE2");
-		
+	
 	rb_define_const(rb_mSin, "SINRGE2_COPYRIGHT",		rb_str_freeze(rb_str_new2(SIN_COPYRIGHT)));
 	rb_define_const(rb_mSin, "SINRGE2_DESCRIPTION",		rb_str_freeze(rb_str_new2(SIN_DESCRIPTION)));
 	rb_define_const(rb_mSin, "SINRGE2_ENGINE",			rb_str_freeze(rb_str_new2(SIN_ENGINE)));
@@ -225,11 +287,13 @@ void MRbSinCore::InitLibrary()
 	
 	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
 	rb_define_module_function(rb_mGraphics, "wait", RbFunc(wait), 1);
-	rb_define_module_function(rb_mGraphics, "width", RbFunc(get_width), 0);
-	rb_define_module_function(rb_mGraphics, "height", RbFunc(get_height), 0);
-	rb_define_module_function(rb_mGraphics, "snap_to_bitmap", RbFunc(snap_to_bitmap), 0);
+	rb_define_module_function(rb_mGraphics, "fadeout", RbFunc(fadeout), 1);
+	rb_define_module_function(rb_mGraphics, "fadein", RbFunc(fadein), 1);
 	rb_define_module_function(rb_mGraphics, "freeze", RbFunc(freeze), 0);
 	rb_define_module_function(rb_mGraphics, "transition", RbFunc(transition), -1);
+	rb_define_module_function(rb_mGraphics, "snap_to_bitmap", RbFunc(snap_to_bitmap), 0);
+	rb_define_module_function(rb_mGraphics, "width", RbFunc(get_width), 0);
+	rb_define_module_function(rb_mGraphics, "height", RbFunc(get_height), 0);
 	rb_define_module_function(rb_mGraphics, "resize_screen", RbFunc(resize_screen), 2);
 
 	rb_define_module_function(rb_mGraphics, "brightness", RbFunc(get_brightness), 0);

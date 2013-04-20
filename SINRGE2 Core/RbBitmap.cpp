@@ -160,12 +160,12 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 	DWORD dwColorValue = 0;
 	HGE* hge = GetAppPtr()->GetHgePtr();
 	hgeQuad quad;
-	wchar_t* filenameW;
+	//wchar_t* filenameW;
 
 	if (rb_scan_args(argc, argv, "11", &arg01, &arg02) == 1)
 	{
 		SafeStringValue(arg01);
-		goto __try_bitmap_load;
+		goto __bitmap_load;
 	}
 	else
 	{
@@ -177,46 +177,21 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 				ccol = GetObjectPtr<RbColor>(arg02);
 				dwColorValue = ccol->GetColor();
 			}
-			goto __try_bitmap_load;
+			goto __bitmap_load;
 		}
 		else goto __bitmap_create;
 	}
 
-__try_bitmap_load:
-	{
-		filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(arg01));
-		quad.tex = hge->Texture_Load(filenameW);
-		if (!quad.tex)
-			goto __bitmap_load;
-	}
-	goto __finish;
-
 __bitmap_load:
 	{
-		void *data;
-		DWORD size;
+		int suffix_idx = -1;
+		static char* szSuffixA[] = { ".png",  ".jpg",  ".bmp",  ".tga",  ".dds",  ".dib"};
+		wchar_t* filename = Kconv::UTF8ToUnicode(RSTRING_PTR(arg01));
+		quad.tex = LoadTexture(filename, dwColorValue, suffix_idx);
 
-		int suffix_idx;
-		
-		static wchar_t* szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
-		static char*	szSuffixA[] = { ".png",  ".jpg",  ".bmp",  ".tga",  ".dds",  ".dib"};
-		static int		uSuffixCnt	= SinArrayCount(szSuffix);
-
-		if (data = hge->Resource_Load_Without_Suffix(filenameW, &size, szSuffix, uSuffixCnt, &suffix_idx))
-		{
-			quad.tex = hge->Texture_Load((const wchar_t*)data, size, false, dwColorValue);
-
-			if(!quad.tex)
-				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(arg01)));
-			
-			VALUE tmp_filename = rb_str_dup(arg01);
-			if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffixA[suffix_idx]));
-			m_filename = rb_str_freeze(tmp_filename);
-			// free
-			hge->Resource_Free(data);
-		}
-		else
-			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(arg01)));
+		VALUE tmp_filename = rb_str_dup(arg01);
+		if (suffix_idx != -1) tmp_filename = rb_str_plus(tmp_filename, rb_str_new2(szSuffixA[suffix_idx]));
+		m_filename = rb_str_freeze(tmp_filename);
 	}
 	goto __finish;
 
@@ -267,6 +242,35 @@ __finish:
 		m_disposed = false;
 	}
 	return obj;
+}
+
+HTEXTURE RbBitmap::LoadTexture(const wchar_t* filename, DWORD colorKey, int &suffix_idx)
+{
+	HGE* hge = GetAppPtr()->GetHgePtr();
+	HTEXTURE tex = hge->Texture_Load(filename, 0, false, colorKey);
+	if (!tex)
+	{
+		void *data;
+		DWORD size;
+
+		static wchar_t* szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
+		static int		uSuffixCnt	= SinArrayCount(szSuffix);
+
+		if (data = hge->Resource_Load_Without_Suffix(filename, &size, szSuffix, uSuffixCnt, &suffix_idx))
+		{
+			tex = hge->Texture_Load((const wchar_t*)data, size, false, colorKey);
+
+			if(!tex)
+				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
+
+			// free
+			hge->Resource_Free(data);
+			return tex;
+		}
+		else
+			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
+	}
+	return tex;
 }
 
 void RbBitmap::check_raise()

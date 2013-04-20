@@ -32,6 +32,8 @@ public:
 	
 	static bool				ScreenToBitmap(bitmap_p pBmp);
 
+	static HTEXTURE			LoadTexture(const wchar_t* filename, DWORD colorKey, int &suffix_idx);
+
 public:
 	u32						GetWidth()					const { return m_bmp.width; }
 	u32						GetHeight()					const { return m_bmp.height; }

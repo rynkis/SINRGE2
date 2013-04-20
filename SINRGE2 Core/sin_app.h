@@ -21,7 +21,7 @@ public:
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
-	inline int					GetBrightness() const { return m_brightness; }
+	//inline int					GetBrightness() const { return m_brightness; }
 
 	//inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
 
@@ -51,7 +51,7 @@ public:
 	void						SystemUpdate();
 	void						BrightnessUpdate();
 
-	void						SetBrightness(int brightness) { m_brightness = brightness; };
+	//void						SetBrightness(int brightness) { m_brightness = brightness; };
 
 	u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
 

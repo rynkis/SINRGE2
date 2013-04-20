@@ -6,6 +6,7 @@
 ** Core system functions
 */
 
+#include "RbBitmap.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "nge_timer.h"
@@ -769,7 +770,7 @@ void MRbSinCore::Freeze()
 //	pHGE->bFreeze = false;
 //}
 
-void MRbSinCore::Transition(int duration, const wchar_t *filename)
+void MRbSinCore::Transition(int duration, const wchar_t *filename, int vague)
 {
 	if (!pHGE->freezeTex) return;
 	if (duration <= 0)
@@ -831,6 +832,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 		pHGE->bFreeze = false;
 		do
 		{
+			al += rate;
 			desQuad.v[0].col =
 			desQuad.v[1].col =
 			desQuad.v[2].col =
@@ -853,9 +855,106 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename)
 				}
 			}
 			LimitFps(pHGE->nHGEFPS);
-			al += rate;
 			duration--;
-		} while (duration > 0);
+		} while (duration);
+		pHGE->Texture_Free(desTex);
+		pHGE->Texture_Free(pHGE->freezeTex);
+	}
+	else
+	{
+		HTEXTURE desTex = pHGE->Texture_CreateFromScreen();
+		if (!desTex) return;
+		int suffix_idx;
+		HTEXTURE midTex = RbBitmap::LoadTexture(filename, 0, suffix_idx);
+		float tempx1, tempy1, tempx2, tempy2;
+
+		tempx1 = 0;
+		tempy1 = 0;
+		tempx2 = pHGE->nScreenWidth;
+		tempy2 = pHGE->nScreenHeight;
+
+		hgeQuad srcQuad;
+		srcQuad.tex = pHGE->freezeTex;
+		srcQuad.blend = BLEND_DEFAULT;
+		srcQuad.blend_color = 0x00000000;
+		for (int i = 0; i < 4; i++)
+		{
+			srcQuad.v[i].z = 0.5f;
+			srcQuad.v[i].col = 0xffffffff;
+		}
+		srcQuad.v[0].tx = 0; srcQuad.v[0].ty = 0;
+		srcQuad.v[1].tx = 1; srcQuad.v[1].ty = 0;
+		srcQuad.v[2].tx = 1; srcQuad.v[2].ty = 1;
+		srcQuad.v[3].tx = 0; srcQuad.v[3].ty = 1;
+		
+		srcQuad.v[0].x = tempx1; srcQuad.v[0].y = tempy1;
+		srcQuad.v[1].x = tempx2; srcQuad.v[1].y = tempy1;
+		srcQuad.v[2].x = tempx2; srcQuad.v[2].y = tempy2;
+		srcQuad.v[3].x = tempx1; srcQuad.v[3].y = tempy2;
+
+		int mw = pHGE->Texture_GetWidth(midTex);
+		int mh = pHGE->Texture_GetHeight(midTex);
+		float rate = 255.0 / duration;
+		float gray = 0;
+		BYTE bGray;
+		//DWORD color1, color2;
+		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
+		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
+		pHGE->bFreeze = false;
+		do
+		{
+			gray += rate;
+			bGray = (BYTE)gray;
+			
+			DWORD* pSrcTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
+			DWORD* pDesTexData = pHGE->Texture_Lock(desTex, true);
+			int tempW1, tempW2;
+			for (int ly = 0; ly < dh; ++ly)
+			{
+				tempW1 = ly * mw;
+				tempW2 = ly * pHGE->nScreenWidth;
+				for (int lx = 0; lx < mw; ++lx)
+				{
+					if (GET_ARGB_R(pMidTexData[tempW1 + lx]) == bGray)
+					{
+						pSrcTexData[tempW2 + lx] = pDesTexData[tempW2 + lx];
+
+						if ((pHGE->nScreenWidth - mw) > lx)
+						{
+							pSrcTexData[tempW2 + lx + mw] = pDesTexData[tempW2 + lx + mw];
+						}
+						
+						if ((pHGE->nScreenHeight - mh) > ly)
+						{
+							pSrcTexData[(ly + mh) * pHGE->nScreenWidth + lx] = pDesTexData[(ly + mh) * pHGE->nScreenWidth + lx];
+							if ((pHGE->nScreenWidth - mw) > lx)
+							{
+								pSrcTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = pDesTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw];
+							}
+						}
+					}
+				}
+			}
+			pHGE->Texture_Unlock(pHGE->freezeTex);
+			pHGE->Texture_Unlock(desTex);
+
+			if (!pHGE->System_PeekMessage())
+				GetAppPtr()->Quit();
+			if(pHGE->bActive || pHGE->bDontSuspend)
+			{
+				pHGE->Gfx_BeginScene();
+				pHGE->Gfx_RenderQuad(&srcQuad);
+				pHGE->Gfx_EndScene();
+
+				if (pHGE->bShowFps)
+				{
+					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
+				}
+			}
+			LimitFps(pHGE->nHGEFPS);
+			duration--;
+		} while (duration);
 		pHGE->Texture_Free(desTex);
 		pHGE->Texture_Free(pHGE->freezeTex);
 	}
