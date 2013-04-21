@@ -33,7 +33,10 @@ RbPlane::RbPlane()
 RbPlane::~RbPlane()
 {
 	if (m_tone_tex)
+	{
 		GetAppPtr()->GetHgePtr()->Texture_Free(m_tone_tex);
+		m_tone_tex = 0;
+	}
 	
 	SAFE_DELETE(m_pSpr);
 
@@ -267,7 +270,10 @@ void RbPlane::process_tone_texture()
 		{
 			m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 			if (m_tone_tex)
+			{
 				GetAppPtr()->GetHgePtr()->Texture_Free(m_tone_tex);
+				m_tone_tex = 0;
+			}
 		}
 	}
 	else if (m_ref_bitmap_modify_count != m_bitmap_ptr->GetModifyCount())
@@ -281,7 +287,10 @@ void RbPlane::process_tone_texture()
 	if (change)
 	{
 		if (m_tone_tex)
+		{
 			hge->Texture_Free(m_tone_tex);
+			m_tone_tex = 0;
+		}
 
 		m_tone_tex = hge->Texture_Create(m_bitmap_ptr->GetWidth(), m_bitmap_ptr->GetHeight());
 		if (!m_tone_tex)
@@ -297,7 +306,10 @@ void RbPlane::process_tone_texture()
 			m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 			
 			if (m_tone_tex)
+			{
 				hge->Texture_Free(m_tone_tex);
+				m_tone_tex = 0;
+			}
 		}
 	}
 }

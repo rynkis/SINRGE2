@@ -86,8 +86,11 @@ RbBitmap::RbBitmap()
 
 RbBitmap::~RbBitmap()
 {
-	if(m_bmp.quad.tex)
+	if (m_bmp.quad.tex)
+	{
 		GetAppPtr()->GetHgePtr()->Texture_Free(m_bmp.quad.tex);
+		m_bmp.quad.tex = 0;
+	}
 }
 
 void RbBitmap::InitLibrary()
@@ -617,7 +620,10 @@ VALUE RbBitmap::dispose()
 		return Qnil;
 
 	if(m_bmp.quad.tex)
+	{
 		GetAppPtr()->GetHgePtr()->Texture_Free(m_bmp.quad.tex);
+		m_bmp.quad.tex = 0;
+	}
 
 	m_disposed = true;
 
@@ -972,6 +978,7 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	hge->Texture_Unlock(tmpTex);
 	//if (sx != 0 || sy != 0 || sw != src->width || sh != src->height)
 	hge->Texture_Free(tmpTex);
+	tmpTex = 0;
 	free(pTempData);
 	
 	//	增加 修改计数值

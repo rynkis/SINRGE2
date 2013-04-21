@@ -763,16 +763,9 @@ void MRbSinCore::Freeze()
 	pHGE->bFreeze = true;
 }
 
-//void MRbSinCore::Unfreeze()
-//{
-//	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
-//	pHGE->freezeTex = 0;
-//	pHGE->bFreeze = false;
-//}
-
 void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 {
-	if (!pHGE->freezeTex) return;
+	if (!pHGE->freezeTex || !pHGE->bFreeze) return;
 
 	if (duration <= 0)
 	{
@@ -835,12 +828,12 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);
 		float a2, gray = 0, rate = 255.0 / duration;;
-		BYTE /*bGray, */a1, r1, g1, b1, r2;
-		int dw = pHGE->nScreenWidth < mh ? pHGE->nScreenWidth : mw;
+		int dw = pHGE->nScreenWidth < mw ? pHGE->nScreenWidth : mw;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
 		int wrate = pHGE->nScreenWidth / mw;
 		int hrate = pHGE->nScreenHeight / mh;
 		
+		BYTE a1, r1, g1, b1, r2;
 		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
 		if (vague > 1)
@@ -861,24 +854,64 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 							else a2 += 12 + rate * rate;								// 通常模糊程度则加以小幅修正
 							a2 = SinBound(a2, 0, 255);									// 控制透明度范围。备忘：许多像素达不到255，应该是算法问题。
 							
-							for (int j = 0; j < hrate + 1; ++j)
+							if (wrate && hrate)
 							{
-								if ((pHGE->nScreenHeight - mh * j) > ly)
+								for (int j = 0; j < hrate + 1; ++j)
 								{
-									int tempH2 = (ly + mh * j) * pHGE->nScreenWidth;
-									GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
-									pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-
-									for (int i = 1; i < wrate + 1; ++i)
+									if ((pHGE->nScreenHeight - mh * j) > ly)
 									{
-										int tempW3 = mw * i;
-										if ((pHGE->nScreenWidth - tempW3) > lx)
+										int tempH2 = (ly + mh * j) * pHGE->nScreenWidth;
+										GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+										pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
+										for (int i = 1; i < wrate + 1; ++i)
 										{
-											GET_ARGB_8888(pNewTexData[tempH2 + lx + tempW3], a1, r1, g1, b1);
-											pNewTexData[tempH2 + lx + tempW3] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+											int tempW3 = mw * i;
+											if ((pHGE->nScreenWidth - tempW3) > lx)
+											{
+												GET_ARGB_8888(pNewTexData[tempH2 + lx + tempW3], a1, r1, g1, b1);
+												pNewTexData[tempH2 + lx + tempW3] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+											}
 										}
 									}
 								}
+							}
+							else if (wrate)
+							{
+								int tempH2 = ly * pHGE->nScreenWidth;
+								GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+								pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
+								for (int i = 1; i < wrate + 1; ++i)
+								{
+									int tempW3 = mw * i;
+									if ((pHGE->nScreenWidth - tempW3) > lx)
+									{
+										GET_ARGB_8888(pNewTexData[tempH2 + lx + tempW3], a1, r1, g1, b1);
+										pNewTexData[tempH2 + lx + tempW3] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+									}
+								}
+							}
+							else if (hrate)
+							{
+								for (int j = 0; j < hrate + 1; ++j)
+								{
+									if ((pHGE->nScreenHeight - mh * j) > ly)
+									{
+										int tempH2 = (ly + mh * j) * pHGE->nScreenWidth;
+										GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+										pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
+										GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+										pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+									}
+								}
+							}
+							else
+							{
+								int tempH2 = ly * pHGE->nScreenWidth;
+								GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+								pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
 							}
 						}
 					}
@@ -994,7 +1027,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 		} while (duration);
 	}
 	pHGE->Texture_Free(newTex);
+	newTex = 0;
 	pHGE->Texture_Free(pHGE->freezeTex);
+	pHGE->freezeTex = 0;
 }
 
 bool MRbInput::OnFocus()
