@@ -755,6 +755,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
+
+
 void MRbSinCore::Freeze()
 {
 	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
@@ -849,10 +851,11 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
 						if ((BYTE)gray < r2)
 						{
-							a2 = 255.0 - 255.0 / vague * (r2 - gray);					// 基础数值，这算法我自己都不知道如何吐槽了，待完善 = =
-							if (vague < 24) a2 += (12 + rate * rate) * (16 - vague);	// 模糊小于一定程度时，大幅提升透明度
-							else a2 += 12 + rate * rate;								// 通常模糊程度则加以小幅修正
-							a2 = SinBound(a2, 0, 255);									// 控制透明度范围。备忘：许多像素达不到255，应该是算法问题。
+							// 透明度数值，这算法我自己都不知道如何吐槽了 = =
+							a2 = 255.0 - 255.0 / vague * (r2 - gray);
+							if (vague < 24) a2 += (12 + rate * rate) * (16 - vague);
+							else a2 += 12 + rate * rate;
+							a2 = SinBound(a2, 0, 255);
 							
 							if (wrate && hrate)
 							{

@@ -31,7 +31,7 @@ RbParticleSystem::RbParticleSystem()
 	memset(particles, 0, sizeof(particles));
 
 	m_pSpr = new hgeSprite(0, 0, 0, 0, 0);
-	m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
+	m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_ZWRITE);
 	m_pSpr->SetTextureRect(0, 0, 32, 32, true);
 	m_pSpr->SetHotSpot(16, 16);
 }
@@ -459,12 +459,18 @@ VALUE RbParticleSystem::set_blend_type(VALUE blend_type)
 	{
 		m_blend_type = FIX2INT(blend_type);
 
-		if (m_blend_type == 1)
+		switch (m_blend_type)
+		{
+		case 1:
 			m_pSpr->SetBlendMode(BLEND_COLORADD);
-		else if (m_blend_type == 2)
+			break;
+		case 2:
 			m_pSpr->SetBlendMode(BLEND_DEFAULT);
-		else
+			break;
+		default:
 			m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
+			break;
+		}
 	}
 	return blend_type;
 }
