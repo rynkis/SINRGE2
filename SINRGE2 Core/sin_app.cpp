@@ -139,6 +139,8 @@ CApplication::CApplication()
 	, m_with_console(false)
 	, m_brightness(255)
 	, m_saved_brghtness(255)
+
+	, m_frame_count(0)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
@@ -478,7 +480,7 @@ void CApplication::OnFailed(VALUE err)
 	else
 		errmsg = rb_sprintf("Script '%s' line %d: %s occurred.\n\n%s", RSTRING_PTR(sourcefile), NUM2INT(sourceline), clsname, msg);
 
-	MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::AnsiToUnicode(RSTRING_PTR(errmsg)), GetAppPtr()->GetTitle(),  MB_ICONWARNING);
+	MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::AnsiToUnicode(RSTRING_PTR(errmsg)), GetAppPtr()->GetTitle(), MB_ICONWARNING);
 }
 
 bool CApplication::InitVideo()

@@ -18,6 +18,7 @@ struct MRbSinCore
 
 	static VALUE init();
 	static VALUE quit();
+	static VALUE stop();
 	
 	static VALUE update();
 	static VALUE wait(int argc, VALUE duration);
@@ -26,15 +27,20 @@ struct MRbSinCore
 	static VALUE freeze();
 	static VALUE transition(int argc, VALUE *argv);
 	static VALUE snap_to_bitmap();
+	//static VALUE frame_reset();
 	static VALUE get_width();
 	static VALUE get_height();
+	static VALUE resize_screen(int argc, VALUE width, VALUE height);
+	static VALUE get_frame_rate();
+	static VALUE set_frame_rate(int argc, VALUE framecount);
+	static VALUE get_framecount();
+	static VALUE set_framecount(int argc, VALUE framecount);
 	static VALUE get_brightness();
 	static VALUE set_brightness(int argc, VALUE brightness);
 
 	static VALUE get_hwnd();
 	static VALUE get_title();
 	static VALUE set_title(int argc, VALUE title);
-	static VALUE resize_screen(int argc, VALUE width, VALUE height);
 	
 	static VALUE set_start_width(int argc, VALUE width);
 	static VALUE set_start_height(int argc, VALUE height);

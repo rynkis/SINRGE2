@@ -583,7 +583,7 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
-		rb_raise(rb_eSinError, "Falied to load video: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
+		rb_raise(rb_eSinError, "Falied to load video: `%s'.", RSTRING_PTR(filename));
 
 	VALUE __argv1[] = {INT2FIX(width), INT2FIX(height)};
 	VALUE bitmap = rb_class_new_instance(2, __argv1, rb_cBitmap);

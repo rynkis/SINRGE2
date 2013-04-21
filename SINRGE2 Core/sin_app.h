@@ -50,6 +50,7 @@ public:
 	void						GraphicsUpdate();
 	void						SystemUpdate();
 	void						BrightnessUpdate();
+	void						FrameCountUpdate() { m_frame_count++; };
 
 	//void						SetBrightness(int brightness) { m_brightness = brightness; };
 
@@ -95,6 +96,8 @@ private:
 	hgeQuad						m_quad;
 	int							m_brightness;
 	int							m_saved_brghtness;
+
+	u32							m_frame_count;
 
 private:
 	class CVideoMgr*			m_pVideoMgr;			///<	AVI²¥·Å

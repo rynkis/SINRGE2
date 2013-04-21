@@ -1,5 +1,6 @@
 #include "RbExport.h"
 #include "nge_timer.h"
+#include "sin_app.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -55,6 +56,7 @@ void LimitFps(uint32_t limit)
 	frame_count++;
 	current_ticks = fps_timer->get_ticks(fps_timer);
 	target_ticks = last_ticks + (uint32_t) ((float) frame_count * rate_ticks);
+	GetAppPtr()->FrameCountUpdate();
 
 	if (current_ticks <= target_ticks)
 	{

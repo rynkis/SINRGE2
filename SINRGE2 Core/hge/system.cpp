@@ -827,7 +827,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 	newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
 	newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
 
-	if (filename)
+	if (filename[0])
 	{
 		int suffix_idx;
 		HTEXTURE midTex = RbBitmap::LoadTexture(filename, 0, suffix_idx);
@@ -838,10 +838,11 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 		BYTE /*bGray, */a1, r1, g1, b1, r2;
 		int dw = pHGE->nScreenWidth < mh ? pHGE->nScreenWidth : mw;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
+		int wrate = pHGE->nScreenWidth / mw;
+		int hrate = pHGE->nScreenHeight / mh;
+		
 		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
-		int tempW1, tempW2;
-
 		if (vague > 1)
 		{
 			do
@@ -849,8 +850,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				DWORD* pNewTexData = pHGE->Texture_Lock(newTex, false);
 				for (int ly = 0; ly < dh; ++ly)
 				{
-					tempW1 = ly * mw;
-					tempW2 = ly * pHGE->nScreenWidth;
+					int tempW1 = ly * mw;
 					for (int lx = 0; lx < dw; ++lx)
 					{
 						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
@@ -858,49 +858,29 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 						{
 							a2 = 255.0 - 255.0 / vague * (r2 - gray);					// 基础数值，这算法我自己都不知道如何吐槽了，待完善 = =
 							if (vague < 24) a2 += (12 + rate * rate) * (16 - vague);	// 模糊小于一定程度时，大幅提升透明度
-							else a2 += 12 + rate * rate;								// 通常模糊程度加以小幅修正
-							a2 = SinBound(a2, 0, 255);									// 控制透明度范围。备忘：许多像素达不到255，说明有算法问题。
+							else a2 += 12 + rate * rate;								// 通常模糊程度则加以小幅修正
+							a2 = SinBound(a2, 0, 255);									// 控制透明度范围。备忘：许多像素达不到255，应该是算法问题。
 							
-							GET_ARGB_8888(pNewTexData[tempW2 + lx], a1, r1, g1, b1);
-							pNewTexData[tempW2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-
-							if ((pHGE->nScreenWidth - mw) > lx)
+							for (int j = 0; j < hrate + 1; ++j)
 							{
-								GET_ARGB_8888(pNewTexData[tempW2 + lx + mw], a1, r1, g1, b1);
-								pNewTexData[tempW2 + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-							}
-						
-							if ((pHGE->nScreenHeight - mh) > ly)
-							{
-								GET_ARGB_8888(pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx], a1, r1, g1, b1);
-								pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
-
-								if ((pHGE->nScreenWidth - mw) > lx)
+								if ((pHGE->nScreenHeight - mh * j) > ly)
 								{
-									GET_ARGB_8888(pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw], a1, r1, g1, b1);
-									pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+									int tempH2 = (ly + mh * j) * pHGE->nScreenWidth;
+									GET_ARGB_8888(pNewTexData[tempH2 + lx], a1, r1, g1, b1);
+									pNewTexData[tempH2 + lx] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+
+									for (int i = 1; i < wrate + 1; ++i)
+									{
+										int tempW3 = mw * i;
+										if ((pHGE->nScreenWidth - tempW3) > lx)
+										{
+											GET_ARGB_8888(pNewTexData[tempH2 + lx + tempW3], a1, r1, g1, b1);
+											pNewTexData[tempH2 + lx + tempW3] = MAKE_ARGB_8888((BYTE)a2, r1, g1, b1);
+										}
+									}
 								}
 							}
 						}
-						/*else
-						{
-							pNewTexData[tempW2 + lx] = 0;
-
-							if ((pHGE->nScreenWidth - mw) > lx)
-							{
-								pNewTexData[tempW2 + lx + mw] = 0;
-							}
-						
-							if ((pHGE->nScreenHeight - mh) > ly)
-							{
-								pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx] = 0;
-
-								if ((pHGE->nScreenWidth - mw) > lx)
-								{
-									pNewTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = 0;
-								}
-							}
-						}*/
 					}
 				}
 				pHGE->Texture_Unlock(newTex);
@@ -930,21 +910,17 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 			do
 			{
 				gray += rate;
-				//bGray = (BYTE)gray;
-			
+
 				DWORD* pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
 				for (int ly = 0; ly < dh; ++ly)
 				{
-					tempW1 = ly * mw;
-					tempW2 = ly * pHGE->nScreenWidth;
+					int tempW1 = ly * mw;
+					int tempW2 = ly * pHGE->nScreenWidth;
 					for (int lx = 0; lx < mw; ++lx)
 					{
 						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
 						if ((BYTE)gray > r2)
 						{
-							/*a2 = 255.0 - 255.0 / vague * (r2 - gray);
-							a2 = SinBound(a2, 0, 255);*/
-
 							pFrzTexData[tempW2 + lx] = 0;
 
 							if ((pHGE->nScreenWidth - mw) > lx)
@@ -957,9 +933,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 								pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx] = 0;
 
 								if ((pHGE->nScreenWidth - mw) > lx)
-								{
 									pFrzTexData[(ly + mh) * pHGE->nScreenWidth + lx + mw] = 0;
-								}
 							}
 						}
 					}
@@ -985,7 +959,6 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				duration--;
 			} while (duration);
 		}
-
 	}
 	else
 	{

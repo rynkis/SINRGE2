@@ -108,7 +108,7 @@ VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	void* psi = hge->Resource_Load(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)));
-	if (!psi) rb_raise(rb_eSinError, "Failed to load psi: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
+	if (!psi) rb_raise(rb_eSinError, "Failed to load psi: `%s'.", RSTRING_PTR(filename));
 	memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
 	hge->Resource_Free(psi);
 

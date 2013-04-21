@@ -254,7 +254,7 @@ VALUE MRbInput::on_focus()
 */
 VALUE MRbInput::mouse_wheel()
 {
-	return rb_int_new(MouseWheel());
+	return INT2FIX(MouseWheel());
 }
 
 /*
@@ -278,8 +278,8 @@ VALUE MRbInput::get_mouse_pos()
 	VALUE ary;
 
 	ary = rb_ary_new2(2);
-	rb_ary_push(ary, rb_int_new(mouse_posX));
-	rb_ary_push(ary, rb_int_new(mouse_posY));
+	rb_ary_push(ary, INT2FIX(mouse_posX));
+	rb_ary_push(ary, INT2FIX(mouse_posY));
 	rb_ary_freeze(ary);
 
 	return ary;

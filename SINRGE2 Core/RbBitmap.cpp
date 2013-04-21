@@ -186,7 +186,8 @@ __bitmap_load:
 	{
 		int suffix_idx = -1;
 		static char* szSuffixA[] = { ".png",  ".jpg",  ".bmp",  ".tga",  ".dds",  ".dib"};
-		wchar_t* filename = Kconv::UTF8ToUnicode(RSTRING_PTR(arg01));
+		wchar_t filename[MAX_PATH];
+		wcscpy_s(filename, Kconv::UTF8ToUnicode(RSTRING_PTR(arg01)));
 		quad.tex = LoadTexture(filename, dwColorValue, suffix_idx);
 
 		VALUE tmp_filename = rb_str_dup(arg01);
@@ -255,20 +256,20 @@ HTEXTURE RbBitmap::LoadTexture(const wchar_t* filename, DWORD colorKey, int &suf
 
 		static wchar_t* szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
 		static int		uSuffixCnt	= SinArrayCount(szSuffix);
-
+		
 		if (data = hge->Resource_Load_Without_Suffix(filename, &size, szSuffix, uSuffixCnt, &suffix_idx))
 		{
 			tex = hge->Texture_Load((const wchar_t*)data, size, false, colorKey);
-
+			
 			if(!tex)
-				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
+				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToUTF8(filename));
 
 			// free
 			hge->Resource_Free(data);
 			return tex;
 		}
 		else
-			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
+			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToUTF8(filename));
 	}
 	return tex;
 }
@@ -287,18 +288,18 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
 
-	int gray;
+	//int gray;
 
 	DWORD* pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(pBmp->quad.tex, false);
 	if (!pSrcTexData)
 		return false;
 
-	int v;
+	//int v;
 	for (s32 x = 0; x < pBmp->width; ++x)
 	{
 		for (s32 y = 0; y < pBmp->height; ++y)
 		{
-			v = pBmp->width * y + x;
+			int v = pBmp->width * y + x;
 			GET_ARGB_8888(pSrcTexData[v], a2, r2, g2, b2);
 			if (a1 == 0)
 			{
@@ -308,7 +309,7 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 			}
 			else
 			{
-				gray = (r2 * 38 + g2 * 75 + b2 * 15) >> 7;
+				int gray = (r2 * 38 + g2 * 75 + b2 * 15) >> 7;
 
 				r2 = sTable768_low[r1 + r2 + (gray - r2) * a1 / 256];
 				g2 = sTable768_low[g1 + g2 + (gray - g2) * a1 / 256];
@@ -352,7 +353,7 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
 
-	int gray;
+	//int gray;
 
 	pSrcTexData = hge->Texture_Lock(pSrcBmp->quad.tex, true);
 
@@ -364,12 +365,12 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 	if (!pDstTexData)
 		goto failed_return;
 
-	int v;
+	//int v;
 	for (int x = 0; x < pSrcBmp->width; ++x)
 	{
 		for (int y = 0; y < pSrcBmp->height; ++y)
 		{
-			v = pSrcBmp->width * y + x;
+			int v = pSrcBmp->width * y + x;
 			GET_ARGB_8888(pSrcTexData[v], a2, r2, g2, b2);
 			if (a1 == 0)
 			{
@@ -379,7 +380,7 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 			}
 			else
 			{
-				gray = (r2 * 38 + g2 * 75 + b2 * 15) >> 7;
+				int gray = (r2 * 38 + g2 * 75 + b2 * 15) >> 7;
 
 				r2 = sTable768_low[r1 + r2 + (gray - r2) * a1 / 256];
 				g2 = sTable768_low[g1 + g2 + (gray - g2) * a1 / 256];
@@ -588,12 +589,12 @@ bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
 	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
 	
-	int v, i;
+	//int v, i;
 	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
 	{
-		v = ly * width;
-		i = GetAppPtr()->GetFrameWidth() * ly;
+		int v = ly * width;
+		int i = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
 			GET_ARGB_8888(pSrcData[v + lx], a, r, g, b);
@@ -661,12 +662,12 @@ VALUE RbBitmap::hue_change(VALUE hue)
 
 	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 
-	int v;
+	//int v;
 	for (s32 x = 0; x < m_bmp.width; ++x)
 	{
 		for (s32 y = 0; y < m_bmp.height; ++y)
 		{
-			v = m_bmp.width * y + x;
+			int v = m_bmp.width * y + x;
 			GET_ARGB_8888(pTexData[v], a, r, g, b);
 			/*r = (BYTE)SinBound(r*matrix[0]+g*matrix[1]+b*matrix[2], 0, 255);
 			g = (BYTE)SinBound(r*matrix[3]+g*matrix[4]+b*matrix[5], 0, 255);
@@ -702,12 +703,12 @@ VALUE RbBitmap::brightness_change(VALUE brightness)
 
 	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 
-	int v;
+	//int v;
 	for (s32 x = 0; x < m_bmp.width; ++x)
 	{
 		for (s32 y = 0; y < m_bmp.height; ++y)
 		{
-			v = m_bmp.width * y + x;
+			int v = m_bmp.width * y + x;
 			GET_ARGB_8888(pTexData[v], a, r, g, b);
 			r = sTable768_mid[r + iBrightness + 256];
 			g = sTable768_mid[g + iBrightness + 256];
@@ -749,9 +750,7 @@ VALUE RbBitmap::tone_change(int argc, VALUE *argv, VALUE obj)
 	else
 	{
 		for (int i = 0; i < argc; ++i)
-		{
 			SafeFixnumValue(argv[i]);
-		}
 
 		r = (NIL_P(argv01) ? 255 : FIX2INT(argv01));
 		g = (NIL_P(green) ? 255 : FIX2INT(green));
@@ -852,12 +851,12 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		return Qfalse;
 	DWORD color1, color2;
 	BYTE a, r, g, b;
-	int v;
+	//int v;
 	for (int lx = sx; lx < sx + sw; ++lx)
 	{
 		for (int ly = sy; ly < sy + sh; ++ly)
 		{
-			v = des->width * (ly - sy + dy) + lx - sx + dx;
+			int v = des->width * (ly - sy + dy) + lx - sx + dx;
 			color1 = pTempData[src->width * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
@@ -950,12 +949,12 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	if (dw + dx > m_bmp.width) dw = m_bmp.width - dx;
 	if (dh + dy > m_bmp.height) dh = m_bmp.height - dy;
 
-	int v;
+	//int v;
 	for (s32 lx = 0; lx < dw; ++lx)
 	{
 		for (s32 ly = 0; ly < dh; ++ly)
 		{
-			v = m_bmp.width * (ly + dy) + lx + dx;
+			int v = m_bmp.width * (ly + dy) + lx + dx;
 			color1 = pTempData[ndw * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
@@ -1033,10 +1032,10 @@ VALUE RbBitmap::fill_rect(int argc, VALUE *argv, VALUE obj)
 	if (!pTexData)
 		return Qfalse;
 	
-	int v;
+	//int v;
 	for (s32 ly = y; ly < y + height; ++ly)
 	{
-		v = m_bmp.width * ly;
+		int v = m_bmp.width * ly;
 		for (s32 lx = x; lx < x + width; ++lx)
 			pTexData[v + lx] = color;
 	}
@@ -1270,13 +1269,13 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 
 				int stride = dwBufferSize / gm.gmBlackBoxY;
 
-				int v, h, i;
+				//int v, h, i;
 				//	ÖðÏñËØÃè»æ
 				for (UINT y = 0; y < gm.gmBlackBoxY; ++y)
 				{
 					tmp_y = y + tm.tmAscent - gm.gmptGlyphOrigin.y + iy + offset_y;
-					h = (tmp_y + 1) * m_bmp.width;
-					i = tmp_y * m_bmp.width;
+					int h1 = (tmp_y + 1) * m_bmp.width;
+					int h2 = tmp_y * m_bmp.width;
 					for (UINT x = 0; x < gm.gmBlackBoxX; ++x)
 					{
 						//	¹ýÂËµôÔ½½çµÄÏñËØ
@@ -1295,20 +1294,20 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 
 						if (shadow)
 						{
-							v = h + tmp_x + 1;
+							int v1 = h1 + tmp_x + 1;
 							//	´¦ÀíÒõÓ°ÑÕÉ«
 							color1 = tmp_gray<<24;
-							color2 = pTexData[v];
+							color2 = pTexData[v1];
 							BLEND_ARGB_8888(color1, color2);
-							pTexData[v] = color2;
+							pTexData[v1] = color2;
 						}
 
-						v = i + tmp_x;
+						int v2 = h2 + tmp_x;
 						//	´¦ÀíÏñËØÑÕÉ«
 						color1 = drgb + (tmp_gray<<24);
-						color2 = pTexData[v];
+						color2 = pTexData[v2];
 						BLEND_ARGB_8888(color1, color2);
-						pTexData[v] = color2;
+						pTexData[v2] = color2;
 					}
 				}
 			}
@@ -1448,11 +1447,11 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE *argv, VALUE obj)
 	}
 	else
 	{
-		int v;
+		//int v;
 		for (s32 ly = y; ly < y + height; ++ly)
 		{
 			color1 = pline[ly - y];
-			v = m_bmp.width * ly;
+			int v = m_bmp.width * ly;
 			for (s32 lx = x; lx < x + width; ++lx)
 				pTexData[v + lx] = color1;
 			//	Ìø¹ýÍ¸Ã÷ÏñËØ
@@ -1682,14 +1681,13 @@ VALUE RbBitmap::flip_v()
 	if (!pTexData) return Qfalse;
 	DWORD* pTempData = (DWORD*)malloc(width * height * sizeof(DWORD));
 	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
-	int v;
+	//int v;
 	for (s32 ly = 0; ly < height; ++ly)
 	{
-		v = m_bmp.width * ly;
+		int v = m_bmp.width * ly;
 		for (s32 lx = 0; lx < width; ++lx)
-		{
 			pTexData[v + lx] = pTempData[v + (width - lx - 1)];
-		}
+
 	}
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	free(pTempData);
