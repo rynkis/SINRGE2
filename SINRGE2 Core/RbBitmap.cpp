@@ -592,7 +592,6 @@ bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
 	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
 	
-	//int v, i;
 	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
 	{
@@ -709,17 +708,17 @@ VALUE RbBitmap::brightness_change(VALUE brightness)
 
 	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 
-	//int v;
-	for (s32 x = 0; x < m_bmp.width; ++x)
+	for (s32 y = 0; y < m_bmp.height; ++y)
 	{
-		for (s32 y = 0; y < m_bmp.height; ++y)
+		int th = m_bmp.width * y;
+		for (s32 x = 0; x < m_bmp.width; ++x)
 		{
-			int v = m_bmp.width * y + x;
-			GET_ARGB_8888(pTexData[v], a, r, g, b);
+			int tv = th + x;
+			GET_ARGB_8888(pTexData[tv], a, r, g, b);
 			r = sTable768_mid[r + iBrightness + 256];
 			g = sTable768_mid[g + iBrightness + 256];
 			b = sTable768_mid[b + iBrightness + 256];
-			pTexData[v] = MAKE_ARGB_8888(a, r, g, b);
+			pTexData[tv] = MAKE_ARGB_8888(a, r, g, b);
 		}
 	}
 	
@@ -955,7 +954,6 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	if (dw + dx > m_bmp.width) dw = m_bmp.width - dx;
 	if (dh + dy > m_bmp.height) dh = m_bmp.height - dy;
 
-	//int v;
 	for (s32 lx = 0; lx < dw; ++lx)
 	{
 		for (s32 ly = 0; ly < dh; ++ly)

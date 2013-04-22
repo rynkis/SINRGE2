@@ -71,7 +71,6 @@ protected:
 	attr_accessor(src_rect)
 	attr_accessor(angle)
 	attr_accessor(mirror)
-	//attr_accessor(blend_type)
 
 	attr_accessor(bush_depth)
 	attr_accessor(bush_opacity)

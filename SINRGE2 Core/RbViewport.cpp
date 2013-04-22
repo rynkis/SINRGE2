@@ -254,6 +254,11 @@ VALUE RbViewport::set_tone(VALUE tone)
 	return tone;
 }
 
+VALUE RbViewport::get_z()
+{
+	return INT2FIX(m_z);
+}
+
 VALUE RbViewport::set_z(VALUE z)
 {
 	SafeFixnumValue(z);

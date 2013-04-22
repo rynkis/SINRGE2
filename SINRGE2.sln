@@ -5,6 +5,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Core", "SINRGE2 Cor
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Player", "SINRGE2 Player\SINRGE2 Player.vcxproj", "{535383FC-CD0C-4134-81FA-9CE22E8E0A66}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINVideo", "SINVideo\SINVideo.vcxproj", "{02A867E7-AAED-4B08-A5E9-5D0E9DAACFC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -19,6 +21,10 @@ Global
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Debug|Win32.Build.0 = Debug|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.ActiveCfg = Release|Win32
 		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.Build.0 = Release|Win32
+		{02A867E7-AAED-4B08-A5E9-5D0E9DAACFC5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{02A867E7-AAED-4B08-A5E9-5D0E9DAACFC5}.Debug|Win32.Build.0 = Debug|Win32
+		{02A867E7-AAED-4B08-A5E9-5D0E9DAACFC5}.Release|Win32.ActiveCfg = Release|Win32
+		{02A867E7-AAED-4B08-A5E9-5D0E9DAACFC5}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

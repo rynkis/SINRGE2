@@ -441,6 +441,11 @@ VALUE RbPlane::set_tone(VALUE tone)
 	return tone;
 }
 
+VALUE RbPlane::get_z()
+{
+	return INT2FIX(m_z);
+}
+
 VALUE RbPlane::set_z(VALUE z)
 {
 	SafeFixnumValue(z);

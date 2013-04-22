@@ -27,8 +27,10 @@ protected:
 	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
 
 	virtual	void	render(u32 id);
-
+	
+	virtual VALUE	get_z();
 	virtual VALUE	set_z(VALUE z);
+
 	virtual VALUE	set_viewport(VALUE viewport);
 
 protected:

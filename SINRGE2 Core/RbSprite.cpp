@@ -465,19 +465,6 @@ VALUE RbSprite::get_height()
 	return LONG2FIX(m_src_rect_ptr->height);
 }
 
-//VALUE RbSprite::get_blend_type()
-//{
-//	return INT2FIX(m_blend_type);
-//}
-//
-//VALUE RbSprite::set_blend_type(VALUE blend_type)
-//{
-//	SafeFixnumValue(blend_type);
-//	m_blend_type = FIX2INT(blend_type);
-//	SinBound(m_blend_type, 0, 2);
-//	return Qnil;
-//}
-
 VALUE RbSprite::get_bush_depth()
 {
 	return m_bush_depth;
