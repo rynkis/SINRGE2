@@ -368,13 +368,13 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 	if (!pDstTexData)
 		goto failed_return;
 
-	//int v;
-	for (int x = 0; x < pSrcBmp->width; ++x)
+	for (int y = 0; y < pSrcBmp->height; ++y)
 	{
-		for (int y = 0; y < pSrcBmp->height; ++y)
+		int th = pSrcBmp->width * y;
+		for (int x = 0; x < pSrcBmp->width; ++x)
 		{
-			int v = pSrcBmp->width * y + x;
-			GET_ARGB_8888(pSrcTexData[v], a2, r2, g2, b2);
+			int tv = th + x;
+			GET_ARGB_8888(pSrcTexData[tv], a2, r2, g2, b2);
 			if (a1 == 0)
 			{
 				r2 = sTable768_low[r2 + r1];
@@ -389,7 +389,7 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 				g2 = sTable768_low[g1 + g2 + (gray - g2) * a1 / 256];
 				b2 = sTable768_low[b1 + b2 + (gray - b2) * a1 / 256];
 			}
-			pDstTexData[v] = MAKE_ARGB_8888(a2, r2, g2, b2);
+			pDstTexData[tv] = MAKE_ARGB_8888(a2, r2, g2, b2);
 		}
 	}
 
@@ -1215,6 +1215,8 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 		if (!GetTextRect(m_font_ptr->GetHFont(), pStr, cx, cy, hScreenDC))
 			break;
 
+		if (shadow) cy += 1;
+
 		int offset_x = 0, offset_y = 0;
 
 		switch (halign % 3)
@@ -1274,7 +1276,6 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 
 				int stride = dwBufferSize / gm.gmBlackBoxY;
 
-				//int v, h, i;
 				//	ÖðÏñËØÃè»æ
 				for (UINT y = 0; y < gm.gmBlackBoxY; ++y)
 				{
@@ -1347,6 +1348,7 @@ VALUE RbBitmap::text_size(VALUE str)
 
 	if (GetTextRect(m_font_ptr->GetHFont(), pStr, cx, cy, NULL))
 	{
+		if (m_font_ptr->IsShadow()) cy += 1;
 		VALUE __argv[] = {RUBY_0, RUBY_0, LONG2FIX(cx), LONG2FIX(cy)};
 		rect = rb_class_new_instance(4, __argv, rb_cRect);
 	}
@@ -1503,6 +1505,15 @@ VALUE RbBitmap::clear_rect(int argc, VALUE *argv, VALUE obj)
 		width = rect->width;
 		height = rect->height;
 	}
+
+	//	ÐÞÕý¾ØÐÎÇøÓò
+	if (x < 0)						{ width += x; x = 0; }
+	if (y < 0)						{ height += y; y = 0; }
+	if (m_bmp.width - x < width)	{ width = m_bmp.width - x; }
+	if (m_bmp.height - y < height)	{ height = m_bmp.height - y; }
+
+	if (width <= 0 || height <= 0)
+		return Qfalse;
 
 	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 	if (!pTexData) return Qfalse;

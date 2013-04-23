@@ -21,7 +21,6 @@ public:
 protected:
 	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
 
-	virtual VALUE	set(int argc, VALUE *argv, VALUE obj);
 	virtual VALUE	_dump(VALUE depth);
 	virtual VALUE	clone();
 
@@ -48,7 +47,8 @@ protected:
 
 protected:
 	static VALUE	dm_load(VALUE klass, VALUE str);
-	static VALUE	dm_set(int argc, VALUE *argv, VALUE obj);
+
+	dm_method_vargs(set)
 
 	attr_accessor(red)
 	attr_accessor(green)

@@ -223,13 +223,21 @@ void RbSprite::render(u32 id)
 		//	没有设置flash颜色的情况下
 		else
 		{
-			if (m_blend_type == 1)
+			switch (m_blend_type)
+			{
+			case 1:
+				m_save_blend_type = 1;
 				save_blend_mode = BLEND_COLORADD;
-			else if (m_blend_type == 2)
+				break;
+			case 2:
+				m_save_blend_type = 2;
 				save_blend_mode = BLEND_ALPHASUBTRACT;
-			else
-				save_blend_mode = m_pSpr->GetBlendMode();
-
+				break;
+			default:
+				m_save_blend_type = 0;
+				save_blend_mode = BLEND_DEFAULT;
+				break;
+			}
 			save_blend_color = m_color_ptr->GetColor();
 		}
 	}
@@ -240,12 +248,23 @@ void RbSprite::render(u32 id)
 		m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
 		m_pSpr->SetBlendColor(save_blend_color);
 	}
-	else
+	else if (m_save_blend_type != m_blend_type)
 	{
-		if (m_blend_type == 1)
+		switch (m_blend_type)
+		{
+		case 1:
+			m_save_blend_type = 1;
 			m_pSpr->SetBlendMode(BLEND_COLORMUL);
-		else if (m_blend_type == 2)
+			break;
+		case 2:
+			m_save_blend_type = 2;
 			m_pSpr->SetBlendMode(BLEND_ALPHASUBTRACT);
+			break;
+		default:
+			m_save_blend_type = 0;
+			m_pSpr->SetBlendMode(BLEND_DEFAULT);
+			break;
+		}
 	}
 
 	// set the sprite's opacity
@@ -349,6 +368,7 @@ VALUE RbSprite::update()
 		DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
 		GetVideoMgr()->UpdateMovieTexture(pTexData);
 		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
+		m_bitmap_ptr->SetModifyCount();
 		return Qnil;
 	}
 	return Qfalse;
@@ -677,7 +697,6 @@ imp_method02(RbSprite, flash)
 imp_attr_accessor(RbSprite, src_rect)
 imp_attr_accessor(RbSprite, angle)
 imp_attr_accessor(RbSprite, mirror)
-//imp_attr_accessor(RbSprite, blend_type)
 
 imp_attr_accessor(RbSprite, bush_depth)
 imp_attr_accessor(RbSprite, bush_opacity)

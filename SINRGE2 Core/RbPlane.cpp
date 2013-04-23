@@ -16,6 +16,7 @@ VALUE rb_cPlane;
 RbPlane::RbPlane()
 	: m_opacity(255)
 	, m_blend_type(0)
+	, m_save_blend_type(0)
 	, m_ref_bitmap_modify_count(-1)
 	, m_ref_tone(0x0)
 	, m_tone_tex(0)
@@ -23,6 +24,8 @@ RbPlane::RbPlane()
 	, m_bitmap_ptr(0)
 	, m_color_ptr(0)
 	, m_tone_ptr(0)
+	, m_tone_tex_width(0)
+	, m_tone_tex_height(0)
 {
 	m_pSpr = new SinSprite();
 }
@@ -164,14 +167,21 @@ void RbPlane::render(u32 id)
 	{
 		if (m_color_ptr->GetColor() != 0)
 		{
-			if (m_blend_type == 1)
+			switch (m_blend_type)
+			{
+			case 1:
+				m_save_blend_type = 1;
 				save_blend_mode = BLEND_COLORADD;
-			else if (m_blend_type == 2)
+				break;
+			case 2:
+				m_save_blend_type = 2;
 				save_blend_mode = BLEND_ALPHASUBTRACT;
-			else
-				save_blend_mode = m_pSpr->GetBlendMode();
-			//save_blend_mode = m_pSpr->GetBlendMode();
-			//m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
+				break;
+			default:
+				m_save_blend_type = 0;
+				save_blend_mode = BLEND_DEFAULT;
+				break;
+			}
 			m_pSpr->SetBlendColor(m_color_ptr->GetColor());
 		}
 	
@@ -180,12 +190,23 @@ void RbPlane::render(u32 id)
 		{
 			m_pSpr->SetBlendMode(save_blend_mode | BLEND_COLORBLNED);
 		}
-		else
+		else if (m_save_blend_type != m_blend_type)
 		{
-			if (m_blend_type == 1)
+			switch (m_blend_type)
+			{
+			case 1:
+				m_save_blend_type = 1;
 				m_pSpr->SetBlendMode(BLEND_COLORMUL);
-			else if (m_blend_type == 2)
+				break;
+			case 2:
+				m_save_blend_type = 2;
 				m_pSpr->SetBlendMode(BLEND_ALPHASUBTRACT);
+				break;
+			default:
+				m_save_blend_type = 0;
+				m_pSpr->SetBlendMode(BLEND_DEFAULT);
+				break;
+			}
 		}
 
 		// set the sprite's opacity
@@ -271,7 +292,7 @@ void RbPlane::process_tone_texture()
 			m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 			if (m_tone_tex)
 			{
-				GetAppPtr()->GetHgePtr()->Texture_Free(m_tone_tex);
+				hge->Texture_Free(m_tone_tex);
 				m_tone_tex = 0;
 			}
 		}
@@ -286,15 +307,21 @@ void RbPlane::process_tone_texture()
 
 	if (change)
 	{
-		if (m_tone_tex)
+		if (m_tone_tex_width != m_bitmap_ptr->GetWidth() || m_tone_tex_height != m_bitmap_ptr->GetHeight())
 		{
-			hge->Texture_Free(m_tone_tex);
-			m_tone_tex = 0;
-		}
+			if (m_tone_tex)
+			{
+				hge->Texture_Free(m_tone_tex);
+				m_tone_tex = 0;
+			}
 
-		m_tone_tex = hge->Texture_Create(m_bitmap_ptr->GetWidth(), m_bitmap_ptr->GetHeight());
-		if (!m_tone_tex)
-			rb_raise(rb_eSinError,"Create Texture Error !");
+			m_tone_tex_width = m_bitmap_ptr->GetWidth();
+			m_tone_tex_height = m_bitmap_ptr->GetHeight();
+
+			m_tone_tex = hge->Texture_Create(m_tone_tex_width, m_tone_tex_height);
+			if (!m_tone_tex)
+				rb_raise(rb_eSinError,"Create Texture Error !");
+		}
 
 		if (RbBitmap::AdjustTexturesToneDouble(m_bitmap_ptr->GetBitmapPtr(), m_tone_tex, m_ref_tone))
 		{

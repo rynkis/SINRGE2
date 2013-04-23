@@ -42,6 +42,7 @@ public:
 	bitmap_p				GetBitmapPtr()				{ return &m_bmp; }
 
 	int						GetModifyCount()			const { return m_modify_count; }
+	void					SetModifyCount()			{ m_modify_count++; }
 
 	bool					IsDisposed()				const { return m_disposed; }
 

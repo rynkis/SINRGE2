@@ -205,36 +205,36 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 	quad.v[2].tx=tx2; quad.v[2].ty=ty2;
 	quad.v[3].tx=tx1; quad.v[3].ty=ty2;
 
-	if(m_zoom_y==0) m_zoom_y=m_zoom_x;
+	//if(m_zoom_y==0) m_zoom_y=m_zoom_x;
 
 	tx1 = -m_ox * m_zoom_x * m_flip_x;
 	ty1 = -m_oy * m_zoom_y * m_flip_y;
-	tx2 = (m_width-m_ox) * m_zoom_x * m_flip_x;
-	ty2 = (m_height-m_oy) * m_zoom_y * m_flip_y;
+	tx2 = (m_rw-m_ox) * m_zoom_x * m_flip_x;
+	ty2 = (m_rh-m_oy) * m_zoom_y * m_flip_y;
 
 	if (m_angle != 0.0f)
 	{
 		cost = cosf(m_angle);
 		sint = sinf(m_angle);
 		
-		quad.v[0].x  = tx1*cost - ty1*sint + x;
-		quad.v[0].y  = tx1*sint + ty1*cost + y;
+		quad.v[0].x  = tx1*cost - ty1*sint/* + x*/;
+		quad.v[0].y  = tx1*sint + ty1*cost/* + y*/;
 
-		quad.v[1].x  = tx2*cost - ty1*sint + x;
-		quad.v[1].y  = tx2*sint + ty1*cost + y;
+		quad.v[1].x  = tx2*cost - ty1*sint/* + x*/;
+		quad.v[1].y  = tx2*sint + ty1*cost/* + y*/;
 
-		quad.v[2].x  = tx2*cost - ty2*sint + x;
-		quad.v[2].y  = tx2*sint + ty2*cost + y;
+		quad.v[2].x  = tx2*cost - ty2*sint/* + x*/;
+		quad.v[2].y  = tx2*sint + ty2*cost/* + y*/;
 
-		quad.v[3].x  = tx1*cost - ty2*sint + x;
-		quad.v[3].y  = tx1*sint + ty2*cost + y;
+		quad.v[3].x  = tx1*cost - ty2*sint/* + x*/;
+		quad.v[3].y  = tx1*sint + ty2*cost/* + y*/;
 	}
 	else
 	{
-		quad.v[0].x = tx1 + x; quad.v[0].y = ty1 + y;
-		quad.v[1].x = tx2 + x; quad.v[1].y = ty1 + y;
-		quad.v[2].x = tx2 + x; quad.v[2].y = ty2 + y;
-		quad.v[3].x = tx1 + x; quad.v[3].y = ty2 + y;
+		quad.v[0].x = tx1/* + x*/; quad.v[0].y = ty1/* + y*/;
+		quad.v[1].x = tx2/* + x*/; quad.v[1].y = ty1/* + y*/;
+		quad.v[2].x = tx2/* + x*/; quad.v[2].y = ty2/* + y*/;
+		quad.v[3].x = tx1/* + x*/; quad.v[3].y = ty2/* + y*/;
 	}
 	
 	m_x1 = quad.v[0].x; m_y1 = quad.v[0].y;

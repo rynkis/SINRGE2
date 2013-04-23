@@ -34,12 +34,10 @@ protected:
 protected:
 	VALUE			m_mirror;
 	VALUE			m_bush_depth;
-	u32				m_bush_opacity;
+	int				m_bush_opacity;
 	VALUE			m_angle_rad;
 	float			m_angle;
 	
-	//int				m_blend_type;
-
 	int				m_flash_duration;					//	精灵闪烁帧数
 	int				m_flash_reduce_count_per_frame;		//	精灵闪烁每帧降低的透明度
 	int				m_flash_hide_spr;					//	是否消去精灵，仅当闪烁颜色指定为nil时才消去精灵。
@@ -50,6 +48,8 @@ protected:
 
 	RbRect*			m_src_rect_ptr;
 	RbTone*			m_tone_ptr;
+
+	//hgeQuad			m_quad;
 
 protected:
 	dm_method(dispose)
