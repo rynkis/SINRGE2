@@ -1,4 +1,4 @@
-SINRGE2 Ver. YAR
+﻿SINRGE2 Ver. YAR
 ======
 Copyright (C) 2013 Sherry Lynch(or Shy07) <Gernischt@gmail.com>
 
@@ -7,7 +7,7 @@ Sorry, only chinese version readme available now.
 关于 SINRGE2
 =====
 
-SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lynch（或称 Shy07）个人开发的一个用于游戏开发的 Ruby 实现。当然，也离不开 RGE2 的开发团队的贡献。
+SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lynch（或称 Shy07）个人开发的一个用于游戏开发的 Ruby 实现。当然，也离不开 RGE2 开发团队的贡献。
 
 之所以会开发这个项目，是因为 RGE2 的开发长期停滞，发布无望，所以试图自己动手，丰衣足食。  
 

@@ -42,7 +42,7 @@ private:
 public:
 	int							Run();
 	bool						InitVideo();
-	void						InitRuby();
+	void						InitRubyInterpreter();
 	int							Eval(const char* script);
 	int							RunScript();
 

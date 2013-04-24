@@ -91,7 +91,7 @@ void RbFont::InitLibrary()
 	rb_define_method(rb_cFont, "shadow=",	(RbFunc)dm_set_shadow,	1);
 
 	// class attribute
-	//rb_define_singleton_method(rb_cFont, "exist?",			(RbFunc)dm_is_exist,			1);
+	rb_define_singleton_method(rb_cFont, "exist?",			(RbFunc)dm_is_exist,			1);
 
 	rb_define_singleton_method(rb_cFont, "default_name",	(RbFunc)dm_get_default_name,	0);
 	rb_define_singleton_method(rb_cFont, "default_name=",	(RbFunc)dm_set_default_name,	1);
@@ -117,19 +117,23 @@ void RbFont::mark()
 	rb_gc_mark(m_name);
 }
 
-//bool RbFont::IsExist(const wchar_t *filename)
-//{
-//	LOGFONTW lfw;
-//	wcscpy_s(lfw.lfFaceName, filename);
-//	HFONT hFont = CreateFontIndirectW(&lfw);
-//	if (hFont)
-//	{
-//		DeleteObject(hFont);
-//		hFont = NULL;
-//		return true;
-//	}
-//	return false;
-//}
+int CALLBACK FontCallback(LPENUMLOGFONT lpelf, LPNEWTEXTMETRIC lpntm, DWORD nFontType, long lparam)
+{
+	return 7;
+}
+
+bool RbFont::IsExist(const wchar_t *filename)
+{
+	static LOGFONTW lfw;
+	wcscpy_s(lfw.lfFaceName, filename);
+	int lp = 0;
+	HDC hScreenDC = GetDC(NULL);
+
+	if (EnumFontFamiliesEx(hScreenDC, &lfw, (FONTENUMPROC)FontCallback, lp, 0) == 7)
+		return true;
+	else
+		return false;
+}
 
 /**
  *	@call
@@ -168,6 +172,12 @@ VALUE RbFont::initialize(int argc, VALUE *argv, VALUE obj)
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
 	return obj;
+}
+
+VALUE RbFont::dm_is_exist(int argc, VALUE name)
+{
+	SafeStringValue(name);
+	return C2RbBool(IsExist(Kconv::UTF8ToUnicode(RSTRING_PTR(name))));
 }
 
 VALUE RbFont::get_name()
@@ -380,9 +390,3 @@ VALUE RbFont::dm_set_default_shadow(VALUE obj, VALUE attr)
 	__default_shadow__ = Ruby2RbBool(attr);
 	return Qnil;
 }
-
-//VALUE RbFont::dm_is_exist(int argc, VALUE name)
-//{
-//	SafeStringValue(name);
-//	return C2RbBool(IsExist(Kconv::UTF8ToUnicode(RSTRING_PTR(name))));
-//}

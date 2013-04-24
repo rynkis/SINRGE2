@@ -118,7 +118,6 @@ namespace
 static const wchar_t* pDefaultConsole	= L"0";
 static const wchar_t* pDefaultScripts	= L"main.rb";
 
-
 /***
  *	全局单例静态变量定义
  */
@@ -224,8 +223,8 @@ void CApplication::BrightnessUpdate()
 
 int CApplication::Run()
 {
-	InitRuby();
 	GetRuntimeInfos();
+	InitRubyInterpreter();
 	InitRubyInnerClassExt();
 	InitExportSinInterface();
 	m_sys_timer->start(m_sys_timer);
@@ -298,7 +297,7 @@ int CApplication::RunScript()
 	return state;//ruby_cleanup(state);
 }
 
-void CApplication::InitRuby()
+void CApplication::InitRubyInterpreter()
 {
 	///<	初始化解释器
 	int		argc = 0;

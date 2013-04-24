@@ -21,8 +21,8 @@ public:
 	RbColor*		GetColorPtr() const { return m_color_ptr; }
 	HFONT			GetHFont() const { return m_hFont; }
 	bool			IsShadow() const { return RTEST(m_shadow); }
-	/*static bool		IsExist(const wchar_t *filename);
-	static VALUE	dm_is_exist(int argc, VALUE name);*/
+	static bool		IsExist(const wchar_t *filename);
+	static VALUE	dm_is_exist(int argc, VALUE name);
 
 protected:
 	virtual void	mark();
