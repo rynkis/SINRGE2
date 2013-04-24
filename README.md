@@ -15,7 +15,7 @@ SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lync
 
 第二版，Ver. YAR 是在研究了 FET、RGE2 等多个项目后开始制作的。YAR 以 HGE 作为图像底层，使用了大量的 RGE2 代码，可以说是对 RGE2 进行补完或分支版本开发。YAR，即 Yet Another RGE2。
 
-YAR，原本计划实现 NGE2 的函数。但是考虑到 Ruby 彻底面向对象的特性，使用 NGE2 的函数来开发会显得很奇怪。因此，个人决定放弃。如果有人曾对此作期待的话，那么个人在此向您道歉。
+YAR，原本计划实现 NGE2 的函数。但是考虑到 Ruby 彻底面向对象的特性，使用 NGE2 的函数来开发会显得很奇怪，最终决定放弃。如果有人曾对此作期待的话，那么在此向您道歉。
 
 
 YAR 的特性
