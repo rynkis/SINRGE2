@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Moudle Input
+*/
 #include "MRbInput.h"
 #include "RbExport.h"
 #include "sin_app.h"

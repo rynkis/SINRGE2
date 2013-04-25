@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** SINRGE2 Application
+*/
 #ifndef __SIN_APPLICATION_H__
 #define __SIN_APPLICATION_H__
 

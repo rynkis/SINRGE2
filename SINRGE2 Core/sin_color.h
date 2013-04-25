@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** SINRGE2 Color Header
+*/
 #ifndef _SIN_COLOR_H_
 #define _SIN_COLOR_H_
 

@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Bitmap
+*/
 #ifndef __CLASS_RB_BITMAP_H__
 #define __CLASS_RB_BITMAP_H__
 

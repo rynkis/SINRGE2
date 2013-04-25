@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Font
+*/
 #ifndef __RB_FONT_H__
 #define __RB_FONT_H__
 

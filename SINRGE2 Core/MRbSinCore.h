@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Moudle SINRGE2
+*/
 #ifndef __MODULE_RB_SIN_CORE_H__
 #define __MODULE_RB_SIN_CORE_H__
 

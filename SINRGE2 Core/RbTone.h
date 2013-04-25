@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Tone
+*/
 #ifndef __RB_TONE_H__
 #define __RB_TONE_H__
 

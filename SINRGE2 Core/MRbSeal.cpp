@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Su Zhang, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Moudle Seal
+*/
 #include "MRbSeal.h"
 extern "C"
 {

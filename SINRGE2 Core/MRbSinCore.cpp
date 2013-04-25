@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** Ruby Moudle SINRGE2
+*/
 #include "nge_timer.h"
 #include "MRbSinCore.h"
 #include "RbBitmap.h"
@@ -62,14 +69,12 @@ VALUE MRbSinCore::snap_to_bitmap()
 	VALUE __argv[] = {INT2FIX(2), INT2FIX(2)};
 	VALUE bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
 	RbBitmap* pRbBmp = (RbBitmap*)DATA_PTR(bitmap);
-	if (RbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
-		return bitmap;
-	else
+	if (!RbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
 	{
-		delete pRbBmp;
-		bitmap = NULL;
-		return Qnil;
+		pRbBmp = NULL;
+		bitmap = Qnil;
 	}
+	return bitmap;
 }
 
 VALUE MRbSinCore::freeze()
@@ -307,7 +312,7 @@ void MRbSinCore::InitLibrary()
 	
 	rb_define_const(rb_mSin, "SINRGE2_COPYRIGHT",		rb_str_freeze(rb_str_new2(SIN_COPYRIGHT)));
 	rb_define_const(rb_mSin, "SINRGE2_DESCRIPTION",		rb_str_freeze(rb_str_new2(SIN_DESCRIPTION)));
-	rb_define_const(rb_mSin, "SINRGE2_ENGINE",			rb_str_freeze(rb_str_new2(SIN_ENGINE)));
+	rb_define_const(rb_mSin, "SINRGE2_NAME",			rb_str_freeze(rb_str_new2(SIN_NAME)));
 	rb_define_const(rb_mSin, "SINRGE2_RELEASE_DATE",	rb_str_freeze(rb_str_new2(SIN_RELEASE_DATE)));
 	rb_define_const(rb_mSin, "SINRGE2_THANKS",			rb_str_freeze(rb_str_new2(SIN_THANKS)));
 	rb_define_const(rb_mSin, "SINRGE2_VERSION",			rb_str_freeze(rb_str_new2(SIN_VERSION)));

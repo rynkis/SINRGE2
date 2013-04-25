@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Rect
+*/
 #ifndef __RB_RECT_H__
 #define __RB_RECT_H__
 

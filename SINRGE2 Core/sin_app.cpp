@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** SINRGE2 Application
+*/
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "MRbSeal.h"

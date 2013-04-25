@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Cpp Struct RbRenderTree
+*/
 #ifndef __RB_RENDER_TREE_H__
 #define __RB_RENDER_TREE_H__
 

@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Viewport
+*/
 #ifndef __RB_VIEWPORT_H__
 #define __RB_VIEWPORT_H__
 

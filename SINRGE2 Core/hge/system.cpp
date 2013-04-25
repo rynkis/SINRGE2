@@ -516,23 +516,20 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 	if (!pTexData) return 0;
 	HTEXTURE tex = Texture_Create(nScreenWidth, height);
 	DWORD* pDesData = Texture_Lock(tex, false);
-	int v, i;
+	
 	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
 	{
-		v = ly * width;
-		i = GetAppPtr()->GetFrameWidth() * ly;
+		int tv = ly * width;
+		int ti = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
 			if (!System_PeekMessage()) GetAppPtr()->Quit();
-			GET_ARGB_8888(pTexData[v + lx], a, r, g, b);
-			pDesData[i + lx] = MAKE_ARGB_8888(255, r, g, b);
+			GET_ARGB_8888(pTexData[tv + lx], a, r, g, b);
+			pDesData[ti + lx] = MAKE_ARGB_8888(255, r, g, b);
 		}
 	}
-	/*for (int ly = 0; ly < height; ++ly)
-		memcpy(pDesData + nScreenWidth * ly, pTexData + width * ly, nScreenWidth * sizeof(DWORD));*/
 	Texture_Unlock(tex);
-	//HTEXTURE tex = Texture_Load((wchar_t*)texData, width * height * sizeof(DWORD));
 	free(pTexData);
 	return tex;
 }
@@ -755,7 +752,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** Ruby Moudle SINRGE2
+*/
 
 void MRbSinCore::Freeze()
 {

@@ -1,11 +1,10 @@
-/**
- * @file  System.cpp
- * @author Sherry Lynch (or Shy07) <Gernischt@gmail.com>
- * @date 2013/03/31 13:29:27
- *
- *  Copyright  2013  Sherry Lynch (or Shy07) <Gernischt@gmail.com>
- *
- */
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Base
+*/
 #ifndef __RB_CLASS_BASE_H__
 #define __RB_CLASS_BASE_H__
 

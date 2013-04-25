@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Tone
+*/
 #include "RbTone.h"
 #include "sin_types.h"
 #include "sin_color.h"

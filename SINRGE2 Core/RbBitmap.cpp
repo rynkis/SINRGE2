@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Bitmap
+*/
 #include "sin_color.h"
 #include "RbExport.h"
 #include "RbBitmap.h"

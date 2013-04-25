@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Plane
+*/
 #include "RbExport.h"
 #include "RbBitmap.h"
 #include "RbViewport.h"

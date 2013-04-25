@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** SINRGE2 Class Video
+*/
 #include "sin_video.h"
 #include <comdef.h>
 

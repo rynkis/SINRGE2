@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Viewport
+*/
 #include "RbViewport.h"
 #include "RbColor.h"
 #include "RbTone.h"

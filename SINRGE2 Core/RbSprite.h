@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Sprite
+*/
 #ifndef __RB_SPRITE_H__
 #define __RB_SPRITE_H__
 

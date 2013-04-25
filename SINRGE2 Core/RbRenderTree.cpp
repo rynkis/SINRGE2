@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Cpp Struct RbRenderTree
+*/
 #include "RbRenderTree.h"
 #include "RbViewport.h"
 #include "sin_app.h"

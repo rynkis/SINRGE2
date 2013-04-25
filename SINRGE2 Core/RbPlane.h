@@ -1,8 +1,14 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Syalon, Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class Plane
+*/
 #ifndef __RB_PLANE_H__
 #define __RB_PLANE_H__
 
 #include "RbDisplayObject.h"
-//#include "hge.h"
 
 class SinSprite;
 

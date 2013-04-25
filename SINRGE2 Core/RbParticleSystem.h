@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** Ruby Class PartcleSystem
+*/
 #ifndef __RB_PARTICLE_SYS_H__
 #define __RB_PARTICLE_SYS_H__
 
