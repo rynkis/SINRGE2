@@ -38,8 +38,8 @@ RbParticleSystem::RbParticleSystem()
 	memset(particles, 0, sizeof(particles));
 
 	m_pSpr = new hgeSprite(0, 0, 0, 0, 0);
-	m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_ZWRITE);
-	m_pSpr->SetTextureRect(0, 0, 32, 32, true);
+	m_pSpr->SetBlendMode(BLEND_COLORMUL | BLEND_ALPHAADD | BLEND_NOZWRITE);
+	m_pSpr->SetTextureRect(0, 0, 32, 32/*, true*/);
 	m_pSpr->SetHotSpot(16, 16);
 }
 

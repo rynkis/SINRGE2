@@ -298,13 +298,10 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
 
-	//int gray;
-
 	DWORD* pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(pBmp->quad.tex, false);
 	if (!pSrcTexData)
 		return false;
 
-	//int v;
 	for (s32 x = 0; x < pBmp->width; ++x)
 	{
 		for (s32 y = 0; y < pBmp->height; ++y)
@@ -362,8 +359,6 @@ bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE p
 
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
-
-	//int gray;
 
 	pSrcTexData = hge->Texture_Lock(pSrcBmp->quad.tex, true);
 
@@ -543,26 +538,30 @@ HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp
 	return cut;
 }
 
-void RbBitmap::BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight)
+void RbBitmap::BilinearZoom(DWORD *srcData, DWORD *desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
 {
-	long x, y, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
+	long lx, ly, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
 	
-	DWORD color11, color21, color12, color22;
+	//DWORD color11, color21, color12, color22;
 	BYTE a, r, g, b;
-	for (y = 0; y < NewHeight; y++)
+	BYTE a11, r11, g11, b11;
+	BYTE a21, r21, g21, b21;
+	BYTE a12, r12, g12, b12;
+	BYTE a22, r22, g22, b22;
+	for (ly = 0; ly < desHeight; ly++)
 	{
 		// 获取y坐标
-		ty1 = y * OldHeight / MathHeight;
+		ty1 = ly * srcHeight / mathHeight;
 		ty2 = ty1 + 1;
 		// 获取y权
-		py2 = y * OldHeight % MathHeight * 100 / MathHeight;
+		py2 = ly * srcHeight % mathHeight * 100 / mathHeight;
 		py1 = 100 - py2;
-		for (x = 0; x < NewWidth; x++)
+		for (lx = 0; lx < desWidth; lx++)
 		{
-			tx1 = x * OldWidth / MathWidth;
+			tx1 = lx * srcWidth / mathWidth;
 			tx2 = tx1 + 1;
 			// 获取x权
-			px2 = x * OldWidth % MathWidth * 100 / MathWidth;
+			px2 = lx * srcWidth % mathWidth * 100 / mathWidth;
 			px1 = 100 - px2;
 			// 获取四点颜色对应的权
 			p11 = px1 * py1;
@@ -570,16 +569,24 @@ void RbBitmap::BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, in
 			p12 = px1 * py2;
 			p22 = px2 * py2;
 			// 获取颜色
-			color11 = OldBitmap[tx1 + ty1 * OldWidth];
-			color21 = OldBitmap[tx2 + ty1 * OldWidth];
-			color12 = OldBitmap[tx1 + ty2 * OldWidth];
-			color22 = OldBitmap[tx2 + ty2 * OldWidth];
+			GET_ARGB_8888(srcData[tx1 + ty1 * srcWidth], a11, r11, g11, b11);
+			GET_ARGB_8888(srcData[tx2 + ty1 * srcWidth], a21, r21, g21, b21);
+			GET_ARGB_8888(srcData[tx1 + ty2 * srcWidth], a12, r12, g12, b12);
+			GET_ARGB_8888(srcData[tx2 + ty2 * srcWidth], a22, r22, g22, b22);
+			/*color11 = srcData[tx1 + ty1 * srcWidth];
+			color21 = srcData[tx2 + ty1 * srcWidth];
+			color12 = srcData[tx1 + ty2 * srcWidth];
+			color22 = srcData[tx2 + ty2 * srcWidth];*/
 			// 计算颜色
-			a = (GET_ARGB_A(color11) * p11 + GET_ARGB_A(color21) * p21 + GET_ARGB_A(color12) * p12 + GET_ARGB_A(color22) * p22) / 10000;
+			a = (a11 * p11 + a21 * p21 + a12 * p12 + a22 * p22) / 10000;
+			r = (r11 * p11 + r21 * p21 + r12 * p12 + r22 * p22) / 10000;
+			g = (g11 * p11 + g21 * p21 + g12 * p12 + g22 * p22) / 10000;
+			b = (b11 * p11 + b21 * p21 + b12 * p12 + b22 * p22) / 10000;
+			/*a = (GET_ARGB_A(color11) * p11 + GET_ARGB_A(color21) * p21 + GET_ARGB_A(color12) * p12 + GET_ARGB_A(color22) * p22) / 10000;
 			r = (GET_ARGB_R(color11) * p11 + GET_ARGB_R(color21) * p21 + GET_ARGB_R(color12) * p12 + GET_ARGB_R(color22) * p22) / 10000;
 			g = (GET_ARGB_G(color11) * p11 + GET_ARGB_G(color21) * p21 + GET_ARGB_G(color12) * p12 + GET_ARGB_G(color22) * p22) / 10000;
-			b = (GET_ARGB_B(color11) * p11 + GET_ARGB_B(color21) * p21 + GET_ARGB_B(color12) * p12 + GET_ARGB_B(color22) * p22) / 10000;
-			NewBitmap[x + y * NewWidth] = MAKE_ARGB_8888(a, r, g, b);
+			b = (GET_ARGB_B(color11) * p11 + GET_ARGB_B(color21) * p21 + GET_ARGB_B(color12) * p12 + GET_ARGB_B(color22) * p22) / 10000;*/
+			desData[lx + ly * desWidth] = MAKE_ARGB_8888(a, r, g, b);
 		}
 	}
 }
@@ -863,7 +870,7 @@ VALUE RbBitmap::blt(int argc, VALUE *argv, VALUE obj)
 		return Qfalse;
 	DWORD color1, color2;
 	BYTE a, r, g, b;
-	//int v;
+	
 	for (int lx = sx; lx < sx + sw; ++lx)
 	{
 		for (int ly = sy; ly < sy + sh; ++ly)
@@ -949,8 +956,8 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE *argv, VALUE obj)
 	DWORD* pSrcTexData = hge->Texture_Lock(tmpTex, true);
 	if (!pSrcTexData) return Qfalse;
 	DWORD* pTempData = (DWORD*)malloc(dw * dh * sizeof(DWORD));
-	int mathW = dw + ceil(sqrt(sqrt((double)(dw / sw))));
-	int mathH = dh + ceil(sqrt(sqrt((double)(dh / sh))));
+	int mathW = dw + ceil(sqrt(sqrt((double)dw / (double)sw)));
+	int mathH = dh + ceil(sqrt(sqrt((double)dh / (double)sh)));
 	BilinearZoom(pSrcTexData, pTempData, sw, sh, dw, dh, mathW, mathH);
 
 	DWORD* pDstTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
@@ -1200,9 +1207,8 @@ VALUE RbBitmap::draw_text(int argc, VALUE *argv, VALUE obj)
 		return Qfalse;
 
 	DWORD draw_color = m_font_ptr->GetColorPtr()->GetColor();
-	BYTE da = GET_ARGB_A(draw_color);//, dr, dg, db;
+	BYTE da = GET_ARGB_A(draw_color);
 	DWORD drgb = draw_color & 0x00FFFFFF;
-	//GET_ARGB_8888(draw_color, da, dr, dg, db);
 	if (!da)
 		return Qfalse;
 
@@ -1540,75 +1546,96 @@ VALUE RbBitmap::blur()
 {
 	check_raise();
 	
-	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-	int radius = 5;
-	double sigma = (double)radius / 3.0;
-	long width = m_bmp.width, height = m_bmp.height;
+	HGE* hge = GetAppPtr()->GetHgePtr();
+	int mathW, mathH;
 
-    double *gaussMatrix, gaussSum = 0.0, _2sigma2 = 2 * sigma * sigma;
-    s32 x, y, xx, yy, xxx, yyy;
-    double *pdbl, a, r, g, b, d;
-    DWORD *pout, *poutb;
-    pout = poutb = (DWORD*)LocalAlloc(LMEM_FIXED, width * height * sizeof(DWORD));
-    if (!pout) return Qfalse;
-    gaussMatrix = pdbl = (double *)LocalAlloc(LMEM_FIXED, (radius * 2 + 1) * (radius * 2 + 1) * sizeof(double));
-    if (!gaussMatrix)
-	{
-        LocalFree(pout);
-        return Qfalse;
-    }
-    for (y = -radius; y <= radius; y++)
-	{
-        for (x = -radius; x <= radius; x++)
-		{
-            a = exp(-(double)(x * x + y * y) / _2sigma2); 
-            *pdbl++ = a;
-            gaussSum += a;
-        }
-    }
-    pdbl = gaussMatrix;
-    for (y = -radius; y <= radius; y++)
-	{
-        for (x = -radius; x <= radius; x++)
-            *pdbl++ /= gaussSum;
-    }
-    for (y = 0; y < height; y++)
-	{
-        for (x = 0; x < width; x++)
-		{
-            a = r = g = b = 0.0;
-            pdbl = gaussMatrix;
-            for (yy = -radius; yy <= radius; yy++)
-			{
-                yyy = y + yy;
-                if (yyy >= 0 && yyy < height)
-				{
-                    for (xx = -radius; xx <= radius; xx++)
-					{
-                        xxx = x + xx;
-                        if (xxx >= 0 && xxx < width)
-						{
-                            d = *pdbl;
-                            a += d * GET_ARGB_A(pTexData[xxx + yyy * width]);
-                            r += d * GET_ARGB_R(pTexData[xxx + yyy * width]);
-                            g += d * GET_ARGB_G(pTexData[xxx + yyy * width]);
-                            b += d * GET_ARGB_B(pTexData[xxx + yyy * width]);
-                        }
-                        pdbl++;
-                    }
-                }
-				else
-				{
-                    pdbl += (radius * 2 + 1);
-                }
-            }
-			*pout++ = MAKE_ARGB_8888((BYTE)a, (BYTE)r, (BYTE)g, (BYTE)b);
-        }
-    }
-    RtlMoveMemory(pTexData, poutb, width * height * sizeof(DWORD));
-    LocalFree(gaussMatrix);
-    LocalFree(poutb);
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	// 让高斯模糊见鬼去吧，我赌五毛 RGSS 的 blur 就是这么实现的 = =b
+	DWORD* pTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
+	if (!pTexData) return Qnil;
+	double rate = 1.8;
+	int tmpWidth = (int)(m_bmp.width / rate), tmpHegiht = (int)(m_bmp.height / rate);
+	DWORD* pTmpData = (DWORD*)malloc(tmpWidth * tmpHegiht * sizeof(DWORD));
+	mathW = tmpWidth + ceil(sqrt(sqrt((double)tmpWidth / (double)m_bmp.width)));
+	mathH = tmpHegiht + ceil(sqrt(sqrt((double)tmpHegiht / (double)m_bmp.height)));
+	BilinearZoom(pTexData, pTmpData, m_bmp.width, m_bmp.height, tmpWidth, tmpHegiht, mathW, mathH);
+	mathW = m_bmp.width + ceil(sqrt(sqrt((double)m_bmp.width / (double)tmpWidth)));
+	mathH = m_bmp.height + ceil(sqrt(sqrt((double)m_bmp.height / (double)tmpHegiht)));
+	BilinearZoom(pTmpData, pTexData, tmpWidth, tmpHegiht, m_bmp.width, m_bmp.height, mathW, mathH);
+	free(pTmpData);
+	hge->Texture_Unlock(m_bmp.quad.tex);
+
+	//DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	//int radius = 5;
+	//double sigma = (double)radius / 3.0;
+	//long width = m_bmp.width, height = m_bmp.height;
+
+ //   double *gaussMatrix, gaussSum = 0.0, _2sigma2 = 2 * sigma * sigma;
+ //   s32 x, y, xx, yy, xxx, yyy;
+ //   double *pdbl, a, r, g, b, d;
+ //   DWORD *pout, *poutb;
+ //   pout = poutb = (DWORD*)malloc(/*LMEM_FIXED, */width * height * sizeof(DWORD));
+ //   if (!pout) return Qfalse;
+ //   gaussMatrix = pdbl = (double *)malloc(/*LMEM_FIXED, */(radius * 2 + 1) * (radius * 2 + 1) * sizeof(double));
+ //   if (!gaussMatrix)
+	//{
+ //       LocalFree(pout);
+ //       return Qfalse;
+ //   }
+ //   for (y = -radius; y <= radius; y++)
+	//{
+	//	s32 ysqh = y * y;
+ //       for (x = -radius; x <= radius; x++)
+	//	{
+ //           a = exp(-(double)(x * x + ysqh) / _2sigma2); 
+ //           *pdbl++ = a;
+ //           gaussSum += a;
+ //       }
+ //   }
+ //   pdbl = gaussMatrix;
+ //   for (y = -radius; y <= radius; y++)
+	//{
+ //       for (x = -radius; x <= radius; x++)
+ //           *pdbl++ /= gaussSum;
+ //   }
+ //   for (y = 0; y < height; y++)
+	//{
+ //       for (x = 0; x < width; x++)
+	//	{
+ //           a = r = g = b = 0.0;
+ //           pdbl = gaussMatrix;
+ //           for (yy = -radius; yy <= radius; yy++)
+	//		{
+ //               yyy = y + yy;
+ //               if (yyy >= 0 && yyy < height)
+	//			{
+ //                   for (xx = -radius; xx <= radius; xx++)
+	//				{
+ //                       xxx = x + xx;
+ //                       if (xxx >= 0 && xxx < width)
+	//					{
+ //                           d = *pdbl;
+	//						BYTE sa, sr, sg, sb;
+	//						GET_ARGB_8888(pTexData[xxx + yyy * width], sa, sr, sg, sb);
+ //                           a += d * sa;
+ //                           r += d * sr;
+ //                           g += d * sg;
+ //                           b += d * sb;
+ //                       }
+ //                       pdbl++;
+ //                   }
+ //               }
+	//			else
+	//			{
+ //                   pdbl += (radius * 2 + 1);
+ //               }
+ //           }
+	//		*pout++ = MAKE_ARGB_8888((BYTE)a, (BYTE)r, (BYTE)g, (BYTE)b);
+ //       }
+ //   }
+ //   RtlMoveMemory(pTexData, poutb, width * height * sizeof(DWORD));
+ //   free(gaussMatrix);
+ //   free(poutb);
+	//GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
     
 	//	增加 修改计数值
 	++m_modify_count;
@@ -1724,15 +1751,31 @@ VALUE RbBitmap::radial_blur(VALUE angle, VALUE division)
 {
 	check_raise();
 	
-	s32 width = m_bmp.width;
+#pragma message("		Unfinished Function " __FUNCTION__)
+	/*SafeFixnumValue(angle);
+	SafeFixnumValue(division);
+	
+	int agl = FIX2INT(angle);
+	agl = SinBound(agl, 0, 360);
+	int div = FIX2INT(division);
+	div = SinBound(div, 2, 100);
+	
+	float aglRate = (float)agl / div;
+	float alRate = 255.0f / div;
+	
+	HGE* hge = GetAppPtr()->GetHgePtr();
+	
+	float alpha = 0, rot = 0;*/
+
+	
+	/*s32 width = m_bmp.width;
 	s32 height = m_bmp.height;
 	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 	DWORD* pTempData = (DWORD*)malloc(width * height * sizeof(DWORD));
 
-#pragma message("		Unfinished Function " __FUNCTION__)
 	
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-	free(pTempData);
+	free(pTempData);*/
 	//	增加 修改计数值
 	++m_modify_count;
 

@@ -117,8 +117,8 @@ public:
 	static bool					RenderProc();
 
 public:
-	static void					ViewportAddToFront(RbRenderNode* node);
-	static void					ViewportDelete(RbRenderNode* node);
+	/*static void					ViewportAddToFront(RbRenderNode* node);
+	static void					ViewportDelete(RbRenderNode* node);*/
 
 	static RbRenderNode*		AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport);
 
@@ -135,7 +135,7 @@ private:
 private:
 	static RbRenderNode*		s_pRenderHead;
 	static RbRenderNode*		s_pRenderTail;
-	static RbRenderNode*		s_pViewportLists;
+	//static RbRenderNode*		s_pViewportLists;
 };
 
 #endif	//	__RB_RENDER_TREE_H__

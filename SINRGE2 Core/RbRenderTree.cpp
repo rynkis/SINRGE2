@@ -11,7 +11,7 @@
 
 HGE* RbRenderState::s_pHge = 0;
 
-RbRenderNode*	RbRenderTree::s_pViewportLists	= 0;
+//RbRenderNode*	RbRenderTree::s_pViewportLists	= 0;
 RbRenderNode*	RbRenderTree::s_pRenderHead		= 0;
 RbRenderNode*	RbRenderTree::s_pRenderTail		= 0;
 
@@ -29,10 +29,10 @@ bool RbRenderTree::RenderProc()
 
 	RbRenderNode*	p1;
 
-	for (p1 = s_pViewportLists; p1; p1 = p1->next)
+	/*for (p1 = s_pViewportLists; p1; p1 = p1->next)
 	{
 		p1->renderproc(p1->value, p1->id);
-	}
+	}*/
 
 	HGE* pHGE = GetAppPtr()->GetHgePtr();
 
@@ -52,15 +52,15 @@ bool RbRenderTree::RenderProc()
 	return false;
 }
 
-void RbRenderTree::ViewportAddToFront(RbRenderNode* node)
-{
-	s_pViewportLists = DoubleLinkAddToFront(s_pViewportLists, node);
-}
-
-void RbRenderTree::ViewportDelete(RbRenderNode* node)
-{
-	s_pViewportLists = DoubleLinkDelete(s_pViewportLists, node);
-}
+//void RbRenderTree::ViewportAddToFront(RbRenderNode* node)
+//{
+//	s_pViewportLists = DoubleLinkAddToFront(s_pViewportLists, node);
+//}
+//
+//void RbRenderTree::ViewportDelete(RbRenderNode* node)
+//{
+//	s_pViewportLists = DoubleLinkDelete(s_pViewportLists, node);
+//}
 
 RbRenderNode*	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
 {

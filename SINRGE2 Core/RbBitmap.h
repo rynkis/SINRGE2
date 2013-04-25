@@ -35,7 +35,7 @@ public:
 
 	static bitmap_p			CloneBitmap(bitmap_p pBmp);
 	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
-	static void				BilinearZoom(DWORD *OldBitmap, DWORD *NewBitmap, int OldWidth, int OldHeight, int NewWidth, int NewHeight, int MathWidth, int MathHeight);
+	static void				BilinearZoom(DWORD *srcData, DWORD *desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight);
 	
 	static bool				ScreenToBitmap(bitmap_p pBmp);
 

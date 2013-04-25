@@ -508,19 +508,15 @@ bool CApplication::InitVideo()
 			isFullScreen = true;
 		else
 		{
-			isFullScreen = int(m_frm_struct.m_screen_width) >= GetSystemMetrics(SM_CXSCREEN) && 
-				int(m_frm_struct.m_screen_height) >= GetSystemMetrics(SM_CYSCREEN);
+			isFullScreen = m_frm_struct.m_screen_width >= GetSystemMetrics(SM_CXSCREEN) && 
+				m_frm_struct.m_screen_height >= GetSystemMetrics(SM_CYSCREEN);
 		}
 	}
-	 //Set the window title
 	m_pHge->System_SetState(HGE_TITLE, m_frm_struct.m_title);
-	// Set our frame's width
 	m_pHge->System_SetState(HGE_SCREENWIDTH, m_frm_struct.m_screen_width);
-	// Set our frame's height
 	m_pHge->System_SetState(HGE_SCREENHEIGHT, m_frm_struct.m_screen_height);
-	// Run in windowed mode, Default window size is 800x600
+	m_pHge->System_SetState(HGE_SCREENBPP, 32);
  	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
-	// Set default FPS
 	m_pHge->System_SetState(HGE_FPS, 60);
 	
 	if(!m_pHge->System_Initiate())

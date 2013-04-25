@@ -277,10 +277,6 @@ public:
 	virtual int				CALL	Random_Int(int min, int max) = 0;
 	virtual float			CALL	Random_Float(float min, float max) = 0;
 
-	/*virtual float			CALL	Timer_GetTime() = 0;
-	virtual float			CALL	Timer_GetDelta() = 0;
-	virtual int				CALL	Timer_GetFPS() = 0;*/
-
 	virtual bool			CALL	Gfx_BeginScene(HTARGET target=0) = 0;
 	virtual void			CALL	Gfx_EndScene() = 0;
 	virtual void			CALL	Gfx_Clear(DWORD color) = 0;
