@@ -6,6 +6,7 @@
 ** Ruby Class Win32API
 */
 #include "RbWin32API.h"
+#include "sin_types.h"
 
 VALUE rb_cWin32API;
 
@@ -154,9 +155,9 @@ VALUE RbWin32API::initialize(int argc, VALUE *argv, VALUE obj)
 			rb_raise(rb_eSinError, "GetProcAddress: %s or %s\n", RSTRING_PTR(proc), RSTRING_PTR(str));
 		}
 	}
-	rb_iv_set(obj, "__dll__", rb_uint2inum((unsigned long)m_hDll));
-	rb_iv_set(obj, "__dllname__", dllname);
-	rb_iv_set(obj, "__proc__", rb_uint2inum((unsigned long)hproc));
+	rb_iv_set(obj, "__dll__",		rb_uint2inum((u32)m_hDll));
+	rb_iv_set(obj, "__dllname__",	dllname);
+	rb_iv_set(obj, "__proc__",		rb_uint2inum((u32)hproc));
 
 	VALUE ary_import = SinParseImportArgs(_import);
 	if (16 < RARRAY_LEN(ary_import))
@@ -174,7 +175,7 @@ VALUE RbWin32API::call(int argc, VALUE* argv, VALUE obj)
 {
 	struct 
 	{
-		unsigned long params[16];
+		u32 params[16];
 	} param;
 
 	VALUE obj_proc		= rb_iv_get(obj, "__proc__");
@@ -192,7 +193,7 @@ VALUE RbWin32API::call(int argc, VALUE* argv, VALUE obj)
 
 	for (int i = 0; i < nimport; ++i) 
 	{
-		unsigned long lParam = 0;
+		u32 lParam = 0;
 		switch (FIX2INT(rb_ary_entry(obj_import, i))) 
 		{
 			VALUE str;
@@ -215,14 +216,14 @@ VALUE RbWin32API::call(int argc, VALUE* argv, VALUE obj)
 			{
 				rb_string_value(&str);
 				rb_str_modify(str);
-				lParam = (unsigned long)rb_string_value_ptr(&str);
+				lParam = (u32)rb_string_value_ptr(&str);
 			}
 			break;
 		}
 		param.params[i] = lParam;
 	}
 
-	unsigned long retval;
+	u32 retval;
 
 	__try
 	{
