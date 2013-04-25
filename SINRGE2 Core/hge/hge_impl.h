@@ -48,16 +48,6 @@ struct CResourceList
 	CResourceList*		next;
 };
 
-//struct CInputEventList
-//{
-//	hgeInputEvent		event;
-//	CInputEventList*	next;
-//};
-
-//void DInit();
-//void DDone();
-//bool DFrame();
-
 /*
 ** HGE Interface implementation
 */
@@ -69,9 +59,11 @@ public:
 	virtual bool			CALL	System_Initiate();
 	virtual void			CALL	System_Shutdown();
 	virtual bool			CALL	System_Start();
+	// +++SINRGE2+++
 	virtual bool			CALL	System_Update();
 	virtual bool			CALL	System_PeekMessage();
 	virtual void			CALL	System_Resize(int width, int height);
+	// +++SINRGE2+++
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
 	virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
@@ -102,22 +94,6 @@ public:
 	virtual void			CALL	Random_Seed(int seed=0);
 	virtual int				CALL	Random_Int(int min, int max);
 	virtual float			CALL	Random_Float(float min, float max);
-
-	/*virtual float			CALL	Timer_GetTime();
-	virtual float			CALL	Timer_GetDelta();
-	virtual int				CALL	Timer_GetFPS();*/
-
-	/*virtual void		CALL	Input_GetMousePos(float *x, float *y);
-	virtual void		CALL	Input_SetMousePos(float x, float y);
-	virtual int			CALL	Input_GetMouseWheel();
-	virtual bool		CALL	Input_IsMouseOver();
-	virtual bool		CALL	Input_KeyDown(int key);
-	virtual bool		CALL	Input_KeyUp(int key);
-	virtual bool		CALL	Input_GetKeyState(int key);
-	virtual char*		CALL	Input_GetKeyName(int key);
-	virtual int			CALL	Input_GetKey();
-	virtual int			CALL	Input_GetChar();
-	virtual bool		CALL	Input_GetEvent(hgeInputEvent *event);*/
 
 	virtual bool			CALL	Gfx_BeginScene(HTARGET target=0);
 	virtual void			CALL	Gfx_EndScene();
@@ -234,34 +210,9 @@ public:
 	void				_SetProjectionMatrix(int width, int height);
 	
 
-	// Input
-	/*int					VKey;
-	int					Char;
-	int					Zpos;
-	float				Xpos;
-	float				Ypos;
-	bool				bMouseOver;
-	bool				bCaptured;
-	char				keyz[256];
-	CInputEventList*	queue;
-	void				_UpdateMouse();*/
-	//void				_InputInit();
-	//void				_ClearQueue();
-	//void				_BuildEvent(int type, int key, int scan, int flags, int x, int y);
-
-
 	// Resources
 	wchar_t				szTmpFilename[_MAX_PATH];
 
-
-	// Timer
-	/*float				fTime;
-	float				fDeltaTime;
-	DWORD				nFixedDelta;
-	int					nFPS;
-	DWORD				t0, t0fps, dt;
-	int					cfps;*/
-	
 	//	+++SINRGE2+++
 	wchar_t				szTitleFps[MAX_PATH];
 	int					mouseButton;

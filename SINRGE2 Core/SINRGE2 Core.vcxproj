@@ -133,6 +133,7 @@
     <ClCompile Include="RbRenderTree.cpp" />
     <ClCompile Include="sin_app.cpp" />
     <ClCompile Include="sin_video.cpp" />
+    <ClCompile Include="RbWin32API.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Contrib\include\ruby.h" />
@@ -213,6 +214,7 @@
     <ClInclude Include="sin_common.h" />
     <ClInclude Include="sin_types.h" />
     <ClInclude Include="sin_video.h" />
+    <ClInclude Include="RbWin32API.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SINRGE2.def" />

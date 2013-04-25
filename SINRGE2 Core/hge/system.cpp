@@ -19,7 +19,7 @@
 #define HIWORDINT(n) ((int)((signed short)(HIWORD(n))))
 
 
-const wchar_t *WINDOW_CLASS_NAME = L"SINRGE2_WNDCLASS";
+const wchar_t *WINDOW_CLASS_NAME = L"SINRGE2_WNDCLASS";		// SINRGE2
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -579,9 +579,6 @@ HGE_Impl::HGE_Impl()
 	textures=0;
 
 	nHGEFPS=HGEFPS_UNLIMITED;
-	/*fTime=0.0f;
-	fDeltaTime=0.0f;
-	nFPS=0;*/
 	
 	procRenderFunc=0;
 	procFocusLostFunc=0;
@@ -598,7 +595,6 @@ HGE_Impl::HGE_Impl()
 	szLogFile[0]=0;
 	szIniFile[0]=0;
 	
-	//nFixedDelta=0;
 	bHideMouse=true;
 	bDontSuspend=false;
 	hwndParent=0;

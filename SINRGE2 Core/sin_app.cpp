@@ -18,6 +18,7 @@
 #include "RbSprite.h"
 #include "RbTable.h"
 #include "RbParticleSystem.h"
+#include "RbWin32API.h"
 #include "sin_app.h"
 #include "sin_video.h"
 
@@ -443,6 +444,7 @@ void CApplication::InitExportSinInterface()
 	RbSprite::InitLibrary();
 	RbTable::InitLibrary();
 	RbParticleSystem::InitLibrary();
+	RbWin32API::InitLibrary();
 		
 	rb_define_module_function(rb_mSin, "load_data",	RbFunc(load_data), 1);
 }

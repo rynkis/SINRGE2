@@ -150,6 +150,9 @@
     <ClCompile Include="Entry.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="RbWin32API.cpp">
+      <Filter>源文件\RubyExt</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="MRbSeal.h">
       <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="RbWin32API.h">
+      <Filter>源文件\RubyExt</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
