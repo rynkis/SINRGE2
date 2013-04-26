@@ -52,26 +52,26 @@ VALUE DisplayObject::is_disposed()
 
 VALUE DisplayObject::get_x()
 {
-	return rb_float_new(m_x);
+	return INT2FIX((int)m_x);
 }
 
 VALUE DisplayObject::set_x(VALUE x)
 {
 	SafeNumericValue(x);
-	m_x = NUM2FLOAT(x);
-	return Qnil;
+	m_x = (float)NUM2INT(x);
+	return x;
 }
 
 VALUE DisplayObject::get_y()
 {
-	return rb_float_new(m_y);
+	return INT2FIX((int)m_y);
 }
 
 VALUE DisplayObject::set_y(VALUE y)
 {
 	SafeNumericValue(y);
-	m_y = NUM2FLOAT(y);
-	return Qnil;
+	m_y = (float)NUM2INT(y);
+	return y;
 }
 
 VALUE DisplayObject::get_z()
@@ -86,26 +86,26 @@ VALUE DisplayObject::set_z(VALUE z)
 
 VALUE DisplayObject::get_ox()
 {
-	return rb_float_new(m_ox);
+	return INT2FIX((int)m_ox);
 }
 
 VALUE DisplayObject::set_ox(VALUE ox)
 {
 	SafeNumericValue(ox);
-	m_ox = NUM2FLOAT(ox);
-	return Qnil;
+	m_ox = (float)NUM2INT(ox);
+	return ox;
 }
 
 VALUE DisplayObject::get_oy()
 {
-	return rb_float_new(m_oy);
+	return INT2FIX((int)m_oy);
 }
 
 VALUE DisplayObject::set_oy(VALUE oy)
 {
 	SafeNumericValue(oy);
-	m_oy = NUM2FLOAT(oy);
-	return Qnil;
+	m_oy = (float)NUM2INT(oy);
+	return oy;
 }
 
 VALUE DisplayObject::get_visible()

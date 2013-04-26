@@ -46,4 +46,6 @@ int GetRealFps();
 
 void LimitFps(uint32_t limit);
 
+double GetTimeDelta();
+
 #endif

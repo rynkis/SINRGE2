@@ -53,8 +53,14 @@ protected:
 	RbRect*				m_rect_ptr;
 	RbColor*			m_color_ptr;
 	RbTone*				m_tone_ptr;
+	
+protected:
+	void				check_raise();
 
 protected:
+	dm_method(dispose)
+	dm_method(is_disposed)
+
 	dm_method(update)
 	dm_method02(flash)
 	attr_accessor(rect)

@@ -9,6 +9,7 @@
 #include "RbColor.h"
 #include "RbTone.h"
 #include "RbRect.h"
+#include "sin_color.h"
 #include "sin_app.h"
 
 VALUE rb_cViewport;
@@ -225,13 +226,37 @@ void RbViewport::render(u32 id)
 	}
 }
 
+VALUE RbViewport::dispose()
+{
+	if (m_disposed)
+		return Qnil;
+
+	m_disposed = true;
+	return Qnil;
+}
+
+VALUE RbViewport::is_disposed()
+{
+	return C2RbBool(m_disposed);
+}
+
+void RbViewport::check_raise()
+{
+	if (m_disposed)
+		rb_raise(rb_eSinError, "disposed viewport");
+}
+
 VALUE RbViewport::get_rect()
 {
+	check_raise();
+
 	return ReturnObject(m_rect_ptr);
 }
 
 VALUE RbViewport::set_rect(VALUE rect)
 {
+	check_raise();
+
 	SafeRectValue(rect);
 	m_rect_ptr = GetObjectPtr<RbRect>(rect);
 	return rect;
@@ -239,11 +264,13 @@ VALUE RbViewport::set_rect(VALUE rect)
 
 VALUE RbViewport::get_color()
 {
+	check_raise();
 	return ReturnObject(m_color_ptr);
 }
 
 VALUE RbViewport::set_color(VALUE color)
 {
+	check_raise();
 	SafeColorValue(color);
 	m_color_ptr = GetObjectPtr<RbColor>(color);
 	return color;
@@ -251,11 +278,13 @@ VALUE RbViewport::set_color(VALUE color)
 
 VALUE RbViewport::get_tone()
 {
+	check_raise();
 	return ReturnObject(m_tone_ptr);
 }
 
 VALUE RbViewport::set_tone(VALUE tone)
 {
+	check_raise();
 	SafeToneValue(tone);
 	m_tone_ptr = GetObjectPtr<RbTone>(tone);
 	return tone;
@@ -263,11 +292,13 @@ VALUE RbViewport::set_tone(VALUE tone)
 
 VALUE RbViewport::get_z()
 {
+	check_raise();
 	return INT2FIX(m_z);
 }
 
 VALUE RbViewport::set_z(VALUE z)
 {
+	check_raise();
 	SafeFixnumValue(z);
 
 	if (m_z != FIX2INT(z))
@@ -282,14 +313,29 @@ VALUE RbViewport::set_z(VALUE z)
 
 VALUE RbViewport::update()
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+	if (m_flash_duration)
+	{
+		BYTE a, r, g, b;
 
+		GET_ARGB_8888(m_flash_color, a, r, g, b);
+		a += m_flash_reduce_count_per_frame;
+		m_flash_color = MAKE_ARGB_8888(a, r, g, b);
+	}
 	return Qnil;
 }
 
 VALUE RbViewport::flash(VALUE color, VALUE duration)
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+	SafeColorValue(color);
+	SafeFixnumValue(duration);
+
+	RbColor* color_ptr = GetObjectPtr<RbColor>(color);
+	m_flash_color = color_ptr->GetColor();
+	m_flash_duration = FIX2INT(duration);
+	m_flash_reduce_count_per_frame = (int)(255.0f / m_flash_duration);
+	color_ptr = NULL;
 
 	return Qnil;
 }
@@ -297,8 +343,12 @@ VALUE RbViewport::flash(VALUE color, VALUE duration)
 /*
  *	以下定义ruby方法
  */
+imp_method(RbViewport, dispose)
+imp_method(RbViewport, is_disposed)
+
 imp_method(RbViewport, update)
 imp_method02(RbViewport, flash)
+
 imp_attr_accessor(RbViewport, rect)
 imp_attr_accessor(RbViewport, color)
 imp_attr_accessor(RbViewport, tone)

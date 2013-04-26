@@ -306,6 +306,11 @@ VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 	return forbid_switch;
 }
 
+VALUE MRbSinCore::get_timer_delta()
+{
+	return DBL2NUM(GetTimeDelta());
+}
+
 void MRbSinCore::InitLibrary()
 {
 	rb_mSin = rb_define_module("SINRGE2");
@@ -362,5 +367,6 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
 	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
 
+	rb_define_module_function(rb_mSin, "get_timer_delta", RbFunc(get_timer_delta), 0);
 	rb_define_module_function(rb_mSin, "game_stop", RbFunc(stop), 0);
 }

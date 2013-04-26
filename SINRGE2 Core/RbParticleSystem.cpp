@@ -28,7 +28,6 @@ RbParticleSystem::RbParticleSystem()
 
 	, m_ref_bitmap_modify_count(0)
 	, m_bitmap_ptr(0)
-	, mlast(0)
 	, m_blend_type(0)
 {
 	memset(&info, 0, sizeof(info));
@@ -156,8 +155,8 @@ VALUE RbParticleSystem::update()
 {
 	check_raise();
 
-	float fDeltaTime = (float)((GetAppPtr()->GetTick() - mlast) / 1000.0);
-	mlast = GetAppPtr()->GetTick();
+	float fDeltaTime = (float)GetTimeDelta();
+	
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	int i;

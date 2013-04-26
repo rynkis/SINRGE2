@@ -376,22 +376,37 @@ VALUE RbSprite::update()
 		GetVideoMgr()->UpdateMovieTexture(pTexData);
 		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_bitmap_ptr->SetModifyCount();
-		return Qnil;
+		//return Qnil;
 	}
-	return Qfalse;
+	if (m_flash_duration)
+	{
+		BYTE a, r, g, b;
+
+		GET_ARGB_8888(m_flash_color, a, r, g, b);
+		a += m_flash_reduce_count_per_frame;
+		m_flash_color = MAKE_ARGB_8888(a, r, g, b);
+	}
+	return Qnil;
 }
 
 VALUE RbSprite::flash(VALUE color, VALUE duration)
 {
-#pragma message("		Unfinished Function " __FUNCTION__)
+	check_raise();
+	SafeColorValue(color);
+	SafeFixnumValue(duration);
+
+	RbColor* color_ptr = GetObjectPtr<RbColor>(color);
+	m_flash_color = color_ptr->GetColor();
+	m_flash_duration = FIX2INT(duration);
+	m_flash_reduce_count_per_frame = (int)(255.0f / m_flash_duration);
+	color_ptr = NULL;
 
 	return Qnil;
 }
 
 VALUE RbSprite::set_bitmap(VALUE bitmap)
 {
-	if (m_disposed)
-		return Qnil;
+	check_raise();
 
 	// 设置位图修改计数值为-1
 	m_ref_bitmap_modify_count = -1;
@@ -421,6 +436,7 @@ VALUE RbSprite::set_bitmap(VALUE bitmap)
 
 VALUE RbSprite::set_ox(VALUE ox)
 {
+	check_raise();
 	super::set_ox(ox);
 
 	m_pSpr->SetOX(m_ox);
@@ -431,6 +447,7 @@ VALUE RbSprite::set_ox(VALUE ox)
 
 VALUE RbSprite::set_oy(VALUE oy)
 {
+	check_raise();
 	super::set_oy(oy);
 
 	m_pSpr->SetOY(m_oy);
@@ -441,11 +458,13 @@ VALUE RbSprite::set_oy(VALUE oy)
 
 VALUE RbSprite::get_src_rect()
 {
+	check_raise();
 	return ReturnObject(m_src_rect_ptr);
 }
 
 VALUE RbSprite::set_src_rect(VALUE src_rect)
 {
+	check_raise();
 	SafeRectValue(src_rect);
 	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
 	return Qnil;
@@ -453,16 +472,18 @@ VALUE RbSprite::set_src_rect(VALUE src_rect)
 
 VALUE RbSprite::get_angle()
 {
+	check_raise();
 	return m_angle_rad;
 }
 
 VALUE RbSprite::set_angle(VALUE angle)
 {
-	SafeNumericValue(angle);
+	check_raise();
+	SafeFixnumValue(angle);
 
 	m_angle_rad = angle;
 
-	m_angle = SinDeg2Rad(360.0f - NUM2INT(angle));
+	m_angle = SinDeg2Rad(360.0f - FIX2INT(angle));
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
 
@@ -471,11 +492,13 @@ VALUE RbSprite::set_angle(VALUE angle)
 
 VALUE RbSprite::get_mirror()
 {
+	check_raise();
 	return m_mirror;
 }
 
 VALUE RbSprite::set_mirror(VALUE mirror)
 {
+	check_raise();
 	m_mirror = Ruby2RbBool(mirror);
 
 	m_pSpr->SetFlip(RTEST(m_mirror), m_pSpr->IsFlipY(), true);
@@ -484,21 +507,25 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 
 VALUE RbSprite::get_width()
 {
+	check_raise();
 	return LONG2FIX(m_src_rect_ptr->width);
 }
 
 VALUE RbSprite::get_height()
 {
+	check_raise();
 	return LONG2FIX(m_src_rect_ptr->height);
 }
 
 VALUE RbSprite::get_bush_depth()
 {
+	check_raise();
 	return m_bush_depth;
 }
 
 VALUE RbSprite::set_bush_depth(VALUE bush_depth)
 {
+	check_raise();
 	SafeFixnumValue(bush_depth);
 
 	m_bush_depth = bush_depth;
@@ -508,11 +535,13 @@ VALUE RbSprite::set_bush_depth(VALUE bush_depth)
 
 VALUE RbSprite::get_bush_opacity()
 {
+	check_raise();
 	return INT2FIX(m_bush_opacity);
 }
 
 VALUE RbSprite::set_bush_opacity(VALUE bush_opacity)
 {
+	check_raise();
 	SafeFixnumValue(bush_opacity);
 
 	m_bush_opacity = FIX2INT(bush_opacity);

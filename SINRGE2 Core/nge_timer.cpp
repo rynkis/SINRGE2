@@ -20,6 +20,8 @@ static uint8_t tex_ret = 0;
 static nge_timer* fps_timer;
 static int lastFps;
 
+static int mlast = 0;
+
 int GetRealFps()
 {
 	static int t, realFps;
@@ -68,6 +70,19 @@ void LimitFps(uint32_t limit)
 		frame_count = 0;
 		last_ticks = fps_timer->get_ticks(fps_timer);
 	}
+}
+
+double GetTimeDelta()
+{
+	if (fps_timer == NULL)
+		return 0;
+		
+	double fDeltaTime = (fps_timer->get_ticks(fps_timer) - mlast) / 1000.0;
+	mlast = fps_timer->get_ticks(fps_timer);
+
+	if (fDeltaTime > 1.0) fDeltaTime = 0.0;
+
+	return fDeltaTime;
 }
 
 nge_timer* nge_timer_create()

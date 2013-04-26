@@ -43,6 +43,8 @@ SinSprite::SinSprite()
 
 void SinSprite::Render(float x, float y)
 {
+	if (m_zoom_x == 0 || m_zoom_y == 0) return;
+
 	quad.v[0].x = m_x1 + x; quad.v[0].y = m_y1 + y;
 	quad.v[1].x = m_x2 + x; quad.v[1].y = m_y2 + y;
 	quad.v[2].x = m_x3 + x; quad.v[2].y = m_y3 + y;
@@ -213,6 +215,7 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 	quad.v[3].tx=tx1; quad.v[3].ty=ty2;
 
 	//if(m_zoom_y==0) m_zoom_y=m_zoom_x;
+	if (m_zoom_y==0) return;
 
 	tx1 = -m_ox * m_zoom_x * m_flip_x;
 	ty1 = -m_oy * m_zoom_y * m_flip_y;

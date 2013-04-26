@@ -49,7 +49,6 @@ protected:
 	
 	s32						m_ref_bitmap_modify_count;
 	
-	int						mlast;
 	int						m_blend_type;
 
 	hgeParticleSystemInfo	info;

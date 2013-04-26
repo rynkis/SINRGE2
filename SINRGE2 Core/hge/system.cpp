@@ -133,7 +133,7 @@ bool CALL HGE_Impl::System_Initiate()
 	}*/
 
 	if (bWindowed)
-		hwnd = CreateWindowEx(WS_EX_WINDOWEDGE, WINDOW_CLASS_NAME, szWinTitle, styleW,
+		hwnd = CreateWindowExW(0, WINDOW_CLASS_NAME, szWinTitle, styleW,
 				rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top,
 				NULL, NULL, hInstance, NULL);
 	else
@@ -850,7 +850,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 						r2 = GET_ARGB_R(pMidTexData[tempW1 + lx]);
 						if ((BYTE)gray < r2)
 						{
-							// 透明度数值，这算法我自己都不知道如何吐槽了 = =
+							// 计算透明度，这算法我自己都不知道如何吐槽了 = =b
 							a2 = 255.0 - 255.0 / vague * (r2 - gray);
 							if (vague < 24) a2 += (12 + rate * rate) * (16 - vague);
 							else a2 += 12 + rate * rate;

@@ -363,16 +363,21 @@ VALUE RbPlane::is_disposed()
 	return C2RbBool(m_disposed);
 }
 
+void RbPlane::check_raise()
+{
+	if (m_disposed)
+		rb_raise(rb_eSinError, "disposed plane");
+}
 
 VALUE RbPlane::get_bitmap()
 {
+	check_raise();
 	return ReturnObject(m_bitmap_ptr);
 }
 
 VALUE RbPlane::set_bitmap(VALUE bitmap)
 {
-	if (m_disposed)	
-		return Qnil;
+	check_raise();
 
 	// 设置位图修改计数值为-1
 	m_ref_bitmap_modify_count = -1;
@@ -396,11 +401,13 @@ VALUE RbPlane::set_bitmap(VALUE bitmap)
 
 VALUE RbPlane::get_zoom_x()
 {
+	check_raise();
 	return rb_float_new(m_pSpr->GetZoomX());
 }
 
 VALUE RbPlane::set_zoom_x(VALUE zoom_x)
 {
+	check_raise();
 	SafeNumericValue(zoom_x);
 
 	m_pSpr->SetZoomX((float)NUM2DBL(zoom_x));
@@ -411,11 +418,13 @@ VALUE RbPlane::set_zoom_x(VALUE zoom_x)
 
 VALUE RbPlane::get_zoom_y()
 {
+	check_raise();
 	return rb_float_new(m_pSpr->GetZoomY());
 }
 
 VALUE RbPlane::set_zoom_y(VALUE zoom_y)
 {
+	check_raise();
 	SafeNumericValue(zoom_y);
 
 	m_pSpr->SetZoomY((float)NUM2DBL(zoom_y));
@@ -426,11 +435,13 @@ VALUE RbPlane::set_zoom_y(VALUE zoom_y)
 
 VALUE RbPlane::get_opacity()
 {
+	check_raise();
 	return INT2FIX(m_opacity);
 }
 
 VALUE RbPlane::set_opacity(VALUE opacity)
 {
+	check_raise();
 	SafeFixnumValue(opacity);
 
 	m_opacity = FIX2INT(opacity);
@@ -441,11 +452,13 @@ VALUE RbPlane::set_opacity(VALUE opacity)
 
 VALUE RbPlane::get_blend_type()
 {
+	check_raise();
 	return INT2FIX(m_blend_type);
 }
 
 VALUE RbPlane::set_blend_type(VALUE blend_type)
 {
+	check_raise();
 	SafeFixnumValue(blend_type);
 	m_blend_type = FIX2INT(blend_type);
 	return blend_type;
@@ -453,11 +466,13 @@ VALUE RbPlane::set_blend_type(VALUE blend_type)
 
 VALUE RbPlane::get_color()
 {
+	check_raise();
 	return ReturnObject(m_color_ptr);
 }
 
 VALUE RbPlane::set_color(VALUE color)
 {
+	check_raise();
 	SafeColorValue(color);
 	m_color_ptr = GetObjectPtr<RbColor>(color);
 	return color;
@@ -465,11 +480,13 @@ VALUE RbPlane::set_color(VALUE color)
 
 VALUE RbPlane::get_tone()
 {
+	check_raise();
 	return ReturnObject(m_tone_ptr);
 }
 
 VALUE RbPlane::set_tone(VALUE tone)
 {
+	check_raise();
 	SafeToneValue(tone);
 	m_tone_ptr = GetObjectPtr<RbTone>(tone);
 	return tone;
@@ -477,11 +494,13 @@ VALUE RbPlane::set_tone(VALUE tone)
 
 VALUE RbPlane::get_z()
 {
+	check_raise();
 	return INT2FIX(m_z);
 }
 
 VALUE RbPlane::set_z(VALUE z)
 {
+	check_raise();
 	SafeFixnumValue(z);
 
 	if (m_z != FIX2INT(z))
@@ -496,6 +515,7 @@ VALUE RbPlane::set_z(VALUE z)
 
 VALUE RbPlane::set_viewport(VALUE viewport)
 {
+	check_raise();
 	if (NIL_P(viewport))
 	{
 		m_viewport_ptr = 0;

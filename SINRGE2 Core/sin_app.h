@@ -61,7 +61,7 @@ public:
 
 	//void						SetBrightness(int brightness) { m_brightness = brightness; };
 
-	u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
+	//u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
 
 private:
 	void						ShowError(const wchar_t* szFormat, ...);
@@ -98,7 +98,7 @@ private:
 	IDirect3DDevice8*			m_ref_device;
 	D3DCAPS8					m_d3d_caps;
 
-	nge_timer*					m_sys_timer;
+	//nge_timer*					m_sys_timer;
 
 	hgeQuad						m_quad;
 	int							m_brightness;

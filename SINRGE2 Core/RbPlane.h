@@ -61,6 +61,9 @@ protected:
 	RbBitmap*		m_bitmap_ptr;
 	RbColor*		m_color_ptr;
 	RbTone*			m_tone_ptr;
+	
+protected:
+	void			check_raise();
 
 protected:
 	dm_method(dispose)

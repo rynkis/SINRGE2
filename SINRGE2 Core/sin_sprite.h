@@ -86,7 +86,7 @@ protected:
 	//	精灵当前的src_rect
 	int			m_rx, m_ry, m_rw, m_rh;
 
-	//	精灵src_rect的藏标记
+	//	精灵src_rect的脏标记
 	bool		m_src_rect_dirty;
 
 	//	精灵经过选择缩放后的四个顶点的坐标(不包括偏移)

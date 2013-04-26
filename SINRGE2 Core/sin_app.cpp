@@ -154,7 +154,7 @@ CApplication::CApplication()
 	szIniPath[0] = 0;
 	szScripts[0] = 0;
 	memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
-	m_sys_timer = nge_timer_create();
+	//m_sys_timer = nge_timer_create();
 	
 	m_quad.v[0].z = 
 	m_quad.v[1].z = 
@@ -235,7 +235,7 @@ int CApplication::Run()
 	InitRubyInterpreter();
 	InitRubyInnerClassExt();
 	InitExportSinInterface();
-	m_sys_timer->start(m_sys_timer);
+	//m_sys_timer->start(m_sys_timer);
     return RunScript();
 }
 
@@ -495,6 +495,7 @@ bool CApplication::InitVideo()
 {
 	m_pHge = hgeCreate(HGE_VERSION);
 	// Set our render proc
+	//m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, LostFocusProc);
 	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
 	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
 
@@ -579,3 +580,9 @@ bool CApplication::IsFileExist(const char* pFileName)
 {
 	return (GetFileAttributesA(pFileName) != INVALID_FILE_ATTRIBUTES);
 }
+
+//bool CApplication::LostFocusProc()
+//{
+//	GetTimeDelta();
+//	return false;
+//}
