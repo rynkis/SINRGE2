@@ -168,7 +168,7 @@ VALUE RbWin32API::initialize(int argc, VALUE *argv, VALUE obj)
 
 	rb_iv_set(obj, "__export__", INT2FIX(SinParseExportArgs(_export)));
 
-	return Qnil;
+	return obj;
 }
 
 VALUE RbWin32API::call(int argc, VALUE* argv, VALUE obj)

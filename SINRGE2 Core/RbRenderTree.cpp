@@ -38,6 +38,7 @@ bool RbRenderTree::RenderProc()
 
 	pHGE->Gfx_BeginScene();
 	pHGE->Gfx_Clear(0);
+	pHGE->Gfx_SetClipping();
 
 	for (p1 = s_pRenderHead; p1; p1 = p1->next)
 	{

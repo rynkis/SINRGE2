@@ -10,6 +10,7 @@ extern "C"
 {
 #include "seal.h"
 }
+#if SIN_USE_SEAL
 
 static const char WAV_SYM[] = "wav";
 static const char OV_SYM[]	= "ov";
@@ -2086,3 +2087,5 @@ void MRbSeal::InitLibrary()
 {
 	Init_seal();
 }
+
+#endif

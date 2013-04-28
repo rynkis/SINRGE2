@@ -14,6 +14,12 @@
 
 #include "RbExport.h"
 #include "hge.h"
+
+/*
+ * 定义是否使用 Seal
+ */
+#define SIN_USE_SEAL		1
+
 /*
  * 如果定义了该宏则使用Ruby解释器默认的内存管理器进行对象分配和释放，否则不使用。
  */

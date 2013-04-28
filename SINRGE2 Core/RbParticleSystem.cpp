@@ -92,10 +92,11 @@ void RbParticleSystem::mark()
 
 VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
 {
-	VALUE filename, viewport;
+	VALUE filename, viewport, isbuffer;
+	bool frombuffer = false;
 
 	//	¼ì²é²ÎÊý
-	rb_scan_args(argc, argv, "11", &filename, &viewport);
+	rb_scan_args(argc, argv, "12", &filename, &viewport, &isbuffer);
 
 	if (!NIL_P(viewport))
 	{
@@ -108,16 +109,25 @@ VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
 	RbRenderTree::InsertNode(m_node);
 
 	m_visible = Qtrue;
-	
-	SafeStringValue(filename);
 
+	frombuffer = RTEST(isbuffer);
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
-	void* psi = hge->Resource_Load(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)));
-	if (!psi) rb_raise(rb_eSinError, "Failed to load psi: `%s'.", RSTRING_PTR(filename));
-	memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
-	hge->Resource_Free(psi);
+	if (frombuffer)
+	{
+		void* psi = RSTRING_PTR(filename);
+		memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
+		psi = NULL;
+	}
+	else
+	{
+		SafeStringValue(filename);
 
+		void* psi = hge->Resource_Load(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)));
+		if (!psi) rb_raise(rb_eSinError, "Failed to load psi: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
+		memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
+		hge->Resource_Free(psi);
+	}
 	info.sprite = m_pSpr;
 
 	m_disposed = false;

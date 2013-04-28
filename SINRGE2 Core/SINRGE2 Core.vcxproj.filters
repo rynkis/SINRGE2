@@ -153,6 +153,9 @@
     <ClCompile Include="RbWin32API.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
+    <ClCompile Include="MRbAudio.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -390,6 +393,9 @@
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="RbWin32API.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="MRbAudio.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>

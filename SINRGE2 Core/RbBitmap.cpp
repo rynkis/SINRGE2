@@ -170,7 +170,13 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 	DWORD dwColorValue = 0;
 	HGE* hge = GetAppPtr()->GetHgePtr();
 	hgeQuad quad;
-	//wchar_t* filenameW;
+
+	/*if (FIXNUM_P(argv[0]))
+	{
+		rb_scan_args(argc, argv, "2", &arg01, &arg02);
+		SafeFixnumValue(arg02);
+		goto __bitmap_load_from_buffer;
+	}*/
 
 	if (rb_scan_args(argc, argv, "11", &arg01, &arg02) == 1)
 	{
@@ -181,6 +187,9 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 	{
 		if (TYPE(arg01) == T_STRING)
 		{
+			if (FIXNUM_P(arg02))
+				goto __bitmap_load_from_buffer;
+
 			SafeColorValue(arg02);
 			{
 				RbColor* ccol;
@@ -191,6 +200,17 @@ VALUE RbBitmap::initialize(int argc, VALUE *argv, VALUE obj)
 		}
 		else goto __bitmap_create;
 	}
+
+__bitmap_load_from_buffer:
+	{
+		wchar_t *data = (wchar_t*)RSTRING_PTR(arg01);
+		int size = FIX2INT(arg02);
+		quad.tex = hge->Texture_Load(data, size);
+		data = NULL;
+		if(!quad.tex)
+			rb_raise(rb_eSinError, "Failed to create bitmap from buffer.");
+	}
+	goto __finish;
 
 __bitmap_load:
 	{
@@ -272,14 +292,14 @@ HTEXTURE RbBitmap::LoadTexture(const wchar_t* filename, DWORD colorKey, int &suf
 			tex = hge->Texture_Load((const wchar_t*)data, size, false, colorKey);
 			
 			if(!tex)
-				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToUTF8(filename));
+				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
 
 			// free
 			hge->Resource_Free(data);
 			return tex;
 		}
 		else
-			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToUTF8(filename));
+			rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
 	}
 	return tex;
 }

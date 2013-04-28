@@ -524,7 +524,8 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 		int ti = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
-			if (!System_PeekMessage()) GetAppPtr()->Quit();
+			//if (!System_PeekMessage()) GetAppPtr()->Quit();
+			GetAppPtr()->SystemUpdate();
 			GET_ARGB_8888(pTexData[tv + lx], a, r, g, b);
 			pDesData[ti + lx] = MAKE_ARGB_8888(255, r, g, b);
 		}
@@ -920,8 +921,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				}
 				pHGE->Texture_Unlock(newTex);
 
-				if (!pHGE->System_PeekMessage())
-					GetAppPtr()->Quit();
+				/*if (!pHGE->System_PeekMessage())
+					GetAppPtr()->Quit();*/
+				GetAppPtr()->SystemUpdate();
 				if(pHGE->bActive || pHGE->bDontSuspend)
 				{
 					pHGE->Gfx_BeginScene();
@@ -975,8 +977,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				}
 				pHGE->Texture_Unlock(pHGE->freezeTex);
 
-				if (!pHGE->System_PeekMessage())
-					GetAppPtr()->Quit();
+				/*if (!pHGE->System_PeekMessage())
+					GetAppPtr()->Quit();*/
+				GetAppPtr()->SystemUpdate();
 				if(pHGE->bActive || pHGE->bDontSuspend)
 				{
 					pHGE->Gfx_BeginScene();
@@ -1008,8 +1011,9 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 			newQuad.v[2].col =
 			newQuad.v[3].col = 0x00ffffff + ((BYTE)al << 24);
 
-			if (!pHGE->System_PeekMessage())
-				GetAppPtr()->Quit();
+			/*if (!pHGE->System_PeekMessage())
+				GetAppPtr()->Quit();*/
+			GetAppPtr()->SystemUpdate();
 			if(pHGE->bActive || pHGE->bDontSuspend)
 			{
 				pHGE->Gfx_BeginScene();
@@ -1049,10 +1053,10 @@ int MRbInput::MouseDblClk(int iKey)
 	return pHGE->mouseButton & (iKey<<6);
 }
 
-int MRbInput::GetMouseMove()
-{
-	return pHGE->mouseMove;
-}
+//int MRbInput::GetMouseMove()
+//{
+//	return pHGE->mouseMove;
+//}
 
 void MRbInput::HideMouse(bool hide)
 {

@@ -179,8 +179,9 @@ VALUE MRbSinCore::fadein(int argv, VALUE duration)
 
 VALUE MRbSinCore::peek_message()
 {
-	if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
-		GetAppPtr()->Quit();
+	GetAppPtr()->SystemUpdate();
+	/*if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
+		GetAppPtr()->Quit();*/
 
 	return Qnil;
 }
@@ -328,6 +329,12 @@ void MRbSinCore::InitLibrary()
 
 	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
 	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
+
+	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
+	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
+
+	rb_define_module_function(rb_mSin, "timer_delta", RbFunc(get_timer_delta), 0);
+	rb_define_module_function(rb_mSin, "game_stop", RbFunc(stop), 0);
 	
 	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
 	rb_define_module_function(rb_mGraphics, "wait", RbFunc(wait), 1);
@@ -349,7 +356,6 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mGraphics, "brightness=", RbFunc(set_brightness), 1);
 
 	rb_mFrame = rb_define_module_under(rb_mSin, "Frame");
-	//rb_iv_set(rb_mFrame,"__title__", rb_str_freeze(rb_str_new2(SIN_DEFAULT_TITLE_NAME)));
 
 	rb_define_module_function(rb_mFrame, "hwnd",	RbFunc(get_hwnd), 0);
 	rb_define_module_function(rb_mFrame, "title",	RbFunc(get_title), 0);
@@ -363,10 +369,4 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "forbid_switch=",		RbFunc(set_forbid_switch), 1);
 	rb_define_module_function(rb_mFrame, "start_width=",		RbFunc(set_start_width), 1);
 	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
-	
-	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
-	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
-
-	rb_define_module_function(rb_mSin, "get_timer_delta", RbFunc(get_timer_delta), 0);
-	rb_define_module_function(rb_mSin, "game_stop", RbFunc(stop), 0);
 }

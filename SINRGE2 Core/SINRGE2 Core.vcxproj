@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="hge\resource.cpp" />
+    <ClCompile Include="MRbAudio.cpp" />
     <ClCompile Include="RbBitmap.cpp" />
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="hge\include\hgesprite.h" />
     <ClInclude Include="hge\include\hgestrings.h" />
     <ClInclude Include="hge\include\hgevector.h" />
+    <ClInclude Include="MRbAudio.h" />
     <ClInclude Include="RbBitmap.h" />
     <ClInclude Include="RbParticleSystem.h" />
     <ClInclude Include="MRbSinCore.h" />

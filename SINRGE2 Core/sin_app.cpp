@@ -7,7 +7,11 @@
 */
 #include "MRbSinCore.h"
 #include "MRbInput.h"
+#if SIN_USE_SEAL
 #include "MRbSeal.h"
+#else
+#include "MRbAudio.h"
+#endif
 #include "RbRect.h"
 #include "RbColor.h"
 #include "RbTone.h"
@@ -432,7 +436,12 @@ void CApplication::InitExportSinInterface()
 {
 	MRbSinCore::InitLibrary();
 	MRbInput::InitLibrary();
+
+#if SIN_USE_SEAL
 	MRbSeal::InitLibrary();
+#else
+	MRbAudio::InitLibrary();
+#endif
 	
 	RbRect::InitLibrary();
 	RbColor::InitLibrary();

@@ -29,10 +29,7 @@ RbSprite::RbSprite()
 	, m_flash_hide_spr(0)
 	, m_flash_color(0)
 	, m_src_rect_ptr(0)
-	, m_movie_playing(false)/*
-	, m_ref_tone(0x0)
-	, m_tone_tex(0)*/
-	//, m_blend_type(0)
+	, m_movie_playing(false)
 {
 }
 
@@ -376,7 +373,6 @@ VALUE RbSprite::update()
 		GetVideoMgr()->UpdateMovieTexture(pTexData);
 		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_bitmap_ptr->SetModifyCount();
-		//return Qnil;
 	}
 	if (m_flash_duration)
 	{
@@ -626,7 +622,7 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
-		rb_raise(rb_eSinError, "Falied to load video: `%s'.", RSTRING_PTR(filename));
+		rb_raise(rb_eSinError, "Falied to load video: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
 
 	VALUE __argv1[] = {INT2FIX(width), INT2FIX(height)};
 	VALUE bitmap = rb_class_new_instance(2, __argv1, rb_cBitmap);
