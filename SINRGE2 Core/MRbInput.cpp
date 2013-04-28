@@ -233,16 +233,6 @@ VALUE MRbInput::get_dir8()
 	
 	return get_dir4();
 }
-/*
-**	call-seq:
-**		SIN::Input.show_mouse(show)	-> nil
-**
-*/
-VALUE MRbInput::show_mouse(int argc, VALUE show)
-{
-	HideMouse(!RTEST(show));
-	return Qnil;
-}
 
 /*
 **	call-seq:
@@ -296,7 +286,6 @@ void MRbInput::InitLibrary()
 {
 	mInput = rb_define_module_under(rb_mSin, "Input");
 
-	rb_define_module_function(mInput, "show_mouse", RbFunc(show_mouse), 1);
 	rb_define_module_function(mInput, "on_focus?", RbFunc(on_focus), 0);
 	rb_define_module_function(mInput, "mouse_wheel", RbFunc(mouse_wheel), 0);
 	rb_define_module_function(mInput, "dblclk?", RbFunc(mouse_dblclk), 1);

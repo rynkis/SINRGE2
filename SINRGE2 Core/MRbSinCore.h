@@ -17,9 +17,10 @@
 struct MRbSinCore
 {
 	static void	InitLibrary();
+	
+	static void HideMouse(bool hide);
 
 	static void Freeze();
-
 	static void Transition(int duration, const wchar_t *filename, float vague);
 
 	static VALUE init();
@@ -56,7 +57,8 @@ struct MRbSinCore
 	static VALUE set_forbid_fs(int argc, VALUE forbid_fs);
 	static VALUE get_forbid_switch();
 	static VALUE set_forbid_switch(int argc, VALUE forbid_switch);
-
+	
+	static VALUE show_mouse(int argc, VALUE show);
 
 	static VALUE get_real_fps();
 	static VALUE peek_message();

@@ -9,8 +9,8 @@
 
 static int per_src_effect_limit = -1;
 
-void _seal_nop() {}
-void* _seal_nop_func() { return 0; }
+//void _seal_nop() {}
+//void* _seal_nop_func() { return 0; }
 
 //_seal_openal_initializer_t* alGenEffects = (void*) _seal_nop;
 //_seal_openal_destroyer_t* alDeleteEffects = (void*) _seal_nop;
@@ -63,25 +63,25 @@ seal_get_version(void)
 //        return SEAL_NO_EXT_FUNC;
 //}
 
-static
-void
-reset_ext_proc(void)
-{
-    alGenEffects = (void*) _seal_nop;
-    alDeleteEffects = (void*) _seal_nop;
-    alIsEffect = (void*) _seal_nop_func;
-    alEffectf = (void*) _seal_nop;
-    alEffecti = (void*) _seal_nop;
-    alGetEffectf = (void*) _seal_nop;
-    alGetEffecti = (void*) _seal_nop;
-    alGenAuxiliaryEffectSlots = (void*) _seal_nop;
-    alDeleteAuxiliaryEffectSlots = (void*) _seal_nop;
-    alIsAuxiliaryEffectSlot = (void*) _seal_nop_func;
-    alAuxiliaryEffectSloti = (void*) _seal_nop;
-    alAuxiliaryEffectSlotf = (void*) _seal_nop;
-    alGetAuxiliaryEffectSloti = (void*) _seal_nop;
-    alGetAuxiliaryEffectSlotf = (void*) _seal_nop;
-}
+//static
+//void
+//reset_ext_proc(void)
+//{
+//    alGenEffects = (void*) _seal_nop;
+//    alDeleteEffects = (void*) _seal_nop;
+//    alIsEffect = (void*) _seal_nop_func;
+//    alEffectf = (void*) _seal_nop;
+//    alEffecti = (void*) _seal_nop;
+//    alGetEffectf = (void*) _seal_nop;
+//    alGetEffecti = (void*) _seal_nop;
+//    alGenAuxiliaryEffectSlots = (void*) _seal_nop;
+//    alDeleteAuxiliaryEffectSlots = (void*) _seal_nop;
+//    alIsAuxiliaryEffectSlot = (void*) _seal_nop_func;
+//    alAuxiliaryEffectSloti = (void*) _seal_nop;
+//    alAuxiliaryEffectSlotf = (void*) _seal_nop;
+//    alGetAuxiliaryEffectSloti = (void*) _seal_nop;
+//    alGetAuxiliaryEffectSlotf = (void*) _seal_nop;
+//}
 
 /*
  * Initializes the specified device and creates a single context. SEAL
@@ -163,7 +163,7 @@ seal_cleanup(void)
     alcDestroyContext(context);
     alcCloseDevice(device);
 
-    reset_ext_proc();
+    //reset_ext_proc();
 }
 
 int

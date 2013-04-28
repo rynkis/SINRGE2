@@ -7,6 +7,7 @@
 */
 #include "nge_timer.h"
 #include "MRbSinCore.h"
+#include "MRbInput.h"
 #include "RbBitmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
@@ -307,6 +308,20 @@ VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 	return forbid_switch;
 }
 
+/*
+**	call-seq:
+**		SIN::Input.show_mouse(show)	-> nil
+**
+*/
+VALUE MRbSinCore::show_mouse(int argc, VALUE show)
+{
+	if (!GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "Uninited frame.");
+
+	HideMouse(!RTEST(show));
+	return Qnil;
+}
+
 VALUE MRbSinCore::get_timer_delta()
 {
 	return DBL2NUM(GetTimeDelta());
@@ -369,4 +384,6 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "forbid_switch=",		RbFunc(set_forbid_switch), 1);
 	rb_define_module_function(rb_mFrame, "start_width=",		RbFunc(set_start_width), 1);
 	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
+
+	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(show_mouse), 1);
 }

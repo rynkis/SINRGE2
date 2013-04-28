@@ -43,6 +43,9 @@
     <Filter Include="源文件\Kconv">
       <UniqueIdentifier>{4a0c2493-e64c-4262-b344-5feef9aab6bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\seal">
+      <UniqueIdentifier>{6a177320-d2fd-4770-a485-bd315ecba5cd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hge\graphics.cpp">
@@ -155,6 +158,51 @@
     </ClCompile>
     <ClCompile Include="MRbAudio.cpp">
       <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\buf.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\core.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\efs.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\err.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\fmt.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\listener.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\mpg.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\ov.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\raw.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\reader.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\rvb.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\src.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\stream.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\threading.c">
+      <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="seal\wav.c">
+      <Filter>源文件\seal</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -397,6 +445,21 @@
     </ClInclude>
     <ClInclude Include="MRbAudio.h">
       <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="seal\mpg.h">
+      <Filter>源文件\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="seal\ov.h">
+      <Filter>源文件\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="seal\reader.h">
+      <Filter>源文件\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="seal\threading.h">
+      <Filter>源文件\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="seal\wav.h">
+      <Filter>源文件\seal</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

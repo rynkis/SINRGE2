@@ -59,6 +59,8 @@ public:
 	void						BrightnessUpdate();
 	void						FrameCountUpdate() { m_frame_count++; };
 
+	bool						IsInited() const { return m_pHge != 0; }
+
 	//void						SetBrightness(int brightness) { m_brightness = brightness; };
 
 	//u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };

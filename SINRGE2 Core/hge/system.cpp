@@ -1058,7 +1058,7 @@ int MRbInput::MouseDblClk(int iKey)
 //	return pHGE->mouseMove;
 //}
 
-void MRbInput::HideMouse(bool hide)
+void MRbSinCore::HideMouse(bool hide)
 {
 	pHGE->bHideMouse = hide;
 }

@@ -159,6 +159,7 @@ CApplication::CApplication()
 	szScripts[0] = 0;
 	memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
 	//m_sys_timer = nge_timer_create();
+	m_pHge = hgeCreate(HGE_VERSION);
 	
 	m_quad.v[0].z = 
 	m_quad.v[1].z = 
@@ -382,11 +383,6 @@ int CApplication::Eval(const char* script)
 	return 0;
 }
 
-//u32 CApplication::GetTick()
-//{
-//	return m_sys_timer->get_ticks(m_sys_timer);
-//}
-
 //void CApplication::ShowError(const wchar_t* szFormat, ...)
 //{
 //	wchar_t szError[1024];
@@ -467,21 +463,14 @@ VALUE CApplication::RunScriptInProtect(VALUE argv)
 	const VALUE f_name	= rb_ary_entry(argv, 0);
 	const VALUE script	= rb_ary_entry(argv, 1);
 
-	/*int xsize = NUM2INT(rb_attr_get(script, rb_intern("xsize")));
-	int ysize = NUM2INT(rb_attr_get(script, rb_intern("ysize")));
-	int zsize = NUM2INT(rb_attr_get(script, rb_intern("zsize")));
-
-	RbTable* table = (RbTable*)DATA_PTR(script);
-	VALUE* scData = table->GetDataPtr();*/
-
-	//(void)rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
-	return rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);//Qnil;
+	return rb_funcall(rb_mKernel, id_eval, 4, script, binding, f_name, line_no);
 }
 
 void CApplication::OnFailed(VALUE err)
 {
 	VALUE errmsg;
 
+	// 以下有被注入的风险，建议在发行版本中做下加密或直接剔除
 	VALUE source_ary	= rb_eval_string("matchstr = $!.is_a?(SyntaxError) ? $!.to_s : $@[0]; matchstr =~ /(.*):([0-9]+)/; ary = [$1.to_s, $2.to_i]; ary");
 	VALUE sourcefile	= rb_ary_entry(source_ary, 0);
 	VALUE sourceline	= rb_ary_entry(source_ary, 1);
@@ -502,7 +491,6 @@ void CApplication::OnFailed(VALUE err)
 
 bool CApplication::InitVideo()
 {
-	m_pHge = hgeCreate(HGE_VERSION);
 	// Set our render proc
 	//m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, LostFocusProc);
 	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
