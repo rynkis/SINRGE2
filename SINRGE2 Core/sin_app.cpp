@@ -152,6 +152,11 @@ CApplication::CApplication()
 	, m_saved_brghtness(255)
 
 	, m_frame_count(0)
+
+	, m_frame(0)
+	, m_t0(0)
+	, m_last_fps(0)
+	, m_last(0)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
@@ -173,6 +178,8 @@ CApplication::CApplication()
 	m_quad.v[1].x = (float)m_frm_struct.m_screen_width;	m_quad.v[1].y = 0;
 	m_quad.v[2].x = (float)m_frm_struct.m_screen_width;	m_quad.v[2].y = (float)m_frm_struct.m_screen_height;
 	m_quad.v[3].x = 0;									m_quad.v[3].y = (float)m_frm_struct.m_screen_height;
+	
+	m_fps_timer = new CTimer();
 }
 
 /***
@@ -200,6 +207,12 @@ void CApplication::Dispose()
 		m_pVideoMgr->Destroy();
 		delete m_pVideoMgr;
 		m_pVideoMgr = 0;
+	}
+
+	if (m_fps_timer)
+	{
+		delete m_fps_timer;
+		m_fps_timer = 0;
 	}
 }
 
@@ -563,6 +576,64 @@ failed_return:
 		pTmpTex = NULL;
 	}
 	return false;
+}
+
+void CApplication::LimitFps(int limit)
+{
+	if (!m_fps_timer->IsStarted())
+	{
+		m_fps_timer->Start();
+		m_current_ticks = 0;
+		m_target_ticks  = 0;
+		m_last_ticks    = 0;
+		f_frame_count   = 0;
+		m_rate_ticks    = 1000.0f / limit;
+		return;
+	}
+	f_frame_count++;
+	m_current_ticks = m_fps_timer->GetTicks();
+	m_target_ticks = m_last_ticks + (unsigned int) ((float) f_frame_count * m_rate_ticks);
+
+	m_frame_count++;
+
+	if (m_current_ticks <= m_target_ticks)
+	{
+		m_the_delay = m_target_ticks - m_current_ticks;
+		RB_SLEEP(m_the_delay);
+	}
+	else
+	{
+		f_frame_count = 0;
+		m_last_ticks = m_fps_timer->GetTicks();
+	}
+}
+
+int CApplication::GetRealFps()
+{
+	m_frame++;
+	m_t0 = m_fps_timer->GetTicks();
+	if ( (m_t0 - m_t1) >= 1000)
+	{
+		m_seconds = (m_t0 - m_t1) / 1000.0;
+		m_last_fps = m_real_fps = m_frame / m_seconds;
+		m_t1 = m_t0;
+		m_frame = 0;
+		return m_real_fps;
+	}
+	return m_last_fps;
+}
+
+double CApplication::GetTimeDelta()
+{
+	if (!m_fps_timer)
+		return 0;
+		
+	double fDeltaTime = (m_fps_timer->GetTicks() - m_last) / 1000.0;
+	m_last = m_fps_timer->GetTicks();
+
+	if (fDeltaTime > 1.0) fDeltaTime = 0.0;
+
+	return fDeltaTime;
 }
 
 /**

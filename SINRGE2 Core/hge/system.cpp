@@ -9,7 +9,7 @@
 #include "RbBitmap.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
-#include "nge_timer.h"
+//#include "nge_timer.h"
 #include "hge_impl.h"
 #include "sin_color.h"
 #include "sin_app.h"
@@ -198,11 +198,11 @@ bool CALL HGE_Impl::System_Update()
 
 		if (bShowFps)
 		{
-			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetRealFps());
+			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetAppPtr()->GetRealFps());
 			SetWindowText(hwnd, szTitleFps);
 		}
 	}
-	LimitFps(nHGEFPS);
+	GetAppPtr()->LimitFps(nHGEFPS);
 	return true;
 }
 
@@ -933,11 +933,11 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 
 					if (pHGE->bShowFps)
 					{
-						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetAppPtr()->GetRealFps());
 						SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
 					}
 				}
-				LimitFps(pHGE->nHGEFPS);
+				GetAppPtr()->LimitFps(pHGE->nHGEFPS);
 				duration--;
 				gray += rate;
 			} while (duration);
@@ -989,11 +989,11 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 
 					if (pHGE->bShowFps)
 					{
-						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+						wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetAppPtr()->GetRealFps());
 						SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
 					}
 				}
-				LimitFps(pHGE->nHGEFPS);
+				GetAppPtr()->LimitFps(pHGE->nHGEFPS);
 				duration--;
 			} while (duration);
 		}
@@ -1024,11 +1024,11 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 
 				if (pHGE->bShowFps)
 				{
-					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetRealFps());
+					wsprintfW(pHGE->szTitleFps, L"%s - %d FPS", pHGE->szWinTitle, GetAppPtr()->GetRealFps());
 					SetWindowText(pHGE->hwnd, pHGE->szTitleFps);
 				}
 			}
-			LimitFps(pHGE->nHGEFPS);
+			GetAppPtr()->LimitFps(pHGE->nHGEFPS);
 			duration--;
 		} while (duration);
 	}

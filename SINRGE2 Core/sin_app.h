@@ -10,7 +10,8 @@
 
 #include "RbRenderTree.h"
 #include "hge.h"
-#include "nge_timer.h"
+#include "sin_timer.h"
+//#include "nge_timer.h"
 #include <d3d8.h>
 
 /***
@@ -57,9 +58,13 @@ public:
 	void						GraphicsUpdate();
 	void						SystemUpdate();
 	void						BrightnessUpdate();
-	void						FrameCountUpdate() { m_frame_count++; };
+	//void						FrameCountUpdate() { m_frame_count++; };
 
 	bool						IsInited() const { return m_pHge != 0; }
+
+	void						LimitFps(int limit);
+	int							GetRealFps();
+	double						GetTimeDelta();
 
 	//void						SetBrightness(int brightness) { m_brightness = brightness; };
 
@@ -107,6 +112,16 @@ private:
 	int							m_saved_brghtness;
 
 	u32							m_frame_count;
+
+	//fps
+	CTimer*						m_fps_timer;
+	unsigned int				m_frame, m_t0, m_t1, m_last_fps, m_real_fps;
+	float						m_seconds;
+
+	unsigned int				m_current_ticks, m_target_ticks, f_frame_count, m_last_ticks, m_the_delay;
+	float						m_rate_ticks;
+
+	unsigned int				m_last;
 
 private:
 	class CVideoMgr*			m_pVideoMgr;			///<	AVI²¥·Å

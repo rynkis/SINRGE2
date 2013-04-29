@@ -165,7 +165,7 @@ VALUE RbParticleSystem::update()
 {
 	check_raise();
 
-	float fDeltaTime = (float)GetTimeDelta();
+	float fDeltaTime = (float)GetAppPtr()->GetTimeDelta();
 	
 	HGE* hge = GetAppPtr()->GetHgePtr();
 

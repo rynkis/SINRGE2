@@ -115,7 +115,6 @@
     <ClCompile Include="Kconv.cpp" />
     <ClCompile Include="RbParticleSystem.cpp" />
     <ClCompile Include="MRbSinCore.cpp" />
-    <ClCompile Include="nge_timer.cpp" />
     <ClCompile Include="MRbInput.cpp" />
     <ClCompile Include="RbPlane.cpp" />
     <ClCompile Include="MRbSeal.cpp" />
@@ -178,6 +177,7 @@
     <ClCompile Include="RbDisplayObject.cpp" />
     <ClCompile Include="RbRenderTree.cpp" />
     <ClCompile Include="sin_app.cpp" />
+    <ClCompile Include="sin_timer.cpp" />
     <ClCompile Include="sin_video.cpp" />
     <ClCompile Include="RbWin32API.cpp" />
   </ItemGroup>
@@ -262,18 +262,17 @@
     <ClInclude Include="sin_color.h" />
     <ClInclude Include="hge\hge_impl.h" />
     <ClInclude Include="Kconv.h" />
-    <ClInclude Include="nge_common.h" />
     <ClInclude Include="RbClassBase.h" />
     <ClInclude Include="RbColor.h" />
     <ClInclude Include="RbExport.h" />
     <ClInclude Include="RbFont.h" />
     <ClInclude Include="RbRect.h" />
-    <ClInclude Include="nge_timer.h" />
     <ClInclude Include="RbTone.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="RbDisplayObject.h" />
     <ClInclude Include="RbRenderTree.h" />
     <ClInclude Include="sin_common.h" />
+    <ClInclude Include="sin_timer.h" />
     <ClInclude Include="sin_types.h" />
     <ClInclude Include="sin_video.h" />
     <ClInclude Include="RbWin32API.h" />

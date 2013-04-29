@@ -5,7 +5,7 @@
 **
 ** Ruby Moudle SINRGE2
 */
-#include "nge_timer.h"
+//#include "nge_timer.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "RbBitmap.h"
@@ -189,7 +189,7 @@ VALUE MRbSinCore::peek_message()
 
 VALUE MRbSinCore::get_real_fps()
 {
-	return INT2FIX(GetRealFps());
+	return INT2FIX(GetAppPtr()->GetRealFps());
 }
 
 VALUE MRbSinCore::get_hwnd()
@@ -324,7 +324,7 @@ VALUE MRbSinCore::show_mouse(int argc, VALUE show)
 
 VALUE MRbSinCore::get_timer_delta()
 {
-	return DBL2NUM(GetTimeDelta());
+	return DBL2NUM(GetAppPtr()->GetTimeDelta());
 }
 
 void MRbSinCore::InitLibrary()

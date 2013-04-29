@@ -31,9 +31,6 @@
     <Filter Include="头文件\seal">
       <UniqueIdentifier>{85f40164-6695-40fd-a6b9-73c0685106c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\nge">
-      <UniqueIdentifier>{b8536fc2-4382-4120-b682-43ca2c5f8ab4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{71f14302-2fb7-47b5-888e-1fd7f2a82759}</UniqueIdentifier>
     </Filter>
@@ -98,9 +95,6 @@
     </ClCompile>
     <ClCompile Include="RubyExt\zlib.c">
       <Filter>源文件\RubyExt</Filter>
-    </ClCompile>
-    <ClCompile Include="nge_timer.cpp">
-      <Filter>源文件\nge</Filter>
     </ClCompile>
     <ClCompile Include="RbBitmap.cpp">
       <Filter>源文件\RbClass</Filter>
@@ -203,6 +197,9 @@
     </ClCompile>
     <ClCompile Include="seal\wav.c">
       <Filter>源文件\seal</Filter>
+    </ClCompile>
+    <ClCompile Include="sin_timer.cpp">
+      <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,12 +344,6 @@
     <ClInclude Include="..\Contrib\include\zconf.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="nge_common.h">
-      <Filter>源文件\nge</Filter>
-    </ClInclude>
-    <ClInclude Include="nge_timer.h">
-      <Filter>源文件\nge</Filter>
-    </ClInclude>
     <ClInclude Include="sin_color.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
@@ -460,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="seal\wav.h">
       <Filter>源文件\seal</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_timer.h">
+      <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
