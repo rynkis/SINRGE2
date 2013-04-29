@@ -1,3 +1,10 @@
+/*
+** SINRGE2
+** Copyright (C) 2013 Shy07
+** Gernischt@gmail.com
+**
+** SINRGE2 Class Timer
+*/
 #ifndef __SIN_TIMER_H__
 #define __SIN_TIMER_H__
 

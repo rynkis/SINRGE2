@@ -29,10 +29,6 @@ public:
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
-	//inline int					GetBrightness() const { return m_brightness; }
-
-	//inline nge_timer*			GetSysTimer() const { return m_sys_timer; }
-
 	inline DWORD				GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
 	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
 	
@@ -58,17 +54,12 @@ public:
 	void						GraphicsUpdate();
 	void						SystemUpdate();
 	void						BrightnessUpdate();
-	//void						FrameCountUpdate() { m_frame_count++; };
 
 	bool						IsInited() const { return m_pHge != 0; }
 
 	void						LimitFps(int limit);
 	int							GetRealFps();
 	double						GetTimeDelta();
-
-	//void						SetBrightness(int brightness) { m_brightness = brightness; };
-
-	//u32							GetTick() { return m_sys_timer->get_ticks(m_sys_timer); };
 
 private:
 	void						ShowError(const wchar_t* szFormat, ...);
@@ -104,8 +95,6 @@ private:
 	IDirect3D8*					m_ref_d3d;
 	IDirect3DDevice8*			m_ref_device;
 	D3DCAPS8					m_d3d_caps;
-
-	//nge_timer*					m_sys_timer;
 
 	hgeQuad						m_quad;
 	int							m_brightness;
