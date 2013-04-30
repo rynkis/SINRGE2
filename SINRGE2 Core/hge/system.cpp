@@ -9,7 +9,6 @@
 #include "RbBitmap.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
-//#include "nge_timer.h"
 #include "hge_impl.h"
 #include "sin_color.h"
 #include "sin_app.h"
@@ -515,8 +514,8 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 	DWORD* pTexData = System_Snapshot(width, height);
 	if (!pTexData) return 0;
 	HTEXTURE tex = Texture_Create(nScreenWidth, height);
+
 	DWORD* pDesData = Texture_Lock(tex, false);
-	
 	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
 	{
@@ -997,6 +996,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				duration--;
 			} while (duration);
 		}
+		pHGE->Texture_Free(midTex);
 	}
 	else
 	{
