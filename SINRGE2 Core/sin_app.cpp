@@ -335,20 +335,19 @@ __run_with_data:
 
 	int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
 
-	VALUE ary, f_name, script;
-	VALUE argv = rb_ary_new2(2);
-	//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
+	//VALUE ary, f_name, script;
+	VALUE argv;// = rb_ary_new2(2);
 	for (int pos = 0; pos < arylen; ++pos)
 	{
-		ary = rb_ary_entry(rbdata, pos);
+		/*ary = rb_ary_entry(rbdata, pos);
 		f_name = rb_ary_entry(ary, 0);
 		script = rb_ary_entry(ary, 1);
-		//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
 		rb_ary_clear(argv);
 		rb_ary_push(argv, f_name);
-		rb_ary_push(argv, script);
-		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
+		rb_ary_push(argv, script);*/
+		argv = rb_ary_entry(rbdata, pos);
 
+		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
 		if (state)
 		{
 			VALUE err = rb_errinfo();
@@ -448,7 +447,6 @@ int CApplication::GetRuntimeInfos()
 			}
 		}
 	}
-
 	return 0;
 }
 
