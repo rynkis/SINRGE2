@@ -20,7 +20,7 @@ public:
 	static void				InitLibrary();
 
 protected:
-	virtual VALUE			initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE			initialize(int argc, VALUE * argv, VALUE obj);
 
 private:
 	HMODULE					m_hDll;

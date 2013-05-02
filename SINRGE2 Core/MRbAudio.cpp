@@ -21,39 +21,39 @@ namespace
 		else return 0;
 	}
 
-	int SetAudio(wchar_t *device, wchar_t *flags)
+	int SetAudio(wchar_t * device, wchar_t * flags)
 	{
 		wsprintfW(cmdStr, L"setaudio %s %s", device, flags);
 		return SendString();
 	}
 
-	int Cue(wchar_t *device)
+	int Cue(wchar_t * device)
 	{
 		wsprintfW(cmdStr, L"cue %s", device);
 		return SendString();
 	}
 
-	int Set(wchar_t *device, wchar_t *flags)
+	int Set(wchar_t * device, wchar_t * flags)
 	{
 		wsprintfW(cmdStr, L"set %s %s", device, flags);
 		return SendString();
 	}
 
-	wchar_t* Capability(wchar_t *device, wchar_t *flags)
+	wchar_t * Capability(wchar_t * device, wchar_t *flags)
 	{
-		wchar_t *rt = new wchar_t[MAX_PATH];
+		wchar_t * rt = new wchar_t[MAX_PATH];
 		wsprintfW(cmdStr, L"capability %s %s", device, flags);
 		mciSendStringW(cmdStr, rt, MAX_PATH, 0);
 		return rt;
 	}
 
-	int Open(wchar_t *device, wchar_t *filename)
+	int Open(wchar_t * device, wchar_t * filename)
 	{
 		wsprintfW(cmdStr, L"open \"%s\" type mpegvideo alias %s wait", filename, device);
 		return SendString();
 	}
 
-	int Play(wchar_t *device, wchar_t *flags)
+	int Play(wchar_t * device, wchar_t * flags)
 	{
 		if (!wcscmp(Capability(device, L"can play"), L"false"))
 			return 1;
@@ -62,13 +62,13 @@ namespace
 		return SendString();
 	}
 
-	int Stop(wchar_t *device)
+	int Stop(wchar_t * device)
 	{
 		wsprintfW(cmdStr, L"stop %s", device);
 		return SendString();
 	}
 
-	int SetVolume(wchar_t *device, int volume)
+	int SetVolume(wchar_t * device, int volume)
 	{
 		volume = SinBound(volume, 0, 100);
 		volume *= 10;
@@ -77,7 +77,7 @@ namespace
 		return SetAudio(device, flags);
 	}
 
-	int Close(wchar_t *device)
+	int Close(wchar_t * device)
 	{
 		wsprintfW(cmdStr, L"close %s", device);
 		return SendString();
@@ -91,10 +91,10 @@ static wchar_t lastBGS[MAX_PATH];
 static wchar_t lastME[MAX_PATH];
 static wchar_t lastSE[MAX_PATH];
 
-VALUE MRbAudio::bgm_play(int argc, VALUE *argv)
+VALUE MRbAudio::bgm_play(int argc, VALUE * argv)
 {
 	SafeStringValue(argv[0]);
-	wchar_t *filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
+	wchar_t * filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
 	if (wcscmp(lastBGM, filename))
 	{
 		if (lastBGM[0] != 0)
@@ -141,10 +141,10 @@ VALUE MRbAudio::bgm_fade(int argc, VALUE time)
 	return Qnil;
 }
 
-VALUE MRbAudio::bgs_play(int argc, VALUE *argv)
+VALUE MRbAudio::bgs_play(int argc, VALUE * argv)
 {
 	SafeStringValue(argv[0]);
-	wchar_t *filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
+	wchar_t * filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
 	if (wcscmp(lastBGS, filename))
 	{
 		if (lastBGS[0] != 0)
@@ -193,7 +193,7 @@ VALUE MRbAudio::bgs_fade(int argc, VALUE time)
 VALUE MRbAudio::me_play(int argc, VALUE *argv)
 {
 	SafeStringValue(argv[0]);
-	wchar_t *filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
+	wchar_t * filename = Kconv::UTF8ToUnicode(RSTRING_PTR(argv[0]));
 	if (!wcscmp(lastME, filename))
 	{
 		wcscpy_s(lastME, filename);

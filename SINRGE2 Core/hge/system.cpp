@@ -18,7 +18,7 @@
 #define HIWORDINT(n) ((int)((signed short)(HIWORD(n))))
 
 
-const wchar_t *WINDOW_CLASS_NAME = L"SINRGE2_WNDCLASS";		// SINRGE2
+const wchar_t * WINDOW_CLASS_NAME = L"SINRGE2_WNDCLASS";		// SINRGE2
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
@@ -495,7 +495,7 @@ DWORD* CALL HGE_Impl::System_Snapshot(int& width, int& height)
 	if (FAILED(pSurf->LockRect(&lockedRect, 0, D3DLOCK_READONLY)))
 		goto __failed_return;
 	width = lockedRect.Pitch / 4;
-	DWORD *pData = (DWORD*)malloc(width * height * sizeof(DWORD));
+	DWORD * pData = (DWORD *)malloc(width * height * sizeof(DWORD));
 	memcpy(pData, lockedRect.pBits, width * height * sizeof(DWORD));
 	pSurf->UnlockRect();
 	pSurf->Release();
@@ -511,11 +511,11 @@ __failed_return:
 HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 {
 	int width, height;
-	DWORD* pTexData = System_Snapshot(width, height);
+	DWORD * pTexData = System_Snapshot(width, height);
 	if (!pTexData) return 0;
 	HTEXTURE tex = Texture_Create(nScreenWidth, height);
 
-	DWORD* pDesData = Texture_Lock(tex, false);
+	DWORD * pDesData = Texture_Lock(tex, false);
 	BYTE a, r, g, b;
 	for (int ly = 0; ly < height; ++ly)
 	{
@@ -835,7 +835,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 		int hrate = pHGE->nScreenHeight / mh;
 		
 		BYTE a1, r1, g1, b1, r2;
-		DWORD* pMidTexData = pHGE->Texture_Lock(midTex, true);
+		DWORD * pMidTexData = pHGE->Texture_Lock(midTex, true);
 		pHGE->bFreeze = false;
 		if (vague > 1)
 		{
@@ -947,7 +947,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 			{
 				gray += rate;
 
-				DWORD* pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
+				DWORD * pFrzTexData = pHGE->Texture_Lock(pHGE->freezeTex, false);
 				for (int ly = 0; ly < dh; ++ly)
 				{
 					int tempW1 = ly * mw;

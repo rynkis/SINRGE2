@@ -13,7 +13,7 @@ namespace
 /**
  *	Anis转Unicode
  */
-wchar_t* Kconv::AnsiToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
+wchar_t * Kconv::AnsiToUnicode(const char * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -25,7 +25,7 @@ wchar_t* Kconv::AnsiToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
 
 	pAutoBuffer->ensure_size(sizeof(wchar_t) * wide_str_len);	///<	确保缓冲区大小
 
-	wchar_t* wb_string = (wchar_t*)pAutoBuffer->get_buffer_ptr();
+	wchar_t * wb_string = (wchar_t *)pAutoBuffer->get_buffer_ptr();
 	//assert(wb_string);
 
 	MultiByteToWideChar(CP_ACP, 0, str, -1, wb_string, wide_str_len);
@@ -36,7 +36,7 @@ wchar_t* Kconv::AnsiToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
 /**
  *	UTF8转Unicode
  */
-wchar_t* Kconv::UTF8ToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
+wchar_t * Kconv::UTF8ToUnicode(const char * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -48,7 +48,7 @@ wchar_t* Kconv::UTF8ToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
 
 	pAutoBuffer->ensure_size(sizeof(wchar_t) * wide_str_len);	///<	确保缓冲区大小
 
-	wchar_t* wb_string = (wchar_t*)pAutoBuffer->get_buffer_ptr();
+	wchar_t * wb_string = (wchar_t *)pAutoBuffer->get_buffer_ptr();
 	//assert(wb_string);
 
 	MultiByteToWideChar(CP_UTF8, 0, str, -1, wb_string, wide_str_len);
@@ -59,7 +59,7 @@ wchar_t* Kconv::UTF8ToUnicode(const char* str, CAutoBuffer* pAutoBuffer)
 /**
  *	Unicode转Ansi
  */
-char* Kconv::UnicodeToAnsi(const wchar_t* str, CAutoBuffer* pAutoBuffer)
+char * Kconv::UnicodeToAnsi(const wchar_t * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -71,7 +71,7 @@ char* Kconv::UnicodeToAnsi(const wchar_t* str, CAutoBuffer* pAutoBuffer)
 
 	pAutoBuffer->ensure_size(ansi_len);	///<	确保缓冲区大小
 
-	char* mb_ansi_string = (char*)pAutoBuffer->get_buffer_ptr();
+	char * mb_ansi_string = (char *)pAutoBuffer->get_buffer_ptr();
 	//assert(mb_ansi_string);
 
 	WideCharToMultiByte(CP_ACP, 0, str, -1, (LPSTR)mb_ansi_string, ansi_len, NULL, NULL);
@@ -82,7 +82,7 @@ char* Kconv::UnicodeToAnsi(const wchar_t* str, CAutoBuffer* pAutoBuffer)
 /**
  *	Unicode转UTF8
  */
-char* Kconv::UnicodeToUTF8(const wchar_t* str, CAutoBuffer* pAutoBuffer)
+char* Kconv::UnicodeToUTF8(const wchar_t * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -94,7 +94,7 @@ char* Kconv::UnicodeToUTF8(const wchar_t* str, CAutoBuffer* pAutoBuffer)
 
 	pAutoBuffer->ensure_size(utf8_len);	///<	确保缓冲区大小
 
-	char* mb_utf8_string = (char*)pAutoBuffer->get_buffer_ptr();
+	char * mb_utf8_string = (char *)pAutoBuffer->get_buffer_ptr();
 	//assert(mb_utf8_string);
 
 	WideCharToMultiByte(CP_UTF8, 0, str, -1, (LPSTR)mb_utf8_string, utf8_len, NULL, NULL);
@@ -105,7 +105,7 @@ char* Kconv::UnicodeToUTF8(const wchar_t* str, CAutoBuffer* pAutoBuffer)
 /**
  *	UTF8转Ansi
  */
-char* Kconv::UTF8ToAnsi(const char* str, CAutoBuffer* pAutoBuffer)
+char * Kconv::UTF8ToAnsi(const char * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -115,7 +115,7 @@ char* Kconv::UTF8ToAnsi(const char* str, CAutoBuffer* pAutoBuffer)
 
 	s_cAutoBuffer02.ensure_size(sizeof(wchar_t) * wide_str_len);	///<	确保缓冲区大小
 
-	wchar_t* wide_str_buf = (wchar_t*)s_cAutoBuffer02.get_buffer_ptr();
+	wchar_t * wide_str_buf = (wchar_t *)s_cAutoBuffer02.get_buffer_ptr();
 	//assert(wide_str_buf);
 
 	MultiByteToWideChar(CP_UTF8, 0, str, -1, wide_str_buf, wide_str_len);
@@ -127,7 +127,7 @@ char* Kconv::UTF8ToAnsi(const char* str, CAutoBuffer* pAutoBuffer)
 /**
  *	Ansi转UTF8
  */
-char* Kconv::AnsiToUTF8(const char* str, CAutoBuffer* pAutoBuffer)
+char * Kconv::AnsiToUTF8(const char * str, CAutoBuffer * pAutoBuffer)
 {
 	if (!str) 
 		return 0;
@@ -137,7 +137,7 @@ char* Kconv::AnsiToUTF8(const char* str, CAutoBuffer* pAutoBuffer)
 
 	s_cAutoBuffer02.ensure_size(sizeof(wchar_t) * wide_str_len);	///<	确保缓冲区大小
 
-	wchar_t* wide_str_buf = (wchar_t*)s_cAutoBuffer02.get_buffer_ptr();
+	wchar_t * wide_str_buf = (wchar_t *)s_cAutoBuffer02.get_buffer_ptr();
 	//assert(wide_str_buf);
 
 	MultiByteToWideChar(CP_ACP, 0, str, -1, wide_str_buf, wide_str_len);

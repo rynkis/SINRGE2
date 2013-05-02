@@ -18,7 +18,7 @@
 /**
  *	加载视频文件（准备播放
  */
-bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHeight)
+bool CVideoMgr::LoadMovie(const wchar_t * pFileName, int &pOutWidth, int &pOutHeight)
 {
     HRESULT hr;
 
@@ -29,7 +29,7 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 	CAutoReleasePool<IUnknown> cLocalPool;
 
 	///<	创建过滤器图管理器
-	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**)&m_pGraphBuilder);
+	hr = CoCreateInstance(CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void **)&m_pGraphBuilder);
 	if (FAILED(hr))	return false;
 
     ///<	获取相关过滤器
@@ -46,7 +46,7 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 	if (FAILED(hr)) return false;
 
     ///<	添加采样过滤器
-	IBaseFilter* pTempFilter;
+	IBaseFilter * pTempFilter;
 	hr = AddFilter(m_pGraphBuilder, CLSID_SampleGrabber, L"Sample Grabber", &pTempFilter);
 	if (FAILED(hr)) return false;
 	cLocalPool.Push(pTempFilter);
@@ -68,8 +68,8 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 	if (FAILED(hr)) return false;
 
 	///<	创建源过滤器
-	IBaseFilter* pSourceFilter = NULL;
-	IFileSourceFilter* pFileSourceFilter = NULL;
+	IBaseFilter * pSourceFilter = NULL;
+	IFileSourceFilter * pFileSourceFilter = NULL;
 	hr = AddFilter(m_pGraphBuilder, CLSID_AsyncReader, L"Sin Source", &pSourceFilter);
 	if (FAILED(hr)) return false;
 	cLocalPool.Push(pSourceFilter);	
@@ -82,14 +82,14 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
 	if (FAILED(hr)) return false;
 
 	///<	构造过滤器图（基本等同于RenderFile）
-	IPin* pSourceFilterOutPint = FindPin(pSourceFilter, PINDIR_OUTPUT);
+	IPin * pSourceFilterOutPint = FindPin(pSourceFilter, PINDIR_OUTPUT);
 	if (!pSourceFilterOutPint) return false;
 	cLocalPool.Push(pSourceFilterOutPint);
 	hr = m_pGraphBuilder->Render(pSourceFilterOutPint);
 	if (FAILED(hr)) return false;
 
 	///<	放在Graph构建完毕之后（否则在构建图的时候会采用Null Renderer等导致不能播放
-	IBaseFilter* pNullRendererFilter = NULL;
+	IBaseFilter * pNullRendererFilter = NULL;
 	hr = AddFilter(m_pGraphBuilder, CLSID_NullRenderer, L"Null Renderer", &pNullRendererFilter);
 	if (FAILED(hr)) return false;
 	cLocalPool.Push(pNullRendererFilter);
@@ -103,7 +103,7 @@ bool CVideoMgr::LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHei
     hr = m_pSampleGrabber->GetConnectedMediaType(&mtt);
 	if (FAILED(hr)) return false;
     
-    VIDEOINFOHEADER* vih = (VIDEOINFOHEADER*)mtt.pbFormat;
+    VIDEOINFOHEADER * vih = (VIDEOINFOHEADER*)mtt.pbFormat;
     m_iVideoWidth	= vih->bmiHeader.biWidth;
     m_iVideoHeight	= vih->bmiHeader.biHeight;
 
@@ -164,7 +164,7 @@ bool CVideoMgr::IsMoviePlaying()
 /**
  *	更新视频贴图
  */
-void CVideoMgr::UpdateMovieTexture(DWORD* pDstBitmapAddr)
+void CVideoMgr::UpdateMovieTexture(DWORD * pDstBitmapAddr)
 {
     HRESULT hr;
  
@@ -262,7 +262,7 @@ void CVideoMgr::SetVolume(long iVolume)
  *	以下开始为私有函数
  /************************************************************/
 
-IPin* CVideoMgr::FindPin(IBaseFilter* pFilter, PIN_DIRECTION PinDir, bool bFreePin)
+IPin * CVideoMgr::FindPin(IBaseFilter * pFilter, PIN_DIRECTION PinDir, bool bFreePin)
 {
 	IEnumPins*		pEnumerator;   
 	IPin*			pPin;
@@ -293,7 +293,7 @@ IPin* CVideoMgr::FindPin(IBaseFilter* pFilter, PIN_DIRECTION PinDir, bool bFreeP
 	return 0;
 }
 
-void CVideoMgr::CollectFilterPins(IBaseFilter* pFilter, ListPinPtr& vInPins, ListPinPtr& vOutPins)
+void CVideoMgr::CollectFilterPins(IBaseFilter * pFilter, ListPinPtr& vInPins, ListPinPtr& vOutPins)
 {
 	IPin*			pPin;
 	IEnumPins*		pEnumerator;
@@ -321,7 +321,7 @@ void CVideoMgr::CollectFilterPins(IBaseFilter* pFilter, ListPinPtr& vInPins, Lis
 	pEnumerator->Release();
 }
 
-void CVideoMgr::CollectFilters(IGraphBuilder* pGraph, ListBaseFilterPtr& vFilters)
+void CVideoMgr::CollectFilters(IGraphBuilder * pGraph, ListBaseFilterPtr& vFilters)
 {
 	IEnumFilters*	pEnumerator;
 	IBaseFilter*	pFilter;
@@ -337,11 +337,11 @@ void CVideoMgr::CollectFilters(IGraphBuilder* pGraph, ListBaseFilterPtr& vFilter
 	pEnumerator->Release();  
 }
 
-HRESULT CVideoMgr::AddFilter(IGraphBuilder* pGraph, const GUID& gClsID, LPCWSTR pName, IBaseFilter** pOutFilter)
+HRESULT CVideoMgr::AddFilter(IGraphBuilder * pGraph, const GUID& gClsID, LPCWSTR pName, IBaseFilter ** pOutFilter)
 {
 	*pOutFilter = 0;
 
-	IBaseFilter* pFilter = 0;
+	IBaseFilter * pFilter = 0;
 	HRESULT hr = CoCreateInstance(gClsID, NULL, CLSCTX_INPROC_SERVER, IID_IBaseFilter, (void**)&pFilter);
 
 	if (SUCCEEDED(hr))
@@ -362,7 +362,7 @@ void CVideoMgr::ReleasePins(ListPinPtr& vPins)
 		(*it)->Release();
 }
 
-HRESULT CVideoMgr::ReplaceVideoRenderer(IBaseFilter* pNullRendererFilter)
+HRESULT CVideoMgr::ReplaceVideoRenderer(IBaseFilter * pNullRendererFilter)
 {
 	HRESULT				hr;
 
@@ -429,7 +429,7 @@ HRESULT CVideoMgr::ReplaceVideoRenderer(IBaseFilter* pNullRendererFilter)
 	}
 
 	///<	替换Video Renderer为 Null Renderer
-	IPin* pNullRendererInPin = FindPin(pNullRendererFilter, PINDIR_INPUT);   
+	IPin * pNullRendererInPin = FindPin(pNullRendererFilter, PINDIR_INPUT);   
 	if (!pNullRendererInPin)
 	{
 		VD_SAFE_RELEASE(pCurrInPin);
@@ -484,7 +484,7 @@ void CVideoMgr::AuxFreeMediaType(AM_MEDIA_TYPE& mt)
 	}
 }
 
-CVideoMgr* CVideoMgr::s_pVideoMgr = 0;
+CVideoMgr * CVideoMgr::s_pVideoMgr = 0;
 
 CVideoMgr::CVideoMgr()
 	: m_pGraphBuilder(0)

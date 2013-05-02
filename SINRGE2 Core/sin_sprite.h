@@ -36,14 +36,14 @@ public:
 	void		SetFlip(bool bX, bool bY, bool bHotSpot = false);
 
 	HTEXTURE	GetTexture() const { return quad.tex; }
-	void		GetTextureRect(float *x, float *y, float *w, float *h) const { *x=tx; *y=ty; *w=m_width; *h=m_height; }
+	void		GetTextureRect(float * x, float * y, float * w, float * h) const { *x = tx; *y = ty; *w = m_width; *h = m_height; }
 	DWORD		GetColor(int i=0) const { return quad.v[i].col; }
 	float		GetZ(int i=0) const { return quad.v[i].z; }
 	int			GetBlendMode() const { return quad.blend; }
 
 	float		GetWidth()											const { return m_width; }
 	float		GetHeight()											const { return m_height; }
-	hgeRect*	GetBoundingBoxEx(float x, float y, hgeRect *rect)	const;
+	hgeRect *	GetBoundingBoxEx(float x, float y, hgeRect *rect)	const;
 	
 	void		SetOX(float ox) { m_ox = ox; }
 	void		SetOY(float oy) { m_oy = oy; }
@@ -56,7 +56,7 @@ public:
 	DWORD		GetBlendColor() const { return quad.blend_color; }		//	SINRGE2
 	
 	bool		GetSrcRectDirty()									const { return m_src_rect_dirty; }
-	void		GetTextureRect(int *x, int *y, int *w, int *h)		const { *x=m_rx; *y=m_ry; *w=m_rw; *h=m_rh; }
+	void		GetTextureRect(int * x, int * y, int * w, int * h)	const { *x = m_rx; *y = m_ry; *w = m_rw; *h = m_rh; }
 
 	float		GetZoomX()											const { return m_zoom_x; }
 	float		GetZoomY()											const { return m_zoom_y; }
@@ -65,7 +65,7 @@ public:
 	inline bool IsFlipY()											const { return m_flip_y < 0.0f; }
 
 protected:
-	static HGE	*hge;
+	static HGE *hge;
 
 	hgeQuad		quad;
 	float		tx, ty;

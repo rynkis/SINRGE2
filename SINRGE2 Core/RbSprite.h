@@ -26,7 +26,7 @@ public:
 
 protected:
 	virtual void	mark();
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);
 
 	virtual	void	render(u32 id);
 
@@ -53,8 +53,8 @@ protected:
 	bool			m_disposed;
 	bool			m_movie_playing;
 
-	RbRect*			m_src_rect_ptr;
-	RbTone*			m_tone_ptr;
+	RbRect *		m_src_rect_ptr;
+	RbTone *		m_tone_ptr;
 
 	//hgeQuad			m_quad;
 

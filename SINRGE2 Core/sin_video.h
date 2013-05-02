@@ -39,7 +39,7 @@ public:
 		Release();
 	}
 
-	void	Push(T* p)
+	void	Push(T * p)
 	{
 		m_vPointers.push_back(p);
 	}
@@ -64,10 +64,10 @@ private:
 	typedef std::vector<std::wstring>	ListWString;
 
 public:
-	bool					LoadMovie(const wchar_t* pFileName, int &pOutWidth, int &pOutHeight);
+	bool					LoadMovie(const wchar_t * pFileName, int &pOutWidth, int &pOutHeight);
 	void					PlayMovie(long iVolume);
 	bool					IsMoviePlaying();
-	void					UpdateMovieTexture(DWORD* pDstBitmapAddr);
+	void					UpdateMovieTexture(DWORD * pDstBitmapAddr);
 	void					StopMovie();
 	void					RewindMovie();
 	long					GetVolume() const;
@@ -75,14 +75,14 @@ public:
 	bool					IsOccupied() const { return m_is_occupied; };
 
 private:
-	void					CollectFilterPins(IBaseFilter* pFilter, ListPinPtr& vInPins, ListPinPtr& vOutPins);
-	void					CollectFilters(IGraphBuilder* pGraph, ListBaseFilterPtr& vFilters);
-	IPin*					FindPin(IBaseFilter* pFilter, PIN_DIRECTION PinDir, bool bFreePin = true);
+	void					CollectFilterPins(IBaseFilter * pFilter, ListPinPtr& vInPins, ListPinPtr& vOutPins);
+	void					CollectFilters(IGraphBuilder * pGraph, ListBaseFilterPtr& vFilters);
+	IPin*					FindPin(IBaseFilter * pFilter, PIN_DIRECTION PinDir, bool bFreePin = true);
 
-	HRESULT					AddFilter(IGraphBuilder* pGraph, const GUID& gClsID, LPCWSTR pName, IBaseFilter** pOutFilter);
+	HRESULT					AddFilter(IGraphBuilder * pGraph, const GUID& gClsID, LPCWSTR pName, IBaseFilter ** pOutFilter);
 	void					ReleasePins(ListPinPtr& vPins);
 	void					AuxFreeMediaType(AM_MEDIA_TYPE& mt);
-	HRESULT					ReplaceVideoRenderer(IBaseFilter* pNullRendererFilter);
+	HRESULT					ReplaceVideoRenderer(IBaseFilter * pNullRendererFilter);
 
 public:
 	bool					Init();

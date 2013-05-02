@@ -50,7 +50,7 @@ void RbTable::InitLibrary()
  *	@desc
  *		生成 Table 对象。指定多维数组各维的尺寸。能生成 1 ～ 3 维的数组。生成单元数为 0 的数组也是可能的。
  */
-VALUE RbTable::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbTable::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE xsize, ysize, zsize;
 
@@ -121,7 +121,7 @@ VALUE RbTable::dm_load(VALUE klass, VALUE str)
 	return obj;
 }
 
-VALUE RbTable::resize(int argc, VALUE *argv, VALUE obj)
+VALUE RbTable::resize(int argc, VALUE * argv, VALUE obj)
 {
 	/* Check arguments nums */
 	VALUE xsize, ysize, zsize;
@@ -176,7 +176,7 @@ VALUE RbTable::resize(int argc, VALUE *argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbTable::get_element(int argc, VALUE *argv, VALUE obj)
+VALUE RbTable::get_element(int argc, VALUE * argv, VALUE obj)
 {
 	/* variables declare */
 	int i, pos, x, y, z;
@@ -211,7 +211,7 @@ VALUE RbTable::get_element(int argc, VALUE *argv, VALUE obj)
 	return m_data[pos];
 }
 
-VALUE RbTable::set_element(int argc, VALUE *argv, VALUE obj)
+VALUE RbTable::set_element(int argc, VALUE * argv, VALUE obj)
 {
 	/* variables declare */
 	int i, pos, x, y, z;

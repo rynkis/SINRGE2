@@ -73,13 +73,13 @@ void RbColor::InitLibrary()
  *	@desc
  *		生成 Color 对象。如省略 alpha 的话则默认为 255。
  */
-VALUE RbColor::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
 		SafeColorValue(argv[0]);
 
-		RbColor* color = GetObjectPtr<RbColor>(argv[0]);
+		RbColor * color = GetObjectPtr<RbColor>(argv[0]);
 
 		m_r = color->m_r;
 		m_g = color->m_g;
@@ -117,14 +117,14 @@ VALUE RbColor::initialize(int argc, VALUE *argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbColor::set(int argc, VALUE *argv, VALUE obj)
+VALUE RbColor::set(int argc, VALUE * argv, VALUE obj)
 {
 	return initialize(argc, argv, obj);
 }
 
 VALUE RbColor::_dump(VALUE depth)
 {
-	return rb_str_new((const char*)&m_dump_data[0], sizeof(m_dump_data));
+	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
 }
 
 VALUE RbColor::clone()

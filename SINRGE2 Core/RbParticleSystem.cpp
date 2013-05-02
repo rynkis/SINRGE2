@@ -90,7 +90,7 @@ void RbParticleSystem::mark()
 	if (m_bitmap_ptr)	m_bitmap_ptr->MarkObject();
 }
 
-VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbParticleSystem::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE filename, viewport, isbuffer;
 	bool frombuffer = false;
@@ -111,11 +111,11 @@ VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
 	m_visible = Qtrue;
 
 	frombuffer = RTEST(isbuffer);
-	HGE* hge = GetAppPtr()->GetHgePtr();
+	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	if (frombuffer)
 	{
-		void* psi = RSTRING_PTR(filename);
+		void * psi = RSTRING_PTR(filename);
 		memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
 		psi = NULL;
 	}
@@ -123,7 +123,7 @@ VALUE RbParticleSystem::initialize(int argc, VALUE *argv, VALUE obj)
 	{
 		SafeStringValue(filename);
 
-		void* psi = hge->Resource_Load(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)));
+		void * psi = hge->Resource_Load(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)));
 		if (!psi) rb_raise(rb_eSinError, "Failed to load psi: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));
 		memcpy(&info, psi, sizeof(hgeParticleSystemInfo));
 		hge->Resource_Free(psi);
@@ -167,11 +167,11 @@ VALUE RbParticleSystem::update()
 
 	float fDeltaTime = (float)GetAppPtr()->GetTimeDelta();
 	
-	HGE* hge = GetAppPtr()->GetHgePtr();
+	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	int i;
 	float ang;
-	hgeParticle *par;
+	hgeParticle * par;
 	hgeVector vecAccel, vecAccel2;
 
 	if(fAge >= 0)
@@ -309,7 +309,7 @@ VALUE RbParticleSystem::fire_at(VALUE vx, VALUE vy)
 	return Qnil;
 }
 
-VALUE RbParticleSystem::stop(int argc, VALUE *argv, VALUE obj)
+VALUE RbParticleSystem::stop(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 	
@@ -322,7 +322,7 @@ VALUE RbParticleSystem::stop(int argc, VALUE *argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbParticleSystem::move_to(int argc, VALUE *argv, VALUE obj)
+VALUE RbParticleSystem::move_to(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 	VALUE vx, vy, move;
@@ -377,7 +377,7 @@ void RbParticleSystem::render(u32 id)
 	
 	if (m_viewport_ptr)
 	{
-		const RbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
+		const RbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
 		x = rect_ptr->x - m_viewport_ptr->m_ox;
 		y = rect_ptr->y - m_viewport_ptr->m_oy;
 	}
@@ -388,7 +388,7 @@ void RbParticleSystem::Render(float offset_x, float offset_y)
 {
 	int i;
 	DWORD col;
-	hgeParticle *par=particles;
+	hgeParticle * par=particles;
 
 	col=info.sprite->GetColor();
 

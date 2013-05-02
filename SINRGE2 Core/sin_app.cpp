@@ -83,7 +83,7 @@ namespace
 
 		VALUE str = rb_str_buf_new(0);
 
-		rb_encoding* enc = rb_utf8_encoding();
+		rb_encoding * enc = rb_utf8_encoding();
 		for (i = 0; i < argc; ++i)
 		{
 			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
@@ -105,7 +105,7 @@ namespace
 
 		VALUE str = rb_str_buf_new(0);
 
-		rb_encoding* enc = rb_utf8_encoding();
+		rb_encoding * enc = rb_utf8_encoding();
 		for (i = 0; i < argc; ++i)
 		{
 			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
@@ -119,21 +119,34 @@ namespace
 	static VALUE load_data(int argc, VALUE filename)
 	{
 		SafeStringValue(filename);
-		VALUE rbread = rb_file_open(RSTRING_PTR(filename), "rb");
-		VALUE rbdata = rb_marshal_load(rbread);
-		(void)rb_io_close(rbread);
-		
+		VALUE rbread, rbdata;
+		if (GetAppPtr()->Get7pkgReader())
+		{
+			wchar_t * filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(filename));
+			void * data = malloc(GetAppPtr()->Get7pkgReader()->FileLength(filenameW));
+			if (!GetAppPtr()->Get7pkgReader()->LoadData(filenameW, data)) return Qnil;
+			rbread = rb_str_new2((char *)data);
+			rbdata = rb_marshal_load(rbread);
+			rbread = Qnil;
+			free(data);
+		}
+		else
+		{
+			rbread = rb_file_open(RSTRING_PTR(filename), "rb");
+			rbdata = rb_marshal_load(rbread);
+			(void)rb_io_close(rbread);
+		}
 		return rbdata;
 	}
 }
 
-static const wchar_t* pDefaultConsole	= L"0";
-static const wchar_t* pDefaultScripts	= L"main.rb";
+static const wchar_t * pDefaultConsole	= L"0";
+static const wchar_t * pDefaultScripts	= L"main.rb";
 
 /***
  *	全局单例静态变量定义
  */
-CApplication* CApplication::s_pApp = 0;
+CApplication * CApplication::s_pApp = 0;
 
 
 /***
@@ -141,6 +154,10 @@ CApplication* CApplication::s_pApp = 0;
  */
 CApplication::CApplication()
 	: m_pVideoMgr(0)
+	, m_7pkgReader(0)
+	, pr_open(0)
+	, pr_close(0)
+
 	, pScripts(0)
 	, m_pHge(0)
 	, m_pRenderState(0)
@@ -157,6 +174,8 @@ CApplication::CApplication()
 	, m_t0(0)
 	, m_last_fps(0)
 	, m_last(0)
+
+	, m_hSeal(0)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
@@ -213,6 +232,19 @@ void CApplication::Dispose()
 		delete m_fps_timer;
 		m_fps_timer = 0;
 	}
+
+	if (m_7pkgReader)
+	{
+		pr_close(m_7pkgReader);
+		m_7pkgReader = 0;
+	}
+
+	if (m_hSeal != NULL)
+	{
+		SealCleanup();
+		FreeLibrary(m_hSeal);
+		m_hSeal = NULL;
+	}
 }
 
 void CApplication::Quit()
@@ -248,7 +280,7 @@ void CApplication::BrightnessUpdate()
 
 int CApplication::Run()
 {
-	GetRuntimeInfos();
+	if (GetRuntimeInfos()) return 1;
 	InitRubyInterpreter();
 	InitRubyInnerClassExt();
 	InitExportSinInterface();
@@ -257,7 +289,13 @@ int CApplication::Run()
 
 int CApplication::RunScript()
 {
-	if(!IsFileExist(pScripts))
+	if (m_7pkgReader)
+	{
+		if (m_7pkgReader->IsFileExist(szScripts))
+			goto __run_with_data;
+	}
+
+	if (!IsFileExist(pScripts))
 	{
 		MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load script.", m_frm_struct.m_title,  MB_ICONWARNING);
 		return 1;
@@ -287,34 +325,36 @@ int CApplication::RunScript()
 				OnFailed(err);
 			}
 		}
+		return state;//ruby_cleanup(state);
 	}
-	else
+	else goto __run_with_data;
+
+__run_with_data:
+	VALUE rbdata = load_data(1, rb_str_new2(pScripts));
+	if (NIL_P(rbdata)) return 0;
+
+	int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
+
+	VALUE ary, f_name, script;
+	VALUE argv = rb_ary_new2(2);
+	//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
+	for (int pos = 0; pos < arylen; ++pos)
 	{
-		VALUE rbdata = load_data(1, rb_str_new2(pScripts));
+		ary = rb_ary_entry(rbdata, pos);
+		f_name = rb_ary_entry(ary, 0);
+		script = rb_ary_entry(ary, 1);
+		//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
+		rb_ary_clear(argv);
+		rb_ary_push(argv, f_name);
+		rb_ary_push(argv, script);
+		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
 
-		int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
-
-		VALUE ary, f_name, script;
-		VALUE argv = rb_ary_new2(2);
-		//VALUE cInflate = rb_class_new;//rb_eval_string("Zlib::Inflate");
-		for (int pos = 0; pos < arylen; ++pos)
+		if (state)
 		{
-			ary = rb_ary_entry(rbdata, pos);
-			f_name = rb_ary_entry(ary, 0);
-			script = rb_ary_entry(ary, 1);
-			//script = rb_funcall(cInflate, rb_intern("inflate"), 1, rb_ary_entry(ary, 1));//rb_ary_entry(ary, 1);
-			rb_ary_clear(argv);
-			rb_ary_push(argv, f_name);
-			rb_ary_push(argv, script);
-			VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
-
-			if (state)
+			VALUE err = rb_errinfo();
+			if (!rb_obj_is_kind_of(err, rb_eSystemExit))
 			{
-				VALUE err = rb_errinfo();
-				if (!rb_obj_is_kind_of(err, rb_eSystemExit))
-				{
-					OnFailed(err);
-				}
+				OnFailed(err);
 			}
 		}
 	}
@@ -339,7 +379,7 @@ void CApplication::InitRubyInterpreter()
 	}
 }
 
-void CApplication::GetRuntimeInfos()
+int CApplication::GetRuntimeInfos()
 {
 	// app路径
 	DWORD len = ::GetModuleFileNameW(NULL, szAppPath, MAX_PATH);
@@ -359,17 +399,21 @@ void CApplication::GetRuntimeInfos()
 	szIniPath[len - 2] = L'n';
 	szIniPath[len - 3] = L'i';
 	
-	wchar_t szConsole[MAX_PATH];
+	wchar_t szConsole[MAX_PATH], szPackage[MAX_PATH], szExtFunc[MAX_PATH];
 	// ini文件存在
 	if (IsFileExist(szIniPath))
 	{
 		GetPrivateProfileStringW(L"Setting", L"Scripts", pDefaultScripts, szScripts, MAX_PATH, szIniPath);
 		GetPrivateProfileStringW(L"Setting", L"Console", pDefaultConsole, szConsole, MAX_PATH, szIniPath);
+		GetPrivateProfileStringW(L"Setting", L"Package", L"", szPackage, MAX_PATH, szIniPath);
+		GetPrivateProfileStringW(L"Setting", L"ExtFunc", L"", szExtFunc, MAX_PATH, szIniPath);
 	}
 	else
 	{
 		wcscpy_s(szScripts, pDefaultScripts);
 		wcscpy_s(szConsole, pDefaultConsole);
+		szPackage[0] = 0;
+		szExtFunc[0] = 0;
 	}
 
 	len = WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, NULL, 0, NULL, FALSE);
@@ -378,9 +422,37 @@ void CApplication::GetRuntimeInfos()
 
 	if (szConsole[0] == '1')
 		m_with_console = true;
+	
+	if (szExtFunc[0] != 0)
+		m_hSeal = ::LoadLibraryW(szExtFunc);
+
+	if (m_hSeal && szPackage[0] != 0)
+	{
+		if (!IsFileExist(szPackage))
+		{
+			MessageBoxW(m_frm_struct.m_hwnd, L"Failed to find 7pkg file.", m_frm_struct.m_title,  MB_ICONWARNING);
+			return 1;
+		}
+		else
+		{
+			pr_open = (func_pr_open)::GetProcAddress(m_hSeal, "pr_open");
+			pr_close = (func_pr_close)::GetProcAddress(m_hSeal, "pr_close");
+			if (pr_open && pr_close)
+			{
+				m_7pkgReader = pr_open(szPackage);
+			}
+			else
+			{
+				MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load expansion functions.", m_frm_struct.m_title,  MB_ICONWARNING);
+				return 1;
+			}
+		}
+	}
+
+	return 0;
 }
 
-int CApplication::Eval(const char* script)
+int CApplication::Eval(const char * script)
 {
 	int status = -1;
 
@@ -394,7 +466,7 @@ int CApplication::Eval(const char* script)
 	return 0;
 }
 
-//void CApplication::ShowError(const wchar_t* szFormat, ...)
+//void CApplication::ShowError(const wchar_t * szFormat, ...)
 //{
 //	wchar_t szError[1024];
 //
@@ -406,7 +478,7 @@ int CApplication::Eval(const char* script)
 //	MessageBoxW(m_frm_struct.m_hwnd, szError, m_frm_struct.m_title, MB_ICONERROR);
 //}
 //
-//void CApplication::ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...)
+//void CApplication::ShowErrorMsg(HWND hWnd, const wchar_t * szTitle, const wchar_t * szFormat, ...)
 //{
 //	wchar_t szError[1024];
 //
@@ -443,12 +515,6 @@ void CApplication::InitExportSinInterface()
 {
 	MRbSinCore::InitLibrary();
 	MRbInput::InitLibrary();
-
-#if SIN_USE_SEAL
-	MRbSeal::InitLibrary();
-#else
-	MRbAudio::InitLibrary();
-#endif
 	
 	RbRect::InitLibrary();
 	RbColor::InitLibrary();
@@ -489,8 +555,8 @@ void CApplication::OnFailed(VALUE err)
 	const VALUE message			= rb_funcall(err, rb_intern("message"), 0);
 	const VALUE message_str		= rb_funcall(message, rb_intern("gsub"), 2, rb_str_new2("\n"), rb_str_new2("\r\n"));
 
-	const char* clsname			= rb_obj_classname(err);
-	const char* msg				= RSTRING_PTR(message_str);
+	const char * clsname			= rb_obj_classname(err);
+	const char * msg				= RSTRING_PTR(message_str);
 
 	if (rb_obj_is_kind_of(err, rb_eSyntaxError))
 		errmsg = rb_sprintf("Script '%s' line %d: %s occurred.", RSTRING_PTR(sourcefile), NUM2INT(sourceline), clsname);
@@ -576,6 +642,17 @@ failed_return:
 	return false;
 }
 
+bool CApplication::InitAudio()
+{
+#if SIN_USE_SEAL
+	if (!m_hSeal) return false;
+	return MRbSeal::InitLibrary();
+#else
+	MRbAudio::InitLibrary();
+	return true;
+#endif
+}
+
 void CApplication::LimitFps(int limit)
 {
 	if (!m_fps_timer->IsStarted())
@@ -637,12 +714,12 @@ double CApplication::GetTimeDelta()
 /**
  *	判断指定文件是否存在
  */
-bool CApplication::IsFileExist(const wchar_t* pFileName)
+bool CApplication::IsFileExist(const wchar_t * pFileName)
 {
 	return (GetFileAttributesW(pFileName) != INVALID_FILE_ATTRIBUTES);
 }
 
-bool CApplication::IsFileExist(const char* pFileName)
+bool CApplication::IsFileExist(const char * pFileName)
 {
 	return (GetFileAttributesA(pFileName) != INVALID_FILE_ATTRIBUTES);
 }

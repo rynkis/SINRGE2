@@ -35,14 +35,14 @@ public:
 	static void		InitLibrary();
 
 public:
-	VALUE*			GetDataPtr() const { return m_data; }
+	VALUE *			GetDataPtr() const { return m_data; }
 
 protected:
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 	virtual VALUE	_dump(VALUE depth);
 
 protected:
-	VALUE*			m_data;
+	VALUE *			m_data;
 	union
 	{
 		struct

@@ -30,7 +30,7 @@ public:
 
 protected:
 	virtual void	mark();
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);
 
 	virtual	void	render(u32 id);
 	
@@ -43,7 +43,7 @@ protected:
 	void			process_tone_texture();
 
 protected:
-	RbRenderNode*	m_node;
+	RbRenderNode *	m_node;
 
 	int				m_opacity;
 	int				m_blend_type;
@@ -56,11 +56,11 @@ protected:
 	int				m_tone_tex_width;
 	int				m_tone_tex_height;
 
-	SinSprite*		m_pSpr;
+	SinSprite *		m_pSpr;
 
-	RbBitmap*		m_bitmap_ptr;
-	RbColor*		m_color_ptr;
-	RbTone*			m_tone_ptr;
+	RbBitmap *		m_bitmap_ptr;
+	RbColor *		m_color_ptr;
+	RbTone *		m_tone_ptr;
 	
 protected:
 	void			check_raise();

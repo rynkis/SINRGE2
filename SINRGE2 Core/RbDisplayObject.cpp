@@ -22,7 +22,7 @@ void DisplayObject::render(u32 id)
 
 void DisplayObject::RenderProc(VALUE obj, u32 id)
 {
-	DisplayObject* dobj;
+	DisplayObject * dobj;
 	Data_Get_Struct(obj, DisplayObject, dobj);
 
 	//	对象已经释放或对象不可见则直接返回

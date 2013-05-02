@@ -74,7 +74,7 @@
 #define imp_method00(klass, name)					\
 	VALUE klass::dm_##name(VALUE obj)				\
 	{												\
-		klass* obj_ptr;								\
+		klass * obj_ptr;							\
 		Data_Get_Struct(obj, klass, obj_ptr);		\
 		return obj_ptr->name();						\
 	}												\
@@ -82,7 +82,7 @@
 #define imp_method01(klass, name)					\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1)		\
 	{												\
-		klass* obj_ptr;								\
+		klass * obj_ptr;							\
 		Data_Get_Struct(obj, klass, obj_ptr);		\
 		return obj_ptr->name(v1);					\
 	}												\
@@ -90,7 +90,7 @@
 #define imp_method02(klass, name)							\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2)	\
 	{														\
-		klass* obj_ptr;										\
+		klass * obj_ptr;									\
 		Data_Get_Struct(obj, klass, obj_ptr);				\
 		return obj_ptr->name(v1, v2);						\
 	}														\
@@ -98,7 +98,7 @@
 #define imp_method03(klass, name)									\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2, VALUE v3)	\
 	{																\
-		klass* obj_ptr;												\
+		klass * obj_ptr;											\
 		Data_Get_Struct(obj, klass, obj_ptr);						\
 		return obj_ptr->name(v1, v2, v3);							\
 	}																\
@@ -106,7 +106,7 @@
 #define imp_method04(klass, name)												\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2, VALUE v3, VALUE v4)	\
 	{																			\
-		klass* obj_ptr;															\
+		klass * obj_ptr;														\
 		Data_Get_Struct(obj, klass, obj_ptr);									\
 		return obj_ptr->name(v1, v2, v3, v4);									\
 	}																			\
@@ -114,7 +114,7 @@
 #define imp_method05(klass, name)														\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2, VALUE v3, VALUE v4, VALUE v5)	\
 	{																					\
-		klass* obj_ptr;																	\
+		klass * obj_ptr;																\
 		Data_Get_Struct(obj, klass, obj_ptr);											\
 		return obj_ptr->name(v1, v2, v3, v4, v5);										\
 	}																					\
@@ -122,7 +122,7 @@
 #define imp_method06(klass, name)																	\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2, VALUE v3, VALUE v4, VALUE v5, VALUE v6)	\
 	{																								\
-		klass* obj_ptr;																				\
+		klass * obj_ptr;																			\
 		Data_Get_Struct(obj, klass, obj_ptr);														\
 		return obj_ptr->name(v1, v2, v3, v4, v5, v6);												\
 	}																								\
@@ -130,7 +130,7 @@
 #define imp_method07(klass, name)																			\
 	VALUE klass::dm_##name(VALUE obj, VALUE v1, VALUE v2, VALUE v3, VALUE v4, VALUE v5, VALUE v6, VALUE v7)	\
 	{																										\
-		klass* obj_ptr;																						\
+		klass * obj_ptr;																					\
 		Data_Get_Struct(obj, klass, obj_ptr);																\
 		return obj_ptr->name(v1, v2, v3, v4, v5, v6, v7);													\
 	}																										\
@@ -138,7 +138,7 @@
 #define imp_method_vargs(klass, name)							\
 	VALUE klass::dm_##name(int argc, VALUE *argv, VALUE obj)	\
 	{															\
-		klass* obj_ptr;											\
+		klass * obj_ptr;										\
 		Data_Get_Struct(obj, klass, obj_ptr);					\
 		return obj_ptr->name(argc, argv, obj);					\
 	}															\
@@ -226,38 +226,38 @@ public:
 	inline VALUE		GetObject() const { return __obj; }							//	获取自身Ruby对象
 	inline void			MarkObject() const { rb_gc_mark(__obj); }					//	标记自身Ruby对象
 
-	static inline VALUE	ReturnObject(RbClassBase* p)								//	安全返回Ruby对象
+	static inline VALUE	ReturnObject(RbClassBase * p)								//	安全返回Ruby对象
 	{
 		return (p ? p->GetObject() : Qnil);
 	}
 
 	template<class T> 
-	static inline T*	GetObjectPtr(VALUE obj)
+	static inline T *	GetObjectPtr(VALUE obj)
 	{
-		return (T*)DATA_PTR(obj);
+		return (T *)DATA_PTR(obj);
 	}
 
 protected:
 	virtual void	mark(){}														//	Ruby对象Mark函数（子类应该重载）
-	virtual VALUE	initialize(int, VALUE*, VALUE obj) { return obj; }				//	Ruby对象initialize函数（子类应该重载）
+	virtual VALUE	initialize(int, VALUE *, VALUE obj) { return obj; }				//	Ruby对象initialize函数（子类应该重载）
 	virtual VALUE	clone()			{ return rb_obj_clone(__obj); }
 	virtual VALUE	dup()			{ return rb_obj_dup(__obj); }
 	virtual VALUE	_dump(VALUE)	{ return Qnil; }
 	virtual VALUE	to_string()		{ return rb_sprintf("#<%s:0x%x>", obj_classname(), __obj); }
 
 protected:
-	const char*		obj_classname() const { return rb_obj_classname(__obj); }
+	const char *	obj_classname() const { return rb_obj_classname(__obj); }
 	VALUE			obj_class()		const { return rb_obj_class(__obj); }
 
 #ifndef SIN_USE_RUBY_MM
 protected:
-	void*			operator new(size_t size) { return xmalloc(size); }
+	void *			operator new(size_t size) { return xmalloc(size); }
 	void			operator delete(void* ptr) { xfree(ptr); }
 #endif	//	SIN_USE_RUBY_MM
 
 protected:
 #ifdef SIN_USE_RUBY_MM
-	static void		ObjFree(RbClassBase *baseobj) 
+	static void		ObjFree(RbClassBase * baseobj) 
 	{ 
 		if (baseobj) 
 		{
@@ -266,18 +266,18 @@ protected:
 		}
 	}
 #else
-	static void		ObjFree(RbClassBase *baseobj) { if (baseobj) delete baseobj; }
+	static void		ObjFree(RbClassBase * baseobj) { if (baseobj) delete baseobj; }
 #endif	//	SIN_USE_RUBY_MM
 
-	static void		ObjMark(RbClassBase *baseobj) { if (baseobj) baseobj->mark(); }
+	static void		ObjMark(RbClassBase * baseobj) { if (baseobj) baseobj->mark(); }
 
 protected:
 	template<class T> static VALUE	ObjAllocate(VALUE klass)
 	{
 #ifdef SIN_USE_RUBY_MM
-		T* dmy = new (xmalloc(sizeof(T))) T();
+		T * dmy = new (xmalloc(sizeof(T))) T();
 #else
-		T* dmy = new T();
+		T * dmy = new T();
 		//if (!dmy)
 		//{
 		//	RbClassError::RaiseNoMemory();
@@ -287,9 +287,9 @@ protected:
 	}
 
 protected:
-	static VALUE	dm_initialize(int argc, VALUE *argv, VALUE obj)
+	static VALUE	dm_initialize(int argc, VALUE * argv, VALUE obj)
 	{
-		RbClassBase	*baseobj;
+		RbClassBase	* baseobj;
 		Data_Get_Struct(obj, RbClassBase, baseobj);
 
 		return baseobj->initialize(argc, argv, obj);
@@ -297,7 +297,7 @@ protected:
 
 	static VALUE	dm_clone(VALUE obj)
 	{
-		RbClassBase	*baseobj;
+		RbClassBase	* baseobj;
 		Data_Get_Struct(obj, RbClassBase, baseobj);
 
 		return baseobj->clone();
@@ -305,7 +305,7 @@ protected:
 
 	static VALUE	dm_dup(VALUE obj)
 	{
-		RbClassBase	*baseobj;
+		RbClassBase	* baseobj;
 		Data_Get_Struct(obj, RbClassBase, baseobj);
 
 		return baseobj->dup();
@@ -313,7 +313,7 @@ protected:
 
 	static VALUE	dm_dump(VALUE obj, VALUE depth)
 	{
-		RbClassBase	*baseobj;
+		RbClassBase	* baseobj;
 		Data_Get_Struct(obj, RbClassBase, baseobj);
 
 		return baseobj->_dump(depth);
@@ -321,7 +321,7 @@ protected:
 
 	static VALUE	dm_to_string(VALUE obj)
 	{
-		RbClassBase	*baseobj;
+		RbClassBase	* baseobj;
 		Data_Get_Struct(obj, RbClassBase, baseobj);
 
 		return baseobj->to_string();

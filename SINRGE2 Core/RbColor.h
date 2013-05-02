@@ -26,7 +26,7 @@ public:
 	const DWORD		GetColor() const { return m_color; }
 
 protected:
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 
 	virtual VALUE	_dump(VALUE depth);
 	virtual VALUE	clone();

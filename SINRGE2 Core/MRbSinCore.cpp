@@ -5,7 +5,6 @@
 **
 ** Ruby Moudle SINRGE2
 */
-//#include "nge_timer.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "RbBitmap.h"
@@ -20,16 +19,24 @@ VALUE rb_mGraphics;
 
 VALUE MRbSinCore::init()
 {
-	if (GetAppPtr()->InitVideo())
-		return Qfalse;
-	// 为了避免窗口在打开过程中就开始写屏，等待30秒
-	int dt = 1800;
+	if (!GetAppPtr()->InitAudio())
+		rb_raise(rb_eSinError, "Failed to initialize Audio Module.");
+	
+	return init_video();
+}
+
+VALUE MRbSinCore::init_video()
+{
+	if (!GetAppPtr()->InitVideo())
+		rb_raise(rb_eSinError, "Failed to initialize Video Module.");
+	// 为了避免窗口在打开过程中就开始写屏，等待30帧
+	int dt = 30;
 	do
 	{
 		GetAppPtr()->GraphicsUpdate();
 		dt--;
 	} while (dt);
-	return Qtrue;
+	return Qnil;
 }
 
 VALUE MRbSinCore::quit()
@@ -69,7 +76,7 @@ VALUE MRbSinCore::snap_to_bitmap()
 {
 	VALUE __argv[] = {INT2FIX(2), INT2FIX(2)};
 	VALUE bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
-	RbBitmap* pRbBmp = (RbBitmap*)DATA_PTR(bitmap);
+	RbBitmap * pRbBmp = (RbBitmap *)DATA_PTR(bitmap);
 	if (!RbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
 	{
 		pRbBmp = NULL;
@@ -84,7 +91,7 @@ VALUE MRbSinCore::freeze()
 	return Qnil;
 }
 
-VALUE MRbSinCore::transition(int argc, VALUE *argv)
+VALUE MRbSinCore::transition(int argc, VALUE * argv)
 {
 	int duration = FIXNUM_P(argv[0]) ? FIX2INT(argv[0]) : 8;
 	wchar_t filename[MAX_PATH];
@@ -206,7 +213,7 @@ VALUE MRbSinCore::set_title(int argc, VALUE title)
 {
 	SafeStringValue(title);
 
-	wchar_t* tempTitle = Kconv::UTF8ToUnicode(RSTRING_PTR(title));
+	wchar_t * tempTitle = Kconv::UTF8ToUnicode(RSTRING_PTR(title));
 	wcscpy_s(GetAppPtr()->m_frm_struct.m_title, tempTitle);
 	return title;
 }
@@ -341,8 +348,9 @@ void MRbSinCore::InitLibrary()
 	rb_eSinError = rb_define_class_under(rb_mSin, "StandardError", rb_eStandardError);
 
 	rb_mGraphics = rb_define_module_under(rb_mSin, "Graphics");
-
+	
 	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
+	rb_define_singleton_method(rb_mSin, "init_video", RbFunc(init_video), 0);
 	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
 
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);

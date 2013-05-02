@@ -37,7 +37,7 @@ public:
 	VALUE			m_visible;
 	bool			m_disposed;
 
-	RbViewport*		m_viewport_ptr;
+	RbViewport *	m_viewport_ptr;
 
 protected:
 	dm_method(dispose)

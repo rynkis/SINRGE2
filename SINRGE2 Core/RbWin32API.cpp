@@ -33,7 +33,7 @@ namespace
 
 		if (obj_type == T_ARRAY)
 		{
-			VALUE* ptr = RARRAY_PTR(import);
+			VALUE * ptr = RARRAY_PTR(import);
 			for (i = 0, len = RARRAY_LEN(import); i < len; ++i) 
 			{
 				SafeStringValue(ptr[i]);
@@ -54,7 +54,7 @@ namespace
 		else if (obj_type != T_NIL)
 		{
 			SafeStringValue(import);
-			char* s = RSTRING_PTR(import);
+			char * s = RSTRING_PTR(import);
 			for (i = 0, len = RSTRING_LEN(import); i < len; ++i)
 			{
 				switch (*s++) 
@@ -134,7 +134,7 @@ void RbWin32API::InitLibrary()
 	rb_define_method(rb_cWin32API, "call",					(RbFunc)dm_call,				-1);
 }
 
-VALUE RbWin32API::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbWin32API::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE dllname, proc, _import, _export;
 	rb_scan_args(argc, argv, "4", &dllname, &proc, &_import, &_export);
@@ -171,7 +171,7 @@ VALUE RbWin32API::initialize(int argc, VALUE *argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbWin32API::call(int argc, VALUE* argv, VALUE obj)
+VALUE RbWin32API::call(int argc, VALUE * argv, VALUE obj)
 {
 	struct 
 	{

@@ -9,7 +9,7 @@
 #include <math.h>
 
 
-HGE *SinSprite::hge=0;
+HGE * SinSprite::hge = 0;
 
 
 SinSprite::SinSprite()
@@ -117,7 +117,7 @@ void SinSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float
 }
 
 
-hgeRect* SinSprite::GetBoundingBoxEx(float x, float y, hgeRect *rect) const
+hgeRect * SinSprite::GetBoundingBoxEx(float x, float y, hgeRect *rect) const
 {
 	rect->Clear();
 

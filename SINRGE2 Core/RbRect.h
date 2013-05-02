@@ -26,9 +26,9 @@ public:
 	static void		InitLibrary();
 
 protected:
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 
-	virtual VALUE	set(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE	set(int argc, VALUE * argv, VALUE obj);
 	virtual VALUE	_dump(VALUE depth);
 	
 	virtual VALUE	to_string();
@@ -48,7 +48,7 @@ protected:
 
 protected:
 	static VALUE	dm_load(VALUE klass, VALUE str);
-	static VALUE	dm_set(int argc, VALUE *argv, VALUE obj);
+	static VALUE	dm_set(int argc, VALUE * argv, VALUE obj);
 
 	dm_method(empty)
 	

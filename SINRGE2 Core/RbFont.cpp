@@ -151,7 +151,7 @@ bool RbFont::IsExist(const wchar_t *filename)
  *	@desc
  *		创建一个字体对象。
  */
-VALUE RbFont::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	检查参数个数
 	if(argc > 2) rb_raise(rb_eArgError, "wrong number of arguments (%d for 2)", argc);

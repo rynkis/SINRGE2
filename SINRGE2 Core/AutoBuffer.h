@@ -25,7 +25,7 @@ public:
 	}
 
 public:
-	unsigned char*	get_buffer_ptr() const	{ return m_pBuffer; }
+	unsigned char *	get_buffer_ptr() const	{ return m_pBuffer; }
 	unsigned long	get_buffer_size() const	{ return m_uLength; }
 
 	void			ensure_size(unsigned long uSize)
@@ -44,7 +44,7 @@ public:
 	}
 
 private:
-	unsigned char*	m_pBuffer;
+	unsigned char *	m_pBuffer;
 	unsigned long	m_uLength;
 };
 #endif	//	__AUTO_BUFFER_H__

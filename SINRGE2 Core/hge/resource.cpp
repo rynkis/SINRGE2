@@ -7,29 +7,42 @@
 */
 
 
+#include "sin_app.h"
 #include "hge_impl.h"
 
 #define NOCRYPT
 
-void* CALL HGE_Impl::Resource_Load(const wchar_t *filename, DWORD *size)
+void * CALL HGE_Impl::Resource_Load(const wchar_t * filename, DWORD * size)
 {
-	void	*data = 0;
+	void * data = 0;
 	HANDLE	handle = NULL;
 	DWORD	file_size;
 
-	handle = CreateFile(Resource_MakePath(filename), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, NULL);
-	if (handle == INVALID_HANDLE_VALUE)
-		return 0;
-	
-	file_size = GetFileSize(handle, NULL);
+	if (GetAppPtr()->Get7pkgReader())
+	{
+		file_size = GetAppPtr()->Get7pkgReader()->FileLength(filename);
+		if (!(data = malloc(file_size)))
+			goto failed_return;
 
-	if (!(data = malloc(file_size)))
-		goto failed_return;
-
-	if (ReadFile(handle, data, file_size, &file_size, NULL) == 0)
-		goto failed_return;
+		if (!GetAppPtr()->Get7pkgReader()->LoadData(filename, data))
+			goto failed_return;
+	}
+	else
+	{
+		handle = CreateFile(Resource_MakePath(filename), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, NULL);
+		if (handle == INVALID_HANDLE_VALUE)
+			return 0;
 	
-	CloseHandle(handle);
+		file_size = GetFileSize(handle, NULL);
+
+		if (!(data = malloc(file_size)))
+			goto failed_return;
+
+		if (ReadFile(handle, data, file_size, &file_size, NULL) == 0)
+			goto failed_return;
+	
+		CloseHandle(handle);
+	}
 
 	if (size)	*size = file_size;
 
@@ -49,9 +62,9 @@ failed_return:
 	return 0;
 }
 
-void* CALL HGE_Impl::Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx)
+void * CALL HGE_Impl::Resource_Load_Without_Suffix(const wchar_t * filename, DWORD * size, wchar_t * suffixs[], int suffixs_size, int * suffix_idx)
 {
-	void *data;
+	void * data;
 
 	int	i;
 
@@ -75,12 +88,12 @@ void* CALL HGE_Impl::Resource_Load_Without_Suffix(const wchar_t *filename, DWORD
 	return 0;
 }
 
-void CALL HGE_Impl::Resource_Free(void *res)
+void CALL HGE_Impl::Resource_Free(void * res)
 {
 	if(res) free(res);
 }
 
-wchar_t* CALL HGE_Impl::Resource_MakePath(const wchar_t *filename)
+wchar_t * CALL HGE_Impl::Resource_MakePath(const wchar_t * filename)
 {
 	int i;
 

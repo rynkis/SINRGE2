@@ -34,7 +34,7 @@ public:
 
 protected:
 	virtual void	mark();
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);
 
 	virtual	void	render(u32 id);
 
@@ -45,7 +45,7 @@ protected:
 	void			check_raise();
 
 protected:
-	RbRenderNode*			m_node;
+	RbRenderNode *			m_node;
 	
 	s32						m_ref_bitmap_modify_count;
 	
@@ -67,9 +67,9 @@ protected:
 
 	hgeParticle				particles[MAX_PARTICLES];
 
-	hgeSprite*				m_pSpr;
+	hgeSprite *				m_pSpr;
 
-	RbBitmap*				m_bitmap_ptr;
+	RbBitmap *				m_bitmap_ptr;
 
 protected:
 	dm_method(dispose)

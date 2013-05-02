@@ -31,15 +31,15 @@ public:
 	static bool				AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone);
 	static void				ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V);
 	static void				ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B);
-	static bool				GetTextRect(HFONT hFont, const wchar_t* pStr, s32 &cx, s32 &cy, HDC hDC);
+	static bool				GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC);
 
 	static bitmap_p			CloneBitmap(bitmap_p pBmp);
 	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
-	static void				BilinearZoom(DWORD *srcData, DWORD *desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight);
+	static void				BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight);
 	
 	static bool				ScreenToBitmap(bitmap_p pBmp);
 
-	static HTEXTURE			LoadTexture(const wchar_t* filename, DWORD colorKey, int &suffix_idx);
+	static HTEXTURE			LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx);
 
 public:
 	u32						GetWidth()					const { return m_bmp.width; }
@@ -55,7 +55,7 @@ public:
 
 protected:
 	virtual void			mark();
-	virtual VALUE			initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE			initialize(int argc, VALUE * argv, VALUE obj);
 
 protected:
 	void					check_raise();
@@ -67,8 +67,8 @@ protected:
 
 	VALUE					m_filename;		// mark
 
-	RbRect*					m_rect_ptr;
-	RbFont*					m_font_ptr;
+	RbRect *				m_rect_ptr;
+	RbFont *				m_font_ptr;
 
 protected:
 	dm_method(dispose)

@@ -25,15 +25,15 @@ public:
 public:
 	static void		InitLibrary();
 
-	RbColor*		GetColorPtr() const { return m_color_ptr; }
+	RbColor *		GetColorPtr() const { return m_color_ptr; }
 	HFONT			GetHFont() const { return m_hFont; }
 	bool			IsShadow() const { return RTEST(m_shadow); }
-	static bool		IsExist(const wchar_t *filename);
+	static bool		IsExist(const wchar_t * filename);
 	static VALUE	dm_is_exist(int argc, VALUE name);
 
 protected:
 	virtual void	mark();
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);
 
 protected:
 	VALUE			m_name;			// mark
@@ -46,7 +46,7 @@ protected:
 	HFONT			m_hFont;
 	LOGFONTW		m_lfw;
 
-	RbColor*		m_color_ptr;
+	RbColor *		m_color_ptr;
 
 protected:
 

@@ -23,6 +23,6 @@ typedef struct tagBitmap
 	int			oheight;   /**< 图片原高 */
 	//float		rcentrex; /**< 图像中心x */
 	//float		rcentrey; /**< 图像中心y */
-} bitmap_t, *bitmap_p;
+} bitmap_t, * bitmap_p;
 
 #endif //__SIN_BITMAP_H__

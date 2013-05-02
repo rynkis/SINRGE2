@@ -48,13 +48,13 @@ void RbTone::InitLibrary()
 	rb_define_method(rb_cTone, "clone",		(RbFunc)dm_clone,		0);
 }
 
-VALUE RbTone::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbTone::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
 		SafeToneValue(argv[0]);
 
-		RbTone* tone = GetObjectPtr<RbTone>(argv[0]);
+		RbTone * tone = GetObjectPtr<RbTone>(argv[0]);
 
 		m_r = tone->m_r;
 		m_g = tone->m_g;

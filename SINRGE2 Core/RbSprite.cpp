@@ -133,7 +133,7 @@ void RbSprite::mark()
  *	@desc
  *		生成 Sprite 对象。
  */
-VALUE RbSprite::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbSprite::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	调用Plane的初始化函数
 	super::initialize(argc, argv, obj);
@@ -284,7 +284,7 @@ void RbSprite::render(u32 id)
 	}
 	else
 	{
-		const RbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
+		const RbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
 
 		x = m_x + rect_ptr->x - m_viewport_ptr->m_ox;
 		y = m_y + rect_ptr->y - m_viewport_ptr->m_oy;
@@ -602,7 +602,7 @@ VALUE RbSprite::set_wave_phase(VALUE wave_phase)
 	return Qnil;
 }
 
-VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
+VALUE RbSprite::play_movie(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -619,7 +619,7 @@ VALUE RbSprite::play_movie(int argc, VALUE *argv, VALUE obj)
 	SafeStringValue(filename);
 
 	int width, height;
-	HGE* hge = GetAppPtr()->GetHgePtr();
+	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	if (!GetVideoMgr()->LoadMovie(Kconv::UTF8ToUnicode(RSTRING_PTR(filename)), width, height))
 		rb_raise(rb_eSinError, "Falied to load video: `%s'.", Kconv::UTF8ToAnsi(RSTRING_PTR(filename)));

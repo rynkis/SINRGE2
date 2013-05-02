@@ -14,19 +14,19 @@ struct MRbAudio
 {
 	static void	InitLibrary();
 	
-	static VALUE bgm_play(int argc, VALUE *argv);
+	static VALUE bgm_play(int argc, VALUE * argv);
 	static VALUE bgm_stop();
 	static VALUE bgm_fade(int argc, VALUE time);
 	
-	static VALUE bgs_play(int argc, VALUE *argv);
+	static VALUE bgs_play(int argc, VALUE * argv);
 	static VALUE bgs_stop();
 	static VALUE bgs_fade(int argc, VALUE time);
 	
-	static VALUE me_play(int argc, VALUE *argv);
+	static VALUE me_play(int argc, VALUE * argv);
 	static VALUE me_stop();
 	static VALUE me_fade(int argc, VALUE time);
 
-	static VALUE se_play(int argc, VALUE *argv);
+	static VALUE se_play(int argc, VALUE * argv);
 	static VALUE se_stop();
 };
 

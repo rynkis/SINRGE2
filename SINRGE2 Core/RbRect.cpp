@@ -46,7 +46,7 @@ void RbRect::InitLibrary()
  	rb_define_method(rb_cRect,	"to_s",		(RbFunc)dm_to_string,	0);
 }
 
-VALUE RbRect::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbRect::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	rb_scan_args(argc, argv, "4", &vx, &vy, &vw, &vh);
 
@@ -123,14 +123,14 @@ VALUE RbRect::set_height(VALUE nh)
 	return nh;
 }
 
-VALUE RbRect::set(int argc, VALUE *argv, VALUE obj)
+VALUE RbRect::set(int argc, VALUE * argv, VALUE obj)
 {
 	return initialize(argc, argv, obj);
 }
 
 VALUE RbRect::_dump(VALUE depth)
 {
-	return rb_str_new((const char*)&m_dump_data[0], sizeof(m_dump_data));
+	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
 }
 
 VALUE RbRect::empty()
@@ -158,9 +158,9 @@ VALUE RbRect::dm_load(VALUE klass, VALUE str)
 	return rb_class_new_instance(4, (VALUE*)RSTRING_PTR(str), klass);
 }
 
-VALUE RbRect::dm_set(int argc, VALUE *argv, VALUE obj)
+VALUE RbRect::dm_set(int argc, VALUE * argv, VALUE obj)
 {
-	RbRect	*cobj;
+	RbRect * cobj;
 	Data_Get_Struct(obj, RbRect, cobj);
 
 	return cobj->set(argc, argv, obj);

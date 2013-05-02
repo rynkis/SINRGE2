@@ -11,7 +11,7 @@
 #include "RbRenderTree.h"
 #include "hge.h"
 #include "sin_timer.h"
-//#include "nge_timer.h"
+#include "TANGRAM.h"
 #include <d3d8.h>
 
 /***
@@ -21,17 +21,21 @@ class CApplication
 {
 public:
 	inline HWND					GetMainHwnd() const { return m_frm_struct.m_hwnd; }
-	inline const wchar_t* 		GetTitle() const { return m_frm_struct.m_title; }
-	inline HGE*					GetHgePtr() const { return m_pHge; }
-	inline RbRenderState*		GetRenderState() const { return m_pRenderState; }
-	inline IDirect3D8*			GetD3DPtr() const { return m_ref_d3d; }
-	inline IDirect3DDevice8*	GetD3DDevicePtr() const { return m_ref_device; }
+	inline const wchar_t *		GetTitle() const { return m_frm_struct.m_title; }
+	inline HGE *				GetHgePtr() const { return m_pHge; }
+	inline RbRenderState *		GetRenderState() const { return m_pRenderState; }
+	inline IDirect3D8 *			GetD3DPtr() const { return m_ref_d3d; }
+	inline IDirect3DDevice8 *	GetD3DDevicePtr() const { return m_ref_device; }
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
 	inline DWORD				GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
 	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
 	
+	inline IC7pkgReader *		Get7pkgReader() const { return m_7pkgReader; }
+
+	inline HMODULE				GetSealHmodule() const { return m_hSeal; }
+
 private:
 	static bool					GainFocusProc();
 	static bool					LostFocusProc();
@@ -46,8 +50,9 @@ private:
 public:
 	int							Run();
 	bool						InitVideo();
+	bool						InitAudio();
 	void						InitRubyInterpreter();
-	int							Eval(const char* script);
+	int							Eval(const char *script);
 	int							RunScript();
 
 	void						Quit();
@@ -62,38 +67,38 @@ public:
 	double						GetTimeDelta();
 
 private:
-	void						ShowError(const wchar_t* szFormat, ...);
+	//void						ShowError(const wchar_t *szFormat, ...);
 	void						Dispose();
 
 	void						InitRubyInnerClassExt();
 	void						InitExportSinInterface();
 
-	void						GetRuntimeInfos();
+	int							GetRuntimeInfos();
 
 	static	VALUE				RunScriptInProtect(VALUE argv);
 	static	void				OnFailed(VALUE err);
 
 public:
-	static bool					IsFileExist(const wchar_t* pFileName);
-	static bool					IsFileExist(const char* pFileName);
+	static bool					IsFileExist(const wchar_t *pFileName);
+	static bool					IsFileExist(const char *pFileName);
 
-	/*static void					ShowErrorMsg(HWND hWnd, const wchar_t* szTitle, const wchar_t* szFormat, ...);
-	static void					ShowErrorMsg(HWND hWnd, const char* szTitle, const char* szFormat, ...);*/
+	//static void					ShowErrorMsg(HWND hWnd, const wchar_t *szTitle, const wchar_t *szFormat, ...);
+	//static void					ShowErrorMsg(HWND hWnd, const char *szTitle, const char *szFormat, ...);
 
 private:
 	wchar_t						szAppPath[MAX_PATH];
 	wchar_t						szIniPath[MAX_PATH];
 	wchar_t						szScripts[MAX_PATH];
 	
-	char*						pScripts;
+	char *						pScripts;
 	bool						m_with_console;
 
-	HGE*						m_pHge;
-	RbRenderState*				m_pRenderState;
+	HGE *						m_pHge;
+	RbRenderState *				m_pRenderState;
 	SinFrameStruct				m_frm_struct;
 
-	IDirect3D8*					m_ref_d3d;
-	IDirect3DDevice8*			m_ref_device;
+	IDirect3D8 *				m_ref_d3d;
+	IDirect3DDevice8 *			m_ref_device;
 	D3DCAPS8					m_d3d_caps;
 
 	hgeQuad						m_quad;
@@ -103,7 +108,7 @@ private:
 	u32							m_frame_count;
 
 	//fps
-	CTimer*						m_fps_timer;
+	CTimer *					m_fps_timer;
 	unsigned int				m_frame, m_t0, m_t1, m_last_fps, m_real_fps;
 	float						m_seconds;
 
@@ -112,17 +117,23 @@ private:
 
 	unsigned int				m_last;
 
-private:
-	class CVideoMgr*			m_pVideoMgr;			///<	AVI播放
+	HMODULE						m_hSeal;
 
 private:
-	static CApplication*		s_pApp;					///<	[静态]		应用程序单例类指针
+	class CVideoMgr *			m_pVideoMgr;			///<	AVI播放
 
-	friend CApplication*		GetAppPtr();
+	IC7pkgReader *				m_7pkgReader;
+	func_pr_open				pr_open;
+	func_pr_close				pr_close;
+
+private:
+	static CApplication *		s_pApp;					///<	[静态]		应用程序单例类指针
+
+	friend CApplication *		GetAppPtr();
 	friend int					SINRGE2Entry();
 	friend class				MRbSinCore;
 };
 
-inline CApplication*			GetAppPtr() { return CApplication::s_pApp; }
+inline CApplication *			GetAppPtr() { return CApplication::s_pApp; }
 
 #endif //__SIN_APPLICATION_H__

@@ -6,10 +6,12 @@
 ** Ruby Moudle Seal
 */
 #include "MRbSeal.h"
-extern "C"
-{
-#include "seal.h"
-}
+#include "sin_app.h"
+#include "TANGRAM.h"
+//extern "C"
+//{
+//#include "seal.h"
+//}
 #if SIN_USE_SEAL
 
 static const char WAV_SYM[] = "wav";
@@ -35,17 +37,17 @@ static VALUE alloc_##obj(VALUE klass)                                       \
 }
 
 #define DEFINE_DEALLOCATOR(obj)                                             \
-static void free_##obj(void* obj)                                           \
+static void free_##obj(void * obj)                                           \
 {                                                                           \
     free_obj(obj, seal_destroy_##obj);                                      \
 }
 
-static VALUE name2sym(const char* name)
+static VALUE name2sym(const char * name)
 {
     return ID2SYM(rb_intern(name));
 }
 
-static void* validate_memory(void* memory)
+static void * validate_memory(void * memory)
 {
     if (memory == 0)
         rb_raise(eSealError, "%s", seal_get_err_msg(SEAL_CANNOT_ALLOC_MEM));
@@ -58,9 +60,9 @@ static void check_seal_err(seal_err_t err)
         rb_raise(eSealError, "%s", seal_get_err_msg(err));
 }
 
-static void free_obj(void* obj, void *destroy)
+static void free_obj(void * obj, void *destroy)
 {
-    ((seal_err_t (*)(void*)) destroy)(obj);
+    ((seal_err_t (*)(void *)) destroy)(obj);
     free(obj);
 }
 
@@ -69,14 +71,14 @@ DEFINE_DEALLOCATOR(buf)
 DEFINE_DEALLOCATOR(rvb)
 DEFINE_DEALLOCATOR(efs)
 
-static void free_stream(void* stream)
+static void free_stream(void * stream)
 {
     free_obj(stream, seal_close_stream);
 }
 
-static VALUE alloc(VALUE klass, size_t size, void* free)
+static VALUE alloc(VALUE klass, size_t size, void * free)
 {
-    void* obj;
+    void * obj;
 
     obj = validate_memory(calloc(1, size));
 
@@ -89,68 +91,68 @@ DEFINE_ALLOCATOR(stream)
 DEFINE_ALLOCATOR(rvb)
 DEFINE_ALLOCATOR(efs)
 
-static void extract_3float(VALUE rarr, float* x, float* y, float* z)
+static void extract_3float(VALUE rarr, float * x, float * y, float * z)
 {
     rarr = rb_convert_type(rarr, T_ARRAY, "Array", "to_a");
-    *x = NUM2DBL(rb_ary_entry(rarr, 0));
-    *y = NUM2DBL(rb_ary_entry(rarr, 1));
-    *z = NUM2DBL(rb_ary_entry(rarr, 2));
+    *x = NUM2FLOAT(rb_ary_entry(rarr, 0));
+    *y = NUM2FLOAT(rb_ary_entry(rarr, 1));
+    *z = NUM2FLOAT(rb_ary_entry(rarr, 2));
 }
 
-static void convert_bulk_float(VALUE* rtuple, float* tuple, int len)
+static void convert_bulk_float(VALUE * rtuple, float * tuple, int len)
 {
     int i;
     for (i = 0; i < len; ++i)
         rtuple[i] = rb_float_new(tuple[i]);
 }
 
-static VALUE set_obj_float(VALUE robj, VALUE rflt, void* set)
+static VALUE set_obj_float(VALUE robj, VALUE rflt, void * set)
 {
     check_seal_err(((seal_err_t (*)(void*, float)) set)(
-        DATA_PTR(robj), NUM2DBL(rflt)
+        DATA_PTR(robj), NUM2FLOAT(rflt)
     ));
 
     return rflt;
 }
 
-static VALUE set_obj_int(VALUE robj, VALUE rnum, void* set)
+static VALUE set_obj_int(VALUE robj, VALUE rnum, void * set)
 {
-    check_seal_err(((seal_err_t (*)(void*, int)) set)(
+    check_seal_err(((seal_err_t (*)(void *, int)) set)(
         DATA_PTR(robj), NUM2INT(rnum)
     ));
 
     return rnum;
 }
 
-static VALUE set_obj_char(VALUE robj, VALUE rbool, void* set)
+static VALUE set_obj_char(VALUE robj, VALUE rbool, void * set)
 {
-    check_seal_err(((seal_err_t (*)(void*, char)) set)(
+    check_seal_err(((seal_err_t (*)(void *, char)) set)(
         DATA_PTR(robj), RTEST(rbool)
     ));
 
     return rbool;
 }
 
-static VALUE set_obj_3float(VALUE robj, VALUE rarr, void* set)
+static VALUE set_obj_3float(VALUE robj, VALUE rarr, void * set)
 {
     float x, y, z;
 
     extract_3float(rarr, &x, &y, &z);
-    check_seal_err(((seal_err_t (*)(void*, float, float, float)) set)(
+    check_seal_err(((seal_err_t (*)(void *, float, float, float)) set)(
         DATA_PTR(robj), x, y, z
     ));
 
     return rarr;
 }
 
-static void get_obj_attr(VALUE robj, void* pvalue, void* get)
+static void get_obj_attr(VALUE robj, void * pvalue, void * get)
 {
-    check_seal_err(((seal_err_t (*)(void*, void*)) get)(
+    check_seal_err(((seal_err_t (*)(void *, void *)) get)(
         DATA_PTR(robj), pvalue
     ));
 }
 
-static VALUE get_obj_float(VALUE robj, void* get)
+static VALUE get_obj_float(VALUE robj, void * get)
 {
     float flt;
 
@@ -159,7 +161,7 @@ static VALUE get_obj_float(VALUE robj, void* get)
     return rb_float_new(flt);
 }
 
-static VALUE get_obj_int(VALUE robj, void* get)
+static VALUE get_obj_int(VALUE robj, void * get)
 {
     int integer;
 
@@ -168,7 +170,7 @@ static VALUE get_obj_int(VALUE robj, void* get)
     return INT2NUM(integer);
 }
 
-static VALUE get_obj_char(VALUE robj, void* get)
+static VALUE get_obj_char(VALUE robj, void * get)
 {
     char sbool;
 
@@ -177,12 +179,12 @@ static VALUE get_obj_char(VALUE robj, void* get)
     return sbool ? Qtrue : Qfalse;
 }
 
-static VALUE get_obj_3float(VALUE robj, void* get)
+static VALUE get_obj_3float(VALUE robj, void * get)
 {
     float tuple[3];
     VALUE rtuple[3];
 
-    check_seal_err(((seal_err_t (*)(void*, float*, float*, float*)) get)(
+    check_seal_err(((seal_err_t (*)(void *, float *, float *, float *)) get)(
         DATA_PTR(robj), tuple, tuple + 1, tuple + 2
     ));
     convert_bulk_float(rtuple, tuple, 3);
@@ -206,14 +208,14 @@ static seal_fmt_t map_format(VALUE symbol)
         return SEAL_UNKNOWN_FMT;
 }
 
-static void input_audio(int argc, VALUE* argv, void* media, void* _input)
+static void input_audio(int argc, VALUE * argv, void * media, void * _input)
 {
-    typedef seal_err_t inputter_t(void*, const char*, seal_fmt_t);
+    typedef seal_err_t inputter_t(void *, const char *, seal_fmt_t);
 
     VALUE filename;
     VALUE format;
 
-    inputter_t* input = (inputter_t*) _input;
+    inputter_t * input = (inputter_t *) _input;
     rb_scan_args(argc, argv, "11", &filename, &format);
     check_seal_err(input(media, rb_string_value_ptr(&filename),
                          map_format(format)));
@@ -229,7 +231,7 @@ static VALUE set_listener_3float(VALUE rarr, seal_err_t (*set)(float, float, flo
     return rarr;
 }
 
-static VALUE get_listener_3float(seal_err_t (*get)(float*, float*, float*))
+static VALUE get_listener_3float(seal_err_t (*get)(float *, float *, float *))
 {
     float tuple[3];
     VALUE rtuple[3];
@@ -242,12 +244,12 @@ static VALUE get_listener_3float(seal_err_t (*get)(float*, float*, float*))
 
 static VALUE set_listener_float(VALUE rflt, seal_err_t (*set)(float))
 {
-    check_seal_err(set(NUM2DBL(rflt)));
+    check_seal_err(set(NUM2FLOAT(rflt)));
 
     return rflt;
 }
 
-static VALUE get_listener_float(seal_err_t (*get)(float*))
+static VALUE get_listener_float(seal_err_t (*get)(float *))
 {
     float value;
 
@@ -256,16 +258,16 @@ static VALUE get_listener_float(seal_err_t (*get)(float*))
     return rb_float_new(value);
 }
 
-static VALUE src_op(VALUE rsrc, seal_err_t (*op)(seal_src_t*))
+static VALUE src_op(VALUE rsrc, seal_err_t (*op)(seal_src_t *))
 {
-    check_seal_err(op(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc))));
+    check_seal_err(op(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc))));
 
     return rsrc;
 }
 
-static seal_stream_t* extract_stream(VALUE rstream)
+static seal_stream_t * extract_stream(VALUE rstream)
 {
-    return reinterpret_cast<seal_stream_t*> (DATA_PTR(rstream));;//DATA_PTR(rstream);
+    return reinterpret_cast<seal_stream_t *> (DATA_PTR(rstream));;//DATA_PTR(rstream);
 }
 
 /*
@@ -279,7 +281,7 @@ static seal_stream_t* extract_stream(VALUE rstream)
  * <code>seal_cleanup</code> and never call <code>seal_starup</code> twice in
  * a row.
  */
-static VALUE startup(int argc, VALUE* argv)
+static VALUE startup(int argc, VALUE * argv)
 {
     VALUE rstring;
 
@@ -325,11 +327,11 @@ static VALUE per_source_effect_limit()
  * There is a limit on the number of allocated buffers. This method raises an
  * error if it is exceeding the limit.
  */
-static VALUE init_buf(int argc, VALUE* argv, VALUE rbuf)
+static VALUE init_buf(int argc, VALUE * argv, VALUE rbuf)
 {
-    seal_buf_t* buf;
+    seal_buf_t * buf;
 
-    buf = reinterpret_cast<seal_buf_t*> (DATA_PTR(rbuf));;//DATA_PTR(rbuf);
+    buf = reinterpret_cast<seal_buf_t *> (DATA_PTR(rbuf));;//DATA_PTR(rbuf);
     check_seal_err(seal_init_buf(buf));
     input_audio(argc, argv, buf, seal_load2buf);
 
@@ -346,7 +348,7 @@ static VALUE init_buf(int argc, VALUE* argv, VALUE rbuf)
  * attempted if _format_ is not specified. See Seal::Format for possible
  * values.Sets all the attributes appropriately.
  */
-static VALUE load_buf(int argc, VALUE* argv, VALUE rbuf)
+static VALUE load_buf(int argc, VALUE * argv, VALUE rbuf)
 {
     input_audio(argc, argv, DATA_PTR(rbuf), seal_load2buf);
 
@@ -406,7 +408,7 @@ static VALUE get_buf_nchannels(VALUE rbuf)
  * audio file; automatic recognition of the audio format will be attempted if
  * _format_ is nil. See Seal::Format for possible values.
  */
-static VALUE init_stream(int argc, VALUE* argv, VALUE rstream)
+static VALUE init_stream(int argc, VALUE * argv, VALUE rstream)
 {
     input_audio(argc, argv, DATA_PTR(rstream), seal_open_stream);
 
@@ -457,7 +459,7 @@ static VALUE get_stream_nchannels(VALUE rstream)
  */
 static VALUE rewind_stream(VALUE rstream)
 {
-    seal_rewind_stream(reinterpret_cast<seal_stream_t*> (DATA_PTR(rstream)));
+    seal_rewind_stream(reinterpret_cast<seal_stream_t *> (DATA_PTR(rstream)));
 
     return rstream;
 }
@@ -470,7 +472,7 @@ static VALUE rewind_stream(VALUE rstream)
  */
 static VALUE close_stream(VALUE rstream)
 {
-    check_seal_err(seal_close_stream(reinterpret_cast<seal_stream_t*> (DATA_PTR(rstream))));
+    check_seal_err(seal_close_stream(reinterpret_cast<seal_stream_t *> (DATA_PTR(rstream))));
 
     return rstream;
 }
@@ -486,7 +488,7 @@ static VALUE close_stream(VALUE rstream)
  */
 static VALUE init_src(VALUE rsrc)
 {
-    check_seal_err(seal_init_src(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc))));
+    check_seal_err(seal_init_src(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc))));
 
     return rsrc;
 }
@@ -581,13 +583,13 @@ static VALUE move_src(VALUE rsrc, VALUE value)
  */
 static VALUE set_src_buf(VALUE rsrc, VALUE rbuf)
 {
-    seal_buf_t* buf;
+    seal_buf_t * buf;
 
     if (NIL_P(rbuf)) {
         src_op(rsrc, seal_detach_src_audio);
     } else {
         Data_Get_Struct(rbuf, seal_buf_t, buf);
-        check_seal_err(seal_set_src_buf(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc)), buf));
+        check_seal_err(seal_set_src_buf(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc)), buf));
     }
     rb_iv_set(rsrc, "@buffer", rbuf);
 
@@ -627,13 +629,13 @@ static VALUE get_src_buf(VALUE rsrc)
  */
 static VALUE set_src_stream(VALUE rsrc, VALUE rstream)
 {
-    seal_stream_t* stream;
+    seal_stream_t * stream;
 
     if (NIL_P(rstream)) {
         src_op(rsrc, seal_detach_src_audio);
     } else {
         Data_Get_Struct(rstream, seal_stream_t, stream);
-        check_seal_err(seal_set_src_stream(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc)), stream));
+        check_seal_err(seal_set_src_stream(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc)), stream));
     }
     rb_iv_set(rsrc, "@stream", rstream);
 
@@ -664,10 +666,10 @@ static VALUE get_src_stream(VALUE rsrc)
  */
 static VALUE feed_efs(VALUE rsrc, VALUE rslot, VALUE rindex)
 {
-    seal_src_t* src;
+    seal_src_t * src;
 
     Data_Get_Struct(rsrc, seal_src_t, src);
-    check_seal_err(seal_feed_efs(src, reinterpret_cast<seal_efs_t*> (DATA_PTR(rslot)), NUM2INT(rindex)));
+    check_seal_err(seal_feed_efs(src, reinterpret_cast<seal_efs_t *> (DATA_PTR(rslot)), NUM2INT(rindex)));
 
     return rsrc;
 }
@@ -919,7 +921,7 @@ static VALUE get_src_type(VALUE rsrc)
 {
     seal_src_type_t type;
 
-    check_seal_err(seal_get_src_type(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc)), &type));
+    check_seal_err(seal_get_src_type(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc)), &type));
     switch (type) {
     case SEAL_STATIC:
         return name2sym(STATIC_SYM);
@@ -940,7 +942,7 @@ static VALUE get_src_state(VALUE rsrc)
 {
     seal_src_state_t state;
 
-    check_seal_err(seal_get_src_state(reinterpret_cast<seal_src_t*> (DATA_PTR(rsrc)), &state));
+    check_seal_err(seal_get_src_state(reinterpret_cast<seal_src_t *> (DATA_PTR(rsrc)), &state));
     switch (state) {
     case SEAL_PLAYING:
         return name2sym(PLAYING_SYM);
@@ -961,7 +963,7 @@ static VALUE get_src_state(VALUE rsrc)
  */
 static VALUE load_rvb(VALUE rrvb, VALUE rpreset)
 {
-    seal_rvb_t* rvb;
+    seal_rvb_t * rvb;
 
     Data_Get_Struct(rrvb, seal_rvb_t, rvb);
     check_seal_err(seal_load_rvb(rvb, (seal_rvb_preset_t)NUM2INT(rpreset)));
@@ -980,12 +982,12 @@ static VALUE load_rvb(VALUE rrvb, VALUE rpreset)
  * There is a limit on the number of allocated reverbs. This method raises an
  * error if it is exceeding the limit.
  */
-static VALUE init_rvb(int argc, VALUE* argv, VALUE rrvb)
+static VALUE init_rvb(int argc, VALUE * argv, VALUE rrvb)
 {
-    seal_rvb_t* rvb;
+    seal_rvb_t * rvb;
     VALUE rpreset;
 
-    rvb = reinterpret_cast<seal_rvb_t*> (DATA_PTR(rrvb));
+    rvb = reinterpret_cast<seal_rvb_t *> (DATA_PTR(rrvb));
     check_seal_err(seal_init_rvb(rvb));
 
     rb_scan_args(argc, argv, "01", &rpreset);
@@ -1384,14 +1386,14 @@ static VALUE is_rvb_hfdecay_limited(VALUE rrvb)
  */
 static VALUE set_efs_effect(VALUE rslot, VALUE reffect)
 {
-    void* effect;
+    void * effect;
     seal_err_t err;
 
     if (NIL_P(reffect)) {
-        err = seal_set_efs_effect(reinterpret_cast<seal_efs_t*> (DATA_PTR(rslot)), 0);
+        err = seal_set_efs_effect(reinterpret_cast<seal_efs_t *> (DATA_PTR(rslot)), 0);
     } else {
-        Data_Get_Struct(reffect, void*, effect);
-        err = seal_set_efs_effect(reinterpret_cast<seal_efs_t*> (DATA_PTR(rslot)), effect);
+        Data_Get_Struct(reffect, void *, effect);
+        err = seal_set_efs_effect(reinterpret_cast<seal_efs_t *> (DATA_PTR(rslot)), effect);
     }
     check_seal_err(err);
     rb_iv_set(rslot, "@effect", reffect);
@@ -1410,12 +1412,12 @@ static VALUE set_efs_effect(VALUE rslot, VALUE reffect)
  * There is a limit on the number of allocated effect slots. This method raises
  * an error if it is exceeding the limit.
  */
-static VALUE init_efs(int argc, VALUE* argv, VALUE rslot)
+static VALUE init_efs(int argc, VALUE * argv, VALUE rslot)
 {
     VALUE reffect;
 
     rb_scan_args(argc, argv, "01", &reffect);
-    check_seal_err(seal_init_efs(reinterpret_cast<seal_efs_t*> (DATA_PTR(rslot))));
+    check_seal_err(seal_init_efs(reinterpret_cast<seal_efs_t *> (DATA_PTR(rslot))));
     if (!NIL_P(reffect))
         set_efs_effect(rslot, reffect);
 
@@ -2083,9 +2085,132 @@ void Init_seal()
     bind_listener();
 }
 
-void MRbSeal::InitLibrary()
+void SealCleanup()
 {
-	Init_seal();
+	seal_cleanup();
 }
+
+#define GET_CHECK_SEAL_FUNC(func)													\
+	do																				\
+	{																				\
+		*((unsigned long*)&##func) = (unsigned long)GetProcAddress(hSeal, #func);	\
+		if (##func == 0)															\
+			return false;															\
+	} while (0)
+
+bool MRbSeal::InitLibrary()
+{
+	HMODULE hSeal = GetAppPtr()->GetSealHmodule();
+
+	GET_CHECK_SEAL_FUNC(seal_startup);
+	GET_CHECK_SEAL_FUNC(seal_cleanup);
+	GET_CHECK_SEAL_FUNC(seal_get_per_src_effect_limit);
+	GET_CHECK_SEAL_FUNC(seal_get_version);
+
+	GET_CHECK_SEAL_FUNC(seal_init_src);
+	GET_CHECK_SEAL_FUNC(seal_destroy_src);
+	GET_CHECK_SEAL_FUNC(seal_play_src);
+	GET_CHECK_SEAL_FUNC(seal_pause_src);
+	GET_CHECK_SEAL_FUNC(seal_stop_src);
+	GET_CHECK_SEAL_FUNC(seal_rewind_src);
+	GET_CHECK_SEAL_FUNC(seal_set_src_buf);
+	GET_CHECK_SEAL_FUNC(seal_set_src_stream);
+	GET_CHECK_SEAL_FUNC(seal_update_src);
+	GET_CHECK_SEAL_FUNC(seal_detach_src_audio);
+	GET_CHECK_SEAL_FUNC(seal_set_src_queue_size);
+	GET_CHECK_SEAL_FUNC(seal_set_src_chunk_size);
+	GET_CHECK_SEAL_FUNC(seal_set_src_pos);
+	GET_CHECK_SEAL_FUNC(seal_set_src_vel);
+	GET_CHECK_SEAL_FUNC(seal_set_src_pitch);
+	GET_CHECK_SEAL_FUNC(seal_set_src_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_src_auto);
+	GET_CHECK_SEAL_FUNC(seal_set_src_relative);
+	GET_CHECK_SEAL_FUNC(seal_set_src_looping);
+	GET_CHECK_SEAL_FUNC(seal_get_src_queue_size);
+	GET_CHECK_SEAL_FUNC(seal_get_src_chunk_size);
+	GET_CHECK_SEAL_FUNC(seal_get_src_buf);
+	GET_CHECK_SEAL_FUNC(seal_get_src_stream);
+	GET_CHECK_SEAL_FUNC(seal_get_src_pos);
+	GET_CHECK_SEAL_FUNC(seal_get_src_vel);
+	GET_CHECK_SEAL_FUNC(seal_get_src_pitch);
+	GET_CHECK_SEAL_FUNC(seal_get_src_gain);
+	GET_CHECK_SEAL_FUNC(seal_is_src_auto);
+	GET_CHECK_SEAL_FUNC(seal_is_src_relative);
+	GET_CHECK_SEAL_FUNC(seal_is_src_looping);
+	GET_CHECK_SEAL_FUNC(seal_get_src_type);
+	GET_CHECK_SEAL_FUNC(seal_get_src_state);
+
+	GET_CHECK_SEAL_FUNC(seal_set_listener_pos);
+	GET_CHECK_SEAL_FUNC(seal_set_listener_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_listener_vel);
+	GET_CHECK_SEAL_FUNC(seal_set_listener_orien);
+	GET_CHECK_SEAL_FUNC(seal_get_listener_pos);
+	GET_CHECK_SEAL_FUNC(seal_get_listener_gain);
+	GET_CHECK_SEAL_FUNC(seal_get_listener_vel);
+	GET_CHECK_SEAL_FUNC(seal_get_listener_orien);
+
+	GET_CHECK_SEAL_FUNC(seal_init_buf);
+	GET_CHECK_SEAL_FUNC(seal_destroy_buf);
+	GET_CHECK_SEAL_FUNC(seal_load2buf);
+	GET_CHECK_SEAL_FUNC(seal_get_buf_size);
+	GET_CHECK_SEAL_FUNC(seal_get_buf_freq);
+	GET_CHECK_SEAL_FUNC(seal_get_buf_bps);
+	GET_CHECK_SEAL_FUNC(seal_get_buf_nchannels);
+
+	GET_CHECK_SEAL_FUNC(seal_open_stream);
+	GET_CHECK_SEAL_FUNC(seal_rewind_stream);
+	GET_CHECK_SEAL_FUNC(seal_close_stream);
+
+	GET_CHECK_SEAL_FUNC(seal_init_rvb);
+	GET_CHECK_SEAL_FUNC(seal_destroy_rvb);
+	GET_CHECK_SEAL_FUNC(seal_load_rvb);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_density);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_diffusion);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_hfgain);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_decay_time);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_hfdecay_ratio);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_reflections_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_reflections_delay);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_late_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_late_delay);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_air_absorbtion_hfgain);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_room_rolloff_factor);
+	GET_CHECK_SEAL_FUNC(seal_set_rvb_hfdecay_limited);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_density);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_diffusion);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_gain);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_hfgain);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_decay_time);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_hfdecay_ratio);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_reflections_gain);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_reflections_delay);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_late_gain);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_late_delay);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_air_absorbtion_hfgain);
+	GET_CHECK_SEAL_FUNC(seal_get_rvb_room_rolloff_factor);
+	GET_CHECK_SEAL_FUNC(seal_is_rvb_hfdecay_limited);
+
+	GET_CHECK_SEAL_FUNC(seal_init_efs);
+	GET_CHECK_SEAL_FUNC(seal_destroy_efs);
+	GET_CHECK_SEAL_FUNC(seal_set_efs_effect);
+	GET_CHECK_SEAL_FUNC(seal_feed_efs);
+	GET_CHECK_SEAL_FUNC(seal_set_efs_gain);
+	GET_CHECK_SEAL_FUNC(seal_set_efs_auto);
+	GET_CHECK_SEAL_FUNC(seal_get_efs_effect);
+	GET_CHECK_SEAL_FUNC(seal_get_efs_gain);
+
+	GET_CHECK_SEAL_FUNC(seal_is_efs_auto);
+	GET_CHECK_SEAL_FUNC(seal_get_err_msg);
+	GET_CHECK_SEAL_FUNC(_seal_sleep);
+
+	GET_CHECK_SEAL_FUNC(seal_move_listener);
+	GET_CHECK_SEAL_FUNC(seal_move_src);
+	
+	Init_seal();
+	return true;
+}
+
+#undef GET_CHECK_SEAL_FUNC
 
 #endif

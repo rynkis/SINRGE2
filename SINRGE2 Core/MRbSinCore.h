@@ -21,9 +21,10 @@ struct MRbSinCore
 	static void HideMouse(bool hide);
 
 	static void Freeze();
-	static void Transition(int duration, const wchar_t *filename, float vague);
-
+	static void Transition(int duration, const wchar_t * filename, float vague);
+	
 	static VALUE init();
+	static VALUE init_video();
 	static VALUE quit();
 	static VALUE stop();
 	
@@ -32,7 +33,7 @@ struct MRbSinCore
 	static VALUE fadeout(int argc, VALUE duration);
 	static VALUE fadein(int argc, VALUE duration);
 	static VALUE freeze();
-	static VALUE transition(int argc, VALUE *argv);
+	static VALUE transition(int argc, VALUE * argv);
 	static VALUE snap_to_bitmap();
 	//static VALUE frame_reset();
 	static VALUE get_width();

@@ -117,7 +117,7 @@ void RbPlane::mark()
  *	@desc
  *		生成 Plane 对象。
  */
-VALUE RbPlane::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbPlane::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE viewport, color, tone;
 
@@ -283,7 +283,7 @@ void RbPlane::process_tone_texture()
 {
 	bool change = false;
 
-	HGE* hge = GetAppPtr()->GetHgePtr();
+	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	if (m_tone_ptr->GetColor() != m_ref_tone)
 	{

@@ -104,8 +104,8 @@ typedef struct __RbRenderNode
 	s32							z;			//	该结点在渲染树中的z坐标值。该值越大的显示在越上面。
 	VALUE						viewport;	//	结点所在视口，如果该值为Qnil的情况下，则结点直接在窗口中渲染，否则在Viewport中渲染。
 
-	struct __RbRenderNode*		prev;		//	上一个结点指针。
-	struct __RbRenderNode*		next;		//	下一个结点指针。
+	struct __RbRenderNode *		prev;		//	上一个结点指针。
+	struct __RbRenderNode *		next;		//	下一个结点指针。
 } RbRenderNode, *RbRenderNodePtr;
 
 class RbRenderTree
@@ -122,19 +122,19 @@ public:
 
 	static RbRenderNode*		AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport);
 
-	static RbRenderNode*		DeleteNode(RbRenderNode *node);
-	static void					InsertNode(RbRenderNode *node);
+	static RbRenderNode*		DeleteNode(RbRenderNode * node);
+	static void					InsertNode(RbRenderNode * node);
 
-	static void					DestroyNode(RbRenderNodePtr* node);
-	static void					FreeNode(RbRenderNodePtr* node);
-
-private:
-	static RbRenderNode*		DoubleLinkAddToFront(RbRenderNode* list, RbRenderNode* node);
-	static RbRenderNode*		DoubleLinkDelete(RbRenderNode* list, RbRenderNode* node);
+	static void					DestroyNode(RbRenderNodePtr * node);
+	static void					FreeNode(RbRenderNodePtr * node);
 
 private:
-	static RbRenderNode*		s_pRenderHead;
-	static RbRenderNode*		s_pRenderTail;
+	static RbRenderNode *		DoubleLinkAddToFront(RbRenderNode * list, RbRenderNode * node);
+	static RbRenderNode *		DoubleLinkDelete(RbRenderNode * list, RbRenderNode * node);
+
+private:
+	static RbRenderNode *		s_pRenderHead;
+	static RbRenderNode *		s_pRenderTail;
 	//static RbRenderNode*		s_pViewportLists;
 };
 

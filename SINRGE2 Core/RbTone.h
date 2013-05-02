@@ -20,7 +20,7 @@ public:
 	static void		InitLibrary();
 
 protected:
-	virtual VALUE	initialize(int argc, VALUE *argv, VALUE obj);	//	initialize
+	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 };
 
 #endif

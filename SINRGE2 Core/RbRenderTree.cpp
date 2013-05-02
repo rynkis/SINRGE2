@@ -12,8 +12,8 @@
 HGE* RbRenderState::s_pHge = 0;
 
 //RbRenderNode*	RbRenderTree::s_pViewportLists	= 0;
-RbRenderNode*	RbRenderTree::s_pRenderHead		= 0;
-RbRenderNode*	RbRenderTree::s_pRenderTail		= 0;
+RbRenderNode *	RbRenderTree::s_pRenderHead		= 0;
+RbRenderNode *	RbRenderTree::s_pRenderTail		= 0;
 
 void RbRenderTree::Init()
 {
@@ -27,14 +27,14 @@ bool RbRenderTree::RenderProc()
 	if(!NIL_P(rb_errinfo()))
 		return true;
 
-	RbRenderNode*	p1;
+	RbRenderNode *	p1;
 
 	/*for (p1 = s_pViewportLists; p1; p1 = p1->next)
 	{
 		p1->renderproc(p1->value, p1->id);
 	}*/
 
-	HGE* pHGE = GetAppPtr()->GetHgePtr();
+	HGE * pHGE = GetAppPtr()->GetHgePtr();
 
 	pHGE->Gfx_BeginScene();
 	pHGE->Gfx_Clear(0);
@@ -63,9 +63,9 @@ bool RbRenderTree::RenderProc()
 //	s_pViewportLists = DoubleLinkDelete(s_pViewportLists, node);
 //}
 
-RbRenderNode*	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
+RbRenderNode *	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
 {
-	RbRenderNode* node	= ALLOC(RbRenderNode);
+	RbRenderNode * node	= ALLOC(RbRenderNode);
 	{
 		node->renderproc	= proc;
 		node->value			= value;
@@ -79,10 +79,10 @@ RbRenderNode*	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s3
 	return node;
 }
 
-RbRenderNode*	RbRenderTree::DeleteNode(RbRenderNode *node)
+RbRenderNode *	RbRenderTree::DeleteNode(RbRenderNode * node)
 {
-	RbRenderNode	*p1;
-	RbRenderNodePtr	*cur_head, *cur_tail;
+	RbRenderNode	* p1;
+	RbRenderNodePtr	* cur_head, * cur_tail;
 	
 	if (NIL_P(node->viewport))
 	{
@@ -91,7 +91,7 @@ RbRenderNode*	RbRenderTree::DeleteNode(RbRenderNode *node)
 	}
 	else
 	{
-		RbViewport*	vp;
+		RbViewport * vp;
 		Data_Get_Struct(node->viewport, RbViewport, vp);
 		cur_head = vp->GetHeadPtr();
 		cur_tail = vp->GetTailPtr();
@@ -133,10 +133,10 @@ RbRenderNode*	RbRenderTree::DeleteNode(RbRenderNode *node)
 	return p1;
 }
 
-void RbRenderTree::InsertNode(RbRenderNode *node)
+void RbRenderTree::InsertNode(RbRenderNode * node)
 {	
-	RbRenderNode	*p1;
-	RbRenderNodePtr	*cur_head, *cur_tail;
+	RbRenderNode	* p1;
+	RbRenderNodePtr	* cur_head, * cur_tail;
 	
 	if (NIL_P(node->viewport))
 	{
@@ -145,7 +145,7 @@ void RbRenderTree::InsertNode(RbRenderNode *node)
 	}
 	else
 	{
-		RbViewport*	vp;
+		RbViewport * vp;
 		Data_Get_Struct(node->viewport, RbViewport, vp);
 		cur_head = vp->GetHeadPtr();
 		cur_tail = vp->GetTailPtr();
@@ -186,7 +186,7 @@ void RbRenderTree::InsertNode(RbRenderNode *node)
 	}
 }
 
-void RbRenderTree::DestroyNode(RbRenderNodePtr* node)
+void RbRenderTree::DestroyNode(RbRenderNodePtr * node)
 {
 	if (*node)
 	{
@@ -200,7 +200,7 @@ void RbRenderTree::DestroyNode(RbRenderNodePtr* node)
 	}
 }
 
-void RbRenderTree::FreeNode(RbRenderNodePtr* node)
+void RbRenderTree::FreeNode(RbRenderNodePtr * node)
 {
 	if (*node)
 	{
@@ -209,7 +209,7 @@ void RbRenderTree::FreeNode(RbRenderNodePtr* node)
 	}
 }
 
-RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode* list, RbRenderNode* node)
+RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode * list, RbRenderNode * node)
 {
 	if (!node)
 		return list;
@@ -223,7 +223,7 @@ RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode* list, RbRenderNod
 	return node;
 }
 
-RbRenderNode* RbRenderTree::DoubleLinkDelete(RbRenderNode* list, RbRenderNode* node)
+RbRenderNode* RbRenderTree::DoubleLinkDelete(RbRenderNode * list, RbRenderNode * node)
 {
 	if (!node)
 		return list;

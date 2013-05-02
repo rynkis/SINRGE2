@@ -24,9 +24,9 @@ public:
 	static void			InitLibrary();
 
 public:
-	RbRenderNodePtr*	GetHeadPtr() { return &m_head; }
-	RbRenderNodePtr*	GetTailPtr() { return &m_tail; }
-	const RbRect*		GetRectPtr() const { return m_rect_ptr; }
+	RbRenderNodePtr *	GetHeadPtr() { return &m_head; }
+	RbRenderNodePtr *	GetTailPtr() { return &m_tail; }
+	const RbRect *		GetRectPtr() const { return m_rect_ptr; }
 
 protected:
 	virtual void		mark();
@@ -45,14 +45,14 @@ protected:
 
 	hgeQuad				m_quad;
 
-	RbRenderNode*		m_node;
+	RbRenderNode *		m_node;
 
-	RbRenderNode*		m_tail;
-	RbRenderNode*		m_head;
+	RbRenderNode *		m_tail;
+	RbRenderNode *		m_head;
 
-	RbRect*				m_rect_ptr;
-	RbColor*			m_color_ptr;
-	RbTone*				m_tone_ptr;
+	RbRect *			m_rect_ptr;
+	RbColor *			m_color_ptr;
+	RbTone *			m_tone_ptr;
 	
 protected:
 	void				check_raise();
@@ -68,7 +68,7 @@ protected:
 	attr_accessor(tone)
 	
 protected:
-	static HGE*			s_pHge;
+	static HGE *		s_pHge;
 };
 
 #endif

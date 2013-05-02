@@ -20,7 +20,7 @@ namespace
 	const u32	id_render_to_texture	= 1;
 }
 
-HGE* RbViewport::s_pHge = 0;
+HGE * RbViewport::s_pHge = 0;
 
 RbViewport::RbViewport()
 	: m_flash_duration(0)
@@ -108,7 +108,7 @@ void RbViewport::mark()
  *	@desc
  *		生成 Viewport 对象。
  */
-VALUE RbViewport::initialize(int argc, VALUE *argv, VALUE obj)
+VALUE RbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	检查参数个数
 	if(argc != 1 && argc != 4)
@@ -170,7 +170,7 @@ void RbViewport::render(u32 id)
 	GetAppPtr()->GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
 
 	//	渲染viewport中的所有对象
-	for (RbRenderNode* p = m_head; p; p = p->next)
+	for (RbRenderNode * p = m_head; p; p = p->next)
 	{
 		p->renderproc(p->value, p->id);
 	}
@@ -331,7 +331,7 @@ VALUE RbViewport::flash(VALUE color, VALUE duration)
 	SafeColorValue(color);
 	SafeFixnumValue(duration);
 
-	RbColor* color_ptr = GetObjectPtr<RbColor>(color);
+	RbColor * color_ptr = GetObjectPtr<RbColor>(color);
 	m_flash_color = color_ptr->GetColor();
 	m_flash_duration = FIX2INT(duration);
 	m_flash_reduce_count_per_frame = (int)(255.0f / m_flash_duration);
