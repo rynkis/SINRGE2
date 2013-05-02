@@ -70,7 +70,7 @@ void RbFont::InitLibrary()
 	
 	rb_str_freeze(__default_name__);
 
-	__default_size__	= INT2FIX(16);
+	__default_size__	= INT2FIX(20);
 	__default_bold__	= Qfalse;
 	__default_italic__	= Qfalse;
 	__default_color__	= rb_class_new_instance(3, __argv, rb_cColor);

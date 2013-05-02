@@ -84,13 +84,6 @@ public:
 	virtual void			CALL	Resource_Free(void *res);
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0);
 
-	virtual	void			CALL	Ini_SetInt(const wchar_t *section, const wchar_t *name, int value);
-	virtual	int 			CALL	Ini_GetInt(const wchar_t *section, const wchar_t *name, int def_val);
-	virtual	void			CALL	Ini_SetFloat(const wchar_t *section, const wchar_t *name, float value);
-	virtual	float			CALL	Ini_GetFloat(const wchar_t *section, const wchar_t *name, float def_val);
-	virtual	void			CALL	Ini_SetString(const wchar_t *section, const wchar_t *name, const wchar_t *value);
-	virtual	wchar_t*		CALL	Ini_GetString(const wchar_t *section, const wchar_t *name, const wchar_t *def_val);
-
 	virtual void			CALL	Random_Seed(int seed=0);
 	virtual int				CALL	Random_Int(int min, int max);
 	virtual float			CALL	Random_Float(float min, float max);
@@ -133,7 +126,6 @@ public:
 	bool					bActive;
 	wchar_t					szError[256];
 	wchar_t					szAppPath[_MAX_PATH];
-	wchar_t					szIniString[256];
 
 
 	// System States
@@ -150,8 +142,6 @@ public:
 	bool					bWindowed;
 	bool					bZBuffer;
 	bool					bTextureFilter;
-	wchar_t					szIniFile[_MAX_PATH];
-	wchar_t					szLogFile[_MAX_PATH];
 	int						nHGEFPS;
 	bool					bHideMouse;
 	bool					bDontSuspend;

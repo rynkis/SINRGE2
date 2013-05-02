@@ -150,8 +150,8 @@ enum hgeStringState
 {
 	HGE_TITLE			= 27,   // char*	window title		(default: "HGE")
 	
-	HGE_INIFILE			= 28,   // char*	ini file			(default: NULL) (meaning no file)
-	HGE_LOGFILE			= 29,   // char*	log file			(default: NULL) (meaning no file)
+	//HGE_INIFILE			= 28,   // char*	ini file			(default: NULL) (meaning no file)
+	//HGE_LOGFILE			= 29,   // char*	log file			(default: NULL) (meaning no file)
 
 	HGESTRINGSTATE_FORCE_DWORD = 0x7FFFFFFF
 };
@@ -265,13 +265,6 @@ public:
 	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx) = 0;
 	virtual void			CALL	Resource_Free(void *res) = 0;
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0) = 0;
-
-	virtual	void			CALL	Ini_SetInt(const wchar_t *section, const wchar_t *name, int value) = 0;
-	virtual	int				CALL	Ini_GetInt(const wchar_t *section, const wchar_t *name, int def_val) = 0;
-	virtual	void			CALL	Ini_SetFloat(const wchar_t *section, const wchar_t *name, float value) = 0;
-	virtual	float			CALL	Ini_GetFloat(const wchar_t *section, const wchar_t *name, float def_val) = 0;
-	virtual	void			CALL	Ini_SetString(const wchar_t *section, const wchar_t *name, const wchar_t *value) = 0;
-	virtual	wchar_t*		CALL	Ini_GetString(const wchar_t *section, const wchar_t *name, const wchar_t *def_val) = 0;
 
 	virtual void			CALL	Random_Seed(int seed=0) = 0;
 	virtual int				CALL	Random_Int(int min, int max) = 0;

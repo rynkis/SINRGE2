@@ -2085,6 +2085,13 @@ void Init_seal()
     bind_listener();
 }
 
+void SealStartup()
+{
+	seal_err_t err = seal_startup(0);
+    if (err != SEAL_OK)
+        rb_raise(eSealError, "%s", seal_get_err_msg(err));
+}
+
 void SealCleanup()
 {
 	seal_cleanup();

@@ -34,7 +34,7 @@ namespace
 	**		msgbox_p(...)		-> nil
 	**
 	*/
-	static VALUE rdf_msgboxp(int argc, VALUE *argv/*, VALUE caller*/)
+	static VALUE msgbox_p(int argc, VALUE *argv/*, VALUE caller*/)
 	{
 		int i;
 
@@ -48,27 +48,6 @@ namespace
 		// 清除多余消息队列
 		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
-
-		return Qnil;
-	}
-	/*
-	**	call-seq:
-	**		p(...)		-> nil
-	**
-	*/
-	static VALUE rdf_p(int argc, VALUE *argv/*, VALUE caller*/)
-	{
-		int i;
-
-		VALUE str = rb_str_buf_new(0);
-
-		for (i = 0; i < argc; ++i)
-		{
-			rb_str_buf_append(str, rb_inspect(argv[i]));
-			rb_str_buf_append(str, rb_default_rs);
-		}
-		
-		printf(Kconv::UTF8ToAnsi(RSTRING_PTR(str)));
 
 		return Qnil;
 	}
@@ -77,7 +56,7 @@ namespace
 	**		msgbox(...)		-> nil
 	**
 	*/
-	static VALUE rdf_msgbox(int argc, VALUE *argv/*, VALUE caller*/)
+	static VALUE msgbox(int argc, VALUE *argv/*, VALUE caller*/)
 	{
 		int i;
 
@@ -91,27 +70,6 @@ namespace
 		// 清除多余消息队列
 		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
-
-		return Qnil;
-	}
-	/*
-	**	call-seq:
-	**		print(...)		-> nil
-	**
-	*/
-	static VALUE rdf_print(int argc, VALUE *argv/*, VALUE caller*/)
-	{
-		int i;
-
-		VALUE str = rb_str_buf_new(0);
-
-		rb_encoding * enc = rb_utf8_encoding();
-		for (i = 0; i < argc; ++i)
-		{
-			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
-		}
-		
-		printf(Kconv::UTF8ToAnsi(RSTRING_PTR(str)));
 
 		return Qnil;
 	}
@@ -140,7 +98,6 @@ namespace
 	}
 }
 
-static const wchar_t * pDefaultConsole	= L"0";
 static const wchar_t * pDefaultScripts	= L"main.rb";
 
 /***
@@ -155,16 +112,15 @@ CApplication * CApplication::s_pApp = 0;
 CApplication::CApplication()
 	: m_pVideoMgr(0)
 	, m_7pkgReader(0)
+
 	, pr_open(0)
 	, pr_close(0)
 
 	, pScripts(0)
-	, m_pHge(0)
 	, m_pRenderState(0)
-
 	, m_ref_d3d(0)
 	, m_ref_device(0)
-	, m_with_console(false)
+
 	, m_brightness(255)
 	, m_saved_brghtness(255)
 
@@ -403,14 +359,12 @@ int CApplication::GetRuntimeInfos()
 	if (IsFileExist(szIniPath))
 	{
 		GetPrivateProfileStringW(L"Setting", L"Scripts", pDefaultScripts, szScripts, MAX_PATH, szIniPath);
-		GetPrivateProfileStringW(L"Setting", L"Console", pDefaultConsole, szConsole, MAX_PATH, szIniPath);
 		GetPrivateProfileStringW(L"Setting", L"Package", L"", szPackage, MAX_PATH, szIniPath);
 		GetPrivateProfileStringW(L"Setting", L"ExtFunc", L"", szExtFunc, MAX_PATH, szIniPath);
 	}
 	else
 	{
 		wcscpy_s(szScripts, pDefaultScripts);
-		wcscpy_s(szConsole, pDefaultConsole);
 		szPackage[0] = 0;
 		szExtFunc[0] = 0;
 	}
@@ -419,9 +373,6 @@ int CApplication::GetRuntimeInfos()
 	pScripts = new char[len];
 	WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, pScripts, len, NULL, FALSE);
 
-	if (szConsole[0] == '1')
-		m_with_console = true;
-	
 	if (szExtFunc[0] != 0)
 		m_hSeal = ::LoadLibraryW(szExtFunc);
 
@@ -490,19 +441,6 @@ int CApplication::Eval(const char * script)
 
 void CApplication::InitRubyInnerClassExt()
 {
-	rb_define_global_function("msgbox_p",		(RbFunc)rdf_msgboxp,		-1);
-	rb_define_global_function("msgbox",			(RbFunc)rdf_msgbox,			-1);
-	if (m_with_console)
-	{
-		rb_define_global_function("p",			(RbFunc)rdf_p,				-1);
-		rb_define_global_function("print",		(RbFunc)rdf_print,			-1);
-	}
-	else
-	{
-		rb_define_global_function("p",			(RbFunc)rdf_msgboxp,		-1);
-		rb_define_global_function("print",		(RbFunc)rdf_msgbox,			-1);
-	}
-
 	ruby_Init_Fiber_as_Coroutine();
 	Init_zlib();
 	Init_nonblock();
@@ -525,7 +463,9 @@ void CApplication::InitExportSinInterface()
 	RbTable::InitLibrary();
 	RbParticleSystem::InitLibrary();
 	RbWin32API::InitLibrary();
-		
+	
+	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(msgbox_p), -1);
+	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(msgbox), -1);
 	rb_define_module_function(rb_mSin, "load_data",	RbFunc(load_data), 1);
 }
 
@@ -600,7 +540,7 @@ bool CApplication::InitVideo()
 	//	Save the window's hwnd
 	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
 
-	RbRenderTree::Init();
+	//RbRenderTree::Init();
 
 	m_pRenderState = new RbRenderState();
 	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());

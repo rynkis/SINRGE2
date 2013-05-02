@@ -45,9 +45,6 @@
     <ClCompile Include="hge\graphics.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>
-    <ClCompile Include="hge\ini.cpp">
-      <Filter>源文件\hge</Filter>
-    </ClCompile>
     <ClCompile Include="hge\power.cpp">
       <Filter>源文件\hge</Filter>
     </ClCompile>

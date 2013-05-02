@@ -339,28 +339,18 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 
 void CALL HGE_Impl::System_SetStateString(hgeStringState state, const wchar_t *value)
 {
-	FILE *hf;
-	
-	switch(state)
+	if (state == HGE_TITLE)
+	{
+		wcscpy_s(szWinTitle,value);
+		if(pHGE->hwnd)
+			SetWindowText(pHGE->hwnd, szWinTitle);
+	}
+	/*switch(state)
 	{
 		case HGE_TITLE:			wcscpy_s(szWinTitle,value);
 								if(pHGE->hwnd) SetWindowText(pHGE->hwnd, szWinTitle);
 								break;
-		case HGE_INIFILE:		if(value)
-									wcscpy_s(szIniFile,Resource_MakePath(value));
-									//wcscpy_s(szIniFile, ResManager::Instance()->Resource_MakePath(value));
-								else szIniFile[0]=0;
-								break;
-		case HGE_LOGFILE:		if(value)
-								{
-									wcscpy_s(szLogFile,Resource_MakePath(value));
-									//wcscpy_s(szIniFile, ResManager::Instance()->Resource_MakePath(value));
-									if(_wfopen_s(&hf, szLogFile, L"w")) szLogFile[0]=0;
-									else fclose(hf);
-								}
-								else szLogFile[0]=0;
-								break;
-	}
+	}*/
 }
 
 bool CALL HGE_Impl::System_GetStateBool(hgeBoolState state)
@@ -415,14 +405,11 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 }
 
 const wchar_t* CALL HGE_Impl::System_GetStateString(hgeStringState state) {
-	switch(state) {
+	if (state == HGE_TITLE)
+		return szWinTitle;
+	/*switch(state) {
 		case HGE_TITLE:			return szWinTitle;
-		case HGE_INIFILE:		if(szIniFile[0]) return szIniFile;
-								else return 0;
-		case HGE_LOGFILE:		if(szLogFile[0]) return szLogFile;
-								else return 0;
-	}
-
+	}*/
 	return NULL;
 }
 
@@ -433,31 +420,16 @@ wchar_t* CALL HGE_Impl::System_GetErrorMessage()
 
 void CALL HGE_Impl::System_Log(const wchar_t *szFormat, ...)
 {
-	FILE *hf = NULL;
+	static wchar_t szError[1024];
 	va_list ap;
-	
-	if(!szLogFile[0])
-	{
-		static wchar_t szError[1024];
-
-		va_start(ap, szFormat);
-		vswprintf_s(szError, szFormat, ap);
-		va_end(ap);
-		
-		wprintf(szError);
-		printf("\n");
-		return;
-	}
-
-	if(_wfopen_s(&hf, szLogFile, L"a")) return;
 
 	va_start(ap, szFormat);
-	vfwprintf(hf, szFormat, ap);
+	vswprintf_s(szError, szFormat, ap);
 	va_end(ap);
-
-	fprintf(hf, "\n");
-
-	fclose(hf);
+	
+	wprintf(szError);
+	printf("\n");
+	return;
 }
 
 bool CALL HGE_Impl::System_Launch(const wchar_t *url)
@@ -592,8 +564,6 @@ HGE_Impl::HGE_Impl()
 	bWindowed=false;
 	bZBuffer=false;
 	bTextureFilter=true;
-	szLogFile[0]=0;
-	szIniFile[0]=0;
 	
 	bHideMouse=true;
 	bDontSuspend=false;
@@ -828,7 +798,7 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);
-		float a2, gray = 0, rate = 255.0 / duration;;
+		float a2, gray = 0, rate = (float)(255.0 / duration);
 		int dw = pHGE->nScreenWidth < mw ? pHGE->nScreenWidth : mw;
 		int dh = pHGE->nScreenHeight < mh ? pHGE->nScreenHeight : mh;
 		int wrate = pHGE->nScreenWidth / mw;

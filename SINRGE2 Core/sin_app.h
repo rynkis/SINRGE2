@@ -89,9 +89,7 @@ private:
 	wchar_t						szAppPath[MAX_PATH];
 	wchar_t						szIniPath[MAX_PATH];
 	wchar_t						szScripts[MAX_PATH];
-	
 	char *						pScripts;
-	bool						m_with_console;
 
 	HGE *						m_pHge;
 	RbRenderState *				m_pRenderState;

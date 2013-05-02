@@ -15,6 +15,7 @@ protected:
 typedef IC7pkgReader * (*func_pr_open)(const wchar_t * filename);
 typedef void (*func_pr_close)(IC7pkgReader * package);
 
+void SealStartup();
 void SealCleanup();
 
 #endif // __TANGRAM_H__

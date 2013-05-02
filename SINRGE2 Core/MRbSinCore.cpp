@@ -7,6 +7,7 @@
 */
 #include "MRbSinCore.h"
 #include "MRbInput.h"
+#include "TANGRAM.h"
 #include "RbBitmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
@@ -21,7 +22,7 @@ VALUE MRbSinCore::init()
 {
 	if (!GetAppPtr()->InitAudio())
 		rb_raise(rb_eSinError, "Failed to initialize Audio Module.");
-	
+	SealStartup();
 	return init_video();
 }
 
