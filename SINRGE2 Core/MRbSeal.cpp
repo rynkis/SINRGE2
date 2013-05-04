@@ -14,6 +14,8 @@
 //}
 #if SIN_USE_SEAL
 
+static bool	seal_running = false;
+
 static const char WAV_SYM[] = "wav";
 static const char OV_SYM[]	= "ov";
 static const char MPG_SYM[] = "mpg";
@@ -2090,11 +2092,13 @@ void SealStartup()
 	seal_err_t err = seal_startup(0);
     if (err != SEAL_OK)
         rb_raise(eSealError, "%s", seal_get_err_msg(err));
+	seal_running = true;
 }
 
 void SealCleanup()
 {
-	seal_cleanup();
+	if (seal_running)
+		seal_cleanup();
 }
 
 #define GET_CHECK_SEAL_FUNC(func)													\

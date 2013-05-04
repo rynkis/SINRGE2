@@ -14,38 +14,42 @@
 
 void * CALL HGE_Impl::Resource_Load(const wchar_t * filename, DWORD * size)
 {
-	void * data = 0;
+	void *	data = 0;
 	HANDLE	handle = NULL;
 	DWORD	file_size;
-
+	
 	if (GetAppPtr()->Get7pkgReader())
 	{
 		file_size = GetAppPtr()->Get7pkgReader()->FileLength(filename);
+		if (!file_size)
+			goto __load_from_hd;
+
 		if (!(data = malloc(file_size)))
 			goto failed_return;
 
 		if (!GetAppPtr()->Get7pkgReader()->LoadData(filename, data))
 			goto failed_return;
-	}
-	else
-	{
-		handle = CreateFile(Resource_MakePath(filename), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, NULL);
-		if (handle == INVALID_HANDLE_VALUE)
-			return 0;
-	
-		file_size = GetFileSize(handle, NULL);
 
-		if (!(data = malloc(file_size)))
-			goto failed_return;
-
-		if (ReadFile(handle, data, file_size, &file_size, NULL) == 0)
-			goto failed_return;
-	
-		CloseHandle(handle);
+		if (size)	*size = file_size;
+		return data;
 	}
+	
+__load_from_hd:
+	handle = CreateFile(Resource_MakePath(filename), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS, NULL);
+	if (handle == INVALID_HANDLE_VALUE)
+		goto failed_return;
+	
+	file_size = GetFileSize(handle, NULL);
+
+	if (!(data = malloc(file_size)))
+		goto failed_return;
+
+	if (ReadFile(handle, data, file_size, &file_size, NULL) == 0)
+		goto failed_return;
+	
+	CloseHandle(handle);
 
 	if (size)	*size = file_size;
-
 	return data;
 
 failed_return:

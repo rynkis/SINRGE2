@@ -44,6 +44,7 @@ void RbRect::InitLibrary()
 
 	// supplement
  	rb_define_method(rb_cRect,	"to_s",		(RbFunc)dm_to_string,	0);
+	rb_define_method(rb_cRect,	"clone",	(RbFunc)dm_clone,		0);
 }
 
 VALUE RbRect::initialize(int argc, VALUE * argv, VALUE obj)
@@ -143,6 +144,13 @@ VALUE RbRect::empty()
 	height	= FIX2INT(vh);
 
 	return __obj;
+}
+
+VALUE RbRect::clone()
+{
+	VALUE __argv[] = { vx, vy, vw, vh };
+
+	return rb_class_new_instance(4, __argv, obj_class());
 }
 
 VALUE RbRect::to_string()

@@ -1,37 +1,64 @@
-﻿SINRGE2 Ver. YAR
-======
-Copyright (C) 2013 Sherry Lynch(or Shy07) <Gernischt@gmail.com>
+﻿# SINRGE2
+Copyright (C) 2013 Lynch Sherry (or Shy07) <Gernischt@gmail.com>
 
-Sorry, only chinese version readme available now.
+## Notice
+Author's English was not good enough to assure everything all right.
+So don't be too serious, you could told me and I'll correct it.
 
-关于 SINRGE2
-=====
+## About SINRGE2
+SINRGE2 is the 递归缩写 of "SINRGE2 Is Not Ruby Game Engine 2".  
+As the name, SINRGE2 has no game engine tools such as map editor,
+scripts editor, etc. SINRGE2 is just a library for Ruby programming
+language.  
+If you have experience with RGSS whst is the ruby game scripts system
+of RPG Maker XP or later. Then SINRGE2 would be very easy to using for
+you.  
 
-SINRGE2，SINRGE2 Is Not Ruby Game Engine 2 的递归缩写，是由 Sherry Lynch（或称 Shy07）个人开发的一个用于游戏开发的 Ruby 实现。当然，也离不开 RGE2 开发团队的贡献。
+## How to use
+### Prepare
+To use SINRGE2, you may compile SINRGE2 from source code or download
+the binary files first. And edit the .ini file to tell SINRGE2.dll
+some necessary parameters.
+```Runme.ini
+[setting]
+Library=SINRGE2.dll # to tell Runme.exe the path of SINRGE2.dll
+ExtFunc=SealEx.dll  # to tell SINRGE2.dll the path of extension library
+                    # and it could be empty
+Scripts=main.rb     # to tell SINRGE2.dll the path of main script file
+Console=0           # to tell SINRGE2 whether show cmd window or not
+                    # only '1' can open the console and any other value
+                    # close the console
+```
+### Basic Use
 
-之所以会开发这个项目，是因为 RGE2 的开发长期停滞，发布无望，所以试图自己动手，丰衣足食。  
+Initialize SINRGE2:
 
-初版，Ver. Draft 是采用 NGE2 作为图像底层，但是 Windows 版本一直不稳定，在官方论坛咨询也不得其果。因此，马不停蹄开始了第二版本的开发。
+```ruby
+SINRGE2.init_video # this can only initialize graphics moudle
+#SINRGE2.init      # this can initialize both graphics and seal moudle
+                   # premise is you have specified the ExtFunc in .ini
+include SINRGE2
+```
 
-第二版，Ver. YAR 是在研究了 FET、RGE2 等多个项目后开始制作的。YAR 以 HGE 作为图像底层，使用了大量的 RGE2 代码，可以说是对 RGE2 进行补完或分支版本开发。YAR，即 Yet Another RGE2。
+Hello world:  
 
-YAR，原本计划实现 NGE2 的函数。但是考虑到 Ruby 彻底面向对象的特性，使用 NGE2 的函数来开发会显得很奇怪，最终决定放弃。如果有人曾对此作期待的话，那么在此向您道歉。
+You can print "Hello world" in cmd window by  
+```ruby
+print "Hello world"
+```
+or  
+```ruby
+p "Hello world"
+puts "Hello world"
+```
+as usual.  
 
-
-YAR 的特性
-=====
-
-
-
-依赖
-=====
-
-Ruby 2.0.0 p0 https://github.com/ruby/ruby  
---附加依赖：zlib
-
-HGE 1.81 https://github.com/kvakvs/hge
-
-Seal 0.1.2 「焦尾」 https://github.com/zhangsu/seal  
---附加依赖：libmpg123、libogg、 libvorbis、OpenAL32
-
+And in SINRGE2 you can print it on screen. This is a sample:  
+```ruby
+@spt = Sprite.new # create a sprite
+@spt.bitmap = Bitmap.new(128, 32) # create a 128 * 32 bitmap
+@spt.bitmap.draw_text(0, 0, 128, 32, "Hello world") # draw text
+game_stop # stop SINRGE2 with looping Graphics#update
+```
+You can get the same effect in RGSS too.  
 

@@ -7,15 +7,12 @@
 */
 #ifndef __RB_PARTICLE_SYS_H__
 #define __RB_PARTICLE_SYS_H__
-
 #include "RbDisplayObject.h"
 #include "hgeparticle.h"
 
 class hgeSprite;
 class hgeParticleSystem;
-
 class RbBitmap;
-
 
 class RbParticleSystem : public DisplayObject
 {
@@ -28,7 +25,6 @@ public:
 
 public:
 	static void		InitLibrary();
-
 	
 	void			Render(float offset_x, float offset_y);
 
@@ -48,7 +44,6 @@ protected:
 	RbRenderNode *			m_node;
 	
 	s32						m_ref_bitmap_modify_count;
-	
 	int						m_blend_type;
 
 	hgeParticleSystemInfo	info;

@@ -115,6 +115,7 @@ void RbFont::InitLibrary()
 
 	// supplement
  	rb_define_method(rb_cFont, "to_s",	(RbFunc)dm_to_string,	0);
+	rb_define_method(rb_cFont, "clone",	(RbFunc)dm_clone,		0);
 }
 
 void RbFont::mark()
@@ -179,6 +180,18 @@ VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 	m_hFont = CreateFontIndirectW(&m_lfw);
 
 	return obj;
+}
+
+VALUE RbFont::clone()
+{
+	VALUE __argv[] = { m_name, m_size };
+	VALUE font = rb_class_new_instance(2, __argv, obj_class());
+	RbFont * font_ptr = GetObjectPtr<RbFont>(font);
+	font_ptr->dm_set_bold(font, m_bold);
+	font_ptr->dm_set_italic(font, m_italic);
+	font_ptr->dm_set_shadow(font, m_shadow);
+	font_ptr = NULL;
+	return font;
 }
 
 VALUE RbFont::dm_is_exist(int argc, VALUE name)

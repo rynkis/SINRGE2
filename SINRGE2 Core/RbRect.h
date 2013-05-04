@@ -30,6 +30,7 @@ protected:
 
 	virtual VALUE	set(int argc, VALUE * argv, VALUE obj);
 	virtual VALUE	_dump(VALUE depth);
+	virtual VALUE	clone();
 	
 	virtual VALUE	to_string();
 

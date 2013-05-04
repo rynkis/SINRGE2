@@ -150,6 +150,9 @@
     <ClCompile Include="sin_timer.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
+    <ClCompile Include="Rb7pkgWriter.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -394,6 +397,9 @@
     </ClInclude>
     <ClInclude Include="TANGRAM.h">
       <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="Rb7pkgWriter.h">
+      <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

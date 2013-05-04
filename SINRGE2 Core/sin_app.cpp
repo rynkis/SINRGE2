@@ -23,6 +23,7 @@
 #include "RbTable.h"
 #include "RbParticleSystem.h"
 #include "RbWin32API.h"
+#include "Rb7pkgWriter.h"
 #include "sin_app.h"
 #include "sin_video.h"
 
@@ -34,12 +35,13 @@ namespace
 	**		msgbox_p(...)		-> nil
 	**
 	*/
-	static VALUE msgbox_p(int argc, VALUE *argv/*, VALUE caller*/)
+	static VALUE rdf_msgboxp(int argc, VALUE * argv/*, VALUE caller*/)
 	{
 		int i;
 
 		VALUE str = rb_str_buf_new(0);
-
+		
+		rb_encoding * enc = rb_utf8_encoding();
 		for (i = 0; i < argc; ++i)
 		{
 			rb_str_buf_append(str, rb_inspect(argv[i]));
@@ -56,7 +58,7 @@ namespace
 	**		msgbox(...)		-> nil
 	**
 	*/
-	static VALUE msgbox(int argc, VALUE *argv/*, VALUE caller*/)
+	static VALUE rdf_msgbox(int argc, VALUE * argv/*, VALUE caller*/)
 	{
 		int i;
 
@@ -73,31 +75,101 @@ namespace
 
 		return Qnil;
 	}
+	/*
+	**	call-seq:
+	**		print(...)		-> nil
+	**
+	*/
+	static VALUE rdf_print(int argc, VALUE * argv/*, VALUE caller*/)
+	{
+		int i;
+
+		VALUE str = rb_str_buf_new(0);
+
+		rb_encoding * enc = rb_utf8_encoding();
+		for (i = 0; i < argc; ++i)
+		{
+			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
+		}
+		
+		printf(Kconv::UTF8ToAnsi(RSTRING_PTR(str)));
+
+		return Qnil;
+	}
+	/*
+	**	call-seq:
+	**		puts(...)		-> nil
+	**
+	*/
+	static VALUE rdf_puts(int argc, VALUE * argv/*, VALUE caller*/)
+	{
+		int i;
+
+		VALUE str = rb_str_buf_new(0);
+
+		rb_encoding * enc = rb_utf8_encoding();
+		for (i = 0; i < argc; ++i)
+		{
+			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
+			rb_str_buf_append(str, rb_default_rs);
+		}
+		
+		printf(Kconv::UTF8ToAnsi(RSTRING_PTR(str)));
+
+		return Qnil;
+	}
 	
 	static VALUE load_data(int argc, VALUE filename)
 	{
 		SafeStringValue(filename);
 		VALUE rbread, rbdata;
+		void * data = 0;
+		DWORD file_size;
+		wchar_t * filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(filename));
+
 		if (GetAppPtr()->Get7pkgReader())
 		{
-			wchar_t * filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(filename));
-			void * data = malloc(GetAppPtr()->Get7pkgReader()->FileLength(filenameW));
-			if (!GetAppPtr()->Get7pkgReader()->LoadData(filenameW, data)) return Qnil;
+			file_size = GetAppPtr()->Get7pkgReader()->FileLength(filenameW);
+			if (!file_size)
+				goto __load_from_hd;
+
+			if (!(data = malloc(file_size)))
+				goto __failed_return;
+
+			if (!GetAppPtr()->Get7pkgReader()->LoadData(filenameW, data))
+				goto __failed_return;
+
 			rbread = rb_str_new2((char *)data);
 			rbdata = rb_marshal_load(rbread);
 			rbread = Qnil;
-			free(data);
+			if (data)
+			{
+				free(data);
+				data = 0;
+			}
+			return rbdata;
 		}
-		else
+
+__load_from_hd:
+		if (GetFileAttributesW(filenameW) != INVALID_FILE_ATTRIBUTES)
 		{
 			rbread = rb_file_open(RSTRING_PTR(filename), "rb");
 			rbdata = rb_marshal_load(rbread);
 			(void)rb_io_close(rbread);
+			return rbdata;
 		}
-		return rbdata;
+
+__failed_return:
+		if (data)
+		{
+			free(data);
+			data = 0;
+		}
+		return Qnil;
 	}
 }
 
+//static const wchar_t * pDefaultConsole	= L"0";
 static const wchar_t * pDefaultScripts	= L"main.rb";
 
 /***
@@ -120,7 +192,7 @@ CApplication::CApplication()
 	, m_pRenderState(0)
 	, m_ref_d3d(0)
 	, m_ref_device(0)
-
+	, m_with_console(false)
 	, m_brightness(255)
 	, m_saved_brghtness(255)
 
@@ -281,7 +353,7 @@ int CApplication::RunScript()
 				OnFailed(err);
 			}
 		}
-		return state;//ruby_cleanup(state);
+		return ruby_cleanup(state);
 	}
 	else goto __run_with_data;
 
@@ -291,17 +363,9 @@ __run_with_data:
 
 	int arylen = NUM2INT(rb_funcall(rbdata, rb_intern("size"), 0));
 
-	//VALUE ary, f_name, script;
-	VALUE argv;// = rb_ary_new2(2);
 	for (int pos = 0; pos < arylen; ++pos)
 	{
-		/*ary = rb_ary_entry(rbdata, pos);
-		f_name = rb_ary_entry(ary, 0);
-		script = rb_ary_entry(ary, 1);
-		rb_ary_clear(argv);
-		rb_ary_push(argv, f_name);
-		rb_ary_push(argv, script);*/
-		argv = rb_ary_entry(rbdata, pos);
+		VALUE argv = rb_ary_entry(rbdata, pos);
 
 		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
 		if (state)
@@ -313,7 +377,7 @@ __run_with_data:
 			}
 		}
 	}
-	return state;//ruby_cleanup(state);
+	return ruby_cleanup(state);
 }
 
 void CApplication::InitRubyInterpreter()
@@ -359,12 +423,14 @@ int CApplication::GetRuntimeInfos()
 	if (IsFileExist(szIniPath))
 	{
 		GetPrivateProfileStringW(L"Setting", L"Scripts", pDefaultScripts, szScripts, MAX_PATH, szIniPath);
+		GetPrivateProfileStringW(L"Setting", L"Console", L"", szConsole, MAX_PATH, szIniPath);
 		GetPrivateProfileStringW(L"Setting", L"Package", L"", szPackage, MAX_PATH, szIniPath);
 		GetPrivateProfileStringW(L"Setting", L"ExtFunc", L"", szExtFunc, MAX_PATH, szIniPath);
 	}
 	else
 	{
 		wcscpy_s(szScripts, pDefaultScripts);
+		szConsole[0] = 0;
 		szPackage[0] = 0;
 		szExtFunc[0] = 0;
 	}
@@ -373,29 +439,34 @@ int CApplication::GetRuntimeInfos()
 	pScripts = new char[len];
 	WideCharToMultiByte(CP_OEMCP, NULL, szScripts, -1, pScripts, len, NULL, FALSE);
 
+	if (szConsole[0] == '1')
+		m_with_console = true;
+
 	if (szExtFunc[0] != 0)
 		m_hSeal = ::LoadLibraryW(szExtFunc);
 
-	if (m_hSeal && szPackage[0] != 0)
+	if (m_hSeal)
 	{
-		if (!IsFileExist(szPackage))
+		pr_open = (func_pr_open)::GetProcAddress(m_hSeal, "pr_open");
+		pr_close = (func_pr_close)::GetProcAddress(m_hSeal, "pr_close");
+		pw_open = (func_pw_open)::GetProcAddress(m_hSeal, "pw_open");
+		pw_close = (func_pw_close)::GetProcAddress(m_hSeal, "pw_close");
+
+		if (!pr_open && !pr_close && !pw_open && !pw_close)
 		{
-			MessageBoxW(m_frm_struct.m_hwnd, L"Failed to find 7pkg file.", m_frm_struct.m_title,  MB_ICONWARNING);
+			MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load expansion functions.", m_frm_struct.m_title,  MB_ICONWARNING);
 			return 1;
 		}
-		else
+
+		if (szPackage[0] != 0)
 		{
-			pr_open = (func_pr_open)::GetProcAddress(m_hSeal, "pr_open");
-			pr_close = (func_pr_close)::GetProcAddress(m_hSeal, "pr_close");
-			if (pr_open && pr_close)
+			if (!IsFileExist(szPackage))
 			{
-				m_7pkgReader = pr_open(szPackage);
-			}
-			else
-			{
-				MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load expansion functions.", m_frm_struct.m_title,  MB_ICONWARNING);
+				MessageBoxW(m_frm_struct.m_hwnd, L"Failed to find 7pkg file.", m_frm_struct.m_title,  MB_ICONWARNING);
 				return 1;
 			}
+			else if (pr_open && pr_close)
+				m_7pkgReader = pr_open(szPackage, L"sinrge2");
 		}
 	}
 	return 0;
@@ -441,6 +512,17 @@ int CApplication::Eval(const char * script)
 
 void CApplication::InitRubyInnerClassExt()
 {
+	if (m_with_console)
+	{
+		rb_define_global_function("print",		(RbFunc)rdf_print,			-1);
+		rb_define_global_function("puts",		(RbFunc)rdf_puts,			-1);
+	}
+	else
+	{
+		rb_define_global_function("p",			(RbFunc)rdf_msgboxp,		-1);
+		rb_define_global_function("print",		(RbFunc)rdf_msgbox,			-1);
+		rb_define_global_function("puts",		(RbFunc)rdf_msgbox,			-1);
+	}
 	ruby_Init_Fiber_as_Coroutine();
 	Init_zlib();
 	Init_nonblock();
@@ -464,8 +546,8 @@ void CApplication::InitExportSinInterface()
 	RbParticleSystem::InitLibrary();
 	RbWin32API::InitLibrary();
 	
-	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(msgbox_p), -1);
-	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(msgbox), -1);
+	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(rdf_msgboxp), -1);
+	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(rdf_msgbox), -1);
 	rb_define_module_function(rb_mSin, "load_data",	RbFunc(load_data), 1);
 }
 
@@ -584,6 +666,7 @@ bool CApplication::InitAudio()
 {
 #if SIN_USE_SEAL
 	if (!m_hSeal) return false;
+	Rb7pkgWriter::InitLibrary();
 	return MRbSeal::InitLibrary();
 #else
 	MRbAudio::InitLibrary();
@@ -660,4 +743,14 @@ bool CApplication::IsFileExist(const wchar_t * pFileName)
 bool CApplication::IsFileExist(const char * pFileName)
 {
 	return (GetFileAttributesA(pFileName) != INVALID_FILE_ATTRIBUTES);
+}
+
+IC7pkgWriter * CApplication::Open7pkgWriter(const wchar_t * filename, const wchar_t * password)
+{
+	return pw_open(filename, password);
+}
+
+void CApplication::Close7pkgWriter(IC7pkgWriter * pw)
+{
+	pw_close(pw);
 }

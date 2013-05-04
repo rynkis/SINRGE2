@@ -99,6 +99,7 @@
     <ClCompile Include="Entry.cpp" />
     <ClCompile Include="hge\resource.cpp" />
     <ClCompile Include="MRbAudio.cpp" />
+    <ClCompile Include="Rb7pkgWriter.cpp" />
     <ClCompile Include="RbBitmap.cpp" />
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
@@ -176,6 +177,7 @@
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
+    <ClInclude Include="Rb7pkgWriter.h" />
     <ClInclude Include="TANGRAM.h" />
     <ClInclude Include="hge\include\hge.h" />
     <ClInclude Include="hge\include\hgeanim.h" />

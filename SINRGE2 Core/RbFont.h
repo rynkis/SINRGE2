@@ -25,15 +25,17 @@ public:
 public:
 	static void		InitLibrary();
 
+	static bool		IsExist(const wchar_t * filename);
+	static VALUE	dm_is_exist(int argc, VALUE name);
+
 	RbColor *		GetColorPtr() const { return m_color_ptr; }
 	HFONT			GetHFont() const { return m_hFont; }
 	bool			IsShadow() const { return RTEST(m_shadow); }
-	static bool		IsExist(const wchar_t * filename);
-	static VALUE	dm_is_exist(int argc, VALUE name);
 
 protected:
 	virtual void	mark();
 	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);
+	virtual VALUE	clone();
 
 protected:
 	VALUE			m_name;			// mark
@@ -47,16 +49,15 @@ protected:
 	LOGFONTW		m_lfw;
 
 	RbColor *		m_color_ptr;
-
+	
 protected:
-
 	attr_accessor(name)
 	attr_accessor(size)
 	attr_accessor(bold)
 	attr_accessor(italic)
 	attr_accessor(color)
 	attr_accessor(shadow)
-
+	
 	class_attr_accessor(default_name)
 	class_attr_accessor(default_size)
 	class_attr_accessor(default_bold)
@@ -71,6 +72,9 @@ protected:
 	static VALUE	__default_italic__;
 	static VALUE	__default_color__;
 	static VALUE	__default_shadow__;
+
+private:
+	friend class	RbFont;
 };
 
 #endif

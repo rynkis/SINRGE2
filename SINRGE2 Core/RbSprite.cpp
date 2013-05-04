@@ -35,6 +35,7 @@ RbSprite::RbSprite()
 
 RbSprite::~RbSprite()
 {
+	super::~RbPlane();
 }
 
 void RbSprite::InitLibrary()

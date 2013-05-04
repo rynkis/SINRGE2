@@ -36,9 +36,9 @@ public:
 
 	inline HMODULE				GetSealHmodule() const { return m_hSeal; }
 
-private:
-	static bool					GainFocusProc();
-	static bool					LostFocusProc();
+//private:
+	/*static bool					GainFocusProc();
+	static bool					LostFocusProc();*/
 
 private:
 	CApplication();
@@ -65,6 +65,9 @@ public:
 	void						LimitFps(int limit);
 	int							GetRealFps();
 	double						GetTimeDelta();
+	
+	IC7pkgWriter *				Open7pkgWriter(const wchar_t * filename, const wchar_t * password);
+	void						Close7pkgWriter(IC7pkgWriter * pw);
 
 private:
 	//void						ShowError(const wchar_t *szFormat, ...);
@@ -89,6 +92,8 @@ private:
 	wchar_t						szAppPath[MAX_PATH];
 	wchar_t						szIniPath[MAX_PATH];
 	wchar_t						szScripts[MAX_PATH];
+
+	bool						m_with_console;
 	char *						pScripts;
 
 	HGE *						m_pHge;
@@ -119,10 +124,13 @@ private:
 
 private:
 	class CVideoMgr *			m_pVideoMgr;			///<	AVI播放
-
+	
 	IC7pkgReader *				m_7pkgReader;
 	func_pr_open				pr_open;
 	func_pr_close				pr_close;
+
+	func_pw_open				pw_open;
+	func_pw_close				pw_close;
 
 private:
 	static CApplication *		s_pApp;					///<	[静态]		应用程序单例类指针
