@@ -2,17 +2,16 @@
 Copyright (C) 2013 Lynch Sherry (or Shy07) <Gernischt@gmail.com>
 
 ## Notice
-Author's English was not good enough to assure everything all right.
-So don't be too serious, you could told me and I'll correct it.
+Author's English was not good enough to assure everything all correct.
+So don't be too seriously, you could told me and I'll correct it.
 
 ## About SINRGE2
-SINRGE2 is the 递归缩写 of "SINRGE2 Is Not Ruby Game Engine 2".  
+SINRGE2 is the recursive acronym of "SINRGE2 Is Not Ruby Game Engine 2".  
 As the name, SINRGE2 has no game engine tools such as map editor,
 scripts editor, etc. SINRGE2 is just a library for Ruby programming
 language.  
 If you have experience with RGSS whst is the ruby game scripts system
-of RPG Maker XP or later. Then SINRGE2 would be very easy to using for
-you.  
+of RPG Maker XP or later. Then SINRGE2 would be very easy to use.  
 
 ## How to use
 ### Prepare
@@ -61,4 +60,6 @@ And in SINRGE2 you can print it on screen. This is a sample:
 game_stop # stop SINRGE2 with looping Graphics#update
 ```
 You can get the same effect in RGSS too.  
+
+unfinished
 
