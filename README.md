@@ -10,7 +10,7 @@ SINRGE2 is the recursive acronym of "SINRGE2 Is Not Ruby Game Engine 2".
 As the name, SINRGE2 has no game engine tools such as map editor,
 scripts editor, etc. SINRGE2 is just a library for Ruby programming
 language.  
-If you have experience with RGSS whst is the ruby game scripts system
+If you have experience with RGSS what is the ruby game scripts system
 of RPG Maker XP or later. Then SINRGE2 would be very easy to use.  
 
 ## How to use
