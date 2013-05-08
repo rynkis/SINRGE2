@@ -353,7 +353,7 @@ int CApplication::RunScript()
 				OnFailed(err);
 			}
 		}
-		return ruby_cleanup(state);
+		return state;//ruby_cleanup(state);
 	}
 	else goto __run_with_data;
 
@@ -377,7 +377,7 @@ __run_with_data:
 			}
 		}
 	}
-	return ruby_cleanup(state);
+	return state;//ruby_cleanup(state);
 }
 
 void CApplication::InitRubyInterpreter()
@@ -575,8 +575,8 @@ void CApplication::OnFailed(VALUE err)
 	const VALUE message			= rb_funcall(err, rb_intern("message"), 0);
 	const VALUE message_str		= rb_funcall(message, rb_intern("gsub"), 2, rb_str_new2("\n"), rb_str_new2("\r\n"));
 
-	const char * clsname			= rb_obj_classname(err);
-	const char * msg				= RSTRING_PTR(message_str);
+	const char * clsname		= rb_obj_classname(err);
+	const char * msg			= RSTRING_PTR(message_str);
 
 	if (rb_obj_is_kind_of(err, rb_eSyntaxError))
 		errmsg = rb_sprintf("Script '%s' line %d: %s occurred.", RSTRING_PTR(sourcefile), NUM2INT(sourceline), clsname);

@@ -95,10 +95,9 @@ VALUE Rb7pkgWriter::dump_file(VALUE filename)
 	if (m_7pkgWriter)
 	{
 		if (!GetAppPtr()->IsFileExist(filenameW))
-			rb_raise(rb_eSinError, "%s is not exist.", RSTRING_PTR(filename));
+			rb_raise(rb_eSinError, "File is not exist:`%s'.", RSTRING_PTR(filename));
 
-		if (m_7pkgWriter->DumpFile(filenameW))
-			return Qtrue;
+		return C2RbBool(m_7pkgWriter->DumpFile(filenameW));
 	}
 	return Qfalse;
 }

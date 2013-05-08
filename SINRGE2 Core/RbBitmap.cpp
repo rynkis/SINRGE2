@@ -118,7 +118,7 @@ void RbBitmap::InitLibrary()
 	// instance method
 	rb_define_method(rb_cBitmap, "dispose",				(RbFunc)dm_dispose,				0);
 	rb_define_method(rb_cBitmap, "disposed?",			(RbFunc)dm_is_disposed,			0);
-	rb_define_method(rb_cBitmap, "save_to_file",		(RbFunc)dm_save_to_file,		-1);	//	snap_to_bitmap
+	rb_define_method(rb_cBitmap, "save_to_file",		(RbFunc)dm_save_to_file,		-1);
 
 	rb_define_method(rb_cBitmap, "hue_change",			(RbFunc)dm_hue_change,			1);
 	rb_define_method(rb_cBitmap, "brightness_change",	(RbFunc)dm_brightness_change,	1);
@@ -1576,141 +1576,9 @@ VALUE RbBitmap::blur()
 	BilinearZoom(pTmpData, pTexData, tmpWidth, tmpHegiht, m_bmp.width, m_bmp.height, mathW, mathH);
 	free(pTmpData);
 	hge->Texture_Unlock(m_bmp.quad.tex);
-
-	//DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-	//int radius = 5;
-	//double sigma = (double)radius / 3.0;
-	//long width = m_bmp.width, height = m_bmp.height;
-
- //   double *gaussMatrix, gaussSum = 0.0, _2sigma2 = 2 * sigma * sigma;
- //   s32 x, y, xx, yy, xxx, yyy;
- //   double *pdbl, a, r, g, b, d;
- //   DWORD *pout, *poutb;
- //   pout = poutb = (DWORD*)malloc(/*LMEM_FIXED, */width * height * sizeof(DWORD));
- //   if (!pout) return Qfalse;
- //   gaussMatrix = pdbl = (double *)malloc(/*LMEM_FIXED, */(radius * 2 + 1) * (radius * 2 + 1) * sizeof(double));
- //   if (!gaussMatrix)
-	//{
- //       LocalFree(pout);
- //       return Qfalse;
- //   }
- //   for (y = -radius; y <= radius; y++)
-	//{
-	//	s32 ysqh = y * y;
- //       for (x = -radius; x <= radius; x++)
-	//	{
- //           a = exp(-(double)(x * x + ysqh) / _2sigma2); 
- //           *pdbl++ = a;
- //           gaussSum += a;
- //       }
- //   }
- //   pdbl = gaussMatrix;
- //   for (y = -radius; y <= radius; y++)
-	//{
- //       for (x = -radius; x <= radius; x++)
- //           *pdbl++ /= gaussSum;
- //   }
- //   for (y = 0; y < height; y++)
-	//{
- //       for (x = 0; x < width; x++)
-	//	{
- //           a = r = g = b = 0.0;
- //           pdbl = gaussMatrix;
- //           for (yy = -radius; yy <= radius; yy++)
-	//		{
- //               yyy = y + yy;
- //               if (yyy >= 0 && yyy < height)
-	//			{
- //                   for (xx = -radius; xx <= radius; xx++)
-	//				{
- //                       xxx = x + xx;
- //                       if (xxx >= 0 && xxx < width)
-	//					{
- //                           d = *pdbl;
-	//						BYTE sa, sr, sg, sb;
-	//						GET_ARGB_8888(pTexData[xxx + yyy * width], sa, sr, sg, sb);
- //                           a += d * sa;
- //                           r += d * sr;
- //                           g += d * sg;
- //                           b += d * sb;
- //                       }
- //                       pdbl++;
- //                   }
- //               }
-	//			else
-	//			{
- //                   pdbl += (radius * 2 + 1);
- //               }
- //           }
-	//		*pout++ = MAKE_ARGB_8888((BYTE)a, (BYTE)r, (BYTE)g, (BYTE)b);
- //       }
- //   }
- //   RtlMoveMemory(pTexData, poutb, width * height * sizeof(DWORD));
- //   free(gaussMatrix);
- //   free(poutb);
-	//GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-    
 	//	增加 修改计数值
 	++m_modify_count;
 
-	//int nRadius = 5;
-	//// 定义变量
-	//long diamet = (nRadius << 1) + 1;				// 采样区域直径,或者方阵的边长
-	//double s = (double)nRadius / 3.0;				// 正态分布的标准偏差σ
-	//double sigma2 = 2.0 * s * s;					// 2倍的σ平方,参考N维空间正态分布方程
-	//double nuclear = 0.0;							// 高斯卷积核
-	//double* matrix = new double[diamet * diamet];	// 高斯矩阵定义
-	//DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false); // 像素内存块
-	//long w = m_bmp.width, h = m_bmp.height;			// 像素矩阵的宽与高
-	//// 计算高斯矩阵
-	//int i = 0;
-	//for(long y = -nRadius; y <= nRadius; ++y)
-	//	for(long x = -nRadius; x <= nRadius; ++x)
-	//	{
-	//		matrix[i] = exp(-(double)(x * x + y * y) / sigma2);
-	//		nuclear += matrix[i];
-	//		++i;
-	//	}
-	//// 遍历并处理像素
-	//for (long y_s = 0; y_s < h; ++y_s)
-	//{
-	//	for (long x_s = 0; x_s < w; ++x_s)
-	//	{
-	//		// 分析取样区域
-	//		double r = 0.0, g = 0.0, b = 0.0;
-	//		int i_m = 0;
-	//		for (long m = -nRadius; m <= nRadius; ++m)
-	//		{
-	//			long y = y_s + m;
-	//			if (y >= 0 && y < h)
-	//				for (long n = -nRadius; n <= nRadius; ++n)
-	//				{
-	//					long x = x_s + n;
-	//					if (x >= 0 && x < w)
-	//					{
-	//						double weight = matrix[i_m] / nuclear;
-	//						long i = (h - y - 1) * w + x;
-	//						r += weight * GET_ARGB_R(pTexData[i]);
-	//						g += weight * GET_ARGB_G(pTexData[i]);
-	//						b += weight * GET_ARGB_B(pTexData[i]);
-	//					}
-	//					++i_m;
-	//				}
-	//			else
-	//				i_m += diamet;
-	//		}
-	//		// 保存处理结果
-	//		long i_s = (h - y_s - 1) * w + x_s;
-	//		pTexData[i_s] = MAKE_ARGB_8888(GET_ARGB_A(pTexData[i_s]), 
-	//			(BYTE)(r > (BYTE)~0 ? (BYTE)~0 : r), 
-	//			(BYTE)(g > (BYTE)~0 ? (BYTE)~0 : g), 
-	//			(BYTE)(b > (BYTE)~0 ? (BYTE)~0 : b));
-	//	}
-	//}
-	//// 清理内存
-	//delete [] matrix;
-	//// 解锁texture
-	//GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	return Qnil;
 }
 
@@ -1744,7 +1612,7 @@ VALUE RbBitmap::flip_v()
 	if (!pTexData) return Qfalse;
 	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
 	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
-	//int v;
+	
 	for (s32 ly = 0; ly < height; ++ly)
 	{
 		int v = m_bmp.width * ly;

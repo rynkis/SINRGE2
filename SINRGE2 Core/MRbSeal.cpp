@@ -8,10 +8,7 @@
 #include "MRbSeal.h"
 #include "sin_app.h"
 #include "TANGRAM.h"
-//extern "C"
-//{
-//#include "seal.h"
-//}
+
 #if SIN_USE_SEAL
 
 static bool	seal_running = false;
@@ -39,7 +36,7 @@ static VALUE alloc_##obj(VALUE klass)                                       \
 }
 
 #define DEFINE_DEALLOCATOR(obj)                                             \
-static void free_##obj(void * obj)                                           \
+static void free_##obj(void * obj)                                          \
 {                                                                           \
     free_obj(obj, seal_destroy_##obj);                                      \
 }

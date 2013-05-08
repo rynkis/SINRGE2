@@ -40,6 +40,9 @@
     <Filter Include="源文件\Kconv">
       <UniqueIdentifier>{4a0c2493-e64c-4262-b344-5feef9aab6bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\RbClass\base">
+      <UniqueIdentifier>{1342fad3-7904-4fb5-8db3-5ad76675533a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="hge\graphics.cpp">
@@ -53,18 +56,6 @@
     </ClCompile>
     <ClCompile Include="hge\system.cpp">
       <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="RbColor.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbFont.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbRect.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbTone.cpp">
-      <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="hge\hgecolor.cpp">
       <Filter>源文件\hge</Filter>
@@ -152,6 +143,18 @@
     </ClCompile>
     <ClCompile Include="Rb7pkgWriter.cpp">
       <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="RbColor.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="RbFont.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="RbRect.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="RbTone.cpp">
+      <Filter>源文件\RbClass\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -272,18 +275,6 @@
     <ClInclude Include="RbClassBase.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
-    <ClInclude Include="RbColor.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbFont.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbRect.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbTone.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="..\Contrib\include\zlib.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -401,6 +392,21 @@
     <ClInclude Include="Rb7pkgWriter.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
+    <ClInclude Include="sin_revision.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="RbColor.h">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClInclude>
+    <ClInclude Include="RbFont.h">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClInclude>
+    <ClInclude Include="RbRect.h">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClInclude>
+    <ClInclude Include="RbTone.h">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SINRGE2 Core.rc">
@@ -410,6 +416,9 @@
   <ItemGroup>
     <None Include="SINRGE2.def">
       <Filter>源文件\SINRGE2</Filter>
+    </None>
+    <None Include="version_generator.rb">
+      <Filter>源文件</Filter>
     </None>
   </ItemGroup>
 </Project>

@@ -94,6 +94,9 @@
     <Manifest>
       <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
     </Manifest>
+    <PreBuildEvent>
+      <Command>ruby version_generator.rb</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Entry.cpp" />
@@ -178,6 +181,7 @@
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="Rb7pkgWriter.h" />
+    <ClInclude Include="sin_revision.h" />
     <ClInclude Include="TANGRAM.h" />
     <ClInclude Include="hge\include\hge.h" />
     <ClInclude Include="hge\include\hgeanim.h" />
@@ -222,6 +226,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SINRGE2.def" />
+    <None Include="version_generator.rb" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SINRGE2 Core.rc" />
