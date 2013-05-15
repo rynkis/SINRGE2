@@ -85,7 +85,7 @@ namespace
 
 /*
 **	call-seq:
-**		SIN::Input.update	-> nil
+**		SINRGE2::Input.update	-> nil
 **
 */
 VALUE MRbInput::update_input()
@@ -112,7 +112,7 @@ VALUE MRbInput::update_input()
 
 /*
 **	call-seq:
-**		SIN::Input.mouse_over?	-> bool
+**		SINRGE2::Input.mouse_over?	-> bool
 **
 */
 VALUE MRbInput::mouse_over()
@@ -122,7 +122,7 @@ VALUE MRbInput::mouse_over()
 
 /*
 **	call-seq:
-**		SIN::Input.press?(vk)	-> bool
+**		SINRGE2::Input.press?(vk)	-> bool
 **
 */
 VALUE MRbInput::is_press(int argc, VALUE key)
@@ -133,7 +133,7 @@ VALUE MRbInput::is_press(int argc, VALUE key)
 
 /*
 **	call-seq:
-**		SIN::Input.trigger?(vk)	-> bool
+**		SINRGE2::Input.trigger?(vk)	-> bool
 **
 */
 VALUE MRbInput::is_trigger(int argc, VALUE key)
@@ -144,7 +144,7 @@ VALUE MRbInput::is_trigger(int argc, VALUE key)
 
 /*
 **	call-seq:
-**		SIN::Input.repeat?(vk)	-> bool
+**		SINRGE2::Input.repeat?(vk)	-> bool
 **
 */
 VALUE MRbInput::is_repeat(int argc, VALUE key)
@@ -155,7 +155,7 @@ VALUE MRbInput::is_repeat(int argc, VALUE key)
 
 /*
 **	call-seq:
-**		SIN::Input.click?(vk)	-> bool
+**		SINRGE2::Input.click?(vk)	-> bool
 **
 */
 VALUE MRbInput::is_click(int argc, VALUE key)
@@ -166,7 +166,7 @@ VALUE MRbInput::is_click(int argc, VALUE key)
 
 /*
 **	call-seq:
-**		SIN::Input.dir4	-> fixnum
+**		SINRGE2::Input.dir4	-> fixnum
 **
 */
 VALUE MRbInput::get_dir4()
@@ -185,7 +185,7 @@ VALUE MRbInput::get_dir4()
 
 /*
 **	call-seq:
-**		SIN::Input.dir8	-> fixnum
+**		SINRGE2::Input.dir8	-> fixnum
 **
 */
 VALUE MRbInput::get_dir8()
@@ -236,7 +236,7 @@ VALUE MRbInput::get_dir8()
 
 /*
 **	call-seq:
-**		SIN::Input.on_focus?	-> bool
+**		SINRGE2::Input.on_focus?	-> bool
 **
 */
 VALUE MRbInput::on_focus()
@@ -246,7 +246,7 @@ VALUE MRbInput::on_focus()
 
 /*
 **	call-seq:
-**		SIN::Input.mouse_wheel	-> fixnum
+**		SINRGE2::Input.mouse_wheel	-> fixnum
 **
 */
 VALUE MRbInput::mouse_wheel()
@@ -256,7 +256,7 @@ VALUE MRbInput::mouse_wheel()
 
 /*
 **	call-seq:
-**		SIN::Input.dblclk?(vk)	-> bool
+**		SINRGE2::Input.dblclk?(vk)	-> bool
 **
 */
 VALUE MRbInput::mouse_dblclk(int argc, VALUE key)
@@ -267,7 +267,7 @@ VALUE MRbInput::mouse_dblclk(int argc, VALUE key)
 
 /*
 **	call-seq:
-**		SIN::Input.mouse_pos	-> array
+**		SINRGE2::Input.mouse_pos	-> array
 **
 */
 VALUE MRbInput::get_mouse_pos()
