@@ -204,6 +204,8 @@ CApplication::CApplication()
 	, m_last(0)
 
 	, m_hSeal(0)
+
+	, m_inited(false)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
@@ -588,6 +590,7 @@ void CApplication::OnFailed(VALUE err)
 
 bool CApplication::InitVideo()
 {
+	if (m_inited) return true;
 	// Set our render proc
 	//m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, LostFocusProc);
 	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
@@ -651,7 +654,9 @@ bool CApplication::InitVideo()
 	if (!m_pVideoMgr->Init())
 		goto failed_return;
 
-	return true;
+	m_inited = true;
+
+	return m_inited;
 
 failed_return:
 	if (pTmpTex)

@@ -519,9 +519,9 @@ bitmap_p RbBitmap::CloneBitmap(bitmap_p pBmp)
 	bitmap_p clone = (bitmap_p)malloc(sizeof(bitmap_t));
 	memcpy(clone, pBmp, sizeof(bitmap_t));
 	clone->quad.tex = hge->Texture_Create(pBmp->width, pBmp->height);
-	DWORD* pSrcTexData = hge->Texture_Lock(pBmp->quad.tex, true);
-	DWORD* pDesTexData = hge->Texture_Lock(clone->quad.tex, false);
-	memcpy(pDesTexData, pSrcTexData, pBmp->width * pBmp->height *sizeof(DWORD));
+	DWORD * pSrcTexData = hge->Texture_Lock(pBmp->quad.tex, true);
+	DWORD * pDesTexData = hge->Texture_Lock(clone->quad.tex, false);
+	memcpy(pDesTexData, pSrcTexData, pBmp->width * pBmp->height * sizeof(DWORD));
 	hge->Texture_Unlock(pBmp->quad.tex);
 	hge->Texture_Unlock(clone->quad.tex);
 	return clone;
@@ -870,7 +870,7 @@ VALUE RbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	DWORD * pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(src->quad.tex, true);
 	if (with_self)
 	{
-		pTempData = (DWORD*)malloc(src->width * src->height * sizeof(DWORD));
+		pTempData = (DWORD *)malloc(src->width * src->height * sizeof(DWORD));
 		memcpy(pTempData, pSrcTexData, src->width * src->height * sizeof(DWORD));
 		GetAppPtr()->GetHgePtr()->Texture_Unlock(src->quad.tex);
 	}

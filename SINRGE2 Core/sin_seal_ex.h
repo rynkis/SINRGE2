@@ -102,15 +102,15 @@ struct seal_buf_t
 
 typedef struct seal_buf_t seal_buf_t;
 
-typedef seal_err_t		(*func_seal_init_buf)(seal_buf_t* buf);
-typedef seal_err_t		(*func_seal_destroy_buf)(seal_buf_t* buf);
-typedef seal_err_t		(*func_seal_load2buf)(seal_buf_t* buf, const char* filename, seal_fmt_t fmt);
-typedef seal_err_t		(*func_seal_raw2buf)(seal_buf_t* buf, seal_raw_t* raw);
-typedef seal_err_t		(*func_seal_get_buf_size)(seal_buf_t* buf, int* psize);
-typedef seal_err_t		(*func_seal_get_buf_freq)(seal_buf_t* buf, int* pfreq);
-typedef seal_err_t		(*func_seal_get_buf_bps)(seal_buf_t* buf, int* pbps);
-typedef seal_err_t		(*func_seal_get_buf_nchannels)(seal_buf_t* buf, int* pnchannels);
-typedef seal_err_t		(*func_seal_load)(seal_raw_t* raw, const char* filename, seal_fmt_t fmt);
+typedef seal_err_t		(*func_seal_init_buf)(seal_buf_t * buf);
+typedef seal_err_t		(*func_seal_destroy_buf)(seal_buf_t * buf);
+typedef seal_err_t		(*func_seal_load2buf)(seal_buf_t * buf, const char * filename, seal_fmt_t fmt);
+typedef seal_err_t		(*func_seal_raw2buf)(seal_buf_t * buf, seal_raw_t * raw);
+typedef seal_err_t		(*func_seal_get_buf_size)(seal_buf_t * buf, int * psize);
+typedef seal_err_t		(*func_seal_get_buf_freq)(seal_buf_t * buf, int * pfreq);
+typedef seal_err_t		(*func_seal_get_buf_bps)(seal_buf_t * buf, int * pbps);
+typedef seal_err_t		(*func_seal_get_buf_nchannels)(seal_buf_t * buf, int * pnchannels);
+typedef seal_err_t		(*func_seal_load)(seal_raw_t * raw, const char * filename, seal_fmt_t fmt);
 
 // stream
 struct seal_stream_t
@@ -121,10 +121,10 @@ struct seal_stream_t
     seal_raw_attr_t attr;
 };
 typedef struct seal_stream_t seal_stream_t;
-typedef seal_err_t		(*func_seal_open_stream)(seal_stream_t* stream, const char* filename, seal_fmt_t fmt);
-typedef seal_err_t		(*func_seal_stream)(seal_stream_t* stream, seal_raw_t* raw, size_t* psize);
-typedef seal_err_t		(*func_seal_rewind_stream)(seal_stream_t* stream);
-typedef seal_err_t		(*func_seal_close_stream)(seal_stream_t* stream);
+typedef seal_err_t		(*func_seal_open_stream)(seal_stream_t * stream, const char * filename, seal_fmt_t fmt);
+typedef seal_err_t		(*func_seal_stream)(seal_stream_t * stream, seal_raw_t * raw, size_t * psize);
+typedef seal_err_t		(*func_seal_rewind_stream)(seal_stream_t * stream);
+typedef seal_err_t		(*func_seal_close_stream)(seal_stream_t * stream);
 
 // efs
 struct seal_efs_t
@@ -134,18 +134,18 @@ struct seal_efs_t
 };
 typedef struct seal_efs_t seal_efs_t;
 
-typedef seal_err_t		(*func_seal_init_efs)(seal_efs_t* slot);
-typedef seal_err_t		(*func_seal_destroy_efs)(seal_efs_t* slot);
-typedef seal_err_t		(*func_seal_set_efs_effect)(seal_efs_t* slot, void* effect);
-typedef seal_err_t		(*func_seal_set_efs_gain)(seal_efs_t* slot, float gain);
-typedef seal_err_t		(*func_seal_set_efs_auto)(seal_efs_t* slot, char automatic);
-typedef void *			(*func_seal_get_efs_effect)(seal_efs_t* slot);
-typedef seal_err_t		(*func_seal_get_efs_gain)(seal_efs_t* slot, float* pgain);
-typedef seal_err_t		(*func_seal_is_efs_auto)(seal_efs_t* slot, char* pauto);
+typedef seal_err_t		(*func_seal_init_efs)(seal_efs_t * slot);
+typedef seal_err_t		(*func_seal_destroy_efs)(seal_efs_t * slot);
+typedef seal_err_t		(*func_seal_set_efs_effect)(seal_efs_t * slot, void * effect);
+typedef seal_err_t		(*func_seal_set_efs_gain)(seal_efs_t * slot, float gain);
+typedef seal_err_t		(*func_seal_set_efs_auto)(seal_efs_t * slot, char automatic);
+typedef void *			(*func_seal_get_efs_effect)(seal_efs_t * slot);
+typedef seal_err_t		(*func_seal_get_efs_gain)(seal_efs_t * slot, float * pgain);
+typedef seal_err_t		(*func_seal_is_efs_auto)(seal_efs_t * slot, char * pauto);
 
 
 // core
-typedef seal_err_t		(*func_seal_startup)(const char* device_name);
+typedef seal_err_t		(*func_seal_startup)(const char * device_name);
 typedef void			(*func_seal_cleanup)(void);
 typedef int				(*func_seal_get_per_src_effect_limit)(void);
 typedef const char *	(*func_seal_get_version)(void);
@@ -183,51 +183,51 @@ typedef struct seal_src_t seal_src_t;
 typedef enum seal_src_type_t seal_src_type_t;
 typedef enum seal_src_state_t seal_src_state_t;
 
-typedef seal_err_t		(*func_seal_init_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_destroy_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_play_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_pause_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_stop_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_rewind_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_move_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_set_src_buf)(seal_src_t* src, seal_buf_t* buf);
-typedef seal_err_t		(*func_seal_set_src_stream)(seal_src_t* src, seal_stream_t* stream);
-typedef seal_err_t		(*func_seal_feed_efs)(seal_src_t* src, seal_efs_t* slot, int index);
-typedef seal_err_t		(*func_seal_update_src)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_detach_src_audio)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_set_src_queue_size)(seal_src_t* src, size_t size);
-typedef seal_err_t		(*func_seal_set_src_chunk_size)(seal_src_t* src, size_t size);
-typedef seal_err_t		(*func_seal_set_src_pos)(seal_src_t* src, float x, float y, float z);
-typedef seal_err_t		(*func_seal_set_src_vel)(seal_src_t* src, float x, float y, float z);
-typedef seal_err_t		(*func_seal_set_src_pitch)(seal_src_t* src, float pitch);
-typedef seal_err_t		(*func_seal_set_src_gain)(seal_src_t* src, float gain);
-typedef seal_err_t		(*func_seal_set_src_auto)(seal_src_t* src, char automatic);
-typedef seal_err_t		(*func_seal_set_src_relative)(seal_src_t* src, char relative);
-typedef seal_err_t		(*func_seal_set_src_looping)(seal_src_t* src, char looping);
-typedef seal_buf_t *	(*func_seal_get_src_buf)(seal_src_t* src);
-typedef seal_stream_t *	(*func_seal_get_src_stream)(seal_src_t* src);
-typedef seal_err_t		(*func_seal_get_src_queue_size)(seal_src_t* src, size_t* psize);
-typedef seal_err_t		(*func_seal_get_src_chunk_size)(seal_src_t* src, size_t* psize);
-typedef seal_err_t		(*func_seal_get_src_pos)(seal_src_t* src, float* px, float* py, float* pz);
-typedef seal_err_t		(*func_seal_get_src_vel)(seal_src_t* src, float* px, float* py, float* pz);
-typedef seal_err_t		(*func_seal_get_src_pitch)(seal_src_t* src, float* ppitch);
-typedef seal_err_t		(*func_seal_get_src_gain)(seal_src_t* src, float* pgain);
-typedef seal_err_t		(*func_seal_is_src_auto)(seal_src_t* src, char* pauto);
-typedef seal_err_t		(*func_seal_is_src_relative)(seal_src_t* src, char* prelative);
-typedef seal_err_t		(*func_seal_is_src_looping)(seal_src_t* src, char* plooping);
-typedef seal_err_t		(*func_seal_get_src_type)(seal_src_t* src, seal_src_type_t* ptype);
-typedef seal_err_t		(*func_seal_get_src_state)(seal_src_t* src, seal_src_state_t* pstate);
+typedef seal_err_t		(*func_seal_init_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_destroy_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_play_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_pause_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_stop_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_rewind_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_move_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_set_src_buf)(seal_src_t * src, seal_buf_t * buf);
+typedef seal_err_t		(*func_seal_set_src_stream)(seal_src_t * src, seal_stream_t * stream);
+typedef seal_err_t		(*func_seal_feed_efs)(seal_src_t * src, seal_efs_t * slot, int index);
+typedef seal_err_t		(*func_seal_update_src)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_detach_src_audio)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_set_src_queue_size)(seal_src_t * src, size_t size);
+typedef seal_err_t		(*func_seal_set_src_chunk_size)(seal_src_t * src, size_t size);
+typedef seal_err_t		(*func_seal_set_src_pos)(seal_src_t * src, float x, float y, float z);
+typedef seal_err_t		(*func_seal_set_src_vel)(seal_src_t * src, float x, float y, float z);
+typedef seal_err_t		(*func_seal_set_src_pitch)(seal_src_t * src, float pitch);
+typedef seal_err_t		(*func_seal_set_src_gain)(seal_src_t * src, float gain);
+typedef seal_err_t		(*func_seal_set_src_auto)(seal_src_t * src, char automatic);
+typedef seal_err_t		(*func_seal_set_src_relative)(seal_src_t * src, char relative);
+typedef seal_err_t		(*func_seal_set_src_looping)(seal_src_t * src, char looping);
+typedef seal_buf_t *	(*func_seal_get_src_buf)(seal_src_t * src);
+typedef seal_stream_t *	(*func_seal_get_src_stream)(seal_src_t * src);
+typedef seal_err_t		(*func_seal_get_src_queue_size)(seal_src_t * src, size_t * psize);
+typedef seal_err_t		(*func_seal_get_src_chunk_size)(seal_src_t * src, size_t * psize);
+typedef seal_err_t		(*func_seal_get_src_pos)(seal_src_t * src, float * px, float * py, float * pz);
+typedef seal_err_t		(*func_seal_get_src_vel)(seal_src_t * src, float * px, float * py, float * pz);
+typedef seal_err_t		(*func_seal_get_src_pitch)(seal_src_t * src, float * ppitch);
+typedef seal_err_t		(*func_seal_get_src_gain)(seal_src_t * src, float * pgain);
+typedef seal_err_t		(*func_seal_is_src_auto)(seal_src_t * src, char * pauto);
+typedef seal_err_t		(*func_seal_is_src_relative)(seal_src_t * src, char * prelative);
+typedef seal_err_t		(*func_seal_is_src_looping)(seal_src_t * src, char * plooping);
+typedef seal_err_t		(*func_seal_get_src_type)(seal_src_t * src, seal_src_type_t * ptype);
+typedef seal_err_t		(*func_seal_get_src_state)(seal_src_t * src, seal_src_state_t * pstate);
 
 // listener
 typedef seal_err_t		(*func_seal_move_listener)(void);
 typedef seal_err_t		(*func_seal_set_listener_gain)(float gain);
 typedef seal_err_t		(*func_seal_set_listener_pos)(float x, float y, float z);
 typedef seal_err_t		(*func_seal_set_listener_vel)(float x, float y, float z);
-typedef seal_err_t		(*func_seal_set_listener_orien)(float* orien);
-typedef seal_err_t		(*func_seal_get_listener_gain)(float* pgain);
-typedef seal_err_t		(*func_seal_get_listener_pos)(float* px, float* py, float* pz);
-typedef seal_err_t		(*func_seal_get_listener_vel)(float* px, float* py, float* pz);
-typedef seal_err_t		(*func_seal_get_listener_orien)(float* orien);
+typedef seal_err_t		(*func_seal_set_listener_orien)(float * orien);
+typedef seal_err_t		(*func_seal_get_listener_gain)(float * pgain);
+typedef seal_err_t		(*func_seal_get_listener_pos)(float * px, float * py, float * pz);
+typedef seal_err_t		(*func_seal_get_listener_vel)(float * px, float * py, float * pz);
+typedef seal_err_t		(*func_seal_get_listener_orien)(float * orien);
 
 // rvb
 enum seal_rvb_preset_t
@@ -383,34 +383,34 @@ struct seal_rvb_t
 typedef struct seal_rvb_t seal_rvb_t;
 typedef enum seal_rvb_preset_t seal_rvb_preset_t;
 
-typedef seal_err_t		(*func_seal_init_rvb)(seal_rvb_t* rvb);
-typedef seal_err_t		(*func_seal_destroy_rvb)(seal_rvb_t* rvb);
-typedef seal_err_t		(*func_seal_load_rvb)(seal_rvb_t* rvb, seal_rvb_preset_t preset);
-typedef seal_err_t		(*func_seal_set_rvb_density)(seal_rvb_t* rvb, float density);
-typedef seal_err_t		(*func_seal_set_rvb_diffusion)(seal_rvb_t* rvb, float diffusion);
-typedef seal_err_t		(*func_seal_set_rvb_gain)(seal_rvb_t* rvb, float gain);
-typedef seal_err_t		(*func_seal_set_rvb_hfgain)(seal_rvb_t* rvb, float hfgain);
-typedef seal_err_t		(*func_seal_set_rvb_decay_time)(seal_rvb_t* rvb, float time);
-typedef seal_err_t		(*func_seal_set_rvb_hfdecay_ratio)(seal_rvb_t* rvb, float ratio);
-typedef seal_err_t		(*func_seal_set_rvb_reflections_gain)(seal_rvb_t* rvb, float gain);
-typedef seal_err_t		(*func_seal_set_rvb_reflections_delay)(seal_rvb_t* rvb, float delay);
-typedef seal_err_t		(*func_seal_set_rvb_late_gain)(seal_rvb_t* rvb, float gain);
-typedef seal_err_t		(*func_seal_set_rvb_late_delay)(seal_rvb_t* rvb, float delay);
-typedef seal_err_t		(*func_seal_set_rvb_air_absorbtion_hfgain)(seal_rvb_t* rvb, float hfgain);
-typedef seal_err_t		(*func_seal_set_rvb_room_rolloff_factor)(seal_rvb_t* rvb, float factor);
-typedef seal_err_t		(*func_seal_set_rvb_hfdecay_limited)(seal_rvb_t* rvb, char limited);
-typedef seal_err_t		(*func_seal_get_rvb_density)(seal_rvb_t* rvb, float* pdensity);
-typedef seal_err_t		(*func_seal_get_rvb_diffusion)(seal_rvb_t* rvb, float* pdensity);
-typedef seal_err_t		(*func_seal_get_rvb_gain)(seal_rvb_t* rvb, float* pgain);
-typedef seal_err_t		(*func_seal_get_rvb_hfgain)(seal_rvb_t* rvb, float* phfgain);
-typedef seal_err_t		(*func_seal_get_rvb_decay_time)(seal_rvb_t* rvb, float* ptime);
-typedef seal_err_t		(*func_seal_get_rvb_hfdecay_ratio)(seal_rvb_t* rvb, float* pratio);
-typedef seal_err_t		(*func_seal_get_rvb_reflections_gain)(seal_rvb_t* rvb, float* pgain);
-typedef seal_err_t		(*func_seal_get_rvb_reflections_delay)(seal_rvb_t* rvb, float* pdelay);
-typedef seal_err_t		(*func_seal_get_rvb_late_gain)(seal_rvb_t* rvb, float* pgain);
-typedef seal_err_t		(*func_seal_get_rvb_late_delay)(seal_rvb_t* rvb, float* pdelay);
-typedef seal_err_t		(*func_seal_get_rvb_air_absorbtion_hfgain)(seal_rvb_t* rvb, float* phfgain);
-typedef seal_err_t		(*func_seal_get_rvb_room_rolloff_factor)(seal_rvb_t* rvb, float* pfactor);
-typedef seal_err_t		(*func_seal_is_rvb_hfdecay_limited)(seal_rvb_t* rvb, char* plimited);
+typedef seal_err_t		(*func_seal_init_rvb)(seal_rvb_t * rvb);
+typedef seal_err_t		(*func_seal_destroy_rvb)(seal_rvb_t * rvb);
+typedef seal_err_t		(*func_seal_load_rvb)(seal_rvb_t * rvb, seal_rvb_preset_t preset);
+typedef seal_err_t		(*func_seal_set_rvb_density)(seal_rvb_t * rvb, float density);
+typedef seal_err_t		(*func_seal_set_rvb_diffusion)(seal_rvb_t * rvb, float diffusion);
+typedef seal_err_t		(*func_seal_set_rvb_gain)(seal_rvb_t * rvb, float gain);
+typedef seal_err_t		(*func_seal_set_rvb_hfgain)(seal_rvb_t * rvb, float hfgain);
+typedef seal_err_t		(*func_seal_set_rvb_decay_time)(seal_rvb_t * rvb, float time);
+typedef seal_err_t		(*func_seal_set_rvb_hfdecay_ratio)(seal_rvb_t * rvb, float ratio);
+typedef seal_err_t		(*func_seal_set_rvb_reflections_gain)(seal_rvb_t * rvb, float gain);
+typedef seal_err_t		(*func_seal_set_rvb_reflections_delay)(seal_rvb_t * rvb, float delay);
+typedef seal_err_t		(*func_seal_set_rvb_late_gain)(seal_rvb_t * rvb, float gain);
+typedef seal_err_t		(*func_seal_set_rvb_late_delay)(seal_rvb_t * rvb, float delay);
+typedef seal_err_t		(*func_seal_set_rvb_air_absorbtion_hfgain)(seal_rvb_t * rvb, float hfgain);
+typedef seal_err_t		(*func_seal_set_rvb_room_rolloff_factor)(seal_rvb_t * rvb, float factor);
+typedef seal_err_t		(*func_seal_set_rvb_hfdecay_limited)(seal_rvb_t * rvb, char limited);
+typedef seal_err_t		(*func_seal_get_rvb_density)(seal_rvb_t * rvb, float * pdensity);
+typedef seal_err_t		(*func_seal_get_rvb_diffusion)(seal_rvb_t * rvb, float * pdensity);
+typedef seal_err_t		(*func_seal_get_rvb_gain)(seal_rvb_t * rvb, float * pgain);
+typedef seal_err_t		(*func_seal_get_rvb_hfgain)(seal_rvb_t * rvb, float * phfgain);
+typedef seal_err_t		(*func_seal_get_rvb_decay_time)(seal_rvb_t * rvb, float * ptime);
+typedef seal_err_t		(*func_seal_get_rvb_hfdecay_ratio)(seal_rvb_t * rvb, float * pratio);
+typedef seal_err_t		(*func_seal_get_rvb_reflections_gain)(seal_rvb_t * rvb, float * pgain);
+typedef seal_err_t		(*func_seal_get_rvb_reflections_delay)(seal_rvb_t * rvb, float * pdelay);
+typedef seal_err_t		(*func_seal_get_rvb_late_gain)(seal_rvb_t * rvb, float * pgain);
+typedef seal_err_t		(*func_seal_get_rvb_late_delay)(seal_rvb_t * rvb, float * pdelay);
+typedef seal_err_t		(*func_seal_get_rvb_air_absorbtion_hfgain)(seal_rvb_t * rvb, float * phfgain);
+typedef seal_err_t		(*func_seal_get_rvb_room_rolloff_factor)(seal_rvb_t * rvb, float * pfactor);
+typedef seal_err_t		(*func_seal_is_rvb_hfdecay_limited)(seal_rvb_t * rvb, char * plimited);
 
 #endif // _SIN_SEAL_EX_H_

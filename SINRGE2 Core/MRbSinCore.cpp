@@ -189,9 +189,6 @@ VALUE MRbSinCore::fadein(int argv, VALUE duration)
 VALUE MRbSinCore::peek_message()
 {
 	GetAppPtr()->SystemUpdate();
-	/*if (!GetAppPtr()->GetHgePtr()->System_PeekMessage())
-		GetAppPtr()->Quit();*/
-
 	return Qnil;
 }
 

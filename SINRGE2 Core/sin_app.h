@@ -60,7 +60,7 @@ public:
 	void						SystemUpdate();
 	void						BrightnessUpdate();
 
-	bool						IsInited() const { return m_pHge != 0; }
+	bool						IsInited() const { return m_inited; }
 
 	void						LimitFps(int limit);
 	int							GetRealFps();
@@ -99,6 +99,8 @@ private:
 	HGE *						m_pHge;
 	RbRenderState *				m_pRenderState;
 	SinFrameStruct				m_frm_struct;
+
+	bool						m_inited;
 
 	IDirect3D8 *				m_ref_d3d;
 	IDirect3DDevice8 *			m_ref_device;

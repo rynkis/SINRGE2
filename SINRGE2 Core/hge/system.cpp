@@ -734,7 +734,7 @@ void MRbSinCore::Freeze()
 	pHGE->bFreeze = true;
 }
 
-void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
+void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 {
 	if (!pHGE->freezeTex || !pHGE->bFreeze) return;
 
@@ -890,8 +890,6 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				}
 				pHGE->Texture_Unlock(newTex);
 
-				/*if (!pHGE->System_PeekMessage())
-					GetAppPtr()->Quit();*/
 				GetAppPtr()->SystemUpdate();
 				if(pHGE->bActive || pHGE->bDontSuspend)
 				{
@@ -946,8 +944,6 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 				}
 				pHGE->Texture_Unlock(pHGE->freezeTex);
 
-				/*if (!pHGE->System_PeekMessage())
-					GetAppPtr()->Quit();*/
 				GetAppPtr()->SystemUpdate();
 				if(pHGE->bActive || pHGE->bDontSuspend)
 				{
@@ -981,8 +977,6 @@ void MRbSinCore::Transition(int duration, const wchar_t *filename, float vague)
 			newQuad.v[2].col =
 			newQuad.v[3].col = 0x00ffffff + ((BYTE)al << 24);
 
-			/*if (!pHGE->System_PeekMessage())
-				GetAppPtr()->Quit();*/
 			GetAppPtr()->SystemUpdate();
 			if(pHGE->bActive || pHGE->bDontSuspend)
 			{
