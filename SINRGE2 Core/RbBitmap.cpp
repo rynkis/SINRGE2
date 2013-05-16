@@ -153,6 +153,7 @@ void RbBitmap::InitLibrary()
 
 	// supplement
  	rb_define_method(rb_cBitmap, "to_s",				(RbFunc)dm_to_string,			0);
+	rb_define_method(rb_cBitmap, "clone",				(RbFunc)dm_clone,				0);
 }
 
 void RbBitmap::mark()
@@ -160,7 +161,8 @@ void RbBitmap::mark()
 	if (m_rect_ptr)	m_rect_ptr->MarkObject();
 	if (m_font_ptr)	m_font_ptr->MarkObject();
 
-	rb_gc_mark(m_filename);
+	if (RTEST(m_filename))
+		rb_gc_mark(m_filename);
 }
 
 VALUE RbBitmap::initialize(int argc, VALUE * argv, VALUE obj)
@@ -266,6 +268,32 @@ __finish:
 		m_disposed = false;
 	}
 	return obj;
+}
+
+VALUE RbBitmap::clone()
+{
+	VALUE __argv[] = { INT2FIX(m_bmp.width), INT2FIX(m_bmp.height) };
+	VALUE bitmap = rb_class_new_instance(2, __argv, obj_class());
+	RbBitmap * bmp_ptr = GetObjectPtr<RbBitmap>(bitmap);
+
+	HGE * hge = GetAppPtr()->GetHgePtr();
+	//memcpy(bmp_ptr->GetBitmapPtr(), &m_bmp, sizeof(bitmap_t));
+	DWORD * pSrcTexData = hge->Texture_Lock(m_bmp.quad.tex, true);
+	DWORD * pDesTexData = hge->Texture_Lock(bmp_ptr->m_bmp.quad.tex, false);
+	if (!pSrcTexData || !pDesTexData)
+		rb_raise(rb_eSinError, "Failed to clone bitmap.");
+
+	memcpy(pDesTexData, pSrcTexData, m_bmp.width * m_bmp.height * sizeof(DWORD));
+	hge->Texture_Unlock(m_bmp.quad.tex);
+	hge->Texture_Unlock(bmp_ptr->m_bmp.quad.tex);
+
+	bmp_ptr->m_filename = m_filename;
+	bmp_ptr->m_font_ptr = m_font_ptr;
+	bmp_ptr->m_modify_count = m_modify_count;
+	bmp_ptr->m_rect_ptr = m_rect_ptr;
+	
+	bmp_ptr = NULL;
+	return bitmap;
 }
 
 HTEXTURE RbBitmap::LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx)

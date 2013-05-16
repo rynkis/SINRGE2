@@ -56,6 +56,7 @@ public:
 protected:
 	virtual void			mark();
 	virtual VALUE			initialize(int argc, VALUE * argv, VALUE obj);
+	virtual VALUE			clone();
 
 protected:
 	void					check_raise();
@@ -100,6 +101,9 @@ protected:
 	attr_reader(height)
 	attr_reader(filename)
 	attr_accessor(font)
+
+private:
+	friend class	RbBitmap;
 };
 
 #endif	//	__CLASS_RB_BITMAP_H__
