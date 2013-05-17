@@ -1,0 +1,92 @@
+﻿body      { font-family: Microsoft YaHei;
+            color: black;
+            margin-left: 1.8em;
+            line-height: 120%;
+            font-size: 85%; }
+a:link    { color: #0000CC;
+            text-decoration:underline; }
+a:visited { color: #0000CC;
+            text-decoration:underline; }
+a:active  { color: #FF0000;
+            text-decoration:underline; }
+a:hover   { color: #FF0000;
+            text-decoration:underline; }
+h1        { font-family: Microsoft YaHei;
+            font-size: 200%;
+            line-height: 120%;
+            margin-bottom: 1.0em;
+            margin-left: -0.6em;
+            padding-left: 0.1em;
+            border-bottom: 0.1em solid;
+            border-color: #0044BB;
+            clear: both; }
+h2        { font-family: Microsoft YaHei;
+            font-size: 180%;
+            line-height: 110%;
+            margin-top: 1.0em;
+            margin-bottom: 0.8em;
+            padding: 0.2em;
+            width: 100%;
+            color: #FFFFFF;
+            background-color : #0044BB;
+            clear: both; }
+h3        { font-family: Microsoft YaHei;
+            font-size: 160%;
+            line-height: 150%;
+            margin-bottom: 0.5em; }
+h6        { font-size: 150%;
+            margin-top: 1.2em;
+            border-bottom: 0.1em solid;
+            border-color: #0044BB;
+            clear: both; }
+hr        { color: #0044BB;
+            clear: both; }
+dt        { font-weight: bold;
+            margin-top: 1.0em;
+            margin-left: 0.5em; }
+dd        { margin-bottom: 1.0em;
+            margin-left: 1.5em; }
+pre       { font-family: Courier New;
+	    margin-top: 0.8em;
+            margin-bottom: 1.0em;
+            line-height: 100%;
+            padding: 0.5em;
+            width: 100%;
+            border: 0.1em solid;
+            border-color: #808080;
+            background-color: #FFFFFF; }
+table     { font-size: 100%; }
+p         { margin-top: 0.6em;
+            margin-bottom: 0.6em; }
+ol        { margin-top: 0.2em;
+            margin-left: 2.1em;
+            padding-left: 0em;
+            margin-right:2.1em }
+ul        { margin-top: 0.2em;
+            margin-left: 2.0em;
+            margin-right: 1.5em;
+            list-style-type: disc; }
+li        { margin-bottom: 0.2em; }
+em        { font-style: normal;
+            font-weight: bold; }
+table     { border-color: #4488CC; }
+td        { border-color: #4488CC; }
+th        { border-color: #4488CC; }
+table.sys { margin-left: 1.0em;
+            margin-top: 1.0em;
+            margin-bottom: 1.0em; }
+ul.square { margin-left: 1.4em;
+            list-style-type: square; }
+ul.circle    { margin-left: 1.4em;
+               list-style-type: circle; }
+ul.decimal   { margin-left: 1.4em;
+               list-style-type: decimal; }
+.note     { margin-left: 1.0em;
+            font-size: 90%; }
+.rgss2       { font-family: Microsoft YaHei;
+               font-weight: bold;
+               color: #CC4400;
+               font-size: 95%; }
+.caution     { color: #FF0000; }
+.western     { font-family: Microsoft YaHei; }
+.trans       { border-width: 0; }
