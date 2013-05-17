@@ -35,10 +35,10 @@ protected:
 
 protected:
 	DWORD			m_color;
-	int				m_r;
-	int				m_g;
-	int				m_b;
-	int				m_a;
+	double			m_r;
+	double			m_g;
+	double			m_b;
+	double			m_a;
 
 	union
 	{

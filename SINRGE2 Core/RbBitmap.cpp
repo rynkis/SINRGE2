@@ -272,6 +272,8 @@ __finish:
 
 VALUE RbBitmap::clone()
 {
+	check_raise();
+
 	VALUE __argv[] = { INT2FIX(m_bmp.width), INT2FIX(m_bmp.height) };
 	VALUE bitmap = rb_class_new_instance(2, __argv, obj_class());
 	RbBitmap * bmp_ptr = GetObjectPtr<RbBitmap>(bitmap);
@@ -790,29 +792,26 @@ VALUE RbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 	check_raise();
 
 	int a, r, g, b;
-	VALUE argv01, green, blue, gray;
+	VALUE red, green, blue, gray;
 	DWORD tone = 0;
 
-	if (rb_scan_args(argc, argv, "04", &argv01, &green, &blue, &gray) == 1)
+	if (argc == 1)
 	{
-		if (FIXNUM_P(argv01))
-		{
-			r = FIX2INT(argv01);
-			r = SinBound(r, 0, 255);
-			tone = MAKE_ARGB_8888(255, r, 255, 255);
-		}
+		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
+			tone = NUM2ULONG(argv[0]);
 		else
 		{
-			SafeToneValue(argv01);
-			tone = GetObjectPtr<RbTone>(argv01)->GetColor();
+			SafeToneValue(argv[0]);
+			tone = GetObjectPtr<RbTone>(argv[0])->GetColor();
 		}
 	}
 	else
 	{
+		rb_scan_args(argc, argv, "4", &red, &green, &blue, &gray);
 		for (int i = 0; i < argc; ++i)
 			SafeFixnumValue(argv[i]);
 
-		r = (NIL_P(argv01) ? 255 : FIX2INT(argv01));
+		r = (NIL_P(red) ? 255 : FIX2INT(red));
 		g = (NIL_P(green) ? 255 : FIX2INT(green));
 		b = (NIL_P(blue) ? 255 : FIX2INT(blue));
 		a = (NIL_P(gray) ? 255 : FIX2INT(gray));
@@ -1052,24 +1051,36 @@ VALUE RbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 		for (int i = 0; i < 4; ++i)
 			SafeFixnumValue(argv[i]);
 		
-		SafeColorValue(argv[4]);
 		x = FIX2INT(argv[0]);
 		y = FIX2INT(argv[1]);
 		width = FIX2INT(argv[2]);
 		height = FIX2INT(argv[3]);
-		color = GetObjectPtr<RbTone>(argv[4])->GetColor();
+
+		if (rb_obj_is_kind_of(argv[4], rb_cInteger))
+			color = NUM2ULONG(argv[4]);
+		else
+		{
+			SafeColorValue(argv[4]);
+			color = GetObjectPtr<RbColor>(argv[4])->GetColor();
+		}
 	}
 	else if (argc == 2)
 	{
 		SafeRectValue(argv[0]);
-		SafeColorValue(argv[1]);
 
 		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
 		x = rect->x;
 		y = rect->y;
 		width = rect->width;
 		height = rect->height;
-		color = GetObjectPtr<RbTone>(argv[1])->GetColor();
+
+		if (rb_obj_is_kind_of(argv[1], rb_cInteger))
+			color = NUM2ULONG(argv[1]);
+		else
+		{
+			SafeColorValue(argv[1]);
+			color = GetObjectPtr<RbColor>(argv[1])->GetColor();
+		}
 	}
 	else
 		rb_raise(rb_eArgError, "wrong number of arguments (%d for 2 or 5)", argc);
@@ -1172,14 +1183,20 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
-	SafeColorValue(color);
 	int dx = FIX2INT(x);
 	int dy = FIX2INT(y);
 	
 	if (dx < 0 || dy < 0 || dx >= m_bmp.width || dy >= m_bmp.height)
 		return Qnil;
-
-	DWORD dwColor = GetObjectPtr<RbTone>(color)->GetColor();
+	
+	DWORD col;
+	if (rb_obj_is_kind_of(color, rb_cInteger))
+		col = NUM2ULONG(color);
+	else
+	{
+		SafeColorValue(color);
+		col = GetObjectPtr<RbTone>(color)->GetColor();
+	}
 	//	跳过透明像素
 	/*if (!GET_ARGB_A(dwColor))
 		return Qfalse;*/
@@ -1190,7 +1207,7 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 		return Qfalse;
 	//color2 = pTexData[m_bmp.width * dy + dx];
 	//BLEND_ARGB_8888(dwColor, color2);
-	pTexData[m_bmp.width * dy + dx] = dwColor;//color2;
+	pTexData[m_bmp.width * dy + dx] = col;//color2;
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	
 	//	增加 修改计数值
@@ -1216,7 +1233,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		SafeFixnumValue(vy);
 		SafeFixnumValue(vw);
 		SafeFixnumValue(vh);
-		SafeStringValue(vstr);
+		//SafeStringValue(vstr);
 
 		ix = FIX2INT(vx);
 		iy = FIX2INT(vy);
@@ -1228,7 +1245,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		rb_scan_args(argc, argv, "22", &rect, &vstr, &ha, &va);
 
 		SafeRectValue(argv[0]);
-		SafeStringValue(vstr);
+		//SafeStringValue(vstr);
 
 		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
 		ix = rect->x;
@@ -1236,7 +1253,8 @@ VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		width = rect->width;
 		height = rect->height;
 	}
-	pStr  = Kconv::UTF8ToUnicode(RSTRING_PTR(vstr));
+	VALUE vStr = NIL_P(vstr) ? rb_str_new2("nil") : rb_obj_as_string(vstr);
+	pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vstr));
 	halign = NIL_P(ha) ? 0 : FIX2INT(ha);
 	valign = NIL_P(va) ? 1 : FIX2INT(va);
 
@@ -1454,11 +1472,22 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
 	if (!pTexData) return Qfalse;
 
-	SafeColorValue(vcolor1);
-	SafeColorValue(vcolor2);
-	DWORD color1 = GetObjectPtr<RbColor>(vcolor1)->GetColor();
-	DWORD color2 = GetObjectPtr<RbColor>(vcolor2)->GetColor();
-	
+	DWORD color1, color2;
+	if (rb_obj_is_kind_of(vcolor1, rb_cInteger))
+		color1 = NUM2ULONG(vcolor1);
+	else
+	{
+		SafeColorValue(vcolor1);
+		color1 = GetObjectPtr<RbColor>(vcolor1)->GetColor();
+	}
+	if (rb_obj_is_kind_of(vcolor2, rb_cInteger))
+		color2 = NUM2ULONG(vcolor2);
+	else
+	{
+		SafeColorValue(vcolor2);
+		color2 = GetObjectPtr<RbColor>(vcolor2)->GetColor();
+	}
+
 	bool vertical = RTEST(vert);
 	float a1, r1, g1, b1, a2, r2, g2, b2, rateA, rateR, rateG, rateB;;
 	GET_ARGB_8888(color1, a1, r1, g1, b1);

@@ -52,14 +52,22 @@ VALUE RbTone::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
-		SafeToneValue(argv[0]);
+		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
+		{
+			DWORD col = NUM2ULONG(argv[0]);
+			GET_ARGB_8888(col, m_a, m_r, m_g, m_b);
+		}
+		else
+		{
+			SafeToneValue(argv[0]);
 
-		RbTone * tone = GetObjectPtr<RbTone>(argv[0]);
+			RbTone * tone = GetObjectPtr<RbTone>(argv[0]);
 
-		m_r = tone->m_r;
-		m_g = tone->m_g;
-		m_b = tone->m_b;
-		m_a = tone->m_a;
+			m_r = tone->m_r;
+			m_g = tone->m_g;
+			m_b = tone->m_b;
+			m_a = tone->m_a;
+		}
 	}
 	else
 	{
@@ -67,27 +75,26 @@ VALUE RbTone::initialize(int argc, VALUE * argv, VALUE obj)
 
 		for (int i = 0; i < argc; ++i)
 		{
-			SafeFixnumValue(argv[i]);
+			SafeNumericValue(argv[i]);
 		}
 
-		m_r = FIX2INT(m_red);
-		m_g = FIX2INT(m_green);
-		m_b = FIX2INT(m_blue);
-		m_a = (NIL_P(m_alpha) ? 255 : FIX2INT(m_alpha));
+		m_r = NUM2DBL(m_red);
+		m_g = NUM2DBL(m_green);
+		m_b = NUM2DBL(m_blue);
+		m_a = (NIL_P(m_alpha) ? 0 : NUM2DBL(m_alpha));
 
  		m_r = SinBound(m_r, 0, 255);
 		m_g = SinBound(m_g, 0, 255);
 		m_b = SinBound(m_b, 0, 255);
 		m_a = SinBound(m_a, 0, 255);
-
 	}
 
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
 
-	m_red	= INT2FIX(m_r);
-	m_green = INT2FIX(m_g);
-	m_blue	= INT2FIX(m_b);
-	m_alpha = INT2FIX(m_a);
+	m_red	= DBL2NUM(m_r);
+	m_green = DBL2NUM(m_g);
+	m_blue	= DBL2NUM(m_b);
+	m_alpha = DBL2NUM(m_a);
 
 	return obj;
 }

@@ -218,7 +218,7 @@ VALUE MRbSinCore::set_title(int argc, VALUE title)
 
 VALUE MRbSinCore::get_width()
 {
-	return INT2FIX(GetAppPtr()->GetFrameWidth());
+	return INT2FIX(GetAppPtr()->m_frm_struct.m_screen_width);
 }
 
 VALUE MRbSinCore::get_height()
@@ -332,6 +332,15 @@ VALUE MRbSinCore::get_timer_delta()
 	return DBL2NUM(GetAppPtr()->GetTimeDelta());
 }
 
+VALUE MRbSinCore::get_screen_size()
+{
+	VALUE argv = rb_ary_new2(2);
+	rb_ary_push(argv, INT2FIX(GetAppPtr()->m_frm_struct.m_screen_width));
+	rb_ary_push(argv, INT2FIX(GetAppPtr()->m_frm_struct.m_screen_height));
+
+	return argv;
+}
+
 void MRbSinCore::InitLibrary()
 {
 	rb_mSin = rb_define_module("SINRGE2");
@@ -375,6 +384,8 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mGraphics, "frame_count=", RbFunc(set_framecount), 1);
 	rb_define_module_function(rb_mGraphics, "brightness", RbFunc(get_brightness), 0);
 	rb_define_module_function(rb_mGraphics, "brightness=", RbFunc(set_brightness), 1);
+
+	rb_define_module_function(rb_mGraphics, "screen_size", RbFunc(get_screen_size), 0);
 
 	rb_mFrame = rb_define_module_under(rb_mSin, "Frame");
 

@@ -77,14 +77,21 @@ VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
-		SafeColorValue(argv[0]);
-
-		RbColor * color = GetObjectPtr<RbColor>(argv[0]);
-
-		m_r = color->m_r;
-		m_g = color->m_g;
-		m_b = color->m_b;
-		m_a = color->m_a;
+		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
+		{
+			DWORD col = NUM2ULONG(argv[0]);
+			GET_ARGB_8888(col, m_a, m_r, m_g, m_b);
+		}
+		else
+		{
+			SafeColorValue(argv[0]);
+			RbColor * color = GetObjectPtr<RbColor>(argv[0]);
+			m_r = color->m_r;
+			m_g = color->m_g;
+			m_b = color->m_b;
+			m_a = color->m_a;
+			color = NULL;
+		}
 	}
 	else
 	{
@@ -92,27 +99,26 @@ VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 
 		for (int i = 0; i < argc; ++i)
 		{
-			SafeFixnumValue(argv[i]);
+			SafeNumericValue(argv[i]);
 		}
 
-		m_r = FIX2INT(m_red);
-		m_g = FIX2INT(m_green);
-		m_b = FIX2INT(m_blue);
-		m_a = (NIL_P(m_alpha) ? 255 : FIX2INT(m_alpha));
+		m_r = NUM2DBL(m_red);
+		m_g = NUM2DBL(m_green);
+		m_b = NUM2DBL(m_blue);
+		m_a = (NIL_P(m_alpha) ? 255 : NUM2DBL(m_alpha));
 
  		m_r = SinBound(m_r, 0, 255);
 		m_g = SinBound(m_g, 0, 255);
 		m_b = SinBound(m_b, 0, 255);
 		m_a = SinBound(m_a, 0, 255);
-
 	}
 
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
 
-	m_red	= INT2FIX(m_r);
-	m_green = INT2FIX(m_g);
-	m_blue	= INT2FIX(m_b);
-	m_alpha = INT2FIX(m_a);
+	m_red	= DBL2NUM(m_r);
+	m_green = DBL2NUM(m_g);
+	m_blue	= DBL2NUM(m_b);
+	m_alpha = DBL2NUM(m_a);
 
 	return obj;
 }
@@ -136,7 +142,7 @@ VALUE RbColor::clone()
 
 VALUE RbColor::to_string()
 {
-	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), m_r, m_g, m_b, m_a);
+	return rb_sprintf("#<%s(%f, %f, %f, %f)>", obj_classname(), m_r, m_g, m_b, m_a);
 }
 
 VALUE RbColor::get_red()
@@ -146,13 +152,13 @@ VALUE RbColor::get_red()
 
 VALUE RbColor::set_red(VALUE red)
 {
-	SafeFixnumValue(red);
+	SafeNumericValue(red);
 
-	m_r = FIX2INT(red);
+	m_r = NUM2DBL(red);
 	m_r = SinBound(m_r, 0, 255);
 
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
-	m_red	= INT2FIX(m_r);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_red	= DBL2NUM(m_r);
 
 	return m_red;
 }
@@ -164,13 +170,13 @@ VALUE RbColor::get_green()
 
 VALUE RbColor::set_green(VALUE green)
 {
-	SafeFixnumValue(green);
+	SafeNumericValue(green);
 
-	m_g = FIX2INT(green);
+	m_g = NUM2DBL(green);
 	m_g = SinBound(m_g, 0, 255);
 	
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
-	m_green	= INT2FIX(m_g);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_green	= DBL2NUM(m_g);
 
 	return m_green;
 }
@@ -182,13 +188,13 @@ VALUE RbColor::get_blue()
 
 VALUE RbColor::set_blue(VALUE blue)
 {
-	SafeFixnumValue(blue);
+	SafeNumericValue(blue);
 
-	m_b = FIX2INT(blue);
+	m_b = NUM2DBL(blue);
 	m_b = SinBound(m_b, 0, 255);
 	
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
-	m_blue	= INT2FIX(m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_blue	= DBL2NUM(m_b);
 
 	return m_blue;
 }
@@ -200,13 +206,13 @@ VALUE RbColor::get_alpha()
 
 VALUE RbColor::set_alpha(VALUE alpha)
 {
-	SafeFixnumValue(alpha);
+	SafeNumericValue(alpha);
 
-	m_a = FIX2INT(alpha);
+	m_a = NUM2DBL(alpha);
 	m_a = SinBound(m_a, 0, 255);
 	
-	m_color = MAKE_ARGB_8888(m_a, m_r, m_g, m_b);
-	m_alpha	= INT2FIX(m_a);
+	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_alpha	= DBL2NUM(m_a);
 
 	return m_alpha;
 }

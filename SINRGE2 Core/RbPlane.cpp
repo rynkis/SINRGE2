@@ -473,8 +473,17 @@ VALUE RbPlane::get_color()
 VALUE RbPlane::set_color(VALUE color)
 {
 	check_raise();
-	SafeColorValue(color);
-	m_color_ptr = GetObjectPtr<RbColor>(color);
+	/*if (rb_obj_is_kind_of(color, rb_cInteger))
+	{
+		VALUE __argv[] = { color };
+		VALUE col = rb_class_new_instance(1, __argv, rb_cColor);
+		m_color_ptr = GetObjectPtr<RbColor>(col);
+	}
+	else
+	{*/
+		SafeColorValue(color);
+		m_color_ptr = GetObjectPtr<RbColor>(color);
+	//}
 	return color;
 }
 

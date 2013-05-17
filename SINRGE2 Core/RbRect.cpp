@@ -49,17 +49,29 @@ void RbRect::InitLibrary()
 
 VALUE RbRect::initialize(int argc, VALUE * argv, VALUE obj)
 {
-	rb_scan_args(argc, argv, "4", &vx, &vy, &vw, &vh);
+	if (argc)
+	{
+		rb_scan_args(argc, argv, "4", &vx, &vy, &vw, &vh);
 
-	SafeFixnumValue(vx);
-	SafeFixnumValue(vy);
-	SafeFixnumValue(vw);
-	SafeFixnumValue(vh);
+		SafeNumericValue(vx);
+		SafeNumericValue(vy);
+		SafeNumericValue(vw);
+		SafeNumericValue(vh);
+	}
+	else
+	{
+		vx = vy = vw = vh = RUBY_0;
+	}
 
-	x		= FIX2INT(vx);
-	y		= FIX2INT(vy);
-	width	= FIX2INT(vw);
-	height	= FIX2INT(vh);
+	x		= NUM2INT(vx);
+	y		= NUM2INT(vy);
+	width	= NUM2INT(vw);
+	height	= NUM2INT(vh);
+	
+	vx		= INT2FIX(x);
+	vy		= INT2FIX(y);
+	vw		= INT2FIX(width);
+	vh		= INT2FIX(height);
 
 	return obj;
 }
@@ -71,10 +83,10 @@ VALUE RbRect::get_x()
 
 VALUE RbRect::set_x(VALUE nx)
 {
-	SafeFixnumValue(nx);
-
-	vx	= nx;
-	x	= FIX2INT(nx);
+	SafeNumericValue(nx);
+	
+	x	= NUM2INT(nx);
+	vx	= INT2FIX(x);
 
 	return nx;
 }
@@ -86,10 +98,10 @@ VALUE RbRect::get_y()
 
 VALUE RbRect::set_y(VALUE ny)
 {
-	SafeFixnumValue(ny);
-
-	vy	= ny;
-	y	= FIX2INT(ny);
+	SafeNumericValue(ny);
+	
+	y	= NUM2INT(ny);
+	vy	= INT2FIX(y);
 
 	return ny;
 }
@@ -101,10 +113,10 @@ VALUE RbRect::get_width()
 
 VALUE RbRect::set_width(VALUE nw)
 {
-	SafeFixnumValue(nw);
-
-	vw		= nw;
-	width	= FIX2INT(nw);
+	SafeNumericValue(nw);
+	
+	width	= NUM2INT(nw);
+	vw		= INT2FIX(width);
 
 	return nw;
 }
@@ -116,10 +128,10 @@ VALUE RbRect::get_height()
 
 VALUE RbRect::set_height(VALUE nh)
 {
-	SafeFixnumValue(nh);
-
-	vh		= nh;
-	height	= FIX2INT(nh);
+	SafeNumericValue(nh);
+	
+	height	= NUM2INT(nh);
+	vh		= INT2FIX(height);
 
 	return nh;
 }
@@ -137,12 +149,7 @@ VALUE RbRect::_dump(VALUE depth)
 VALUE RbRect::empty()
 {
 	vx = vy = vw = vh = RUBY_0;
-
-	x		= FIX2INT(vx);
-	y		= FIX2INT(vy);
-	width	= FIX2INT(vw);
-	height	= FIX2INT(vh);
-
+	x = y = width = height = 0;
 	return __obj;
 }
 
