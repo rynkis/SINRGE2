@@ -25,8 +25,7 @@ ExtFunc=SealEx.dll  # to tell SINRGE2.dll the path of extension library
                     # and it could be empty
 Scripts=main.rb     # to tell SINRGE2.dll the path of main script file
 Console=0           # to tell SINRGE2 whether show cmd window or not
-                    # only '1' can open the console and any other value
-                    # close the console
+                    # only '1' can open the console and any other value would close the console
 ```
 ### Basic Use
 
