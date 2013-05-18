@@ -151,7 +151,7 @@ bool CALL HGE_Impl::System_Initiate()
 
 	timeBeginPeriod(1);
 	Random_Seed();
-	_InitPowerStatus();
+	//_InitPowerStatus();
 	if(!_GfxInit()) { System_Shutdown(); return false; }
 
 	//System_Log(L"Init done.\n");
@@ -172,7 +172,7 @@ void CALL HGE_Impl::System_Shutdown()
 
 	timeEndPeriod(1);
 	_GfxDone();
-	_DonePowerStatus();
+	//_DonePowerStatus();
 
 	if(hwnd)
 	{
@@ -398,7 +398,7 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 		case HGE_SCREENHEIGHT:	return nScreenHeight;
 		case HGE_SCREENBPP:		return nScreenBPP;
 		case HGE_FPS:			return nHGEFPS;
-		case HGE_POWERSTATUS:	return nPowerStatus;
+		//case HGE_POWERSTATUS:	return nPowerStatus;
 	}
 
 	return 0;
@@ -569,9 +569,9 @@ HGE_Impl::HGE_Impl()
 	bDontSuspend=false;
 	hwndParent=0;
 
-	nPowerStatus=HGEPWR_UNSUPPORTED;
+	/*nPowerStatus=HGEPWR_UNSUPPORTED;
 	hKrnl32 = NULL;
-	lpfnGetSystemPowerStatus = NULL;
+	lpfnGetSystemPowerStatus = NULL;*/
 	
 	GetModuleFileName(GetModuleHandle(NULL), szAppPath, sizeof(szAppPath));
 	int i;

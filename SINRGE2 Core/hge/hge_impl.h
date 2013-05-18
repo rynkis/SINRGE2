@@ -148,13 +148,13 @@ public:
 	HWND					hwndParent;
 
 	// Power
-	int							nPowerStatus;
+	/*int							nPowerStatus;
 	HMODULE						hKrnl32;
 	GetSystemPowerStatusFunc	lpfnGetSystemPowerStatus;
 
 	void					_InitPowerStatus();
 	void					_UpdatePowerStatus();
-	void					_DonePowerStatus();
+	void					_DonePowerStatus();*/
 
 	// Graphics
 	D3DPRESENT_PARAMETERS*  d3dpp;

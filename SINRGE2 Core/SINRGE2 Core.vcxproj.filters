@@ -28,9 +28,6 @@
     <Filter Include="头文件\ruby\backward">
       <UniqueIdentifier>{b28dbcca-f227-4d3b-9d84-e20ad06deb3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="头文件\seal">
-      <UniqueIdentifier>{85f40164-6695-40fd-a6b9-73c0685106c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{71f14302-2fb7-47b5-888e-1fd7f2a82759}</UniqueIdentifier>
     </Filter>
@@ -156,6 +153,9 @@
     <ClCompile Include="RbTone.cpp">
       <Filter>源文件\RbClass\base</Filter>
     </ClCompile>
+    <ClCompile Include="RbLFont.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -235,36 +235,6 @@
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\util.h">
       <Filter>头文件\ruby\backward</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\buf.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\core.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\efs.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\err.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\fmt.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\listener.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\raw.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\rvb.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\src.h">
-      <Filter>头文件\seal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\seal\stream.h">
-      <Filter>头文件\seal</Filter>
     </ClInclude>
     <ClInclude Include="hge\hge_impl.h">
       <Filter>源文件\hge</Filter>
@@ -406,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="RbTone.h">
       <Filter>源文件\RbClass\base</Filter>
+    </ClInclude>
+    <ClInclude Include="RbLFont.h">
+      <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

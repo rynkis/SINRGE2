@@ -112,10 +112,13 @@
     <ClCompile Include="hge\hgerect.cpp" />
     <ClCompile Include="hge\hgesprite.cpp" />
     <ClCompile Include="hge\hgevector.cpp" />
-    <ClCompile Include="hge\power.cpp" />
+    <ClCompile Include="hge\power.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="hge\random.cpp" />
     <ClCompile Include="hge\system.cpp" />
     <ClCompile Include="Kconv.cpp" />
+    <ClCompile Include="RbLFont.cpp" />
     <ClCompile Include="RbParticleSystem.cpp" />
     <ClCompile Include="MRbSinCore.cpp" />
     <ClCompile Include="MRbInput.cpp" />
@@ -167,20 +170,11 @@
     <ClInclude Include="..\Contrib\include\ruby\vm.h" />
     <ClInclude Include="..\Contrib\include\ruby\win32.h" />
     <ClInclude Include="..\Contrib\include\seal.h" />
-    <ClInclude Include="..\Contrib\include\seal\buf.h" />
-    <ClInclude Include="..\Contrib\include\seal\core.h" />
-    <ClInclude Include="..\Contrib\include\seal\efs.h" />
-    <ClInclude Include="..\Contrib\include\seal\err.h" />
-    <ClInclude Include="..\Contrib\include\seal\fmt.h" />
-    <ClInclude Include="..\Contrib\include\seal\listener.h" />
-    <ClInclude Include="..\Contrib\include\seal\raw.h" />
-    <ClInclude Include="..\Contrib\include\seal\rvb.h" />
-    <ClInclude Include="..\Contrib\include\seal\src.h" />
-    <ClInclude Include="..\Contrib\include\seal\stream.h" />
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="Rb7pkgWriter.h" />
+    <ClInclude Include="RbLFont.h" />
     <ClInclude Include="sin_revision.h" />
     <ClInclude Include="TANGRAM.h" />
     <ClInclude Include="hge\include\hge.h" />

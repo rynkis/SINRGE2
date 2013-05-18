@@ -319,7 +319,7 @@ VALUE MRbInput::get_character()
 	if (isTrigger(VK_2))			return rb_str_new2(capital ? "@" : "2");
 	if (isTrigger(VK_3))			return rb_str_new2(capital ? "#" : "3");
 	if (isTrigger(VK_4))			return rb_str_new2(capital ? "$" : "4");
-	if (isTrigger(VK_5))			return rb_str_new2(capital ? "%%" : "5");
+	if (isTrigger(VK_5))			return rb_str_new2(capital ? "%%": "5");
 	if (isTrigger(VK_6))			return rb_str_new2(capital ? "^" : "6");
 	if (isTrigger(VK_7))			return rb_str_new2(capital ? "&" : "7");
 	if (isTrigger(VK_8))			return rb_str_new2(capital ? "*" : "8");

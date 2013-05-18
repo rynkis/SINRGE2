@@ -98,9 +98,7 @@ VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 		rb_scan_args(argc, argv, "31", &m_red, &m_green, &m_blue, &m_alpha);
 
 		for (int i = 0; i < argc; ++i)
-		{
 			SafeNumericValue(argv[i]);
-		}
 
 		m_r = NUM2DBL(m_red);
 		m_g = NUM2DBL(m_green);
@@ -135,7 +133,7 @@ VALUE RbColor::_dump(VALUE depth)
 
 VALUE RbColor::clone()
 {
-	VALUE __argv[] = { m_red, m_green, m_blue, m_alpha };
+	VALUE __argv[4] = { m_red, m_green, m_blue, m_alpha };
 
 	return rb_class_new_instance(4, __argv, obj_class());
 }

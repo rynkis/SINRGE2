@@ -24,6 +24,7 @@
 #include "RbParticleSystem.h"
 #include "RbWin32API.h"
 #include "Rb7pkgWriter.h"
+#include "RbLFont.h"
 #include "sin_app.h"
 #include "sin_video.h"
 
@@ -547,6 +548,8 @@ void CApplication::InitExportSinInterface()
 	RbTable::InitLibrary();
 	RbParticleSystem::InitLibrary();
 	RbWin32API::InitLibrary();
+
+	RbLFont::InitLibrary();
 	
 	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(rdf_msgboxp), -1);
 	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(rdf_msgbox), -1);

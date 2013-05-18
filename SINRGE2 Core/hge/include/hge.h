@@ -141,7 +141,7 @@ enum hgeIntState
 	
 	HGE_FPS				= 24,	// int		fixed fps			(default: HGEFPS_UNLIMITED)
 
-	HGE_POWERSTATUS		= 25,   // int		battery life percent + status
+	//HGE_POWERSTATUS		= 25,   // int		battery life percent + status
 	
 	HGEINTSTATE_FORCE_DWORD = 0x7FFFFFF
 };
@@ -172,8 +172,8 @@ typedef bool (*hgeCallback)();
 /*
 ** HGE_POWERSTATUS system state special constants
 */
-#define HGEPWR_AC			-1
-#define HGEPWR_UNSUPPORTED	-2
+//#define HGEPWR_AC			-1
+//#define HGEPWR_UNSUPPORTED	-2
 
 
 /*

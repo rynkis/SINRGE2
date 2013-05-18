@@ -168,7 +168,8 @@ VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 	m_italic		= dm_get_default_italic(rb_cFont);
 	m_shadow		= dm_get_default_shadow(rb_cFont);
 
-	VALUE color		= RbColor::dm_clone(dm_get_default_color(rb_cFont));
+	VALUE __argv[1]	= { ULONG2NUM(GetObjectPtr<RbColor>(__default_color__)->GetColor()) };
+	VALUE color		= rb_class_new_instance(1, __argv, rb_cColor);//RbColor::dm_clone(dm_get_default_color(rb_cFont));
 	m_color_ptr		= GetObjectPtr<RbColor>(color);
 	
 	//	´´½¨Âß¼­×ÖÌå
@@ -184,7 +185,7 @@ VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 
 VALUE RbFont::clone()
 {
-	VALUE __argv[] = { m_name, m_size };
+	VALUE __argv[2] = { m_name, m_size };
 	VALUE font = rb_class_new_instance(2, __argv, obj_class());
 	RbFont * font_ptr = GetObjectPtr<RbFont>(font);
 	font_ptr->dm_set_bold(font, m_bold);
