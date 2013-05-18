@@ -8,10 +8,12 @@ buffer = open("Unicode12", "rb") {|f| f.read }
 buffer = Zlib::Inflate.inflate(buffer)
 @lfont12 = LFont.new(buffer, 12, true)
 @lfont12.color = Color.new(144, 0, 32)
+
 buffer = open("Unicode14", "rb") {|f| f.read }
 buffer = Zlib::Inflate.inflate(buffer)
 @lfont14 = LFont.new(buffer, 14, true)
 @lfont14.color = Color.new(32, 64, 128)
+
 buffer = open("Unicode16", "rb") {|f| f.read }
 buffer = Zlib::Inflate.inflate(buffer)
 @lfont16 = LFont.new(buffer, 16, true)
@@ -57,10 +59,7 @@ draw_lfont_text(@lfont14, texts, x: 32, y: 52, width: 800, height: 20)
 texts = "12size：I'm Sherry Lynch, I'm Shy07."
 draw_lfont_text(@lfont12, texts, rect: Rect.new(32, 72, 800, 20))
 
-while true
-  Graphics.update
-  # Input.update
-end
+game_stop
 
 
 
