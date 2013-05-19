@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;HGE_DIRECTX_VER=9;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;HGE_DIRECTX_VER=9;HAVE_STRUCT_TIMEVAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)Contrib\DirectShow\include;$(SolutionDir)Contrib\DXSDK81\include;$(SolutionDir)Contrib\include;$(ProjectDir);$(ProjectDir)hge;$(ProjectDir)hge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>

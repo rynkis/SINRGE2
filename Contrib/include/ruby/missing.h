@@ -3,7 +3,7 @@
   missing.h - prototype for *.c in ./missing, and
   	      for missing timeval struct
 
-  $Author: kosaki $
+  $Author: nagachika $
   created at: Sat May 11 23:46:03 JST 2002
 
 ************************************************/
@@ -25,18 +25,21 @@ extern "C" {
 #include RUBY_EXTCONF_H
 #endif
 
+#if !defined(HAVE_STRUCT_TIMEVAL) || !defined(HAVE_STRUCT_TIMESPEC)
+#if defined(HAVE_TIME_H)
+# include <time.h>
+#endif
 #if defined(HAVE_SYS_TIME_H)
-#  include <sys/time.h>
-#elif !defined(_WIN32)
-#  define time_t long
+# include <sys/time.h>
+#endif
+#endif
+
+#if !defined(HAVE_STRUCT_TIMEVAL)
 struct timeval {
     time_t tv_sec;	/* seconds */
     long tv_usec;	/* microseconds */
 };
-#endif
-#if defined(HAVE_SYS_TYPES_H)
-#  include <sys/types.h>
-#endif
+#endif /* HAVE_STRUCT_TIMEVAL */
 
 #if !defined(HAVE_STRUCT_TIMESPEC)
 struct timespec {
@@ -50,11 +53,6 @@ struct timezone {
     int tz_minuteswest;
     int tz_dsttime;
 };
-#endif
-
-#if defined(HAVE___SYSCALL) && (defined(__APPLE__) || defined(__OpenBSD__))
-/* Mac OS X and OpenBSD have __syscall but don't define it in headers */
-off_t __syscall(quad_t number, ...);
 #endif
 
 #ifdef RUBY_EXPORT

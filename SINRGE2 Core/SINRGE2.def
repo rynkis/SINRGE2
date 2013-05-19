@@ -1,9 +1,6 @@
-LIBRARY	"SINRGE2.dll"
-
+VERSION 2.0
 EXPORTS
-
 SINRGE2Entry
-
 FD_CLR=rb_w32_fdclr
 FD_ISSET=rb_w32_fdisset
 InitVM_Enumerator
@@ -1164,6 +1161,7 @@ rb_num_coerce_bin
 rb_num_coerce_bit
 rb_num_coerce_cmp
 rb_num_coerce_relop
+rb_num_negative_p
 rb_num_to_uint
 rb_num_zerodiv
 rb_obj_alloc
@@ -1339,7 +1337,6 @@ rb_set_class_path_string
 rb_set_coverages
 rb_set_end_proc
 rb_set_errinfo
-rb_set_lib_handle
 rb_set_safe_level
 rb_set_safe_level_force
 rb_signal_buff_size
@@ -1587,6 +1584,7 @@ rb_vm_call
 rb_vm_call_cfunc
 rb_vm_cbase
 rb_vm_change_state
+rb_vm_check_redefinition_by_prepend
 rb_vm_control_frame_block_ptr
 rb_vm_control_frame_id_and_class
 rb_vm_cref
@@ -1766,6 +1764,7 @@ ruby_gc_debug_indent DATA
 ruby_get_inplace_mode
 ruby_getcwd
 ruby_glob
+ruby_global_name_punct_bits DATA
 ruby_hdtoa
 ruby_incpush
 ruby_incpush_expand

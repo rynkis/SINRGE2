@@ -535,8 +535,6 @@ static inline volatile VALUE *rb_gc_guarded_ptr(volatile VALUE *ptr) {return ptr
 #define RB_UNUSED_VAR(x) x
 #endif
 
-void rb_set_lib_handle(HINSTANCE dll);
-
 void rb_check_type(VALUE,int);
 #define Check_Type(v,t) rb_check_type((VALUE)(v),(t))
 

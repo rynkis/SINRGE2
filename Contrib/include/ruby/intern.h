@@ -2,7 +2,7 @@
 
   intern.h -
 
-  $Author: usa $
+  $Author: nagachika $
   created at: Thu Jun 10 14:22:17 JST 1993
 
   Copyright (C) 1993-2007 Yukihiro Matsumoto
@@ -31,6 +31,11 @@ extern "C" {
 #else
 # include <varargs.h>
 #endif
+
+#if defined(HAVE_SYS_TYPES_H)
+#include <sys/types.h>
+#endif
+
 #include "ruby/st.h"
 
 #if defined __GNUC__ && __GNUC__ >= 4
