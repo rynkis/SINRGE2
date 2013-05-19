@@ -455,17 +455,16 @@ int CApplication::GetRuntimeInfos()
 		pw_open = (func_pw_open)::GetProcAddress(m_hSeal, "pw_open");
 		pw_close = (func_pw_close)::GetProcAddress(m_hSeal, "pw_close");
 
-		if (!pr_open && !pr_close && !pw_open && !pw_close)
-		{
-			MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load expansion functions.", m_frm_struct.m_title,  MB_ICONWARNING);
-			return 1;
-		}
-
 		if (szPackage[0] != 0)
 		{
 			if (!IsFileExist(szPackage))
 			{
 				MessageBoxW(m_frm_struct.m_hwnd, L"Failed to find 7pkg file.", m_frm_struct.m_title,  MB_ICONWARNING);
+				return 1;
+			}
+			else if (!pr_open && !pr_close && !pw_open && !pw_close)
+			{
+				MessageBoxW(m_frm_struct.m_hwnd, L"Failed to load expansion functions.", m_frm_struct.m_title,  MB_ICONWARNING);
 				return 1;
 			}
 			else if (pr_open && pr_close)
