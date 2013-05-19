@@ -28,7 +28,6 @@
 #include "sin_app.h"
 #include "sin_video.h"
 
-
 namespace
 {
 	/*
@@ -368,8 +367,6 @@ __run_with_data:
 
 	for (int pos = 0; pos < arylen; ++pos)
 	{
-		VALUE argv = rb_ary_entry(rbdata, pos);
-
 		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
 		if (state)
 		{
