@@ -380,6 +380,9 @@
     <ClInclude Include="RbLFont.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
+    <ClInclude Include="sin_latticef.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SINRGE2 Core.rc">

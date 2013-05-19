@@ -9,14 +9,10 @@ buffer = Zlib::Inflate.inflate(buffer)
 @lfont12 = LFont.new(buffer, 12, true)
 @lfont12.color = Color.new(144, 0, 32)
 
-buffer = open("Unicode14", "rb") {|f| f.read }
-buffer = Zlib::Inflate.inflate(buffer)
-@lfont14 = LFont.new(buffer, 14, true)
+@lfont14 = LFont.new("Unicode14", 14)
 @lfont14.color = Color.new(32, 64, 128)
 
-buffer = open("Unicode16", "rb") {|f| f.read }
-buffer = Zlib::Inflate.inflate(buffer)
-@lfont16 = LFont.new(buffer, 16, true)
+@lfont16 = LFont.new("Unicode16", 16)
 
 @spt = Sprite.new
 @spt.bitmap = Bitmap.new(800, 600)

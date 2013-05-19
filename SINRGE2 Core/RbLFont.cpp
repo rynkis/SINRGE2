@@ -9,6 +9,7 @@
 #include "RbColor.h"
 #include "RbBitmap.h"
 #include "sin_app.h"
+#include "zlib.h"
 
 VALUE rb_cLFont;
 
@@ -103,12 +104,18 @@ VALUE RbLFont::initialize(int argc, VALUE * argv, VALUE obj)
 	else
 	{
 		char * filename = Kconv::UTF8ToAnsi(RSTRING_PTR(m_filename));
-
+		
 		FILE * fp = 0;
 		fopen_s(&fp, filename, "rb");
 		if (fp == NULL) rb_raise(rb_eSinError, "Failed to load lattice font.");
-		fread(m_font_data, size, 1, fp);
+		long fsize = filelength(fileno(fp));
+		void * temp_data = malloc(fsize);
+		fread(temp_data, fsize, 1, fp);
 		fclose(fp);
+		if (uncompress(m_font_data, &size, (BYTE *)temp_data, fsize) != Z_OK)
+			rb_raise(rb_eSinError, "Failed to uncompress lattice font data.");
+		free(temp_data);
+		temp_data = NULL;
 	}
 
 	VALUE __argv[3]	= { INT2FIX(255), INT2FIX(255), INT2FIX(255) };
