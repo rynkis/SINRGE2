@@ -293,7 +293,6 @@ void CApplication::GraphicsUpdate()
 
 void CApplication::SystemUpdate()
 {
-	GetTimeDelta();
 	if (!m_pHge->System_PeekMessage())
 		Quit();
 }
