@@ -55,7 +55,7 @@ And in SINRGE2 you can print it on screen. This is a sample:
 @spt = Sprite.new # create a sprite
 @spt.bitmap = Bitmap.new(128, 32) # create a 128 * 32 bitmap
 @spt.bitmap.draw_text(0, 0, 128, 32, "Hello world") # draw text
-game_stop # stop SINRGE2 with looping Graphics#update
+SINRGE2.stop # stop SINRGE2 with looping Graphics#update
 ```
 You can get the same effect in RGSS too.  
 

@@ -345,12 +345,12 @@ void MRbSinCore::InitLibrary()
 {
 	rb_mSin = rb_define_module("SINRGE2");
 	
-	rb_define_const(rb_mSin, "SINRGE2_COPYRIGHT",		rb_str_freeze(rb_str_new2(SIN_COPYRIGHT)));
-	rb_define_const(rb_mSin, "SINRGE2_DESCRIPTION",		rb_str_freeze(rb_str_new2(SIN_DESCRIPTION)));
-	rb_define_const(rb_mSin, "SINRGE2_NAME",			rb_str_freeze(rb_str_new2(SIN_NAME)));
-	rb_define_const(rb_mSin, "SINRGE2_RELEASE_DATE",	rb_str_freeze(rb_str_new2(SIN_RELEASE_DATE)));
-	rb_define_const(rb_mSin, "SINRGE2_THANKS",			rb_str_freeze(rb_str_new2(SIN_THANKS)));
-	rb_define_const(rb_mSin, "SINRGE2_VERSION",			rb_str_freeze(rb_str_new2(SIN_VERSION)));
+	rb_define_const(rb_mSin, "COPYRIGHT",		rb_str_freeze(rb_str_new2(SIN_COPYRIGHT)));
+	rb_define_const(rb_mSin, "DESCRIPTION",		rb_str_freeze(rb_str_new2(SIN_DESCRIPTION)));
+	rb_define_const(rb_mSin, "CORENAME",		rb_str_freeze(rb_str_new2(SIN_NAME)));
+	rb_define_const(rb_mSin, "RELEASE_DATE",	rb_str_freeze(rb_str_new2(SIN_RELEASE_DATE)));
+	rb_define_const(rb_mSin, "THANKS",			rb_str_freeze(rb_str_new2(SIN_THANKS)));
+	rb_define_const(rb_mSin, "VERSION",			rb_str_freeze(rb_str_new2(SIN_VERSION)));
 	
 	rb_eSinError = rb_define_class_under(rb_mSin, "StandardError", rb_eStandardError);
 
@@ -359,13 +359,12 @@ void MRbSinCore::InitLibrary()
 	rb_define_singleton_method(rb_mSin, "init", RbFunc(init), 0);
 	rb_define_singleton_method(rb_mSin, "init_video", RbFunc(init_video), 0);
 	rb_define_singleton_method(rb_mSin, "quit", RbFunc(quit), 0);
-
-	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
-	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
+	rb_define_singleton_method(rb_mSin, "stop", RbFunc(stop), 0);
 
 	rb_define_module_function(rb_mSin, "time_delta", RbFunc(get_time_delta), 0);
-	rb_define_module_function(rb_mSin, "game_stop", RbFunc(stop), 0);
 	
+	rb_define_module_function(rb_mGraphics, "real_fps", RbFunc(get_real_fps), 0);
+
 	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);
 	rb_define_module_function(rb_mGraphics, "wait", RbFunc(wait), 1);
 	rb_define_module_function(rb_mGraphics, "fadeout", RbFunc(fadeout), 1);
@@ -403,4 +402,5 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
 
 	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(show_mouse), 1);
+	rb_define_module_function(rb_mFrame, "peek_message",		RbFunc(peek_message), 0);
 }

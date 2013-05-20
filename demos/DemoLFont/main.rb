@@ -55,7 +55,7 @@ draw_lfont_text(@lfont14, texts, x: 32, y: 52, width: 800, height: 20)
 texts = "12size：I'm Sherry Lynch, I'm Shy07."
 draw_lfont_text(@lfont12, texts, rect: Rect.new(32, 72, 800, 20))
 
-game_stop
+SINRGE2.stop
 
 
 
