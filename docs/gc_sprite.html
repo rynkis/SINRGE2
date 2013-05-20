@@ -37,13 +37,13 @@
 
   <dt><a name="flash">flash(<var>color</var>, <var>duration</var>)</a></dt>
   <dd>
-    <p>开始闪烁 Sprite。<var>duration</var> 是指定闪烁的画格数。</p>
+    <p>开始闪烁 Sprite。<var>duration</var> 是指定闪烁的帧数。</p>
     <p>若 <var>color</var> 设为 nil，则闪烁时 Sprite 会消失。</p>
   </dd>
 
   <dt>update</dt>
   <dd>
-    <p>刷新 Sprite 的闪烁或波浪效果。原则上，此方法一画格调用一次。</p>
+    <p>刷新 Sprite 的闪烁或波浪效果，以及更新视频画面。原则上，此方法一帧调用一次。</p>
     <p>若是没有使用闪烁或波浪效果时，无须调用此方法。</p>
   </dd>
 
