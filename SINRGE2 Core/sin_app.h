@@ -33,6 +33,8 @@ public:
 	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
 	
 	inline IC7pkgReader *		Get7pkgReader() const { return m_7pkgReader; }
+	
+	inline double				GetCurrentDelta() const { return m_current_delta; }
 
 	inline HMODULE				GetSealHmodule() const { return m_hSeal; }
 
@@ -64,7 +66,6 @@ public:
 
 	void						LimitFps(int limit);
 	int							GetRealFps();
-	double						GetTimeDelta();
 	
 	IC7pkgWriter *				Open7pkgWriter(const wchar_t * filename, const wchar_t * password);
 	void						Close7pkgWriter(IC7pkgWriter * pw);
@@ -80,6 +81,8 @@ private:
 
 	static	VALUE				RunScriptInProtect(VALUE argv);
 	static	void				OnFailed(VALUE err);
+	
+	void						GetTimeDelta();
 
 public:
 	static bool					IsFileExist(const wchar_t *pFileName);
@@ -121,6 +124,8 @@ private:
 	float						m_rate_ticks;
 
 	unsigned int				m_last;
+
+	double						m_current_delta;
 
 	HMODULE						m_hSeal;
 

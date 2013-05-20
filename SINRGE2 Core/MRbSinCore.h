@@ -63,7 +63,7 @@ struct MRbSinCore
 
 	static VALUE get_real_fps();
 	static VALUE peek_message();
-	static VALUE get_timer_delta();
+	static VALUE get_time_delta();
 
 	static VALUE get_screen_size();
 };

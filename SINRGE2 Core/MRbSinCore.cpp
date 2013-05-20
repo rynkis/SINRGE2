@@ -327,9 +327,9 @@ VALUE MRbSinCore::show_mouse(int argc, VALUE show)
 	return Qnil;
 }
 
-VALUE MRbSinCore::get_timer_delta()
+VALUE MRbSinCore::get_time_delta()
 {
-	return DBL2NUM(GetAppPtr()->GetTimeDelta());
+	return DBL2NUM(GetAppPtr()->GetCurrentDelta());
 }
 
 VALUE MRbSinCore::get_screen_size()
@@ -363,7 +363,7 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mSin, "real_fps", RbFunc(get_real_fps), 0);
 	rb_define_module_function(rb_mSin, "peek_message", RbFunc(peek_message), 0);
 
-	rb_define_module_function(rb_mSin, "timer_delta", RbFunc(get_timer_delta), 0);
+	rb_define_module_function(rb_mSin, "time_delta", RbFunc(get_time_delta), 0);
 	rb_define_module_function(rb_mSin, "game_stop", RbFunc(stop), 0);
 	
 	rb_define_module_function(rb_mGraphics, "update", RbFunc(update), 0);

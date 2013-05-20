@@ -203,6 +203,8 @@ CApplication::CApplication()
 	, m_last_fps(0)
 	, m_last(0)
 
+	, m_current_delta(0)
+
 	, m_hSeal(0)
 
 	, m_inited(false)
@@ -284,12 +286,14 @@ void CApplication::Quit()
 
 void CApplication::GraphicsUpdate()
 {
+	GetTimeDelta();
     if (!m_pHge->System_Update())
 		Quit();
 }
 
 void CApplication::SystemUpdate()
 {
+	GetTimeDelta();
 	if (!m_pHge->System_PeekMessage())
 		Quit();
 }
@@ -732,17 +736,18 @@ int CApplication::GetRealFps()
 	return m_last_fps;
 }
 
-double CApplication::GetTimeDelta()
+void CApplication::GetTimeDelta()
 {
 	if (!m_fps_timer)
-		return 0;
-		
-	double fDeltaTime = (m_fps_timer->GetTicks() - m_last) / 1000.0;
+	{
+		m_current_delta = 0;
+		return;
+	}
+	
+	m_current_delta = (m_fps_timer->GetTicks() - m_last) / 1000.0;
 	m_last = m_fps_timer->GetTicks();
 
-	if (fDeltaTime > 1.0) fDeltaTime = 0.0;
-
-	return fDeltaTime;
+	if (m_current_delta > 1.0) m_current_delta = 0.0;
 }
 
 /**
