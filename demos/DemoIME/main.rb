@@ -1,7 +1,7 @@
 #encoding:utf-8
 include SINRGE2
 
-Frame.title = "Demo4"
+Frame.title = "DemoIME"
 SINRGE2.init_video
 
 require "__list__"

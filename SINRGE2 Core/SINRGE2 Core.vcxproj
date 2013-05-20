@@ -175,7 +175,6 @@
     <ClInclude Include="AutoBuffer.h" />
     <ClInclude Include="Rb7pkgWriter.h" />
     <ClInclude Include="RbLFont.h" />
-    <ClInclude Include="sin_latticef.h" />
     <ClInclude Include="sin_revision.h" />
     <ClInclude Include="TANGRAM.h" />
     <ClInclude Include="hge\include\hge.h" />

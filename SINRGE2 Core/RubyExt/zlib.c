@@ -4191,13 +4191,21 @@ rb_gzreader_readlines(int argc, VALUE *argv, VALUE obj)
 
 #endif /* GZIP_SUPPORT */
 
+
+//++++SINRGE2++++
+VALUE mZlib, cZStream, cDeflate, cInflate;
+#if GZIP_SUPPORT
+VALUE cGzipFile, cGzipWriter, cGzipReader;
+#endif
+//++++SINRGE2++++
+
 void
 Init_zlib()
 {
-    VALUE mZlib, cZStream, cDeflate, cInflate;
+    /*VALUE mZlib, cZStream, cDeflate, cInflate;
 #if GZIP_SUPPORT
     VALUE cGzipFile, cGzipWriter, cGzipReader;
-#endif
+#endif*/
 
     mZlib = rb_define_module("Zlib");
 

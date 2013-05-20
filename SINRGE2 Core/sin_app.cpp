@@ -367,7 +367,16 @@ __run_with_data:
 
 	for (int pos = 0; pos < arylen; ++pos)
 	{
-		VALUE result = rb_protect(RunScriptInProtect, rb_ary_entry(rbdata, pos), &state);
+		VALUE temp = rb_ary_entry(rbdata, pos);
+		VALUE code = rb_ary_entry(temp, 2);
+		code = rb_funcall(mZlib, rb_intern("inflate"), 1, code);
+
+		VALUE argv = rb_ary_new2(2);
+		rb_ary_push(argv, rb_ary_entry(temp, 1));
+		rb_ary_push(argv, code);
+		rb_ary_freeze(argv);
+
+		VALUE result = rb_protect(RunScriptInProtect, argv, &state);
 		if (state)
 		{
 			VALUE err = rb_errinfo();
