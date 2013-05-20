@@ -188,6 +188,9 @@ VALUE MRbSinCore::fadein(int argv, VALUE duration)
 
 VALUE MRbSinCore::peek_message()
 {
+	if (!GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has not ninited.");
+
 	GetAppPtr()->SystemUpdate();
 	return Qnil;
 }
@@ -347,7 +350,7 @@ void MRbSinCore::InitLibrary()
 	rb_define_const(rb_mSin, "THANKS",			rb_str_freeze(rb_str_new2(SIN_THANKS)));
 	rb_define_const(rb_mSin, "VERSION",			rb_str_freeze(rb_str_new2(SIN_VERSION)));
 	
-	rb_eSinError = rb_define_class_under(rb_mSin, "StandardError", rb_eStandardError);
+	rb_eSinError = rb_define_class_under(rb_mSin, "SinError", rb_eStandardError);
 
 	rb_mGraphics = rb_define_module_under(rb_mSin, "Graphics");
 	

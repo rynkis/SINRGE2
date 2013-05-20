@@ -1029,5 +1029,8 @@ void MRbSinCore::HideMouse(bool hide)
 
 VALUE MRbSinCore::get_show_mouse()
 {
+	if (!GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has not ninited.");
+
 	return C2RbBool(!pHGE->bHideMouse);
 }
