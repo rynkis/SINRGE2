@@ -313,15 +313,10 @@ VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 	return forbid_switch;
 }
 
-/*
-**	call-seq:
-**		SIN::Input.show_mouse(show)	-> nil
-**
-*/
-VALUE MRbSinCore::show_mouse(int argc, VALUE show)
+VALUE MRbSinCore::set_show_mouse(int argc, VALUE show)
 {
 	if (!GetAppPtr()->IsInited())
-		rb_raise(rb_eSinError, "Uninited frame.");
+		rb_raise(rb_eSinError, "SINRGE2 has not ninited.");
 
 	HideMouse(!RTEST(show));
 	return Qnil;
@@ -400,7 +395,8 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "forbid_switch=",		RbFunc(set_forbid_switch), 1);
 	rb_define_module_function(rb_mFrame, "start_width=",		RbFunc(set_start_width), 1);
 	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
-
-	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(show_mouse), 1);
+	
+	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(get_show_mouse), 0);
+	rb_define_module_function(rb_mFrame, "show_mouse=",			RbFunc(set_show_mouse), 1);
 	rb_define_module_function(rb_mFrame, "peek_message",		RbFunc(peek_message), 0);
 }

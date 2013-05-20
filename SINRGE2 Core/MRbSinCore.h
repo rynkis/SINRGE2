@@ -59,7 +59,8 @@ struct MRbSinCore
 	static VALUE get_forbid_switch();
 	static VALUE set_forbid_switch(int argc, VALUE forbid_switch);
 	
-	static VALUE show_mouse(int argc, VALUE show);
+	static VALUE get_show_mouse();
+	static VALUE set_show_mouse(int argc, VALUE show);
 
 	static VALUE get_real_fps();
 	static VALUE peek_message();

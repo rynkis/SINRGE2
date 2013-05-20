@@ -1027,3 +1027,7 @@ void MRbSinCore::HideMouse(bool hide)
 	pHGE->bHideMouse = hide;
 }
 
+VALUE MRbSinCore::get_show_mouse()
+{
+	return C2RbBool(!pHGE->bHideMouse);
+}
