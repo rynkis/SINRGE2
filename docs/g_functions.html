@@ -16,7 +16,7 @@
     <p>加载由 <var>filename</var> 指定的数据文件，并重建各种对象。</p>
     <pre>$data_scripts = load_data("Data/Scripts.rbdata")<br></pre>
 这个函数本质上与下面的语句相同：
-    <pre>File.open(filename, "rb") { |f|<br>  obj = Marshal.load(f)<br>}<br></pre>
+    <pre>File.open(filename, "rb") { |f|<br>  obj = Marshal.load(f)<br>}</pre>
     <p>不同之处在于，本函数可以从加密文件(文件格式暂未发布)内加载数据文件。</p>
   </dd>
   <!-- <dt><a name="save_data">save_data(<var>obj</var>,
