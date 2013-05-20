@@ -17,8 +17,7 @@
 <dl>
   <dt><a name="new">Bitmap.new(<var>filename</var>)</a></dt>
   <dd>
-    <p>载入由 <var>filename</var>
-所指定的图像文件，并生成 Bitmap 实例。扩展名可以省略。</p>
+    <p>载入由 <var>filename</var> 所指定的图像文件，并生成 Bitmap 实例。扩展名可以省略。</p>
   </dd>
   <dt>Bitmap.new(<var>width</var>, <var>height</var>)</dt>
   <dd>
@@ -46,24 +45,15 @@
   <dd>
     <p>获取 Bitmap 的宽度。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>height</dt>
   <dd>
     <p>获取 Bitmap 的高度。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>rect</dt>
   <dd>
     <p>获取 Bitmap 的矩形范围（<a href="gc_rect.html">Rect</a>）。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>blt(<var>x</var>, <var>y</var>, <var>src_bitmap</var>,
@@ -73,9 +63,6 @@
     <p><var>src_bitmap</var> 为源 Bitmap 。<var>src_rect</var>（<a href="gc_rect.html">Rect</a>）为源 Bitmap 指定区域的矩形范围。</p>
     <p><var>opacity</var> 为透明度，范围 0～255。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>stretch_blt(<var>dest_rect</var>, <var>src_bitmap</var>,
     <var>src_rect</var>[, <var>opacity</var>])</dt>
@@ -84,18 +71,12 @@
     <p><var>src_bitmap</var> 为源 Bitmap 。<var>src_rect</var>（<a href="gc_rect.html">Rect</a>）为源 Bitmap 指定区域的矩形范围。</p>
     <p><var>opacity</var> 为透明度，范围 0～255。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>fill_rect(<var>x</var>, <var>y</var>,
     <var>width</var>, <var>height</var>, <var>color</var>)</dt>
   <dt>fill_rect(<var>rect</var>, <var>color</var>)</dt>
   <dd>
     <p>以指定颜色 <var>color</var>（<a href="gc_color.html">Color</a> 或 32 位颜色（Bignum））填充 Bitmap  (<var>x</var>, <var>y</var>, <var>width</var>, <var>height</var>) 或（<a href="gc_rect.html">Rect</a>）指定的区域。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>gradient_fill_rect(<var>x</var>, <var>y</var>,<var>width</var>, <var>height</var>, <var>color1</var>,<var>color2</var>[, <var>vertical</var>])</dt>
@@ -105,16 +86,10 @@
     </p>
     <p><var>vertical</var> 为 true 时纵向绘制，为 false 时横向绘制，预设为 false 。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>clear</dt>
   <dd>
     <p>以透明色填充整张 Bitmap 。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>clear_rect(<var>x</var>, <var>y</var>,<var>width</var>, <var>height</var>)</dt>
@@ -122,24 +97,15 @@
   <dd>
     <p>以透明色填充 Bitmap 的指定区域。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>get_pixel(<var>x</var>, <var>y</var>)</dt>
   <dd>
     <p>获取指定像素点 (<var>x</var>, <var>y</var>) 的颜色（<a href="gc_color.html">Color</a>）。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>set_pixel(<var>x</var>, <var>y</var>, <var>color</var>)</dt>
   <dd>
     <p>设定指定像素点 (<var>x</var>, <var>y</var>) 的颜色（<a href="gc_color.html">Color</a> 或 32 位颜色（Bignum））。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>hue_change(<var>hue</var>)</dt>
@@ -147,24 +113,15 @@
     <p>在 360 度内变换 Bitmap 的色相。</p>
     <p>此处理需要花费时间，另外颜色转换会产生误差，反复转换可能会导致颜色损失。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>blur</dt>
   <dd>
     <p>对 Bitmap 执行模糊效果。此处理需要花费时间。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>radial_blur(<var>angle</var>, <var>division</var>)</dt>
   <dd>
     <p>暂未实现</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>draw_text(<var>x</var>, <var>y</var>, <var>width</var>, <var>height</var>, <var>str</var>[, <var>halign</var>[, <var>valign</var>]])</dt>
@@ -177,9 +134,6 @@
     <p>文字的横向对齐方式预设为 0 靠左对齐，可以设置 <var>halign</var> 为 1 居中对齐，或设置为 2 靠右对齐。</p>
     <p>文字的纵向对齐方式预设为 1 居中对齐，可以设置 <var>valign</var> 为 0 靠上对齐，或设置为 2 靠下对齐。</p>
     <p>此处理需要花费时间，因此不建议每帧重复绘制文字。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
   <dt>text_size(<var>str</var>)</dt>
@@ -194,33 +148,21 @@
   <dd>
     <p>改变 Bitmap 的亮度。<var>brightness</var> 为亮度，范围 -255～255</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>tone_change(<var>tone</var>)</dt>
   <dt>tone_change(<var>red</var>, <var>green</var>, <var>blue</var>, <var>gray</var>)</dt>
   <dd>
     <p>将 Bitmap 设置为指定的 <var>tone</var>（<a href="gc_tone.html">Tone</a> 或 32 位颜色（Bignum））或 <var>red</var>, <var>green</var>, <var>blue</var>, <var>gray</var> 色调。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>flip_h</dt>
   <dd>
     <p>垂直翻转 Bitmap 。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
 
   <dt>flip_v</dt>
   <dd>
     <p>水平翻转 Bitmap 。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
   
   <dt>filename</dt>
@@ -228,16 +170,10 @@
     <p>获取 Bitmap 的文件名。</p>
     <p>如果是使用 Bitmap.new(<var>width</var>, <var>height</var>) 或 Bitmap.new(<var>buffer</var>, <var>size</var>) 创建的 Bitmap ，返回 nil。</p>
   </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
-  </dd>
   
   <dt>save_to_file(<var>filename</var>)</dt>
   <dd>
     <p>将 Bitmap 保存为指定文件名 <var>filename</var> 的 bmp 格式位图文件。</p>
-  </dd>
-  <dd>
-    <p>如果对已经释放的对象进行调用会抛出 SINRGE2::StandardError 异常。</p>
   </dd>
 
 </dl>
