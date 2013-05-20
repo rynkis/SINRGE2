@@ -346,15 +346,15 @@ void MRbInput::InitLibrary()
 	mInput = rb_define_module_under(rb_mSin, "Input");
 
 	rb_define_module_function(mInput, "on_focus?", RbFunc(on_focus), 0);
-	rb_define_module_function(mInput, "mouse_wheel", RbFunc(mouse_wheel), 0);
+	rb_define_module_function(mInput, "click?", RbFunc(is_click), 1);
 	rb_define_module_function(mInput, "dblclk?", RbFunc(mouse_dblclk), 1);
+	rb_define_module_function(mInput, "mouse_wheel", RbFunc(mouse_wheel), 0);
 	rb_define_module_function(mInput, "mouse_over?", RbFunc(mouse_over), 0);
 	rb_define_module_function(mInput, "mouse_pos", RbFunc(get_mouse_pos), 0);
 	rb_define_module_function(mInput, "update", RbFunc(update_input), 0);
 	rb_define_module_function(mInput, "press?", RbFunc(is_press), 1);
 	rb_define_module_function(mInput, "trigger?", RbFunc(is_trigger), 1);
 	rb_define_module_function(mInput, "repeat?", RbFunc(is_repeat), 1);
-	rb_define_module_function(mInput, "click?", RbFunc(is_click), 1);
 	rb_define_module_function(mInput, "dir4", RbFunc(get_dir4), 0);
 	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 
