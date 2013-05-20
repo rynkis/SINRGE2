@@ -23,7 +23,7 @@ some necessary parameters.
 Library=SINRGE2.dll # to tell Runme.exe the path of SINRGE2.dll
 ExtFunc=SealEx.dll  # to tell SINRGE2.dll the path of extension library and it could be empty  
 Scripts=main.rb     # to tell SINRGE2.dll the path of main script file
-Console=0           # to tell SINRGE2 whether show cmd window or not
+Console=0           # to tell SINRGE2 whether show cmd window
                     # only '1' can open the console and any other value would close the console
 ```
 ### Basic Use
