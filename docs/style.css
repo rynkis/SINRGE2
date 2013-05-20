@@ -83,10 +83,6 @@ ul.decimal   { margin-left: 1.4em;
                list-style-type: decimal; }
 .note     { margin-left: 1.0em;
             font-size: 90%; }
-.rgss2       { font-family: Microsoft YaHei;
-               font-weight: bold;
-               color: #CC4400;
-               font-size: 95%; }
 .caution     { color: #FF0000; }
 .western     { font-family: Microsoft YaHei; }
 .trans       { border-width: 0; }
