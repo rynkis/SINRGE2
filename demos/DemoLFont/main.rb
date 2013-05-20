@@ -30,7 +30,7 @@ def draw_lfont_text(lfont, texts, x: nil, y: nil, width: nil, height: nil, rect:
     tw = 0
     while !temp.empty?
       text = temp.slice!(0, 1)
-      tw += lfont.text_size(text)
+      tw += lfont.char_width(text)
     end
     if width - tw > 0
       x += (width - tw) / (3 - halign)
@@ -41,9 +41,9 @@ def draw_lfont_text(lfont, texts, x: nil, y: nil, width: nil, height: nil, rect:
   end
   while !texts.empty?
     text = texts.slice!(0, 1)
-    bmp = lfont.font_bitmap(text)
+    bmp = lfont.char_bitmap(text)
     @spt.bitmap.blt(x, y, bmp, bmp.rect)
-    x += lfont.text_size(text)
+    x += lfont.char_width(text)
     bmp.dispose
   end
 end

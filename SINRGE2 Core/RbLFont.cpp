@@ -19,7 +19,7 @@ RbLFont::RbLFont()
 	, m_length(0)
 	, m_shadow(Qfalse)
 	, m_color_ptr(0)
-	, m_closed(false)
+	, m_disposed(false)
 	, m_font_data(0)
 {
 }
@@ -49,11 +49,11 @@ void RbLFont::InitLibrary()
 	rb_define_method(rb_cLFont, "initialize",			(RbFunc)dm_initialize, -1);
 	
 	// instance method
-	rb_define_method(rb_cLFont, "close",				(RbFunc)dm_close,		0);
-	rb_define_method(rb_cLFont, "closed?",				(RbFunc)dm_is_closed,	0);
+	rb_define_method(rb_cLFont, "dispose",				(RbFunc)dm_dispose,		0);
+	rb_define_method(rb_cLFont, "disposed?",			(RbFunc)dm_is_disposed,	0);
 	
-	rb_define_method(rb_cLFont, "font_bitmap",			(RbFunc)dm_get_font_bmp,1);
-	rb_define_method(rb_cLFont, "text_size",			(RbFunc)dm_text_size,	1);
+	rb_define_method(rb_cLFont, "char_bitmap",			(RbFunc)dm_get_char_bmp,1);
+	rb_define_method(rb_cLFont, "char_width",			(RbFunc)dm_char_width,	1);
 	//rb_define_method(rb_cLFont, "draw_text",			(RbFunc)dm_draw_text,	-1);
 	
 
@@ -61,8 +61,8 @@ void RbLFont::InitLibrary()
 	rb_define_method(rb_cLFont, "size",					(RbFunc)dm_get_size,	0);
 	rb_define_method(rb_cLFont, "color",				(RbFunc)dm_get_color,	0);
 	rb_define_method(rb_cLFont, "color=",				(RbFunc)dm_set_color,	1);
-	rb_define_method(rb_cLFont, "shadow",				(RbFunc)dm_get_shadow,	0);
-	rb_define_method(rb_cLFont, "shadow=",				(RbFunc)dm_set_shadow,	1);
+	/*rb_define_method(rb_cLFont, "shadow",				(RbFunc)dm_get_shadow,	0);
+	rb_define_method(rb_cLFont, "shadow=",				(RbFunc)dm_set_shadow,	1);*/
 
 	// supplement
  	rb_define_method(rb_cLFont, "to_s",					(RbFunc)dm_to_string,	0);
@@ -108,7 +108,7 @@ VALUE RbLFont::initialize(int argc, VALUE * argv, VALUE obj)
 		FILE * fp = 0;
 		fopen_s(&fp, filename, "rb");
 		if (fp == NULL) rb_raise(rb_eSinError, "Failed to load lattice font.");
-		long fsize = filelength(fileno(fp));
+		long fsize = _filelength(_fileno(fp));
 		void * temp_data = malloc(fsize);
 		fread(temp_data, fsize, 1, fp);
 		fclose(fp);
@@ -127,13 +127,13 @@ VALUE RbLFont::initialize(int argc, VALUE * argv, VALUE obj)
 
 void RbLFont::check_raise()
 {
-	if (m_closed)
-		rb_raise(rb_eSinError, "closed lattice font");
+	if (m_disposed)
+		rb_raise(rb_eSinError, "disposed lattice font");
 }
 
-VALUE RbLFont::close()
+VALUE RbLFont::dispose()
 {
-	if (m_closed)
+	if (m_disposed)
 		return Qnil;
 
 	if (m_font_data)
@@ -141,16 +141,16 @@ VALUE RbLFont::close()
 		free(m_font_data);
 		m_font_data= NULL;
 	}
-	m_closed = true;
+	m_disposed = true;
 	return Qnil;
 }
 
-VALUE RbLFont::is_closed()
+VALUE RbLFont::is_disposed()
 {
-	return C2RbBool(m_closed);
+	return C2RbBool(m_disposed);
 }
 
-VALUE RbLFont::get_font_bmp(VALUE str)
+VALUE RbLFont::get_char_bmp(VALUE str)
 {
 	check_raise();
 
@@ -201,7 +201,7 @@ __failed_return:
 	return Qnil;
 }
 
-VALUE RbLFont::text_size(VALUE str)
+VALUE RbLFont::char_width(VALUE str)
 {
 	SafeStringValue(str);
 	DWORD char_index = Kconv::UTF8ToUnicode(RSTRING_PTR(str))[0];
@@ -245,28 +245,28 @@ VALUE RbLFont::set_color(VALUE color)
 	return color;
 }
 
-VALUE RbLFont::get_shadow()
-{
-	check_raise();
+//VALUE RbLFont::get_shadow()
+//{
+//	check_raise();
+//
+//	return m_shadow;
+//}
+//
+//VALUE RbLFont::set_shadow(VALUE shadow)
+//{
+//	check_raise();
+//
+//	m_shadow = Ruby2RbBool(shadow);
+//	return shadow;
+//}
 
-	return m_shadow;
-}
 
-VALUE RbLFont::set_shadow(VALUE shadow)
-{
-	check_raise();
-
-	m_shadow = Ruby2RbBool(shadow);
-	return shadow;
-}
-
-
-imp_method(RbLFont, close)
-imp_method(RbLFont, is_closed)
+imp_method(RbLFont, dispose)
+imp_method(RbLFont, is_disposed)
 imp_method(RbLFont, get_size)
-imp_method01(RbLFont, get_font_bmp)
-imp_method01(RbLFont, text_size)
+imp_method01(RbLFont, get_char_bmp)
+imp_method01(RbLFont, char_width)
 //imp_method_vargs(RbLFont, draw_text)
 
 imp_attr_accessor(RbLFont, color)
-imp_attr_accessor(RbLFont, shadow)
+//imp_attr_accessor(RbLFont, shadow)

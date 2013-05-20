@@ -51,23 +51,23 @@ protected:
 
 	RbColor *				m_color_ptr;
 
-	bool					m_closed;
+	bool					m_disposed;
 
 	BYTE *					m_font_data;
 
 protected:
-	dm_method(close)
-	dm_method(is_closed)
+	dm_method(dispose)
+	dm_method(is_disposed)
 	dm_method(get_size)
 	
-	dm_method01(get_font_bmp)
-	dm_method01(text_size)
+	dm_method01(get_char_bmp)
+	dm_method01(char_width)
 	//dm_method_vargs(draw_text)
 
 	/*attr_accessor(bold)
 	attr_accessor(italic)*/
 	attr_accessor(color)
-	attr_accessor(shadow)
+	//attr_accessor(shadow)
 
 private:
 	friend class	RbLFont;

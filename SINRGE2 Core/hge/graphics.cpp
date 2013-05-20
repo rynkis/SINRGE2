@@ -184,51 +184,51 @@ void CALL HGE_Impl::Gfx_EndScene()
 	if(!pCurTarget) pD3DDevice->Present( NULL, NULL, NULL, NULL );
 }
 
-void CALL HGE_Impl::Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color, float z)
-{
-	if(VertArray)
-	{
-		if(CurPrimType!=HGEPRIM_LINES || nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_LINES || CurTexture || CurBlendMode!=BLEND_DEFAULT)
-		{
-			_render_batch();
+//void CALL HGE_Impl::Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color, float z)
+//{
+//	if(VertArray)
+//	{
+//		if(CurPrimType!=HGEPRIM_LINES || nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_LINES || CurTexture || CurBlendMode!=BLEND_DEFAULT)
+//		{
+//			_render_batch();
+//
+//			CurPrimType=HGEPRIM_LINES;
+//			if(CurBlendMode != BLEND_DEFAULT) _SetBlendMode(BLEND_DEFAULT);
+//			if(CurTexture) { pD3DDevice->SetTexture(0, 0); CurTexture=0; }
+//		}
+//
+//		int i=nPrim*HGEPRIM_LINES;
+//		VertArray[i].x = x1; VertArray[i+1].x = x2;
+//		VertArray[i].y = y1; VertArray[i+1].y = y2;
+//		VertArray[i].z     = VertArray[i+1].z = z;
+//		VertArray[i].col   = VertArray[i+1].col = color;
+//		VertArray[i].tx    = VertArray[i+1].tx =
+//		VertArray[i].ty    = VertArray[i+1].ty = 0.0f;
+//
+//		nPrim++;
+//	}
+//}
 
-			CurPrimType=HGEPRIM_LINES;
-			if(CurBlendMode != BLEND_DEFAULT) _SetBlendMode(BLEND_DEFAULT);
-			if(CurTexture) { pD3DDevice->SetTexture(0, 0); CurTexture=0; }
-		}
-
-		int i=nPrim*HGEPRIM_LINES;
-		VertArray[i].x = x1; VertArray[i+1].x = x2;
-		VertArray[i].y = y1; VertArray[i+1].y = y2;
-		VertArray[i].z     = VertArray[i+1].z = z;
-		VertArray[i].col   = VertArray[i+1].col = color;
-		VertArray[i].tx    = VertArray[i+1].tx =
-		VertArray[i].ty    = VertArray[i+1].ty = 0.0f;
-
-		nPrim++;
-	}
-}
-
-void CALL HGE_Impl::Gfx_RenderTriple(const hgeTriple *triple)
-{
-	if(VertArray)
-	{
-		if(CurPrimType!=HGEPRIM_TRIPLES || nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_TRIPLES || CurTexture!=triple->tex || CurBlendMode!=triple->blend)
-		{
-			_render_batch();
-
-			CurPrimType=HGEPRIM_TRIPLES;
-			if(CurBlendMode != triple->blend) _SetBlendMode(triple->blend);
-			if(triple->tex != CurTexture) {
-				pD3DDevice->SetTexture( 0, (LPDIRECT3DTEXTURE8)triple->tex );
-				CurTexture = triple->tex;
-			}
-		}
-
-		memcpy(&VertArray[nPrim*HGEPRIM_TRIPLES], triple->v, sizeof(hgeVertex)*HGEPRIM_TRIPLES);
-		nPrim++;
-	}
-}
+//void CALL HGE_Impl::Gfx_RenderTriple(const hgeTriple *triple)
+//{
+//	if(VertArray)
+//	{
+//		if(CurPrimType!=HGEPRIM_TRIPLES || nPrim>=VERTEX_BUFFER_SIZE/HGEPRIM_TRIPLES || CurTexture!=triple->tex || CurBlendMode!=triple->blend)
+//		{
+//			_render_batch();
+//
+//			CurPrimType=HGEPRIM_TRIPLES;
+//			if(CurBlendMode != triple->blend) _SetBlendMode(triple->blend);
+//			if(triple->tex != CurTexture) {
+//				pD3DDevice->SetTexture( 0, (LPDIRECT3DTEXTURE8)triple->tex );
+//				CurTexture = triple->tex;
+//			}
+//		}
+//
+//		memcpy(&VertArray[nPrim*HGEPRIM_TRIPLES], triple->v, sizeof(hgeVertex)*HGEPRIM_TRIPLES);
+//		nPrim++;
+//	}
+//}
 
 void CALL HGE_Impl::Gfx_RenderQuad(const hgeQuad *quad)
 {
