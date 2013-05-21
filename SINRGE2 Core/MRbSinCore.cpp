@@ -341,11 +341,11 @@ VALUE MRbSinCore::get_screen_size()
 
 void MRbSinCore::InitLibrary()
 {
-	rb_mSin = rb_define_module("SINRGE2");
+	rb_mSin = rb_define_module(SIN_CORENAME);
 	
 	rb_define_const(rb_mSin, "COPYRIGHT",		rb_str_freeze(rb_str_new2(SIN_COPYRIGHT)));
 	rb_define_const(rb_mSin, "DESCRIPTION",		rb_str_freeze(rb_str_new2(SIN_DESCRIPTION)));
-	rb_define_const(rb_mSin, "CORENAME",		rb_str_freeze(rb_str_new2(SIN_NAME)));
+	rb_define_const(rb_mSin, "CORENAME",		rb_str_freeze(rb_str_new2(SIN_CORENAME)));
 	rb_define_const(rb_mSin, "RELEASE_DATE",	rb_str_freeze(rb_str_new2(SIN_RELEASE_DATE)));
 	rb_define_const(rb_mSin, "THANKS",			rb_str_freeze(rb_str_new2(SIN_THANKS)));
 	rb_define_const(rb_mSin, "VERSION",			rb_str_freeze(rb_str_new2(SIN_VERSION)));

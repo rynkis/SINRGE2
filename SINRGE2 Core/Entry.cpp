@@ -5,10 +5,7 @@
 **
 ** SINRGE2 Entry
 */
-extern "C"
-{
 #include "ruby.h"
-}
 #include "sin_app.h"
 
 //BOOL APIENTRY DllMain(HINSTANCE dll, DWORD reason, LPVOID reserved)

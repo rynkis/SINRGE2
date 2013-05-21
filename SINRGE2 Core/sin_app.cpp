@@ -25,6 +25,7 @@
 #include "RbWin32API.h"
 #include "Rb7pkgWriter.h"
 #include "RbLFont.h"
+#include "sin_common.h"
 #include "sin_app.h"
 #include "sin_video.h"
 
@@ -406,7 +407,7 @@ void CApplication::InitRubyInterpreter()
 		//	rb_set_kcode("utf8");
 		//  ruby_init_loadpath();
 		ruby_incpush("./");
-		ruby_script("SINRGE2");
+		ruby_script(SIN_CORENAME);
 	}
 }
 
