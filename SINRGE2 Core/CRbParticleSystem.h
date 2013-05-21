@@ -5,23 +5,23 @@
 **
 ** Ruby Class PartcleSystem
 */
-#ifndef __RB_PARTICLE_SYS_H__
-#define __RB_PARTICLE_SYS_H__
-#include "RbDisplayObject.h"
+#ifndef __C_RB_PARTICLE_SYS_H__
+#define __C_RB_PARTICLE_SYS_H__
+#include "CRbDisplayObject.h"
 #include "hgeparticle.h"
 
 class hgeSprite;
 class hgeParticleSystem;
-class RbBitmap;
+class CRbBitmap;
 
-class RbParticleSystem : public DisplayObject
+class CRbParticleSystem : public DisplayObject
 {
 public:
 	typedef DisplayObject	super;
 
 public:
-	RbParticleSystem();
-	virtual ~RbParticleSystem();
+	CRbParticleSystem();
+	virtual ~CRbParticleSystem();
 
 public:
 	static void		InitLibrary();
@@ -64,7 +64,7 @@ protected:
 
 	hgeSprite *				m_pSpr;
 
-	RbBitmap *				m_bitmap_ptr;
+	CRbBitmap *				m_bitmap_ptr;
 
 protected:
 	dm_method(dispose)
@@ -80,4 +80,4 @@ protected:
 	attr_accessor(blend_type)
 };
 
-#endif //__RB_PARTICLE_SYS_H__
+#endif //__C_RB_PARTICLE_SYS_H__

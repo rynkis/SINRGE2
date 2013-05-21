@@ -3,10 +3,10 @@
 ** Copyright (C) 2013 Syalon, Shy07
 ** Gernischt@gmail.com
 **
-** Cpp Struct RbRenderTree
+** Cpp Struct CRbRenderTree
 */
-#ifndef __RB_RENDER_TREE_H__
-#define __RB_RENDER_TREE_H__
+#ifndef __C_RB_RENDER_TREE_H__
+#define __C_RB_RENDER_TREE_H__
 
 #ifdef WIN32
 #pragma once
@@ -16,7 +16,7 @@
 #include "sin_types.h"
 #include "hge.h"
 
-class RbRenderState
+class CRbRenderState
 {
 public:
 	typedef struct __RbRenderClipRect
@@ -39,13 +39,13 @@ public:
 	} RbRenderClipRect;
 
 public:
-	RbRenderState()
+	CRbRenderState()
 		: m_render2texture(false)
 	{
 		s_pHge = hgeCreate(HGE_VERSION);
 	}
 
-	~RbRenderState()
+	~CRbRenderState()
 	{
 		s_pHge->Release();
 	}
@@ -108,7 +108,7 @@ typedef struct __RbRenderNode
 	struct __RbRenderNode *		next;		//	下一个结点指针。
 } RbRenderNode, *RbRenderNodePtr;
 
-class RbRenderTree
+class CRbRenderTree
 {
 public:
 	static void					Init();
@@ -138,4 +138,4 @@ private:
 	//static RbRenderNode*		s_pViewportLists;
 };
 
-#endif	//	__RB_RENDER_TREE_H__
+#endif	//	__C_RB_RENDER_TREE_H__

@@ -5,21 +5,21 @@
 **
 ** Ruby Class Sprite
 */
-#ifndef __RB_SPRITE_H__
-#define __RB_SPRITE_H__
+#ifndef __C_RB_SPRITE_H__
+#define __C_RB_SPRITE_H__
 
-#include "RbPlane.h"
+#include "CRbPlane.h"
 
-class RbRect;
+class CRbRect;
 
-class RbSprite : public RbPlane
+class CRbSprite : public CRbPlane
 {
 public:
-	typedef RbPlane	super;
+	typedef CRbPlane	super;
 
 public:
-	RbSprite();
-	virtual ~RbSprite();
+	CRbSprite();
+	virtual ~CRbSprite();
 
 public:
 	static void		InitLibrary();
@@ -53,8 +53,8 @@ protected:
 	bool			m_disposed;
 	bool			m_movie_playing;
 
-	RbRect *		m_src_rect_ptr;
-	RbTone *		m_tone_ptr;
+	CRbRect *		m_src_rect_ptr;
+	CRbTone *		m_tone_ptr;
 
 	//hgeQuad			m_quad;
 

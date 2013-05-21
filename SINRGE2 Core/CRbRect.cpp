@@ -5,11 +5,11 @@
 **
 ** Ruby Class Rect
 */
-#include "RbRect.h"
+#include "CRbRect.h"
 
 VALUE rb_cRect;
 
-void RbRect::InitLibrary()
+void CRbRect::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -21,7 +21,7 @@ void RbRect::InitLibrary()
 	rb_cRect = rb_define_class_under(rb_mSin, "Rect", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cRect, ObjAllocate<RbRect>);
+	rb_define_alloc_func(rb_cRect, ObjAllocate<CRbRect>);
 	rb_define_method(rb_cRect, "initialize", (RbFunc)dm_initialize, -1);
 
 	// class method
@@ -47,7 +47,7 @@ void RbRect::InitLibrary()
 	rb_define_method(rb_cRect,	"clone",	(RbFunc)dm_clone,		0);
 }
 
-VALUE RbRect::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbRect::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc)
 	{
@@ -76,12 +76,12 @@ VALUE RbRect::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbRect::get_x()
+VALUE CRbRect::get_x()
 {
 	return vx;
 }
 
-VALUE RbRect::set_x(VALUE nx)
+VALUE CRbRect::set_x(VALUE nx)
 {
 	SafeNumericValue(nx);
 	
@@ -91,12 +91,12 @@ VALUE RbRect::set_x(VALUE nx)
 	return nx;
 }
 
-VALUE RbRect::get_y()
+VALUE CRbRect::get_y()
 {
 	return vy;
 }
 
-VALUE RbRect::set_y(VALUE ny)
+VALUE CRbRect::set_y(VALUE ny)
 {
 	SafeNumericValue(ny);
 	
@@ -106,12 +106,12 @@ VALUE RbRect::set_y(VALUE ny)
 	return ny;
 }
 
-VALUE RbRect::get_width()
+VALUE CRbRect::get_width()
 {
 	return vw;
 }
 
-VALUE RbRect::set_width(VALUE nw)
+VALUE CRbRect::set_width(VALUE nw)
 {
 	SafeNumericValue(nw);
 	
@@ -121,12 +121,12 @@ VALUE RbRect::set_width(VALUE nw)
 	return nw;
 }
 
-VALUE RbRect::get_height()
+VALUE CRbRect::get_height()
 {
 	return vh;
 }
 
-VALUE RbRect::set_height(VALUE nh)
+VALUE CRbRect::set_height(VALUE nh)
 {
 	SafeNumericValue(nh);
 	
@@ -136,36 +136,36 @@ VALUE RbRect::set_height(VALUE nh)
 	return nh;
 }
 
-VALUE RbRect::set(int argc, VALUE * argv, VALUE obj)
+VALUE CRbRect::set(int argc, VALUE * argv, VALUE obj)
 {
 	return initialize(argc, argv, obj);
 }
 
-VALUE RbRect::_dump(VALUE depth)
+VALUE CRbRect::_dump(VALUE depth)
 {
 	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
 }
 
-VALUE RbRect::empty()
+VALUE CRbRect::empty()
 {
 	vx = vy = vw = vh = RUBY_0;
 	x = y = width = height = 0;
 	return __obj;
 }
 
-VALUE RbRect::clone()
+VALUE CRbRect::clone()
 {
 	VALUE __argv[] = { vx, vy, vw, vh };
 
 	return rb_class_new_instance(4, __argv, obj_class());
 }
 
-VALUE RbRect::to_string()
+VALUE CRbRect::to_string()
 {
 	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), x, y, width, height);
 }
 
-VALUE RbRect::dm_load(VALUE klass, VALUE str)
+VALUE CRbRect::dm_load(VALUE klass, VALUE str)
 {
 	if (4 * sizeof(VALUE) != RSTRING_LEN(str))	//	error
 		return Qnil;
@@ -173,17 +173,17 @@ VALUE RbRect::dm_load(VALUE klass, VALUE str)
 	return rb_class_new_instance(4, (VALUE*)RSTRING_PTR(str), klass);
 }
 
-VALUE RbRect::dm_set(int argc, VALUE * argv, VALUE obj)
+VALUE CRbRect::dm_set(int argc, VALUE * argv, VALUE obj)
 {
-	RbRect * cobj;
-	Data_Get_Struct(obj, RbRect, cobj);
+	CRbRect * cobj;
+	Data_Get_Struct(obj, CRbRect, cobj);
 
 	return cobj->set(argc, argv, obj);
 }
 
-imp_method(RbRect, empty)
+imp_method(CRbRect, empty)
 
-imp_attr_accessor(RbRect, x)
-imp_attr_accessor(RbRect, y)
-imp_attr_accessor(RbRect, width)
-imp_attr_accessor(RbRect, height)
+imp_attr_accessor(CRbRect, x)
+imp_attr_accessor(CRbRect, y)
+imp_attr_accessor(CRbRect, width)
+imp_attr_accessor(CRbRect, height)

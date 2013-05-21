@@ -8,12 +8,12 @@
 #ifndef __DISPLAY_OBJECT_H__
 #define __DISPLAY_OBJECT_H__
 
-#include "RbClassBase.h"
-#include "RbRenderTree.h"
+#include "CRbClassBase.h"
+#include "CRbRenderTree.h"
 
-class RbViewport;
+class CRbViewport;
 
-class DisplayObject : public RbClassBase
+class DisplayObject : public CRbClassBase
 {
 public:
 	DisplayObject();
@@ -37,7 +37,7 @@ public:
 	VALUE			m_visible;
 	bool			m_disposed;
 
-	RbViewport *	m_viewport_ptr;
+	CRbViewport *	m_viewport_ptr;
 
 protected:
 	dm_method(dispose)

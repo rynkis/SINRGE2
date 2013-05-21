@@ -5,13 +5,13 @@
 **
 ** Ruby Class Tone
 */
-#include "RbTone.h"
+#include "CRbTone.h"
 #include "sin_types.h"
 #include "sin_color.h"
 
 VALUE rb_cTone;
 
-void RbTone::InitLibrary()
+void CRbTone::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -23,7 +23,7 @@ void RbTone::InitLibrary()
 	rb_cTone = rb_define_class_under(rb_mSin, "Tone", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cTone, ObjAllocate<RbTone>);
+	rb_define_alloc_func(rb_cTone, ObjAllocate<CRbTone>);
 	rb_define_method(rb_cTone, "initialize", (RbFunc)dm_initialize,		-1);
 
 	// class method
@@ -48,7 +48,7 @@ void RbTone::InitLibrary()
 	rb_define_method(rb_cTone, "clone",		(RbFunc)dm_clone,		0);
 }
 
-VALUE RbTone::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbTone::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
@@ -61,7 +61,7 @@ VALUE RbTone::initialize(int argc, VALUE * argv, VALUE obj)
 		{
 			SafeToneValue(argv[0]);
 
-			RbTone * tone = GetObjectPtr<RbTone>(argv[0]);
+			CRbTone * tone = GetObjectPtr<CRbTone>(argv[0]);
 
 			m_r = tone->m_r;
 			m_g = tone->m_g;

@@ -5,12 +5,12 @@
 **
 ** Ruby Class Table
 */
-#include "RbTable.h"
+#include "CRbTable.h"
 #include "sin_types.h"
 
 VALUE rb_cTable;
 
-void RbTable::InitLibrary()
+void CRbTable::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -22,7 +22,7 @@ void RbTable::InitLibrary()
 	rb_cTable = rb_define_class_under(rb_mSin, "Table", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cTable, ObjAllocate<RbTable>);
+	rb_define_alloc_func(rb_cTable, ObjAllocate<CRbTable>);
 	rb_define_method(rb_cTable, "initialize", (RbFunc)dm_initialize, -1);
 
 	// class method
@@ -50,7 +50,7 @@ void RbTable::InitLibrary()
  *	@desc
  *		生成 Table 对象。指定多维数组各维的尺寸。能生成 1 ～ 3 维的数组。生成单元数为 0 的数组也是可能的。
  */
-VALUE RbTable::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbTable::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE xsize, ysize, zsize;
 
@@ -85,7 +85,7 @@ VALUE RbTable::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbTable::_dump(VALUE depth)
+VALUE CRbTable::_dump(VALUE depth)
 {
 	//	|dims|dim_size[3]|size|size * sizeof(VALUE)|
 	VALUE base = rb_str_new((const char*)&m_dump_data[0], sizeof(m_dump_data));
@@ -93,7 +93,7 @@ VALUE RbTable::_dump(VALUE depth)
 	return rb_str_buf_cat(base, (const char*)m_data, sizeof(VALUE) * m_size);
 }
 
-VALUE RbTable::dm_load(VALUE klass, VALUE str)
+VALUE CRbTable::dm_load(VALUE klass, VALUE str)
 {
 	int		dump_data[5];
 
@@ -114,14 +114,14 @@ VALUE RbTable::dm_load(VALUE klass, VALUE str)
 
 	VALUE obj = rb_class_new_instance(dump_data[0], __argv, klass);
 
-	RbTable* tbl = GetObjectPtr<RbTable>(obj);
+	CRbTable* tbl = GetObjectPtr<CRbTable>(obj);
 
 	memcpy(tbl->m_data, RSTRING_PTR(str) + sizeof(dump_data), sizeof(VALUE) * dump_data[4]);
 
 	return obj;
 }
 
-VALUE RbTable::resize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbTable::resize(int argc, VALUE * argv, VALUE obj)
 {
 	/* Check arguments nums */
 	VALUE xsize, ysize, zsize;
@@ -176,7 +176,7 @@ VALUE RbTable::resize(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbTable::get_element(int argc, VALUE * argv, VALUE obj)
+VALUE CRbTable::get_element(int argc, VALUE * argv, VALUE obj)
 {
 	/* variables declare */
 	int i, pos, x, y, z;
@@ -211,7 +211,7 @@ VALUE RbTable::get_element(int argc, VALUE * argv, VALUE obj)
 	return m_data[pos];
 }
 
-VALUE RbTable::set_element(int argc, VALUE * argv, VALUE obj)
+VALUE CRbTable::set_element(int argc, VALUE * argv, VALUE obj)
 {
 	/* variables declare */
 	int i, pos, x, y, z;
@@ -248,17 +248,17 @@ VALUE RbTable::set_element(int argc, VALUE * argv, VALUE obj)
 	return m_data[pos];
 }
 
-VALUE RbTable::get_xsize()
+VALUE CRbTable::get_xsize()
 {
 	return INT2FIX(m_dim_size[0]);
 }
 
-VALUE RbTable::get_ysize()
+VALUE CRbTable::get_ysize()
 {
 	return INT2FIX(m_dim_size[1]);
 }
 
-VALUE RbTable::get_zsize()
+VALUE CRbTable::get_zsize()
 {
 	return INT2FIX(m_dim_size[2]);
 }
@@ -266,11 +266,11 @@ VALUE RbTable::get_zsize()
 /*
  *	以下定义ruby方法
  */
-imp_method_vargs(RbTable, resize)
+imp_method_vargs(CRbTable, resize)
 
-imp_attr_reader(RbTable, xsize)
-imp_attr_reader(RbTable, ysize)
-imp_attr_reader(RbTable, zsize)
+imp_attr_reader(CRbTable, xsize)
+imp_attr_reader(CRbTable, ysize)
+imp_attr_reader(CRbTable, zsize)
 
-imp_method_vargs(RbTable, get_element)
-imp_method_vargs(RbTable, set_element)
+imp_method_vargs(CRbTable, get_element)
+imp_method_vargs(CRbTable, set_element)

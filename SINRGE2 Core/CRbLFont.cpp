@@ -5,15 +5,15 @@
 **
 ** Ruby Class LFont
 */
-#include "RbLFont.h"
-#include "RbColor.h"
-#include "RbBitmap.h"
+#include "CRbLFont.h"
+#include "CRbColor.h"
+#include "CRbBitmap.h"
 #include "sin_app.h"
 #include "zlib.h"
 
 VALUE rb_cLFont;
 
-RbLFont::RbLFont()
+CRbLFont::CRbLFont()
 	: m_filename(Qnil)
 	, m_size(0)
 	, m_length(0)
@@ -24,7 +24,7 @@ RbLFont::RbLFont()
 {
 }
 
-RbLFont::~RbLFont()
+CRbLFont::~CRbLFont()
 {
 	if (m_font_data)
 	{
@@ -33,7 +33,7 @@ RbLFont::~RbLFont()
 	}
 }
 
-void RbLFont::InitLibrary()
+void CRbLFont::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -45,7 +45,7 @@ void RbLFont::InitLibrary()
 	rb_cLFont = rb_define_class_under(rb_mSin, "LFont", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cLFont, ObjAllocate<RbLFont>);
+	rb_define_alloc_func(rb_cLFont, ObjAllocate<CRbLFont>);
 	rb_define_method(rb_cLFont, "initialize",			(RbFunc)dm_initialize, -1);
 	
 	// instance method
@@ -68,7 +68,7 @@ void RbLFont::InitLibrary()
  	rb_define_method(rb_cLFont, "to_s",					(RbFunc)dm_to_string,	0);
 }
 
-void RbLFont::mark()
+void CRbLFont::mark()
 {
 	if (m_color_ptr)	m_color_ptr->MarkObject();
 
@@ -76,7 +76,7 @@ void RbLFont::mark()
 		rb_gc_mark(m_filename);
 }
 
-VALUE RbLFont::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbLFont::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE arg01, arg02, arg03;
 	rb_scan_args(argc, argv, "21", &arg01, &arg02, &arg03);
@@ -120,18 +120,18 @@ VALUE RbLFont::initialize(int argc, VALUE * argv, VALUE obj)
 
 	VALUE __argv[3]	= { INT2FIX(255), INT2FIX(255), INT2FIX(255) };
 	VALUE color		= rb_class_new_instance(3, __argv, rb_cColor);
-	m_color_ptr		= GetObjectPtr<RbColor>(color);
+	m_color_ptr		= GetObjectPtr<CRbColor>(color);
 	
 	return obj;
 }
 
-void RbLFont::check_raise()
+void CRbLFont::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed lattice font");
 }
 
-VALUE RbLFont::dispose()
+VALUE CRbLFont::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -145,12 +145,12 @@ VALUE RbLFont::dispose()
 	return Qnil;
 }
 
-VALUE RbLFont::is_disposed()
+VALUE CRbLFont::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-VALUE RbLFont::get_char_bmp(VALUE str)
+VALUE CRbLFont::get_char_bmp(VALUE str)
 {
 	check_raise();
 
@@ -167,7 +167,7 @@ VALUE RbLFont::get_char_bmp(VALUE str)
 		VALUE __argv[2]	= { INT2FIX(m_size), INT2FIX(m_size) };
 		bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
 	}
-	RbBitmap * bmp_p =  GetObjectPtr<RbBitmap>(bitmap);
+	CRbBitmap * bmp_p =  GetObjectPtr<CRbBitmap>(bitmap);
 	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	DWORD * data = hge->Texture_Lock(bmp_p->GetBitmapPtr()->quad.tex, false);
@@ -201,7 +201,7 @@ __failed_return:
 	return Qnil;
 }
 
-VALUE RbLFont::char_width(VALUE str)
+VALUE CRbLFont::char_width(VALUE str)
 {
 	SafeStringValue(str);
 	DWORD char_index = Kconv::UTF8ToUnicode(RSTRING_PTR(str))[0];
@@ -222,37 +222,37 @@ VALUE RbLFont::char_width(VALUE str)
 	return LONG2FIX(width);*/
 }
 
-VALUE RbLFont::get_size()
+VALUE CRbLFont::get_size()
 {
 	check_raise();
 
 	return INT2FIX(m_size);
 }
 
-VALUE RbLFont::get_color()
+VALUE CRbLFont::get_color()
 {
 	check_raise();
 
 	return ReturnObject(m_color_ptr);
 }
 
-VALUE RbLFont::set_color(VALUE color)
+VALUE CRbLFont::set_color(VALUE color)
 {
 	check_raise();
 
 	SafeColorValue(color);
-	m_color_ptr = GetObjectPtr<RbColor>(color);
+	m_color_ptr = GetObjectPtr<CRbColor>(color);
 	return color;
 }
 
-//VALUE RbLFont::get_shadow()
+//VALUE CRbLFont::get_shadow()
 //{
 //	check_raise();
 //
 //	return m_shadow;
 //}
 //
-//VALUE RbLFont::set_shadow(VALUE shadow)
+//VALUE CRbLFont::set_shadow(VALUE shadow)
 //{
 //	check_raise();
 //
@@ -261,12 +261,12 @@ VALUE RbLFont::set_color(VALUE color)
 //}
 
 
-imp_method(RbLFont, dispose)
-imp_method(RbLFont, is_disposed)
-imp_method(RbLFont, get_size)
-imp_method01(RbLFont, get_char_bmp)
-imp_method01(RbLFont, char_width)
-//imp_method_vargs(RbLFont, draw_text)
+imp_method(CRbLFont, dispose)
+imp_method(CRbLFont, is_disposed)
+imp_method(CRbLFont, get_size)
+imp_method01(CRbLFont, get_char_bmp)
+imp_method01(CRbLFont, char_width)
+//imp_method_vargs(CRbLFont, draw_text)
 
-imp_attr_accessor(RbLFont, color)
-//imp_attr_accessor(RbLFont, shadow)
+imp_attr_accessor(CRbLFont, color)
+//imp_attr_accessor(CRbLFont, shadow)

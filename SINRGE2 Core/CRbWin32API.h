@@ -5,16 +5,16 @@
 **
 ** Ruby Class Win32API
 */
-#ifndef __RB_WIN32API_H__
-#define __RB_WIN32API_H__
+#ifndef __C_RB_WIN32API_H__
+#define __C_RB_WIN32API_H__
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 
-class RbWin32API : public RbClassBase
+class CRbWin32API : public CRbClassBase
 {
 public:
-	RbWin32API();
-	virtual ~RbWin32API();
+	CRbWin32API();
+	virtual ~CRbWin32API();
 
 public:
 	static void				InitLibrary();
@@ -29,4 +29,4 @@ protected:
 	dm_method_vargs(call)
 };
 
-#endif	//	__RB_WIN32API_H__
+#endif	//	__C_RB_WIN32API_H__

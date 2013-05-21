@@ -8,8 +8,8 @@
 #include "MRbAudio.h"
 #include "sin_types.h"
 #include "sin_app.h"
-#if !SIN_USE_SEAL
 
+#ifndef SIN_USE_SEAL
 namespace
 {
 	static	wchar_t			cmdStr[MAX_PATH];

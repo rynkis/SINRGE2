@@ -5,22 +5,22 @@
 **
 ** Ruby Class Font
 */
-#ifndef __RB_FONT_H__
-#define __RB_FONT_H__
+#ifndef __C_RB_FONT_H__
+#define __C_RB_FONT_H__
 
 #ifdef WIN32
 #pragma once
 #endif
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 
-class RbColor;
+class CRbColor;
 
-class RbFont : public RbClassBase
+class CRbFont : public CRbClassBase
 {
 public:
-	RbFont();
-	virtual ~RbFont();
+	CRbFont();
+	virtual ~CRbFont();
 
 public:
 	static void		InitLibrary();
@@ -28,7 +28,7 @@ public:
 	static bool		IsExist(const wchar_t * filename);
 	static VALUE	dm_is_exist(int argc, VALUE name);
 
-	RbColor *		GetColorPtr() const { return m_color_ptr; }
+	CRbColor *		GetColorPtr() const { return m_color_ptr; }
 	HFONT			GetHFont() const { return m_hFont; }
 	bool			IsShadow() const { return RTEST(m_shadow); }
 
@@ -48,7 +48,7 @@ protected:
 	HFONT			m_hFont;
 	LOGFONTW		m_lfw;
 
-	RbColor *		m_color_ptr;
+	CRbColor *		m_color_ptr;
 	
 protected:
 	attr_accessor(name)
@@ -74,7 +74,7 @@ protected:
 	static VALUE	__default_shadow__;
 
 private:
-	friend class	RbFont;
+	friend class	CRbFont;
 };
 
 #endif

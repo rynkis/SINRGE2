@@ -6,10 +6,12 @@
 ** Ruby Moudle Seal
 */
 #include "MRbSeal.h"
+#include "RbExport.h"
 #include "sin_app.h"
 #include "TANGRAM.h"
 
-#if SIN_USE_SEAL
+#ifndef SIN_USE_SEAL
+#else
 
 static bool	seal_running = false;
 

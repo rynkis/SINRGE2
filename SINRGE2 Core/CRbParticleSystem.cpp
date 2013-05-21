@@ -6,15 +6,15 @@
 ** Ruby Class PartcleSyatem
 */
 #include "RbExport.h"
-#include "RbBitmap.h"
-#include "RbViewport.h"
-#include "RbRect.h"
-#include "RbParticleSystem.h"
+#include "CRbBitmap.h"
+#include "CRbViewport.h"
+#include "CRbRect.h"
+#include "CRbParticleSystem.h"
 #include "sin_app.h"
 
 VALUE rb_cParticleSystem;
 
-RbParticleSystem::RbParticleSystem()
+CRbParticleSystem::CRbParticleSystem()
 	: m_node(0)
 
 	, fAge(-2.0f)
@@ -42,18 +42,18 @@ RbParticleSystem::RbParticleSystem()
 	m_pSpr->SetHotSpot(16, 16);
 }
 
-RbParticleSystem::~RbParticleSystem()
+CRbParticleSystem::~CRbParticleSystem()
 {
 	SAFE_DELETE(m_pSpr);
-	RbRenderTree::DestroyNode(&m_node);
+	CRbRenderTree::DestroyNode(&m_node);
 }
 
-void RbParticleSystem::InitLibrary()
+void CRbParticleSystem::InitLibrary()
 {
 	rb_cParticleSystem = rb_define_class_under(rb_mSin, "ParticleSystem", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cParticleSystem, ObjAllocate<RbParticleSystem>);
+	rb_define_alloc_func(rb_cParticleSystem, ObjAllocate<CRbParticleSystem>);
 	rb_define_method(rb_cParticleSystem, "initialize",		(RbFunc)dm_initialize,			-1);
 
 	// instance method
@@ -84,13 +84,13 @@ void RbParticleSystem::InitLibrary()
  	rb_define_method(rb_cParticleSystem, "to_s",			(RbFunc)dm_to_string,			0);
 }
 
-void RbParticleSystem::mark()
+void CRbParticleSystem::mark()
 {
 	if (m_viewport_ptr) m_viewport_ptr->MarkObject();
 	if (m_bitmap_ptr)	m_bitmap_ptr->MarkObject();
 }
 
-VALUE RbParticleSystem::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbParticleSystem::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE filename, viewport, isbuffer;
 	bool frombuffer = false;
@@ -101,12 +101,12 @@ VALUE RbParticleSystem::initialize(int argc, VALUE * argv, VALUE obj)
 	if (!NIL_P(viewport))
 	{
 		SafeViewportValue(viewport);
-		m_viewport_ptr = GetObjectPtr<RbViewport>(viewport);
+		m_viewport_ptr = GetObjectPtr<CRbViewport>(viewport);
 	}
 	
 	//	创建并添加渲染结点
-	m_node = RbRenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
-	RbRenderTree::InsertNode(m_node);
+	m_node = CRbRenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
+	CRbRenderTree::InsertNode(m_node);
 
 	m_visible = Qtrue;
 
@@ -134,13 +134,13 @@ VALUE RbParticleSystem::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-void RbParticleSystem::check_raise()
+void CRbParticleSystem::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed particle system");
 }
 
-VALUE RbParticleSystem::dispose()
+VALUE CRbParticleSystem::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -156,12 +156,12 @@ VALUE RbParticleSystem::dispose()
 	return Qnil;
 }
 
-VALUE RbParticleSystem::is_disposed()
+VALUE CRbParticleSystem::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-VALUE RbParticleSystem::update()
+VALUE CRbParticleSystem::update()
 {
 	check_raise();
 
@@ -281,7 +281,7 @@ VALUE RbParticleSystem::update()
 	return Qnil;
 }
 
-VALUE RbParticleSystem::fire()
+VALUE CRbParticleSystem::fire()
 {
 	check_raise();
 
@@ -291,7 +291,7 @@ VALUE RbParticleSystem::fire()
 	return Qnil;
 }
 
-VALUE RbParticleSystem::fire_at(VALUE vx, VALUE vy)
+VALUE CRbParticleSystem::fire_at(VALUE vx, VALUE vy)
 {
 	check_raise();
 	SafeNumericValue(vx);
@@ -309,7 +309,7 @@ VALUE RbParticleSystem::fire_at(VALUE vx, VALUE vy)
 	return Qnil;
 }
 
-VALUE RbParticleSystem::stop(int argc, VALUE * argv, VALUE obj)
+VALUE CRbParticleSystem::stop(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 	
@@ -322,7 +322,7 @@ VALUE RbParticleSystem::stop(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbParticleSystem::move_to(int argc, VALUE * argv, VALUE obj)
+VALUE CRbParticleSystem::move_to(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 	VALUE vx, vy, move;
@@ -363,7 +363,7 @@ VALUE RbParticleSystem::move_to(int argc, VALUE * argv, VALUE obj)
 /*
  *	渲染（描绘）
  */
-void RbParticleSystem::render(u32 id)
+void CRbParticleSystem::render(u32 id)
 {
 	//	有效性检查
 	if (!m_bitmap_ptr)
@@ -377,14 +377,14 @@ void RbParticleSystem::render(u32 id)
 	
 	if (m_viewport_ptr)
 	{
-		const RbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
+		const CRbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
 		x = rect_ptr->x - m_viewport_ptr->m_ox;
 		y = rect_ptr->y - m_viewport_ptr->m_oy;
 	}
 	Render(x, y);
 }
 
-void RbParticleSystem::Render(float offset_x, float offset_y)
+void CRbParticleSystem::Render(float offset_x, float offset_y)
 {
 	int i;
 	DWORD col;
@@ -405,12 +405,12 @@ void RbParticleSystem::Render(float offset_x, float offset_y)
 	info.sprite->SetColor(col);
 }
 
-VALUE RbParticleSystem::get_bitmap()
+VALUE CRbParticleSystem::get_bitmap()
 {
 	return ReturnObject(m_bitmap_ptr);
 }
 
-VALUE RbParticleSystem::set_bitmap(VALUE bitmap)
+VALUE CRbParticleSystem::set_bitmap(VALUE bitmap)
 {
 	if (m_disposed)	
 		return Qnil;
@@ -423,13 +423,13 @@ VALUE RbParticleSystem::set_bitmap(VALUE bitmap)
 	else
 	{
 		SafeBitmapValue(bitmap);
-		m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
+		m_bitmap_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 	}
 	return bitmap;
 }
 
-VALUE RbParticleSystem::set_z(VALUE z)
+VALUE CRbParticleSystem::set_z(VALUE z)
 {
 	SafeFixnumValue(z);
 
@@ -437,13 +437,13 @@ VALUE RbParticleSystem::set_z(VALUE z)
 	{
 		m_z = FIX2INT(z);
 		m_node->z = m_z;
-		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
+		CRbRenderTree::InsertNode(CRbRenderTree::DeleteNode(m_node));
 	}
 
 	return z;
 }
 
-VALUE RbParticleSystem::set_viewport(VALUE viewport)
+VALUE CRbParticleSystem::set_viewport(VALUE viewport)
 {
 	if (NIL_P(viewport))
 	{
@@ -452,22 +452,22 @@ VALUE RbParticleSystem::set_viewport(VALUE viewport)
 	else
 	{
 		SafeViewportValue(viewport);
-		m_viewport_ptr = GetObjectPtr<RbViewport>(viewport);
+		m_viewport_ptr = GetObjectPtr<CRbViewport>(viewport);
 	}
 
-	RbRenderTree::DeleteNode(m_node);
+	CRbRenderTree::DeleteNode(m_node);
 	m_node->viewport = viewport;
-	RbRenderTree::InsertNode(m_node);
+	CRbRenderTree::InsertNode(m_node);
 
 	return viewport;
 }
 
-VALUE RbParticleSystem::get_blend_type()
+VALUE CRbParticleSystem::get_blend_type()
 {
 	return INT2FIX(m_blend_type);
 }
 
-VALUE RbParticleSystem::set_blend_type(VALUE blend_type)
+VALUE CRbParticleSystem::set_blend_type(VALUE blend_type)
 {
 	SafeFixnumValue(blend_type);
 
@@ -494,14 +494,14 @@ VALUE RbParticleSystem::set_blend_type(VALUE blend_type)
 /*
  *	以下定义ruby方法
  */
-imp_method(RbParticleSystem, dispose)
-imp_method(RbParticleSystem, is_disposed)
+imp_method(CRbParticleSystem, dispose)
+imp_method(CRbParticleSystem, is_disposed)
 
-imp_method(RbParticleSystem, update)
-imp_method02(RbParticleSystem, fire_at)
-imp_method(RbParticleSystem, fire)
-imp_method_vargs(RbParticleSystem, stop)
-imp_method_vargs(RbParticleSystem, move_to)
+imp_method(CRbParticleSystem, update)
+imp_method02(CRbParticleSystem, fire_at)
+imp_method(CRbParticleSystem, fire)
+imp_method_vargs(CRbParticleSystem, stop)
+imp_method_vargs(CRbParticleSystem, move_to)
 
-imp_attr_accessor(RbParticleSystem, bitmap)
-imp_attr_accessor(RbParticleSystem, blend_type)
+imp_attr_accessor(CRbParticleSystem, bitmap)
+imp_attr_accessor(CRbParticleSystem, blend_type)

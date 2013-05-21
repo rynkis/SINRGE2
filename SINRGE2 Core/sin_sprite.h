@@ -8,7 +8,7 @@
 #ifndef SINSPRITE_H
 #define SINSPRITE_H
 
-#include "RbBitmap.h"
+#include "CRbBitmap.h"
 
 #include "hge.h"
 #include "hgerect.h"

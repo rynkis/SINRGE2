@@ -5,8 +5,8 @@
 **
 ** Ruby Class Font
 */
-#include "RbFont.h"
-#include "RbColor.h"
+#include "CRbFont.h"
+#include "CRbColor.h"
 
 VALUE rb_cFont;
 
@@ -17,14 +17,14 @@ VALUE rb_cFont;
 	if(FIX2INT(_size) > 96) rb_raise(rb_eArgError, "bad value for size, the max value is 96.");	\
 } while(0)
 
-VALUE RbFont::__default_name__		= Qnil;
-VALUE RbFont::__default_size__		= Qnil;
-VALUE RbFont::__default_bold__		= Qnil;
-VALUE RbFont::__default_italic__	= Qnil;
-VALUE RbFont::__default_color__		= Qnil;
-VALUE RbFont::__default_shadow__	= Qnil;
+VALUE CRbFont::__default_name__		= Qnil;
+VALUE CRbFont::__default_size__		= Qnil;
+VALUE CRbFont::__default_bold__		= Qnil;
+VALUE CRbFont::__default_italic__	= Qnil;
+VALUE CRbFont::__default_color__		= Qnil;
+VALUE CRbFont::__default_shadow__	= Qnil;
 
-RbFont::RbFont()
+CRbFont::CRbFont()
 	: m_hFont(0)
 	, m_name(Qnil)
 	, m_color_ptr(0)
@@ -44,7 +44,7 @@ RbFont::RbFont()
 	m_lfw.lfItalic			= 0;			// 斜体
 }
 
-RbFont::~RbFont()
+CRbFont::~CRbFont()
 {
 	if (m_hFont)
 	{
@@ -53,7 +53,7 @@ RbFont::~RbFont()
 	}
 }
 
-void RbFont::InitLibrary()
+void CRbFont::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -80,7 +80,7 @@ void RbFont::InitLibrary()
 	rb_gc_register_address(&__default_color__);
 
 	// special method
-	rb_define_alloc_func(rb_cFont, ObjAllocate<RbFont>);
+	rb_define_alloc_func(rb_cFont, ObjAllocate<CRbFont>);
 	rb_define_method(rb_cFont, "initialize", (RbFunc)dm_initialize, -1);
 
 	// object attribute
@@ -118,7 +118,7 @@ void RbFont::InitLibrary()
 	rb_define_method(rb_cFont, "clone",	(RbFunc)dm_clone,		0);
 }
 
-void RbFont::mark()
+void CRbFont::mark()
 {
 	if (m_color_ptr)	m_color_ptr->MarkObject();
 
@@ -130,7 +130,7 @@ int CALLBACK FontCallback(LPENUMLOGFONT lpelf, LPNEWTEXTMETRIC lpntm, DWORD nFon
 	return 7;
 }
 
-bool RbFont::IsExist(const wchar_t *filename)
+bool CRbFont::IsExist(const wchar_t *filename)
 {
 	static LOGFONTW lfw;
 	wcscpy_s(lfw.lfFaceName, filename);
@@ -152,7 +152,7 @@ bool RbFont::IsExist(const wchar_t *filename)
  *	@desc
  *		创建一个字体对象。
  */
-VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbFont::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	检查参数个数
 	if(argc > 2) rb_raise(rb_eArgError, "wrong number of arguments (%d for 2)", argc);
@@ -168,9 +168,9 @@ VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 	m_italic		= dm_get_default_italic(rb_cFont);
 	m_shadow		= dm_get_default_shadow(rb_cFont);
 
-	VALUE __argv[1]	= { ULONG2NUM(GetObjectPtr<RbColor>(__default_color__)->GetColor()) };
-	VALUE color		= rb_class_new_instance(1, __argv, rb_cColor);//RbColor::dm_clone(dm_get_default_color(rb_cFont));
-	m_color_ptr		= GetObjectPtr<RbColor>(color);
+	VALUE __argv[1]	= { ULONG2NUM(GetObjectPtr<CRbColor>(__default_color__)->GetColor()) };
+	VALUE color		= rb_class_new_instance(1, __argv, rb_cColor);//CRbColor::dm_clone(dm_get_default_color(rb_cFont));
+	m_color_ptr		= GetObjectPtr<CRbColor>(color);
 	
 	//	创建逻辑字体
 	m_lfw.lfHeight = FIX2INT(m_size);
@@ -183,11 +183,11 @@ VALUE RbFont::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbFont::clone()
+VALUE CRbFont::clone()
 {
 	VALUE __argv[2] = { m_name, m_size };
 	VALUE font = rb_class_new_instance(2, __argv, obj_class());
-	RbFont * font_ptr = GetObjectPtr<RbFont>(font);
+	CRbFont * font_ptr = GetObjectPtr<CRbFont>(font);
 	font_ptr->dm_set_bold(font, m_bold);
 	font_ptr->dm_set_italic(font, m_italic);
 	font_ptr->dm_set_shadow(font, m_shadow);
@@ -195,18 +195,18 @@ VALUE RbFont::clone()
 	return font;
 }
 
-VALUE RbFont::dm_is_exist(int argc, VALUE name)
+VALUE CRbFont::dm_is_exist(int argc, VALUE name)
 {
 	SafeStringValue(name);
 	return C2RbBool(IsExist(Kconv::UTF8ToUnicode(RSTRING_PTR(name))));
 }
 
-VALUE RbFont::get_name()
+VALUE CRbFont::get_name()
 {
 	return m_name;
 }
 
-VALUE RbFont::set_name(VALUE name)
+VALUE CRbFont::set_name(VALUE name)
 {
 	SafeStringValue(name);
 
@@ -228,12 +228,12 @@ VALUE RbFont::set_name(VALUE name)
 	return name;
 }
 
-VALUE RbFont::get_size()
+VALUE CRbFont::get_size()
 {
 	return m_size;
 }
 
-VALUE RbFont::set_size(VALUE size)
+VALUE CRbFont::set_size(VALUE size)
 {
 	SafeFontSetSize(size);
 
@@ -255,12 +255,12 @@ VALUE RbFont::set_size(VALUE size)
 	return size;
 }
 
-VALUE RbFont::get_bold()
+VALUE CRbFont::get_bold()
 {
 	return m_bold;
 }
 
-VALUE RbFont::set_bold(VALUE bold)
+VALUE CRbFont::set_bold(VALUE bold)
 {
 	bold = Ruby2RbBool(bold);
 
@@ -283,12 +283,12 @@ VALUE RbFont::set_bold(VALUE bold)
 	return bold;
 }
 
-VALUE RbFont::get_italic()
+VALUE CRbFont::get_italic()
 {
 	return m_italic;
 }
 
-VALUE RbFont::set_italic(VALUE italic)
+VALUE CRbFont::set_italic(VALUE italic)
 {
 	italic = Ruby2RbBool(italic);
 
@@ -310,24 +310,24 @@ VALUE RbFont::set_italic(VALUE italic)
 	return italic;
 }
 
-VALUE RbFont::get_color()
+VALUE CRbFont::get_color()
 {
 	return ReturnObject(m_color_ptr);
 }
 
-VALUE RbFont::set_color(VALUE color)
+VALUE CRbFont::set_color(VALUE color)
 {
 	SafeColorValue(color);
-	m_color_ptr = GetObjectPtr<RbColor>(color);
+	m_color_ptr = GetObjectPtr<CRbColor>(color);
 	return color;
 }
 
-VALUE RbFont::get_shadow()
+VALUE CRbFont::get_shadow()
 {
 	return m_shadow;
 }
 
-VALUE RbFont::set_shadow(VALUE shadow)
+VALUE CRbFont::set_shadow(VALUE shadow)
 {
 	m_shadow = Ruby2RbBool(shadow);
 	return shadow;
@@ -336,77 +336,77 @@ VALUE RbFont::set_shadow(VALUE shadow)
 /*
  *	以下定义ruby方法
  */
-imp_attr_accessor(RbFont, name)
-imp_attr_accessor(RbFont, size)
-imp_attr_accessor(RbFont, bold)
-imp_attr_accessor(RbFont, italic)
-imp_attr_accessor(RbFont, color)
-imp_attr_accessor(RbFont, shadow)
+imp_attr_accessor(CRbFont, name)
+imp_attr_accessor(CRbFont, size)
+imp_attr_accessor(CRbFont, bold)
+imp_attr_accessor(CRbFont, italic)
+imp_attr_accessor(CRbFont, color)
+imp_attr_accessor(CRbFont, shadow)
 
-VALUE RbFont::dm_get_default_name(VALUE obj)
+VALUE CRbFont::dm_get_default_name(VALUE obj)
 {
 	return __default_name__;
 }
 
-VALUE RbFont::dm_set_default_name(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_name(VALUE obj, VALUE attr)
 {
 	SafeStringValue(attr);
 	__default_name__ = attr;
 	return Qnil;
 }
 
-VALUE RbFont::dm_get_default_size(VALUE obj)
+VALUE CRbFont::dm_get_default_size(VALUE obj)
 {
 	return __default_size__;
 }
 
-VALUE RbFont::dm_set_default_size(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_size(VALUE obj, VALUE attr)
 {
 	SafeFontSetSize(attr);
 	__default_size__ = attr;
 	return Qnil;
 }
 
-VALUE RbFont::dm_get_default_bold(VALUE obj)
+VALUE CRbFont::dm_get_default_bold(VALUE obj)
 {
 	return __default_bold__;
 }
 
-VALUE RbFont::dm_set_default_bold(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_bold(VALUE obj, VALUE attr)
 {
 	__default_bold__ = Ruby2RbBool(attr);
 	return Qnil;
 }
 
-VALUE RbFont::dm_get_default_italic(VALUE obj)
+VALUE CRbFont::dm_get_default_italic(VALUE obj)
 {
 	return __default_italic__;
 }
 
-VALUE RbFont::dm_set_default_italic(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_italic(VALUE obj, VALUE attr)
 {
 	__default_italic__ = Ruby2RbBool(attr);
 	return Qnil;
 }
 
-VALUE RbFont::dm_get_default_color(VALUE obj)
+VALUE CRbFont::dm_get_default_color(VALUE obj)
 {
 	return __default_color__;
 }
 
-VALUE RbFont::dm_set_default_color(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_color(VALUE obj, VALUE attr)
 {
 	SafeColorValue(attr);
 	__default_color__ = attr;
 	return Qnil;
 }
 
-VALUE RbFont::dm_get_default_shadow(VALUE obj)
+VALUE CRbFont::dm_get_default_shadow(VALUE obj)
 {
 	return __default_shadow__;
 }
 
-VALUE RbFont::dm_set_default_shadow(VALUE obj, VALUE attr)
+VALUE CRbFont::dm_set_default_shadow(VALUE obj, VALUE attr)
 {
 	__default_shadow__ = Ruby2RbBool(attr);
 	return Qnil;

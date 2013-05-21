@@ -1,15 +1,15 @@
 #ifndef __7PKG_WRITER_H__
 #define __7PKG_WRITER_H__
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 #include "TANGRAM.h"
 #include "sin_app.h"
 
 
-class Rb7pkgWriter : public RbClassBase
+class CRb7pkgWriter : public CRbClassBase
 {
 public:
-	Rb7pkgWriter();													//	allocate
-	virtual ~Rb7pkgWriter();
+	CRb7pkgWriter();													//	allocate
+	virtual ~CRb7pkgWriter();
 
 public:
 	static void		InitLibrary();

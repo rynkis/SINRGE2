@@ -5,20 +5,20 @@
 **
 ** Ruby Class Viewport
 */
-#ifndef __RB_VIEWPORT_H__
-#define __RB_VIEWPORT_H__
+#ifndef __C_RB_VIEWPORT_H__
+#define __C_RB_VIEWPORT_H__
 
-#include "RbDisplayObject.h"
+#include "CRbDisplayObject.h"
 
-class RbRect;
-class RbColor;
-class RbTone;
+class CRbRect;
+class CRbColor;
+class CRbTone;
 
-class RbViewport : public DisplayObject
+class CRbViewport : public DisplayObject
 {
 public:
-	RbViewport();
-	virtual ~RbViewport();
+	CRbViewport();
+	virtual ~CRbViewport();
 
 public:
 	static void			InitLibrary();
@@ -26,7 +26,7 @@ public:
 public:
 	RbRenderNodePtr *	GetHeadPtr() { return &m_head; }
 	RbRenderNodePtr *	GetTailPtr() { return &m_tail; }
-	const RbRect *		GetRectPtr() const { return m_rect_ptr; }
+	const CRbRect *		GetRectPtr() const { return m_rect_ptr; }
 
 protected:
 	virtual void		mark();
@@ -50,9 +50,9 @@ protected:
 	RbRenderNode *		m_tail;
 	RbRenderNode *		m_head;
 
-	RbRect *			m_rect_ptr;
-	RbColor *			m_color_ptr;
-	RbTone *			m_tone_ptr;
+	CRbRect *			m_rect_ptr;
+	CRbColor *			m_color_ptr;
+	CRbTone *			m_tone_ptr;
 	
 protected:
 	void				check_raise();

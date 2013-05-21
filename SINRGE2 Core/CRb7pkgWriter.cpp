@@ -5,17 +5,17 @@
 **
 ** Ruby Class SpkgWriter
 */
-#include "Rb7pkgWriter.h"
+#include "CRb7pkgWriter.h"
 
 VALUE rb_c7pkgWriter;
 
-Rb7pkgWriter::Rb7pkgWriter()
+CRb7pkgWriter::CRb7pkgWriter()
 	: m_7pkgWriter(0)
 	, m_closed(false)
 {
 }
 
-Rb7pkgWriter::~Rb7pkgWriter()
+CRb7pkgWriter::~CRb7pkgWriter()
 {
 	if (m_7pkgWriter)
 	{
@@ -24,12 +24,12 @@ Rb7pkgWriter::~Rb7pkgWriter()
 	}
 }
 
-void Rb7pkgWriter::InitLibrary()
+void CRb7pkgWriter::InitLibrary()
 {
 	rb_c7pkgWriter = rb_define_class_under(rb_mSin, "SpkgWriter", rb_cObject);
 	
 	// special method
-	rb_define_alloc_func(rb_c7pkgWriter, ObjAllocate<Rb7pkgWriter>);
+	rb_define_alloc_func(rb_c7pkgWriter, ObjAllocate<CRb7pkgWriter>);
 	rb_define_method(rb_c7pkgWriter, "initialize", (RbFunc)dm_initialize,	-1);
 
 	// instance method
@@ -42,7 +42,7 @@ void Rb7pkgWriter::InitLibrary()
  	rb_define_method(rb_c7pkgWriter, "to_s",		(RbFunc)dm_to_string,	0);
 }
 
-VALUE Rb7pkgWriter::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRb7pkgWriter::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	SafeStringValue(argv[0]);
 	SafeStringValue(argv[1]);
@@ -58,18 +58,18 @@ VALUE Rb7pkgWriter::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-void Rb7pkgWriter::check_raise()
+void CRb7pkgWriter::check_raise()
 {
 	if (m_closed)
 		rb_raise(rb_eSinError, "closed 7pkgWriter");
 }
 
-VALUE Rb7pkgWriter::is_closed()
+VALUE CRb7pkgWriter::is_closed()
 {
 	return C2RbBool(m_closed);
 }
 
-VALUE Rb7pkgWriter::close()
+VALUE CRb7pkgWriter::close()
 {
 	if (m_closed)
 		return Qnil;
@@ -85,7 +85,7 @@ VALUE Rb7pkgWriter::close()
 	return Qnil;
 }
 
-VALUE Rb7pkgWriter::dump_file(VALUE filename)
+VALUE CRb7pkgWriter::dump_file(VALUE filename)
 {
 	check_raise();
 
@@ -102,7 +102,7 @@ VALUE Rb7pkgWriter::dump_file(VALUE filename)
 	return Qfalse;
 }
 
-VALUE Rb7pkgWriter::defrag()
+VALUE CRb7pkgWriter::defrag()
 {
 	check_raise();
 	if (m_7pkgWriter)
@@ -113,7 +113,7 @@ VALUE Rb7pkgWriter::defrag()
 	return Qfalse;
 }
 
-imp_method(Rb7pkgWriter, is_closed)
-imp_method(Rb7pkgWriter, close)
-imp_method01(Rb7pkgWriter, dump_file)
-imp_method(Rb7pkgWriter, defrag)
+imp_method(CRb7pkgWriter, is_closed)
+imp_method(CRb7pkgWriter, close)
+imp_method01(CRb7pkgWriter, dump_file)
+imp_method(CRb7pkgWriter, defrag)

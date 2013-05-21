@@ -5,25 +5,25 @@
 **
 ** Ruby Class Bitmap
 */
-#ifndef __CLASS_RB_BITMAP_H__
-#define __CLASS_RB_BITMAP_H__
+#ifndef __C_RB_BITMAP_H__
+#define __C_RB_BITMAP_H__
 
 #ifdef WIN32
 #pragma once
 #endif
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 #include "sin_bitmap.h"
 #include "sin_types.h"
 
-class RbRect;
-class RbFont;
+class CRbRect;
+class CRbFont;
 
-class RbBitmap : public RbClassBase
+class CRbBitmap : public CRbClassBase
 {
 public:
-	RbBitmap();
-	virtual ~RbBitmap();
+	CRbBitmap();
+	virtual ~CRbBitmap();
 
 public:
 	static void				InitLibrary();
@@ -68,8 +68,8 @@ protected:
 
 	VALUE					m_filename;		// mark
 
-	RbRect *				m_rect_ptr;
-	RbFont *				m_font_ptr;
+	CRbRect *				m_rect_ptr;
+	CRbFont *				m_font_ptr;
 
 protected:
 	dm_method(dispose)
@@ -103,7 +103,7 @@ protected:
 	attr_accessor(font)
 
 private:
-	friend class	RbBitmap;
+	friend class	CRbBitmap;
 };
 
-#endif	//	__CLASS_RB_BITMAP_H__
+#endif	//	__C_RB_BITMAP_H__

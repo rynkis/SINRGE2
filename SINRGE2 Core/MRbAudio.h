@@ -8,7 +8,7 @@
 #ifndef _MODULE_RB_AUDIO_H_
 #define _MODULE_RB_AUDIO_H_
 
-#include "RbClassBase.h"
+#include "RbExport.h"
 
 struct MRbAudio
 {

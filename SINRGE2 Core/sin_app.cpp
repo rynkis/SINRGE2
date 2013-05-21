@@ -7,24 +7,24 @@
 */
 #include "MRbSinCore.h"
 #include "MRbInput.h"
-#if SIN_USE_SEAL
-#include "MRbSeal.h"
-#else
+#ifndef SIN_USE_SEAL
 #include "MRbAudio.h"
+#else
+#include "MRbSeal.h"
 #endif
-#include "RbRect.h"
-#include "RbColor.h"
-#include "RbTone.h"
-#include "RbFont.h"
-#include "RbBitmap.h"
-#include "RbViewport.h"
-#include "RbPlane.h"
-#include "RbSprite.h"
-#include "RbTable.h"
-#include "RbParticleSystem.h"
-#include "RbWin32API.h"
-#include "Rb7pkgWriter.h"
-#include "RbLFont.h"
+#include "CRbRect.h"
+#include "CRbColor.h"
+#include "CRbTone.h"
+#include "CRbFont.h"
+#include "CRbBitmap.h"
+#include "CRbViewport.h"
+#include "CRbPlane.h"
+#include "CRbSprite.h"
+#include "CRbTable.h"
+#include "CRbParticleSystem.h"
+#include "CRbWin32API.h"
+#include "CRb7pkgWriter.h"
+#include "CRbLFont.h"
 #include "sin_common.h"
 #include "sin_app.h"
 #include "sin_video.h"
@@ -546,19 +546,19 @@ void CApplication::InitExportSinInterface()
 	MRbSinCore::InitLibrary();
 	MRbInput::InitLibrary();
 	
-	RbRect::InitLibrary();
-	RbColor::InitLibrary();
-	RbTone::InitLibrary();
-	RbFont::InitLibrary();
-	RbBitmap::InitLibrary();
-	RbViewport::InitLibrary();
-	RbPlane::InitLibrary();
-	RbSprite::InitLibrary();
-	RbTable::InitLibrary();
-	RbParticleSystem::InitLibrary();
-	RbWin32API::InitLibrary();
+	CRbRect::InitLibrary();
+	CRbColor::InitLibrary();
+	CRbTone::InitLibrary();
+	CRbFont::InitLibrary();
+	CRbBitmap::InitLibrary();
+	CRbViewport::InitLibrary();
+	CRbPlane::InitLibrary();
+	CRbSprite::InitLibrary();
+	CRbTable::InitLibrary();
+	CRbParticleSystem::InitLibrary();
+	CRbWin32API::InitLibrary();
 
-	RbLFont::InitLibrary();
+	CRbLFont::InitLibrary();
 	
 	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(rdf_msgboxp), -1);
 	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(rdf_msgbox), -1);
@@ -605,7 +605,7 @@ bool CApplication::InitVideo()
 	if (m_inited) return true;
 	// Set our render proc
 	//m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, LostFocusProc);
-	m_pHge->System_SetState(HGE_RENDERFUNC, RbRenderTree::RenderProc);
+	m_pHge->System_SetState(HGE_RENDERFUNC, CRbRenderTree::RenderProc);
 	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
 
 	bool	isFullScreen;
@@ -637,9 +637,9 @@ bool CApplication::InitVideo()
 	//	Save the window's hwnd
 	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
 
-	//RbRenderTree::Init();
+	//CRbRenderTree::Init();
 
-	m_pRenderState = new RbRenderState();
+	m_pRenderState = new CRbRenderState();
 	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
 
 	//	Hack the D3D pointer & D3DDevice pointer
@@ -683,7 +683,7 @@ bool CApplication::InitAudio()
 {
 #if SIN_USE_SEAL
 	if (!m_hSeal) return false;
-	Rb7pkgWriter::InitLibrary();
+	CRb7pkgWriter::InitLibrary();
 	return MRbSeal::InitLibrary();
 #else
 	MRbAudio::InitLibrary();

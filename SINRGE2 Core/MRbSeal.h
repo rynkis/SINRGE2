@@ -8,7 +8,6 @@
 #ifndef _MODULE_RB_SEAL_H_
 #define _MODULE_RB_SEAL_H_
 
-#include "RbClassBase.h"
 #include "sin_seal_ex.h"
 
 namespace

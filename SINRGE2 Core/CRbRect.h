@@ -5,20 +5,20 @@
 **
 ** Ruby Class Rect
 */
-#ifndef __RB_RECT_H__
-#define __RB_RECT_H__
+#ifndef __C_RB_RECT_H__
+#define __C_RB_RECT_H__
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 #include "sin_types.h"
 
-class RbRect : public RbClassBase
+class CRbRect : public CRbClassBase
 {
 public:
-	RbRect()
+	CRbRect()
 		: x(0), y(0), width(0), height(0)							//	allocate
 	{
 	}
-	virtual ~RbRect()												//	free
+	virtual ~CRbRect()												//	free
 	{
 	}						
 

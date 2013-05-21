@@ -5,8 +5,8 @@
 **
 ** Ruby Class Base
 */
-#ifndef __RB_CLASS_BASE_H__
-#define __RB_CLASS_BASE_H__
+#ifndef __C_RB_CLASS_BASE_H__
+#define __C_RB_CLASS_BASE_H__
 
 #ifdef WIN32
 #pragma once
@@ -14,11 +14,6 @@
 
 #include "RbExport.h"
 #include "hge.h"
-
-/*
- * 定义是否使用 Seal
- */
-#define SIN_USE_SEAL		1
 
 /*
  * 如果定义了该宏则使用Ruby解释器默认的内存管理器进行对象分配和释放，否则不使用。
@@ -211,22 +206,22 @@
 
 
 /**
- *	RbClassBase
+ *	CRbClassBase
  *
  *		Ruby对象的顶层基类。
  */
-class RbClassBase
+class CRbClassBase
 {
 public:
-	RbClassBase() : __obj(Qnil) {}													//	Ruby对象Allocate函数
-	virtual ~RbClassBase() {}														//	Ruby对象Free函数（子类应该重载）
+	CRbClassBase() : __obj(Qnil) {}													//	Ruby对象Allocate函数
+	virtual ~CRbClassBase() {}														//	Ruby对象Free函数（子类应该重载）
 
 public:
 	inline bool			IsCppObject() const { return NIL_P(__obj); }				//	是否是C++对象判断
 	inline VALUE		GetObject() const { return __obj; }							//	获取自身Ruby对象
 	inline void			MarkObject() const { rb_gc_mark(__obj); }					//	标记自身Ruby对象
 
-	static inline VALUE	ReturnObject(RbClassBase * p)								//	安全返回Ruby对象
+	static inline VALUE	ReturnObject(CRbClassBase * p)								//	安全返回Ruby对象
 	{
 		return (p ? p->GetObject() : Qnil);
 	}
@@ -257,19 +252,19 @@ protected:
 
 protected:
 #ifdef SIN_USE_RUBY_MM
-	static void		ObjFree(RbClassBase * baseobj) 
+	static void		ObjFree(CRbClassBase * baseobj) 
 	{ 
 		if (baseobj) 
 		{
-			baseobj->~RbClassBase();
+			baseobj->~CRbClassBase();
 			xfree(baseobj);
 		}
 	}
 #else
-	static void		ObjFree(RbClassBase * baseobj) { if (baseobj) delete baseobj; }
+	static void		ObjFree(CRbClassBase * baseobj) { if (baseobj) delete baseobj; }
 #endif	//	SIN_USE_RUBY_MM
 
-	static void		ObjMark(RbClassBase * baseobj) { if (baseobj) baseobj->mark(); }
+	static void		ObjMark(CRbClassBase * baseobj) { if (baseobj) baseobj->mark(); }
 
 protected:
 	template<class T> static VALUE	ObjAllocate(VALUE klass)
@@ -289,40 +284,40 @@ protected:
 protected:
 	static VALUE	dm_initialize(int argc, VALUE * argv, VALUE obj)
 	{
-		RbClassBase	* baseobj;
-		Data_Get_Struct(obj, RbClassBase, baseobj);
+		CRbClassBase	* baseobj;
+		Data_Get_Struct(obj, CRbClassBase, baseobj);
 
 		return baseobj->initialize(argc, argv, obj);
 	}
 
 	static VALUE	dm_clone(VALUE obj)
 	{
-		RbClassBase	* baseobj;
-		Data_Get_Struct(obj, RbClassBase, baseobj);
+		CRbClassBase	* baseobj;
+		Data_Get_Struct(obj, CRbClassBase, baseobj);
 
 		return baseobj->clone();
 	}
 
 	static VALUE	dm_dup(VALUE obj)
 	{
-		RbClassBase	* baseobj;
-		Data_Get_Struct(obj, RbClassBase, baseobj);
+		CRbClassBase	* baseobj;
+		Data_Get_Struct(obj, CRbClassBase, baseobj);
 
 		return baseobj->dup();
 	}
 
 	static VALUE	dm_dump(VALUE obj, VALUE depth)
 	{
-		RbClassBase	* baseobj;
-		Data_Get_Struct(obj, RbClassBase, baseobj);
+		CRbClassBase	* baseobj;
+		Data_Get_Struct(obj, CRbClassBase, baseobj);
 
 		return baseobj->_dump(depth);
 	}
 
 	static VALUE	dm_to_string(VALUE obj)
 	{
-		RbClassBase	* baseobj;
-		Data_Get_Struct(obj, RbClassBase, baseobj);
+		CRbClassBase	* baseobj;
+		Data_Get_Struct(obj, CRbClassBase, baseobj);
 
 		return baseobj->to_string();
 	}

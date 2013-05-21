@@ -6,7 +6,6 @@
 ** Ruby Moudle Input
 */
 #include "MRbInput.h"
-#include "RbExport.h"
 #include "sin_app.h"
 
 VALUE mInput;

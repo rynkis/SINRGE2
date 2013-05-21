@@ -5,20 +5,20 @@
 **
 ** Ruby Class Sprite
 */
-#include "sin_color.h"
-#include "RbSprite.h"
-#include "RbBitmap.h"
-#include "RbViewport.h"
-#include "RbColor.h"
-#include "RbTone.h"
-#include "RbRect.h"
+#include "CRbSprite.h"
+#include "CRbBitmap.h"
+#include "CRbViewport.h"
+#include "CRbColor.h"
+#include "CRbTone.h"
+#include "CRbRect.h"
 #include "sin_app.h"
+#include "sin_color.h"
 #include "sin_video.h"
 #include "sin_sprite.h"
 
 VALUE rb_cSprite;
 
-RbSprite::RbSprite()
+CRbSprite::CRbSprite()
 	: m_mirror(Qfalse)
 	, m_bush_depth(RUBY_0)
 	, m_bush_opacity(128)
@@ -33,17 +33,17 @@ RbSprite::RbSprite()
 {
 }
 
-RbSprite::~RbSprite()
+CRbSprite::~CRbSprite()
 {
-	super::~RbPlane();
+	super::~CRbPlane();
 }
 
-void RbSprite::InitLibrary()
+void CRbSprite::InitLibrary()
 {
 	rb_cSprite = rb_define_class_under(rb_mSin, "Sprite", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cSprite, ObjAllocate<RbSprite>);
+	rb_define_alloc_func(rb_cSprite, ObjAllocate<CRbSprite>);
 	rb_define_method(rb_cSprite, "initialize",		(RbFunc)dm_initialize,			-1);
 
 	// instance method
@@ -119,7 +119,7 @@ void RbSprite::InitLibrary()
  	rb_define_method(rb_cSprite, "to_s",			(RbFunc)dm_to_string,			0);
 }
 
-void RbSprite::mark()
+void CRbSprite::mark()
 {
 	super::mark();
 
@@ -134,7 +134,7 @@ void RbSprite::mark()
  *	@desc
  *		生成 Sprite 对象。
  */
-VALUE RbSprite::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbSprite::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	调用Plane的初始化函数
 	super::initialize(argc, argv, obj);
@@ -144,19 +144,19 @@ VALUE RbSprite::initialize(int argc, VALUE * argv, VALUE obj)
 
 	VALUE src_rect = rb_class_new_instance(4, __argv, rb_cRect);
 
-	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
+	m_src_rect_ptr = GetObjectPtr<CRbRect>(src_rect);
 
 	m_disposed = false;
 	return obj;
 }
 
-void RbSprite::check_raise()
+void CRbSprite::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed sprite");
 }
 
-VALUE RbSprite::dispose()
+VALUE CRbSprite::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -170,12 +170,12 @@ VALUE RbSprite::dispose()
 	return Qnil;
 }
 
-VALUE RbSprite::is_disposed()
+VALUE CRbSprite::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-void RbSprite::render(u32 id)
+void CRbSprite::render(u32 id)
 {
 	if (!m_bitmap_ptr)
 		return;
@@ -285,7 +285,7 @@ void RbSprite::render(u32 id)
 	}
 	else
 	{
-		const RbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
+		const CRbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
 
 		x = m_x + rect_ptr->x - m_viewport_ptr->m_ox;
 		y = m_y + rect_ptr->y - m_viewport_ptr->m_oy;
@@ -307,7 +307,7 @@ void RbSprite::render(u32 id)
 
 		int min_x, min_y, max_x, max_y;
 
-		const RbRenderState::RbRenderClipRect& clip_rect = GetAppPtr()->GetRenderState()->GetClipRect();
+		const CRbRenderState::RbRenderClipRect& clip_rect = GetAppPtr()->GetRenderState()->GetClipRect();
 
 		//	先描绘不透明部分
 		min_x = SinMax(clip_rect.x, top_rect.x1);
@@ -363,7 +363,7 @@ void RbSprite::render(u32 id)
 	}
 }
 
-VALUE RbSprite::update()
+VALUE CRbSprite::update()
 {
 	check_raise();
 
@@ -386,13 +386,13 @@ VALUE RbSprite::update()
 	return Qnil;
 }
 
-VALUE RbSprite::flash(VALUE color, VALUE duration)
+VALUE CRbSprite::flash(VALUE color, VALUE duration)
 {
 	check_raise();
 	SafeColorValue(color);
 	SafeFixnumValue(duration);
 
-	RbColor* color_ptr = GetObjectPtr<RbColor>(color);
+	CRbColor* color_ptr = GetObjectPtr<CRbColor>(color);
 	m_flash_color = color_ptr->GetColor();
 	m_flash_duration = FIX2INT(duration);
 	m_flash_reduce_count_per_frame = (int)(255.0f / m_flash_duration);
@@ -401,7 +401,7 @@ VALUE RbSprite::flash(VALUE color, VALUE duration)
 	return Qnil;
 }
 
-VALUE RbSprite::set_bitmap(VALUE bitmap)
+VALUE CRbSprite::set_bitmap(VALUE bitmap)
 {
 	check_raise();
 
@@ -418,7 +418,7 @@ VALUE RbSprite::set_bitmap(VALUE bitmap)
 	{
 		SafeBitmapValue(bitmap);
 
-		m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
+		m_bitmap_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_pSpr->SetSrcRectDirty();
@@ -431,7 +431,7 @@ VALUE RbSprite::set_bitmap(VALUE bitmap)
 	return bitmap;
 }
 
-VALUE RbSprite::set_ox(VALUE ox)
+VALUE CRbSprite::set_ox(VALUE ox)
 {
 	check_raise();
 	super::set_ox(ox);
@@ -442,7 +442,7 @@ VALUE RbSprite::set_ox(VALUE ox)
 	return ox;
 }
 
-VALUE RbSprite::set_oy(VALUE oy)
+VALUE CRbSprite::set_oy(VALUE oy)
 {
 	check_raise();
 	super::set_oy(oy);
@@ -453,27 +453,27 @@ VALUE RbSprite::set_oy(VALUE oy)
 	return oy;
 }
 
-VALUE RbSprite::get_src_rect()
+VALUE CRbSprite::get_src_rect()
 {
 	check_raise();
 	return ReturnObject(m_src_rect_ptr);
 }
 
-VALUE RbSprite::set_src_rect(VALUE src_rect)
+VALUE CRbSprite::set_src_rect(VALUE src_rect)
 {
 	check_raise();
 	SafeRectValue(src_rect);
-	m_src_rect_ptr = GetObjectPtr<RbRect>(src_rect);
+	m_src_rect_ptr = GetObjectPtr<CRbRect>(src_rect);
 	return Qnil;
 }
 
-VALUE RbSprite::get_angle()
+VALUE CRbSprite::get_angle()
 {
 	check_raise();
 	return m_angle_rad;
 }
 
-VALUE RbSprite::set_angle(VALUE angle)
+VALUE CRbSprite::set_angle(VALUE angle)
 {
 	check_raise();
 	SafeFixnumValue(angle);
@@ -487,13 +487,13 @@ VALUE RbSprite::set_angle(VALUE angle)
 	return angle;
 }
 
-VALUE RbSprite::get_mirror()
+VALUE CRbSprite::get_mirror()
 {
 	check_raise();
 	return m_mirror;
 }
 
-VALUE RbSprite::set_mirror(VALUE mirror)
+VALUE CRbSprite::set_mirror(VALUE mirror)
 {
 	check_raise();
 	m_mirror = Ruby2RbBool(mirror);
@@ -502,25 +502,25 @@ VALUE RbSprite::set_mirror(VALUE mirror)
 	return mirror;
 }
 
-VALUE RbSprite::get_width()
+VALUE CRbSprite::get_width()
 {
 	check_raise();
 	return LONG2FIX(m_src_rect_ptr->width);
 }
 
-VALUE RbSprite::get_height()
+VALUE CRbSprite::get_height()
 {
 	check_raise();
 	return LONG2FIX(m_src_rect_ptr->height);
 }
 
-VALUE RbSprite::get_bush_depth()
+VALUE CRbSprite::get_bush_depth()
 {
 	check_raise();
 	return m_bush_depth;
 }
 
-VALUE RbSprite::set_bush_depth(VALUE bush_depth)
+VALUE CRbSprite::set_bush_depth(VALUE bush_depth)
 {
 	check_raise();
 	SafeFixnumValue(bush_depth);
@@ -530,13 +530,13 @@ VALUE RbSprite::set_bush_depth(VALUE bush_depth)
 	return bush_depth;
 }
 
-VALUE RbSprite::get_bush_opacity()
+VALUE CRbSprite::get_bush_opacity()
 {
 	check_raise();
 	return INT2FIX(m_bush_opacity);
 }
 
-VALUE RbSprite::set_bush_opacity(VALUE bush_opacity)
+VALUE CRbSprite::set_bush_opacity(VALUE bush_opacity)
 {
 	check_raise();
 	SafeFixnumValue(bush_opacity);
@@ -547,63 +547,63 @@ VALUE RbSprite::set_bush_opacity(VALUE bush_opacity)
 	return bush_opacity;
 }
 
-VALUE RbSprite::get_wave_amp()
+VALUE CRbSprite::get_wave_amp()
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::set_wave_amp(VALUE wave_amp)
+VALUE CRbSprite::set_wave_amp(VALUE wave_amp)
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::get_wave_length()
+VALUE CRbSprite::get_wave_length()
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::set_wave_length(VALUE wave_length)
+VALUE CRbSprite::set_wave_length(VALUE wave_length)
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::get_wave_speed()
+VALUE CRbSprite::get_wave_speed()
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::set_wave_speed(VALUE wave_speed)
+VALUE CRbSprite::set_wave_speed(VALUE wave_speed)
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::get_wave_phase()
+VALUE CRbSprite::get_wave_phase()
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::set_wave_phase(VALUE wave_phase)
+VALUE CRbSprite::set_wave_phase(VALUE wave_phase)
 {
 #pragma message("		Unfinished Function " __FUNCTION__)
 
 	return Qnil;
 }
 
-VALUE RbSprite::play_movie(int argc, VALUE * argv, VALUE obj)
+VALUE CRbSprite::play_movie(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -632,7 +632,7 @@ VALUE RbSprite::play_movie(int argc, VALUE * argv, VALUE obj)
 	m_ref_bitmap_modify_count = -1;
 
 	SafeBitmapValue(bitmap);
-	m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
+	m_bitmap_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 	m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 	m_pSpr->SetSrcRectDirty();
 	VALUE __argv2[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetWidth()), INT2FIX(m_bitmap_ptr->GetHeight()) };
@@ -648,7 +648,7 @@ VALUE RbSprite::play_movie(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbSprite::is_playing()
+VALUE CRbSprite::is_playing()
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -662,14 +662,14 @@ VALUE RbSprite::is_playing()
 	return Qfalse;
 }
 
-VALUE RbSprite::get_volume()
+VALUE CRbSprite::get_volume()
 {
 	if (!m_movie_playing)
 		return Qnil;
 	return LONG2FIX(GetVideoMgr()->GetVolume());
 }
 
-VALUE RbSprite::set_volume(VALUE volume)
+VALUE CRbSprite::set_volume(VALUE volume)
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -678,7 +678,7 @@ VALUE RbSprite::set_volume(VALUE volume)
 	return volume;
 }
 
-VALUE RbSprite::replay_at_finish()
+VALUE CRbSprite::replay_at_finish()
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -690,7 +690,7 @@ VALUE RbSprite::replay_at_finish()
 	return Qnil;
 }
 
-VALUE RbSprite::stop_movie()
+VALUE CRbSprite::stop_movie()
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -701,7 +701,7 @@ VALUE RbSprite::stop_movie()
 	return Qnil;
 }
 
-VALUE RbSprite::rewind_movie()
+VALUE CRbSprite::rewind_movie()
 {
 	if (!m_movie_playing)
 		return Qfalse;
@@ -712,29 +712,29 @@ VALUE RbSprite::rewind_movie()
 /*
  *	以下定义ruby方法
  */
-imp_method(RbSprite, dispose)
-imp_method(RbSprite, is_disposed)
-imp_method_vargs(RbSprite, play_movie)
-imp_method(RbSprite, get_volume)
-imp_method01(RbSprite, set_volume)
-imp_method(RbSprite, is_playing)
-imp_method(RbSprite, replay_at_finish)
-imp_method(RbSprite, stop_movie)
-imp_method(RbSprite, rewind_movie)
+imp_method(CRbSprite, dispose)
+imp_method(CRbSprite, is_disposed)
+imp_method_vargs(CRbSprite, play_movie)
+imp_method(CRbSprite, get_volume)
+imp_method01(CRbSprite, set_volume)
+imp_method(CRbSprite, is_playing)
+imp_method(CRbSprite, replay_at_finish)
+imp_method(CRbSprite, stop_movie)
+imp_method(CRbSprite, rewind_movie)
 
-imp_method(RbSprite, update)
-imp_method(RbSprite, get_width)
-imp_method(RbSprite, get_height)
-imp_method02(RbSprite, flash)
+imp_method(CRbSprite, update)
+imp_method(CRbSprite, get_width)
+imp_method(CRbSprite, get_height)
+imp_method02(CRbSprite, flash)
 
-imp_attr_accessor(RbSprite, src_rect)
-imp_attr_accessor(RbSprite, angle)
-imp_attr_accessor(RbSprite, mirror)
+imp_attr_accessor(CRbSprite, src_rect)
+imp_attr_accessor(CRbSprite, angle)
+imp_attr_accessor(CRbSprite, mirror)
 
-imp_attr_accessor(RbSprite, bush_depth)
-imp_attr_accessor(RbSprite, bush_opacity)
+imp_attr_accessor(CRbSprite, bush_depth)
+imp_attr_accessor(CRbSprite, bush_opacity)
 
-imp_attr_accessor(RbSprite, wave_amp)
-imp_attr_accessor(RbSprite, wave_length)
-imp_attr_accessor(RbSprite, wave_speed)
-imp_attr_accessor(RbSprite, wave_phase)
+imp_attr_accessor(CRbSprite, wave_amp)
+imp_attr_accessor(CRbSprite, wave_length)
+imp_attr_accessor(CRbSprite, wave_speed)
+imp_attr_accessor(CRbSprite, wave_phase)

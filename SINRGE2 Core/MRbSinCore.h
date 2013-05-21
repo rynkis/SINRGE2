@@ -12,7 +12,7 @@
 #pragma once
 #endif
 
-#include "RbClassBase.h"
+#include "RbExport.h"
 
 struct MRbSinCore
 {

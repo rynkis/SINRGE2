@@ -5,10 +5,10 @@
 **
 ** Ruby Class Viewport
 */
-#include "RbViewport.h"
-#include "RbColor.h"
-#include "RbTone.h"
-#include "RbRect.h"
+#include "CRbViewport.h"
+#include "CRbColor.h"
+#include "CRbTone.h"
+#include "CRbRect.h"
 #include "sin_color.h"
 #include "sin_app.h"
 
@@ -20,9 +20,9 @@ namespace
 	const u32	id_render_to_texture	= 1;
 }
 
-HGE * RbViewport::s_pHge = 0;
+HGE * CRbViewport::s_pHge = 0;
 
-RbViewport::RbViewport()
+CRbViewport::CRbViewport()
 	: m_flash_duration(0)
 	, m_flash_reduce_count_per_frame(0)
 	, m_flash_hide_spr(0)
@@ -42,17 +42,17 @@ RbViewport::RbViewport()
 	m_quad.blend_color = 0;
 }
 
-RbViewport::~RbViewport()
+CRbViewport::~CRbViewport()
 {
 	for (; m_head; m_head = m_head->next)
 		m_head->viewport = 0;	//	清空视口标记为0
 
-	RbRenderTree::DestroyNode(&m_node);
+	CRbRenderTree::DestroyNode(&m_node);
 
 	s_pHge->Release();
 }
 
-void RbViewport::InitLibrary()
+void CRbViewport::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -64,7 +64,7 @@ void RbViewport::InitLibrary()
 	rb_cViewport = rb_define_class_under(rb_mSin, "Viewport", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cViewport, ObjAllocate<RbViewport>);
+	rb_define_alloc_func(rb_cViewport, ObjAllocate<CRbViewport>);
 	rb_define_method(rb_cViewport, "initialize", (RbFunc)dm_initialize,		-1);
 
 	// instance method
@@ -93,7 +93,7 @@ void RbViewport::InitLibrary()
  	rb_define_method(rb_cViewport, "to_s",		(RbFunc)dm_to_string,	0);
 }
 
-void RbViewport::mark()
+void CRbViewport::mark()
 {
 	if (m_rect_ptr)		m_rect_ptr->MarkObject();
 	if (m_color_ptr)	m_color_ptr->MarkObject();
@@ -108,7 +108,7 @@ void RbViewport::mark()
  *	@desc
  *		生成 Viewport 对象。
  */
-VALUE RbViewport::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	检查参数个数
 	if(argc != 1 && argc != 4)
@@ -121,7 +121,7 @@ VALUE RbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 		SafeRectValue(argv[0])
 
 		//	保存rect对象
-		m_rect_ptr = GetObjectPtr<RbRect>(argv[0]);
+		m_rect_ptr = GetObjectPtr<CRbRect>(argv[0]);
 	}
 	//	Viewport.new(x, y, width, height) 的情况
 	else
@@ -137,7 +137,7 @@ VALUE RbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
 
-		m_rect_ptr = GetObjectPtr<RbRect>(rect);
+		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
 	}
 
 	//	创建color和tone对象
@@ -146,21 +146,21 @@ VALUE RbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 	VALUE color = rb_class_new_instance(4, __argv, rb_cColor);
 	VALUE tone = rb_class_new_instance(4, __argv, rb_cTone);
 
-	m_color_ptr = GetObjectPtr<RbColor>(color);
-	m_tone_ptr = GetObjectPtr<RbTone>(tone);
+	m_color_ptr = GetObjectPtr<CRbColor>(color);
+	m_tone_ptr = GetObjectPtr<CRbTone>(tone);
 
 	m_visible = Qtrue;
 
 	//	创建并添加渲染结点
-	m_node = RbRenderTree::AllocNode(RenderProc, obj, id_render_normal, 0, Qnil);
-	RbRenderTree::InsertNode(m_node);
+	m_node = CRbRenderTree::AllocNode(RenderProc, obj, id_render_normal, 0, Qnil);
+	CRbRenderTree::InsertNode(m_node);
 
 	m_disposed = false;
 
 	return obj;
 }
 
-void RbViewport::render(u32 id)
+void CRbViewport::render(u32 id)
 {
 	//	如果视口处于闪烁中且闪烁颜色为nil则直接返回
 	if (m_flash_duration > 0 && m_flash_hide_spr > 0)
@@ -226,7 +226,7 @@ void RbViewport::render(u32 id)
 	}
 }
 
-VALUE RbViewport::dispose()
+VALUE CRbViewport::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -235,68 +235,68 @@ VALUE RbViewport::dispose()
 	return Qnil;
 }
 
-VALUE RbViewport::is_disposed()
+VALUE CRbViewport::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-void RbViewport::check_raise()
+void CRbViewport::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed viewport");
 }
 
-VALUE RbViewport::get_rect()
+VALUE CRbViewport::get_rect()
 {
 	check_raise();
 
 	return ReturnObject(m_rect_ptr);
 }
 
-VALUE RbViewport::set_rect(VALUE rect)
+VALUE CRbViewport::set_rect(VALUE rect)
 {
 	check_raise();
 
 	SafeRectValue(rect);
-	m_rect_ptr = GetObjectPtr<RbRect>(rect);
+	m_rect_ptr = GetObjectPtr<CRbRect>(rect);
 	return rect;
 }
 
-VALUE RbViewport::get_color()
+VALUE CRbViewport::get_color()
 {
 	check_raise();
 	return ReturnObject(m_color_ptr);
 }
 
-VALUE RbViewport::set_color(VALUE color)
+VALUE CRbViewport::set_color(VALUE color)
 {
 	check_raise();
 	SafeColorValue(color);
-	m_color_ptr = GetObjectPtr<RbColor>(color);
+	m_color_ptr = GetObjectPtr<CRbColor>(color);
 	return color;
 }
 
-VALUE RbViewport::get_tone()
+VALUE CRbViewport::get_tone()
 {
 	check_raise();
 	return ReturnObject(m_tone_ptr);
 }
 
-VALUE RbViewport::set_tone(VALUE tone)
+VALUE CRbViewport::set_tone(VALUE tone)
 {
 	check_raise();
 	SafeToneValue(tone);
-	m_tone_ptr = GetObjectPtr<RbTone>(tone);
+	m_tone_ptr = GetObjectPtr<CRbTone>(tone);
 	return tone;
 }
 
-VALUE RbViewport::get_z()
+VALUE CRbViewport::get_z()
 {
 	check_raise();
 	return INT2FIX(m_z);
 }
 
-VALUE RbViewport::set_z(VALUE z)
+VALUE CRbViewport::set_z(VALUE z)
 {
 	check_raise();
 	SafeFixnumValue(z);
@@ -305,13 +305,13 @@ VALUE RbViewport::set_z(VALUE z)
 	{
 		m_z = FIX2INT(z);
 		m_node->z = m_z;
-		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
+		CRbRenderTree::InsertNode(CRbRenderTree::DeleteNode(m_node));
 	}
 
 	return z;
 }
 
-VALUE RbViewport::update()
+VALUE CRbViewport::update()
 {
 	check_raise();
 	if (m_flash_duration)
@@ -325,13 +325,13 @@ VALUE RbViewport::update()
 	return Qnil;
 }
 
-VALUE RbViewport::flash(VALUE color, VALUE duration)
+VALUE CRbViewport::flash(VALUE color, VALUE duration)
 {
 	check_raise();
 	SafeColorValue(color);
 	SafeFixnumValue(duration);
 
-	RbColor * color_ptr = GetObjectPtr<RbColor>(color);
+	CRbColor * color_ptr = GetObjectPtr<CRbColor>(color);
 	m_flash_color = color_ptr->GetColor();
 	m_flash_duration = FIX2INT(duration);
 	m_flash_reduce_count_per_frame = (int)(255.0f / m_flash_duration);
@@ -343,12 +343,12 @@ VALUE RbViewport::flash(VALUE color, VALUE duration)
 /*
  *	以下定义ruby方法
  */
-imp_method(RbViewport, dispose)
-imp_method(RbViewport, is_disposed)
+imp_method(CRbViewport, dispose)
+imp_method(CRbViewport, is_disposed)
 
-imp_method(RbViewport, update)
-imp_method02(RbViewport, flash)
+imp_method(CRbViewport, update)
+imp_method02(CRbViewport, flash)
 
-imp_attr_accessor(RbViewport, rect)
-imp_attr_accessor(RbViewport, color)
-imp_attr_accessor(RbViewport, tone)
+imp_attr_accessor(CRbViewport, rect)
+imp_attr_accessor(CRbViewport, color)
+imp_attr_accessor(CRbViewport, tone)

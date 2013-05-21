@@ -6,7 +6,7 @@
 ** Core system functions
 */
 
-#include "RbBitmap.h"
+#include "CRbBitmap.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "hge_impl.h"
@@ -794,7 +794,7 @@ void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 	if (filename[0])
 	{
 		int suffix_idx;
-		HTEXTURE midTex = RbBitmap::LoadTexture(filename, 0, suffix_idx);
+		HTEXTURE midTex = CRbBitmap::LoadTexture(filename, 0, suffix_idx);
 
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);

@@ -8,7 +8,7 @@
 #ifndef __SIN_APPLICATION_H__
 #define __SIN_APPLICATION_H__
 
-#include "RbRenderTree.h"
+#include "CRbRenderTree.h"
 #include "hge.h"
 #include "sin_timer.h"
 #include "TANGRAM.h"
@@ -23,7 +23,7 @@ public:
 	inline HWND					GetMainHwnd() const { return m_frm_struct.m_hwnd; }
 	inline const wchar_t *		GetTitle() const { return m_frm_struct.m_title; }
 	inline HGE *				GetHgePtr() const { return m_pHge; }
-	inline RbRenderState *		GetRenderState() const { return m_pRenderState; }
+	inline CRbRenderState *		GetRenderState() const { return m_pRenderState; }
 	inline IDirect3D8 *			GetD3DPtr() const { return m_ref_d3d; }
 	inline IDirect3DDevice8 *	GetD3DDevicePtr() const { return m_ref_device; }
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
@@ -100,7 +100,7 @@ private:
 	char *						pScripts;
 
 	HGE *						m_pHge;
-	RbRenderState *				m_pRenderState;
+	CRbRenderState *			m_pRenderState;
 	SinFrameStruct				m_frm_struct;
 
 	bool						m_inited;

@@ -34,9 +34,6 @@
     <Filter Include="头文件\hge">
       <UniqueIdentifier>{ece89693-0f0e-498f-af10-c35fc274eff1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\Kconv">
-      <UniqueIdentifier>{4a0c2493-e64c-4262-b344-5feef9aab6bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\RbClass\base">
       <UniqueIdentifier>{1342fad3-7904-4fb5-8db3-5ad76675533a}</UniqueIdentifier>
     </Filter>
@@ -78,29 +75,8 @@
     <ClCompile Include="RubyExt\zlib.c">
       <Filter>源文件\RubyExt</Filter>
     </ClCompile>
-    <ClCompile Include="RbBitmap.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="hge\resource.cpp">
       <Filter>源文件\hge</Filter>
-    </ClCompile>
-    <ClCompile Include="RbViewport.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbPlane.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbRenderTree.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbDisplayObject.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbSprite.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
-    <ClCompile Include="RbTable.cpp">
-      <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="sin_video.cpp">
       <Filter>源文件\SINRGE2</Filter>
@@ -108,14 +84,8 @@
     <ClCompile Include="sin_app.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
-    <ClCompile Include="Kconv.cpp">
-      <Filter>源文件\Kconv</Filter>
-    </ClCompile>
     <ClCompile Include="sin_sprite.cpp">
       <Filter>源文件\SINRGE2</Filter>
-    </ClCompile>
-    <ClCompile Include="RbParticleSystem.cpp">
-      <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="MRbInput.cpp">
       <Filter>源文件\RbClass</Filter>
@@ -129,32 +99,59 @@
     <ClCompile Include="Entry.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RbWin32API.cpp">
-      <Filter>源文件\RbClass</Filter>
-    </ClCompile>
     <ClCompile Include="MRbAudio.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
     <ClCompile Include="sin_timer.cpp">
       <Filter>源文件\SINRGE2</Filter>
     </ClCompile>
-    <ClCompile Include="Rb7pkgWriter.cpp">
+    <ClCompile Include="sin_kconv.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
+    <ClCompile Include="CRb7pkgWriter.cpp">
       <Filter>源文件\RbClass</Filter>
     </ClCompile>
-    <ClCompile Include="RbColor.cpp">
-      <Filter>源文件\RbClass\base</Filter>
-    </ClCompile>
-    <ClCompile Include="RbFont.cpp">
-      <Filter>源文件\RbClass\base</Filter>
-    </ClCompile>
-    <ClCompile Include="RbRect.cpp">
-      <Filter>源文件\RbClass\base</Filter>
-    </ClCompile>
-    <ClCompile Include="RbTone.cpp">
-      <Filter>源文件\RbClass\base</Filter>
-    </ClCompile>
-    <ClCompile Include="RbLFont.cpp">
+    <ClCompile Include="CRbBitmap.cpp">
       <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbDisplayObject.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbLFont.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbParticleSystem.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbPlane.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbRenderTree.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbSprite.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbTable.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbViewport.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbWin32API.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbColor.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbFont.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbRect.cpp">
+      <Filter>源文件\RbClass\base</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbTone.cpp">
+      <Filter>源文件\RbClass\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,9 +239,6 @@
     <ClInclude Include="RbExport.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
-    <ClInclude Include="RbClassBase.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="..\Contrib\include\zlib.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -263,29 +257,8 @@
     <ClInclude Include="sin_types.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="RbBitmap.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>
-    </ClInclude>
-    <ClInclude Include="RbViewport.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbPlane.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbRenderTree.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbDisplayObject.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbSprite.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbTable.h">
-      <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="sin_common.h">
       <Filter>源文件\SINRGE2</Filter>
@@ -323,17 +296,8 @@
     <ClInclude Include="sin_app.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="AutoBuffer.h">
-      <Filter>源文件\Kconv</Filter>
-    </ClInclude>
-    <ClInclude Include="Kconv.h">
-      <Filter>源文件\Kconv</Filter>
-    </ClInclude>
     <ClInclude Include="sin_sprite.h">
       <Filter>源文件\SINRGE2</Filter>
-    </ClInclude>
-    <ClInclude Include="RbParticleSystem.h">
-      <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="MRbInput.h">
       <Filter>源文件\RbClass</Filter>
@@ -342,9 +306,6 @@
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="MRbSeal.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
-    <ClInclude Include="RbWin32API.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="MRbAudio.h">
@@ -359,25 +320,61 @@
     <ClInclude Include="TANGRAM.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="Rb7pkgWriter.h">
-      <Filter>源文件\RbClass</Filter>
-    </ClInclude>
     <ClInclude Include="sin_revision.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="RbColor.h">
+    <ClInclude Include="sin_auto_buffer.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_kconv.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="CRb7pkgWriter.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbBitmap.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbDisplayObject.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbLFont.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbParticleSystem.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbPlane.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbRenderTree.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbSprite.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbTable.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbViewport.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbWin32API.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbColor.h">
       <Filter>源文件\RbClass\base</Filter>
     </ClInclude>
-    <ClInclude Include="RbFont.h">
+    <ClInclude Include="CRbFont.h">
       <Filter>源文件\RbClass\base</Filter>
     </ClInclude>
-    <ClInclude Include="RbRect.h">
+    <ClInclude Include="CRbRect.h">
       <Filter>源文件\RbClass\base</Filter>
     </ClInclude>
-    <ClInclude Include="RbTone.h">
+    <ClInclude Include="CRbTone.h">
       <Filter>源文件\RbClass\base</Filter>
     </ClInclude>
-    <ClInclude Include="RbLFont.h">
+    <ClInclude Include="CRbClassBase.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>

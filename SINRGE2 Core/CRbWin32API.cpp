@@ -5,7 +5,7 @@
 **
 ** Ruby Class Win32API
 */
-#include "RbWin32API.h"
+#include "CRbWin32API.h"
 #include "sin_types.h"
 
 VALUE rb_cWin32API;
@@ -108,12 +108,12 @@ namespace
 	}
 }
 
-RbWin32API::RbWin32API()
+CRbWin32API::CRbWin32API()
 	: m_hDll(NULL)
 {
 }
 
-RbWin32API::~RbWin32API()
+CRbWin32API::~CRbWin32API()
 {
 	if (m_hDll != NULL)
 	{
@@ -122,19 +122,19 @@ RbWin32API::~RbWin32API()
 	}
 }
 
-void RbWin32API::InitLibrary()
+void CRbWin32API::InitLibrary()
 {
 	rb_cWin32API = rb_define_class_under(rb_mSin, "Win32API", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cWin32API, ObjAllocate<RbWin32API>);
+	rb_define_alloc_func(rb_cWin32API, ObjAllocate<CRbWin32API>);
 	rb_define_method(rb_cWin32API, "initialize",			(RbFunc)dm_initialize,			-1);
 
 	// instance method
 	rb_define_method(rb_cWin32API, "call",					(RbFunc)dm_call,				-1);
 }
 
-VALUE RbWin32API::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbWin32API::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE dllname, proc, _import, _export;
 	rb_scan_args(argc, argv, "4", &dllname, &proc, &_import, &_export);
@@ -171,7 +171,7 @@ VALUE RbWin32API::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbWin32API::call(int argc, VALUE * argv, VALUE obj)
+VALUE CRbWin32API::call(int argc, VALUE * argv, VALUE obj)
 {
 	struct 
 	{
@@ -258,4 +258,4 @@ VALUE RbWin32API::call(int argc, VALUE * argv, VALUE obj)
 	}
 }
 
-imp_method_vargs(RbWin32API, call)
+imp_method_vargs(CRbWin32API, call)

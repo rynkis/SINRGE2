@@ -8,7 +8,7 @@
 #include "MRbSinCore.h"
 #include "MRbInput.h"
 #include "TANGRAM.h"
-#include "RbBitmap.h"
+#include "CRbBitmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
 #include <math.h>
@@ -77,8 +77,8 @@ VALUE MRbSinCore::snap_to_bitmap()
 {
 	VALUE __argv[] = {INT2FIX(2), INT2FIX(2)};
 	VALUE bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
-	RbBitmap * pRbBmp = (RbBitmap *)DATA_PTR(bitmap);
-	if (!RbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
+	CRbBitmap * pRbBmp = (CRbBitmap *)DATA_PTR(bitmap);
+	if (!CRbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
 	{
 		pRbBmp = NULL;
 		bitmap = Qnil;

@@ -5,24 +5,24 @@
 **
 ** Ruby Class Table
 */
-#ifndef __RB_TABLE_H__
-#define __RB_TABLE_H__
+#ifndef __C_RB_TABLE_H__
+#define __C_RB_TABLE_H__
 
 #ifdef WIN32
 #pragma once
 #endif
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 
-class RbTable : public RbClassBase
+class CRbTable : public CRbClassBase
 {
 public:
-	RbTable()
+	CRbTable()
 		: m_data(0), m_dims(0), m_size(0)
 	{
 		memset(m_dim_size, 0, sizeof(m_dim_size));
 	}
-	virtual ~RbTable()											//	free
+	virtual ~CRbTable()											//	free
 	{
 		if (m_data)
 		{

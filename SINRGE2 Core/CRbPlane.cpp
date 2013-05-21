@@ -6,12 +6,12 @@
 ** Ruby Class Plane
 */
 #include "RbExport.h"
-#include "RbBitmap.h"
-#include "RbViewport.h"
-#include "RbColor.h"
-#include "RbTone.h"
-#include "RbRect.h"
-#include "RbPlane.h"
+#include "CRbBitmap.h"
+#include "CRbViewport.h"
+#include "CRbColor.h"
+#include "CRbTone.h"
+#include "CRbRect.h"
+#include "CRbPlane.h"
 #include "sin_sprite.h"
 #include "sin_app.h"
 
@@ -20,7 +20,7 @@ VALUE rb_cPlane;
 /*
  *	构造
  */
-RbPlane::RbPlane()
+CRbPlane::CRbPlane()
 	: m_opacity(255)
 	, m_blend_type(0)
 	, m_save_blend_type(0)
@@ -40,7 +40,7 @@ RbPlane::RbPlane()
 /*
  *	释放
  */
-RbPlane::~RbPlane()
+CRbPlane::~CRbPlane()
 {
 	if (m_tone_tex)
 	{
@@ -50,15 +50,15 @@ RbPlane::~RbPlane()
 	
 	SAFE_DELETE(m_pSpr);
 
-	RbRenderTree::DestroyNode(&m_node);
+	CRbRenderTree::DestroyNode(&m_node);
 }
 
-void RbPlane::InitLibrary()
+void CRbPlane::InitLibrary()
 {
 	rb_cPlane = rb_define_class_under(rb_mSin, "Plane", rb_cObject);
 
 	// special method
-	rb_define_alloc_func(rb_cPlane, ObjAllocate<RbPlane>);
+	rb_define_alloc_func(rb_cPlane, ObjAllocate<CRbPlane>);
 	rb_define_method(rb_cPlane, "initialize",	(RbFunc)dm_initialize,		-1);
 
 	// instance method
@@ -101,7 +101,7 @@ void RbPlane::InitLibrary()
 /*
  *	标记
  */
-void RbPlane::mark()
+void CRbPlane::mark()
 {
 	if (m_viewport_ptr) m_viewport_ptr->MarkObject();
 	if (m_bitmap_ptr)	m_bitmap_ptr->MarkObject();
@@ -117,7 +117,7 @@ void RbPlane::mark()
  *	@desc
  *		生成 Plane 对象。
  */
-VALUE RbPlane::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbPlane::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE viewport, color, tone;
 
@@ -127,12 +127,12 @@ VALUE RbPlane::initialize(int argc, VALUE * argv, VALUE obj)
 	if (!NIL_P(viewport))
 	{
 		SafeViewportValue(viewport);
-		m_viewport_ptr = GetObjectPtr<RbViewport>(viewport);
+		m_viewport_ptr = GetObjectPtr<CRbViewport>(viewport);
 	}
 
 	//	创建并添加渲染结点
-	m_node = RbRenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
-	RbRenderTree::InsertNode(m_node);
+	m_node = CRbRenderTree::AllocNode(RenderProc, obj, 0, 0, viewport);
+	CRbRenderTree::InsertNode(m_node);
 
 	m_visible = Qtrue;
 
@@ -142,8 +142,8 @@ VALUE RbPlane::initialize(int argc, VALUE * argv, VALUE obj)
 	color = rb_class_new_instance(4, __argv, rb_cColor);
 	tone = rb_class_new_instance(4, __argv, rb_cTone);
 
-	m_color_ptr = GetObjectPtr<RbColor>(color);
-	m_tone_ptr = GetObjectPtr<RbTone>(tone);
+	m_color_ptr = GetObjectPtr<CRbColor>(color);
+	m_tone_ptr = GetObjectPtr<CRbTone>(tone);
 
 	//	取消释放标记
 	m_disposed = false;
@@ -154,7 +154,7 @@ VALUE RbPlane::initialize(int argc, VALUE * argv, VALUE obj)
 /*
  *	渲染（描绘）
  */
-void RbPlane::render(u32 id)
+void CRbPlane::render(u32 id)
 {
 	//	有效性检查
 	if (!m_bitmap_ptr)
@@ -231,7 +231,7 @@ void RbPlane::render(u32 id)
 		}
 		else
 		{
-			const RbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
+			const CRbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
 
 			wrap_w = rect_ptr->width;
 			wrap_h = rect_ptr->height;
@@ -279,7 +279,7 @@ void RbPlane::render(u32 id)
 	}
 }
 
-void RbPlane::process_tone_texture()
+void CRbPlane::process_tone_texture()
 {
 	bool change = false;
 
@@ -330,7 +330,7 @@ void RbPlane::process_tone_texture()
 				rb_raise(rb_eSinError,"Create Texture Error !");
 		}
 
-		if (RbBitmap::AdjustTexturesToneDouble(m_bitmap_ptr->GetBitmapPtr(), m_tone_tex, m_ref_tone))
+		if (CRbBitmap::AdjustTexturesToneDouble(m_bitmap_ptr->GetBitmapPtr(), m_tone_tex, m_ref_tone))
 		{
 			m_pSpr->SetTexture(m_tone_tex);
 			m_pSpr->SetSrcRectDirty();
@@ -348,7 +348,7 @@ void RbPlane::process_tone_texture()
 	}
 }
 
-VALUE RbPlane::dispose()
+VALUE CRbPlane::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -358,24 +358,24 @@ VALUE RbPlane::dispose()
 	return Qnil;
 }
 
-VALUE RbPlane::is_disposed()
+VALUE CRbPlane::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-void RbPlane::check_raise()
+void CRbPlane::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed plane");
 }
 
-VALUE RbPlane::get_bitmap()
+VALUE CRbPlane::get_bitmap()
 {
 	check_raise();
 	return ReturnObject(m_bitmap_ptr);
 }
 
-VALUE RbPlane::set_bitmap(VALUE bitmap)
+VALUE CRbPlane::set_bitmap(VALUE bitmap)
 {
 	check_raise();
 
@@ -390,7 +390,7 @@ VALUE RbPlane::set_bitmap(VALUE bitmap)
 	{
 		SafeBitmapValue(bitmap);
 
-		m_bitmap_ptr = GetObjectPtr<RbBitmap>(bitmap);
+		m_bitmap_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_pSpr->SetSrcRectDirty();
@@ -399,13 +399,13 @@ VALUE RbPlane::set_bitmap(VALUE bitmap)
 	return bitmap;
 }
 
-VALUE RbPlane::get_zoom_x()
+VALUE CRbPlane::get_zoom_x()
 {
 	check_raise();
 	return rb_float_new(m_pSpr->GetZoomX());
 }
 
-VALUE RbPlane::set_zoom_x(VALUE zoom_x)
+VALUE CRbPlane::set_zoom_x(VALUE zoom_x)
 {
 	check_raise();
 	SafeNumericValue(zoom_x);
@@ -416,13 +416,13 @@ VALUE RbPlane::set_zoom_x(VALUE zoom_x)
 	return zoom_x;
 }
 
-VALUE RbPlane::get_zoom_y()
+VALUE CRbPlane::get_zoom_y()
 {
 	check_raise();
 	return rb_float_new(m_pSpr->GetZoomY());
 }
 
-VALUE RbPlane::set_zoom_y(VALUE zoom_y)
+VALUE CRbPlane::set_zoom_y(VALUE zoom_y)
 {
 	check_raise();
 	SafeNumericValue(zoom_y);
@@ -433,13 +433,13 @@ VALUE RbPlane::set_zoom_y(VALUE zoom_y)
 	return zoom_y;
 }
 
-VALUE RbPlane::get_opacity()
+VALUE CRbPlane::get_opacity()
 {
 	check_raise();
 	return INT2FIX(m_opacity);
 }
 
-VALUE RbPlane::set_opacity(VALUE opacity)
+VALUE CRbPlane::set_opacity(VALUE opacity)
 {
 	check_raise();
 	SafeFixnumValue(opacity);
@@ -450,13 +450,13 @@ VALUE RbPlane::set_opacity(VALUE opacity)
 	return opacity;
 }
 
-VALUE RbPlane::get_blend_type()
+VALUE CRbPlane::get_blend_type()
 {
 	check_raise();
 	return INT2FIX(m_blend_type);
 }
 
-VALUE RbPlane::set_blend_type(VALUE blend_type)
+VALUE CRbPlane::set_blend_type(VALUE blend_type)
 {
 	check_raise();
 	SafeFixnumValue(blend_type);
@@ -464,50 +464,50 @@ VALUE RbPlane::set_blend_type(VALUE blend_type)
 	return blend_type;
 }
 
-VALUE RbPlane::get_color()
+VALUE CRbPlane::get_color()
 {
 	check_raise();
 	return ReturnObject(m_color_ptr);
 }
 
-VALUE RbPlane::set_color(VALUE color)
+VALUE CRbPlane::set_color(VALUE color)
 {
 	check_raise();
 	/*if (rb_obj_is_kind_of(color, rb_cInteger))
 	{
 		VALUE __argv[] = { color };
 		VALUE col = rb_class_new_instance(1, __argv, rb_cColor);
-		m_color_ptr = GetObjectPtr<RbColor>(col);
+		m_color_ptr = GetObjectPtr<CRbColor>(col);
 	}
 	else
 	{*/
 		SafeColorValue(color);
-		m_color_ptr = GetObjectPtr<RbColor>(color);
+		m_color_ptr = GetObjectPtr<CRbColor>(color);
 	//}
 	return color;
 }
 
-VALUE RbPlane::get_tone()
+VALUE CRbPlane::get_tone()
 {
 	check_raise();
 	return ReturnObject(m_tone_ptr);
 }
 
-VALUE RbPlane::set_tone(VALUE tone)
+VALUE CRbPlane::set_tone(VALUE tone)
 {
 	check_raise();
 	SafeToneValue(tone);
-	m_tone_ptr = GetObjectPtr<RbTone>(tone);
+	m_tone_ptr = GetObjectPtr<CRbTone>(tone);
 	return tone;
 }
 
-VALUE RbPlane::get_z()
+VALUE CRbPlane::get_z()
 {
 	check_raise();
 	return INT2FIX(m_z);
 }
 
-VALUE RbPlane::set_z(VALUE z)
+VALUE CRbPlane::set_z(VALUE z)
 {
 	check_raise();
 	SafeFixnumValue(z);
@@ -516,13 +516,13 @@ VALUE RbPlane::set_z(VALUE z)
 	{
 		m_z = FIX2INT(z);
 		m_node->z = m_z;
-		RbRenderTree::InsertNode(RbRenderTree::DeleteNode(m_node));
+		CRbRenderTree::InsertNode(CRbRenderTree::DeleteNode(m_node));
 	}
 
 	return z;
 }
 
-VALUE RbPlane::set_viewport(VALUE viewport)
+VALUE CRbPlane::set_viewport(VALUE viewport)
 {
 	check_raise();
 	if (NIL_P(viewport))
@@ -532,12 +532,12 @@ VALUE RbPlane::set_viewport(VALUE viewport)
 	else
 	{
 		SafeViewportValue(viewport);
-		m_viewport_ptr = GetObjectPtr<RbViewport>(viewport);
+		m_viewport_ptr = GetObjectPtr<CRbViewport>(viewport);
 	}
 
-	RbRenderTree::DeleteNode(m_node);
+	CRbRenderTree::DeleteNode(m_node);
 	m_node->viewport = viewport;
-	RbRenderTree::InsertNode(m_node);
+	CRbRenderTree::InsertNode(m_node);
 
 	return viewport;
 }
@@ -545,13 +545,13 @@ VALUE RbPlane::set_viewport(VALUE viewport)
 /*
  *	以下定义ruby方法
  */
-imp_method(RbPlane, dispose)
-imp_method(RbPlane, is_disposed)
+imp_method(CRbPlane, dispose)
+imp_method(CRbPlane, is_disposed)
 
-imp_attr_accessor(RbPlane, bitmap)
-imp_attr_accessor(RbPlane, zoom_x)
-imp_attr_accessor(RbPlane, zoom_y)
-imp_attr_accessor(RbPlane, opacity)
-imp_attr_accessor(RbPlane, blend_type)
-imp_attr_accessor(RbPlane, color)
-imp_attr_accessor(RbPlane, tone)
+imp_attr_accessor(CRbPlane, bitmap)
+imp_attr_accessor(CRbPlane, zoom_x)
+imp_attr_accessor(CRbPlane, zoom_y)
+imp_attr_accessor(CRbPlane, opacity)
+imp_attr_accessor(CRbPlane, blend_type)
+imp_attr_accessor(CRbPlane, color)
+imp_attr_accessor(CRbPlane, tone)

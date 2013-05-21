@@ -5,13 +5,13 @@
 **
 ** Ruby Class Color
 */
-#include "RbColor.h"
+#include "CRbColor.h"
 #include "sin_types.h"
 #include "sin_color.h"
 
 VALUE rb_cColor;
 
-RbColor::RbColor()
+CRbColor::CRbColor()
 	: m_color(0)
 	, m_r(0)
 	, m_g(0)
@@ -24,7 +24,7 @@ RbColor::RbColor()
 {
 }
 
-void RbColor::InitLibrary()
+void CRbColor::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -36,7 +36,7 @@ void RbColor::InitLibrary()
 	rb_cColor = rb_define_class_under(rb_mSin, "Color", rb_cObject);
 	
 	// special method
-	rb_define_alloc_func(rb_cColor, ObjAllocate<RbColor>);
+	rb_define_alloc_func(rb_cColor, ObjAllocate<CRbColor>);
 	rb_define_method(rb_cColor, "initialize", (RbFunc)dm_initialize,	-1);
 
 	// class method
@@ -73,7 +73,7 @@ void RbColor::InitLibrary()
  *	@desc
  *		生成 Color 对象。如省略 alpha 的话则默认为 255。
  */
-VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbColor::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	if (argc == 1)
 	{
@@ -85,7 +85,7 @@ VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 		else
 		{
 			SafeColorValue(argv[0]);
-			RbColor * color = GetObjectPtr<RbColor>(argv[0]);
+			CRbColor * color = GetObjectPtr<CRbColor>(argv[0]);
 			m_r = color->m_r;
 			m_g = color->m_g;
 			m_b = color->m_b;
@@ -121,34 +121,34 @@ VALUE RbColor::initialize(int argc, VALUE * argv, VALUE obj)
 	return obj;
 }
 
-VALUE RbColor::set(int argc, VALUE * argv, VALUE obj)
+VALUE CRbColor::set(int argc, VALUE * argv, VALUE obj)
 {
 	return initialize(argc, argv, obj);
 }
 
-VALUE RbColor::_dump(VALUE depth)
+VALUE CRbColor::_dump(VALUE depth)
 {
 	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
 }
 
-VALUE RbColor::clone()
+VALUE CRbColor::clone()
 {
 	VALUE __argv[4] = { m_red, m_green, m_blue, m_alpha };
 
 	return rb_class_new_instance(4, __argv, obj_class());
 }
 
-VALUE RbColor::to_string()
+VALUE CRbColor::to_string()
 {
 	return rb_sprintf("#<%s(%f, %f, %f, %f)>", obj_classname(), m_r, m_g, m_b, m_a);
 }
 
-VALUE RbColor::get_red()
+VALUE CRbColor::get_red()
 {
 	return m_red;
 }
 
-VALUE RbColor::set_red(VALUE red)
+VALUE CRbColor::set_red(VALUE red)
 {
 	SafeNumericValue(red);
 
@@ -161,12 +161,12 @@ VALUE RbColor::set_red(VALUE red)
 	return m_red;
 }
 
-VALUE RbColor::get_green()
+VALUE CRbColor::get_green()
 {
 	return m_green;
 }
 
-VALUE RbColor::set_green(VALUE green)
+VALUE CRbColor::set_green(VALUE green)
 {
 	SafeNumericValue(green);
 
@@ -179,12 +179,12 @@ VALUE RbColor::set_green(VALUE green)
 	return m_green;
 }
 
-VALUE RbColor::get_blue()
+VALUE CRbColor::get_blue()
 {
 	return m_blue;
 }
 
-VALUE RbColor::set_blue(VALUE blue)
+VALUE CRbColor::set_blue(VALUE blue)
 {
 	SafeNumericValue(blue);
 
@@ -197,12 +197,12 @@ VALUE RbColor::set_blue(VALUE blue)
 	return m_blue;
 }
 
-VALUE RbColor::get_alpha()
+VALUE CRbColor::get_alpha()
 {
 	return m_alpha;
 }
 
-VALUE RbColor::set_alpha(VALUE alpha)
+VALUE CRbColor::set_alpha(VALUE alpha)
 {
 	SafeNumericValue(alpha);
 
@@ -218,7 +218,7 @@ VALUE RbColor::set_alpha(VALUE alpha)
 /*
  *	以下定义ruby方法
  */
-VALUE RbColor::dm_load(VALUE klass, VALUE str)
+VALUE CRbColor::dm_load(VALUE klass, VALUE str)
 {
 	if (4 * sizeof(VALUE) != RSTRING_LEN(str))	//	error
 		return Qnil;
@@ -226,9 +226,9 @@ VALUE RbColor::dm_load(VALUE klass, VALUE str)
 	return rb_class_new_instance(4, (VALUE*)RSTRING_PTR(str), klass);
 }
 
-imp_method_vargs(RbColor, set)
+imp_method_vargs(CRbColor, set)
 
-imp_attr_accessor(RbColor, red)
-imp_attr_accessor(RbColor, green)
-imp_attr_accessor(RbColor, blue)
-imp_attr_accessor(RbColor, alpha)
+imp_attr_accessor(CRbColor, red)
+imp_attr_accessor(CRbColor, green)
+imp_attr_accessor(CRbColor, blue)
+imp_attr_accessor(CRbColor, alpha)

@@ -5,16 +5,16 @@
 **
 ** Ruby Class Tone
 */
-#ifndef __RB_TONE_H__
-#define __RB_TONE_H__
+#ifndef __C_RB_TONE_H__
+#define __C_RB_TONE_H__
 
 #ifdef WIN32
 #pragma once
 #endif
 
-#include "RbColor.h"
+#include "CRbColor.h"
 
-class RbTone : public RbColor
+class CRbTone : public CRbColor
 {
 public:
 	static void		InitLibrary();

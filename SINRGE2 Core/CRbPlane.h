@@ -5,25 +5,25 @@
 **
 ** Ruby Class Plane
 */
-#ifndef __RB_PLANE_H__
-#define __RB_PLANE_H__
+#ifndef __C_RB_PLANE_H__
+#define __C_RB_PLANE_H__
 
-#include "RbDisplayObject.h"
+#include "CRbDisplayObject.h"
 
 class SinSprite;
 
-class RbBitmap;
-class RbColor;
-class RbTone;
+class CRbBitmap;
+class CRbColor;
+class CRbTone;
 
-class RbPlane : public DisplayObject
+class CRbPlane : public DisplayObject
 {
 public:
 	typedef DisplayObject	super;
 
 public:
-	RbPlane();
-	virtual ~RbPlane();
+	CRbPlane();
+	virtual ~CRbPlane();
 
 public:
 	static void		InitLibrary();
@@ -58,9 +58,9 @@ protected:
 
 	SinSprite *		m_pSpr;
 
-	RbBitmap *		m_bitmap_ptr;
-	RbColor *		m_color_ptr;
-	RbTone *		m_tone_ptr;
+	CRbBitmap *		m_bitmap_ptr;
+	CRbColor *		m_color_ptr;
+	CRbTone *		m_tone_ptr;
 	
 protected:
 	void			check_raise();

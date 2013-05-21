@@ -7,11 +7,11 @@
 */
 #include "sin_color.h"
 #include "RbExport.h"
-#include "RbBitmap.h"
-#include "RbColor.h"
-#include "RbRect.h"
-#include "RbFont.h"
-#include "RbTone.h"
+#include "CRbBitmap.h"
+#include "CRbColor.h"
+#include "CRbRect.h"
+#include "CRbFont.h"
+#include "CRbTone.h"
 #include "sin_app.h"
 #include <math.h>
 #include <d3dx8tex.h>
@@ -82,7 +82,7 @@ namespace
 	};
 }
 
-RbBitmap::RbBitmap()
+CRbBitmap::CRbBitmap()
 	: m_disposed(true)
 	, m_modify_count(0)
 	, m_filename(Qnil)
@@ -91,7 +91,7 @@ RbBitmap::RbBitmap()
 {
 }
 
-RbBitmap::~RbBitmap()
+CRbBitmap::~CRbBitmap()
 {
 	if (m_bmp.quad.tex)
 	{
@@ -100,7 +100,7 @@ RbBitmap::~RbBitmap()
 	}
 }
 
-void RbBitmap::InitLibrary()
+void CRbBitmap::InitLibrary()
 {
 	/**
 	 *	@classname
@@ -112,7 +112,7 @@ void RbBitmap::InitLibrary()
 	rb_cBitmap = rb_define_class_under(rb_mSin, "Bitmap", rb_cObject);
 	
 	// special method
-	rb_define_alloc_func(rb_cBitmap, ObjAllocate<RbBitmap>);
+	rb_define_alloc_func(rb_cBitmap, ObjAllocate<CRbBitmap>);
 	rb_define_method(rb_cBitmap, "initialize",			(RbFunc)dm_initialize,			-1);
 
 	// instance method
@@ -156,7 +156,7 @@ void RbBitmap::InitLibrary()
 	rb_define_method(rb_cBitmap, "clone",				(RbFunc)dm_clone,				0);
 }
 
-void RbBitmap::mark()
+void CRbBitmap::mark()
 {
 	if (m_rect_ptr)	m_rect_ptr->MarkObject();
 	if (m_font_ptr)	m_font_ptr->MarkObject();
@@ -165,7 +165,7 @@ void RbBitmap::mark()
 		rb_gc_mark(m_filename);
 }
 
-VALUE RbBitmap::initialize(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE arg01, arg02;
 
@@ -187,8 +187,8 @@ VALUE RbBitmap::initialize(int argc, VALUE * argv, VALUE obj)
 
 			SafeColorValue(arg02);
 			{
-				RbColor * ccol;
-				ccol = GetObjectPtr<RbColor>(arg02);
+				CRbColor * ccol;
+				ccol = GetObjectPtr<CRbColor>(arg02);
 				dwColorValue = ccol->GetColor();
 			}
 			goto __bitmap_load;
@@ -261,22 +261,22 @@ __finish:
 		//	create rect
 		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_bmp.width), INT2FIX(m_bmp.height)};
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
-		m_rect_ptr = GetObjectPtr<RbRect>(rect);
+		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
 		// create a font object for the bitmap-obj
 		VALUE font = rb_class_new_instance(0, 0, rb_cFont);
-		m_font_ptr = GetObjectPtr<RbFont>(font);
+		m_font_ptr = GetObjectPtr<CRbFont>(font);
 		m_disposed = false;
 	}
 	return obj;
 }
 
-VALUE RbBitmap::clone()
+VALUE CRbBitmap::clone()
 {
 	check_raise();
 
 	VALUE __argv[] = { INT2FIX(m_bmp.width), INT2FIX(m_bmp.height) };
 	VALUE bitmap = rb_class_new_instance(2, __argv, obj_class());
-	RbBitmap * bmp_ptr = GetObjectPtr<RbBitmap>(bitmap);
+	CRbBitmap * bmp_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	//memcpy(bmp_ptr->GetBitmapPtr(), &m_bmp, sizeof(bitmap_t));
@@ -298,7 +298,7 @@ VALUE RbBitmap::clone()
 	return bitmap;
 }
 
-HTEXTURE RbBitmap::LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx)
+HTEXTURE CRbBitmap::LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx)
 {
 	HGE* hge = GetAppPtr()->GetHgePtr();
 	HTEXTURE tex = hge->Texture_Load(filename, 0, false, colorKey);
@@ -327,13 +327,13 @@ HTEXTURE RbBitmap::LoadTexture(const wchar_t * filename, DWORD colorKey, int &su
 	return tex;
 }
 
-void RbBitmap::check_raise()
+void CRbBitmap::check_raise()
 {
 	if (m_disposed)
 		rb_raise(rb_eSinError, "disposed bitmap");
 }
 
-bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
+bool CRbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 {
 	if (!dwTone)
 		return true;
@@ -373,7 +373,7 @@ bool RbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 	return true;
 }
 
-bool RbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone)
+bool CRbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone)
 {
 	DWORD * pSrcTexData = 0;
 	DWORD * pDstTexData = 0;
@@ -450,7 +450,7 @@ failed_return:
 	return false;
 }
 
-void RbBitmap::ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V)
+void CRbBitmap::ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V)
 {
 	int max = R;
 	if (G > max) max = G;
@@ -480,7 +480,7 @@ void RbBitmap::ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float 
 	}
 }
 
-void RbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B)
+void CRbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B)
 {
 	if (S == 0)
 	{
@@ -514,7 +514,7 @@ void RbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BY
 	}
 }
 
-bool RbBitmap::GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC)
+bool CRbBitmap::GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC)
 {
 	HDC hScreenDC;
 
@@ -543,7 +543,7 @@ bool RbBitmap::GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, 
 	return (bRet != 0);
 }
 
-bitmap_p RbBitmap::CloneBitmap(bitmap_p pBmp)
+bitmap_p CRbBitmap::CloneBitmap(bitmap_p pBmp)
 {
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	bitmap_p clone = (bitmap_p)malloc(sizeof(bitmap_t));
@@ -557,7 +557,7 @@ bitmap_p RbBitmap::CloneBitmap(bitmap_p pBmp)
 	return clone;
 }
 
-HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp)
+HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp)
 {
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
@@ -581,7 +581,7 @@ HTEXTURE RbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp
 	return cut;
 }
 
-void RbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
+void CRbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
 {
 	long lx, ly, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
 	
@@ -634,7 +634,7 @@ void RbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int 
 	}
 }
 
-bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
+bool CRbBitmap::ScreenToBitmap(bitmap_p pBmp)
 {
 	int width, height;
 	HGE * hge = GetAppPtr()->GetHgePtr();
@@ -670,7 +670,7 @@ bool RbBitmap::ScreenToBitmap(bitmap_p pBmp)
 	return true;
 }
 
-VALUE RbBitmap::dispose()
+VALUE CRbBitmap::dispose()
 {
 	if (m_disposed)
 		return Qnil;
@@ -686,12 +686,12 @@ VALUE RbBitmap::dispose()
 	return Qnil;
 }
 
-VALUE RbBitmap::is_disposed()
+VALUE CRbBitmap::is_disposed()
 {
 	return C2RbBool(m_disposed);
 }
 
-VALUE RbBitmap::hue_change(VALUE hue)
+VALUE CRbBitmap::hue_change(VALUE hue)
 {
 	check_raise();
 
@@ -749,7 +749,7 @@ VALUE RbBitmap::hue_change(VALUE hue)
 	return Qnil;
 }
 
-VALUE RbBitmap::brightness_change(VALUE brightness)
+VALUE CRbBitmap::brightness_change(VALUE brightness)
 {
 	check_raise();
 
@@ -787,7 +787,7 @@ VALUE RbBitmap::brightness_change(VALUE brightness)
 	return Qnil;
 }
 
-VALUE RbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -802,7 +802,7 @@ VALUE RbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 		else
 		{
 			SafeToneValue(argv[0]);
-			tone = GetObjectPtr<RbTone>(argv[0])->GetColor();
+			tone = GetObjectPtr<CRbTone>(argv[0])->GetColor();
 		}
 	}
 	else
@@ -832,7 +832,7 @@ VALUE RbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::blt(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -845,7 +845,7 @@ VALUE RbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 		rb_scan_args(argc, argv, "41", &x, &y, &src_bitmap, &src_rect, &opacity);
 
 		SafeBitmapValue(src_bitmap);
-		RbBitmap * srcBmp = GetObjectPtr<RbBitmap>(src_bitmap);
+		CRbBitmap * srcBmp = GetObjectPtr<CRbBitmap>(src_bitmap);
 		src = srcBmp->GetBitmapPtr();
 	}
 	else
@@ -859,7 +859,7 @@ VALUE RbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	SafeRectValue(src_rect);
 
 	bitmap_p des = &m_bmp;
-	RbRect* srcRect = GetObjectPtr<RbRect>(src_rect);
+	CRbRect* srcRect = GetObjectPtr<CRbRect>(src_rect);
 	int sx = srcRect->x;
 	int sy = srcRect->y;
 	int sw = srcRect->width;
@@ -944,7 +944,7 @@ VALUE RbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -956,14 +956,14 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	SafeBitmapValue(src_bitmap);
 	SafeRectValue(src_rect);
 	
-	RbRect * desRect = GetObjectPtr<RbRect>(dest_rect);
+	CRbRect * desRect = GetObjectPtr<CRbRect>(dest_rect);
 	int dx = desRect->x;
 	int dy = desRect->y;
 	int dw = desRect->width;
 	int dh = desRect->height;
-	RbBitmap * srcBmp = GetObjectPtr<RbBitmap>(src_bitmap);
+	CRbBitmap * srcBmp = GetObjectPtr<CRbBitmap>(src_bitmap);
 	src = srcBmp->GetBitmapPtr();
-	RbRect * srcRect = GetObjectPtr<RbRect>(src_rect);
+	CRbRect * srcRect = GetObjectPtr<CRbRect>(src_rect);
 	int sx = srcRect->x;
 	int sy = srcRect->y;
 	int sw = srcRect->width;
@@ -1039,7 +1039,7 @@ VALUE RbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -1061,14 +1061,14 @@ VALUE RbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 		else
 		{
 			SafeColorValue(argv[4]);
-			color = GetObjectPtr<RbColor>(argv[4])->GetColor();
+			color = GetObjectPtr<CRbColor>(argv[4])->GetColor();
 		}
 	}
 	else if (argc == 2)
 	{
 		SafeRectValue(argv[0]);
 
-		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
+		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
 		x = rect->x;
 		y = rect->y;
 		width = rect->width;
@@ -1079,7 +1079,7 @@ VALUE RbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 		else
 		{
 			SafeColorValue(argv[1]);
-			color = GetObjectPtr<RbColor>(argv[1])->GetColor();
+			color = GetObjectPtr<CRbColor>(argv[1])->GetColor();
 		}
 	}
 	else
@@ -1132,7 +1132,7 @@ VALUE RbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::clear()
+VALUE CRbBitmap::clear()
 {
 	check_raise();
 
@@ -1152,7 +1152,7 @@ VALUE RbBitmap::clear()
 	return Qnil;
 }
 
-VALUE RbBitmap::get_pixel(VALUE x, VALUE y)
+VALUE CRbBitmap::get_pixel(VALUE x, VALUE y)
 {
 	check_raise();
 	
@@ -1177,7 +1177,7 @@ VALUE RbBitmap::get_pixel(VALUE x, VALUE y)
 	return pixel;
 }
 
-VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
+VALUE CRbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 {
 	check_raise();
 
@@ -1195,7 +1195,7 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	else
 	{
 		SafeColorValue(color);
-		col = GetObjectPtr<RbTone>(color)->GetColor();
+		col = GetObjectPtr<CRbTone>(color)->GetColor();
 	}
 	//	跳过透明像素
 	/*if (!GET_ARGB_A(dwColor))
@@ -1216,7 +1216,7 @@ VALUE RbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	return Qnil;
 }
 
-VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -1247,7 +1247,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		SafeRectValue(argv[0]);
 		//SafeStringValue(vstr);
 
-		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
+		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
 		ix = rect->x;
 		iy = rect->y;
 		width = rect->width;
@@ -1409,7 +1409,7 @@ VALUE RbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::text_size(VALUE str)
+VALUE CRbBitmap::text_size(VALUE str)
 {
 	VALUE vStr = NIL_P(str) ? rb_str_new2("nil") : rb_obj_as_string(str);
 
@@ -1432,7 +1432,7 @@ VALUE RbBitmap::text_size(VALUE str)
 	return rect;
 }
 
-VALUE RbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -1459,7 +1459,7 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 
 		SafeRectValue(argv[0]);
 
-		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
+		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
 		x = rect->x;
 		y = rect->y;
 		width = rect->width;
@@ -1478,14 +1478,14 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	else
 	{
 		SafeColorValue(vcolor1);
-		color1 = GetObjectPtr<RbColor>(vcolor1)->GetColor();
+		color1 = GetObjectPtr<CRbColor>(vcolor1)->GetColor();
 	}
 	if (rb_obj_is_kind_of(vcolor2, rb_cInteger))
 		color2 = NUM2ULONG(vcolor2);
 	else
 	{
 		SafeColorValue(vcolor2);
-		color2 = GetObjectPtr<RbColor>(vcolor2)->GetColor();
+		color2 = GetObjectPtr<CRbColor>(vcolor2)->GetColor();
 	}
 
 	bool vertical = RTEST(vert);
@@ -1564,7 +1564,7 @@ VALUE RbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -1582,7 +1582,7 @@ VALUE RbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 	else
 	{
 		SafeRectValue(argv[0]);
-		RbRect * rect = GetObjectPtr<RbRect>(argv[0]);
+		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
 		x = rect->x;
 		y = rect->y;
 		width = rect->width;
@@ -1612,7 +1612,7 @@ VALUE RbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 	return Qnil;
 }
 
-VALUE RbBitmap::blur()
+VALUE CRbBitmap::blur()
 {
 	check_raise();
 	
@@ -1639,7 +1639,7 @@ VALUE RbBitmap::blur()
 	return Qnil;
 }
 
-VALUE RbBitmap::flip_h()
+VALUE CRbBitmap::flip_h()
 {
 	check_raise();
 
@@ -1659,7 +1659,7 @@ VALUE RbBitmap::flip_h()
 	return Qnil;
 }
 
-VALUE RbBitmap::flip_v()
+VALUE CRbBitmap::flip_v()
 {
 	check_raise();
 	
@@ -1685,7 +1685,7 @@ VALUE RbBitmap::flip_v()
 	return Qnil;
 }
 
-VALUE RbBitmap::radial_blur(VALUE angle, VALUE division)
+VALUE CRbBitmap::radial_blur(VALUE angle, VALUE division)
 {
 	check_raise();
 	
@@ -1720,51 +1720,51 @@ VALUE RbBitmap::radial_blur(VALUE angle, VALUE division)
 	return Qnil;
 }
 
-VALUE RbBitmap::get_rect()
+VALUE CRbBitmap::get_rect()
 {
 	check_raise();
 
 	return ReturnObject(m_rect_ptr);
 }
 
-VALUE RbBitmap::get_width()
+VALUE CRbBitmap::get_width()
 {
 	check_raise();
 
 	return INT2FIX(GetWidth());
 }
 
-VALUE RbBitmap::get_height()
+VALUE CRbBitmap::get_height()
 {
 	check_raise();
 
 	return INT2FIX(GetHeight());
 }
 
-VALUE RbBitmap::get_filename()
+VALUE CRbBitmap::get_filename()
 {
 	check_raise();
 
 	return m_filename;
 }
 
-VALUE RbBitmap::get_font()
+VALUE CRbBitmap::get_font()
 {
 	check_raise();
 
 	return ReturnObject(m_font_ptr);
 }
 
-VALUE RbBitmap::set_font(VALUE font)
+VALUE CRbBitmap::set_font(VALUE font)
 {
 	check_raise();
 
 	SafeFontValue(font);
-	m_font_ptr = GetObjectPtr<RbFont>(font);
+	m_font_ptr = GetObjectPtr<CRbFont>(font);
 	return font;
 }
 
-VALUE RbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
+VALUE CRbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
@@ -1823,32 +1823,32 @@ failed_return:
 	return Qfalse;
 }
 
-imp_method(RbBitmap, dispose)
-imp_method(RbBitmap, is_disposed)
-imp_method_vargs(RbBitmap, save_to_file)
-imp_method01(RbBitmap, hue_change)
-imp_method01(RbBitmap, brightness_change)
-imp_method_vargs(RbBitmap, tone_change)
+imp_method(CRbBitmap, dispose)
+imp_method(CRbBitmap, is_disposed)
+imp_method_vargs(CRbBitmap, save_to_file)
+imp_method01(CRbBitmap, hue_change)
+imp_method01(CRbBitmap, brightness_change)
+imp_method_vargs(CRbBitmap, tone_change)
 
-imp_method_vargs(RbBitmap, blt)
-imp_method_vargs(RbBitmap, stretch_blt)
-imp_method_vargs(RbBitmap, fill_rect)
-imp_method(RbBitmap, clear)
-imp_method02(RbBitmap, get_pixel)
-imp_method03(RbBitmap, set_pixel)
-imp_method_vargs(RbBitmap, draw_text)
-imp_method01(RbBitmap, text_size)
+imp_method_vargs(CRbBitmap, blt)
+imp_method_vargs(CRbBitmap, stretch_blt)
+imp_method_vargs(CRbBitmap, fill_rect)
+imp_method(CRbBitmap, clear)
+imp_method02(CRbBitmap, get_pixel)
+imp_method03(CRbBitmap, set_pixel)
+imp_method_vargs(CRbBitmap, draw_text)
+imp_method01(CRbBitmap, text_size)
 
-imp_method_vargs(RbBitmap, gradient_fill_rect)
-imp_method_vargs(RbBitmap, clear_rect)
-imp_method(RbBitmap, blur)
-imp_method02(RbBitmap, radial_blur)
+imp_method_vargs(CRbBitmap, gradient_fill_rect)
+imp_method_vargs(CRbBitmap, clear_rect)
+imp_method(CRbBitmap, blur)
+imp_method02(CRbBitmap, radial_blur)
 
-imp_method(RbBitmap, flip_h)
-imp_method(RbBitmap, flip_v)
+imp_method(CRbBitmap, flip_h)
+imp_method(CRbBitmap, flip_v)
 
-imp_attr_reader(RbBitmap, rect)
-imp_attr_reader(RbBitmap, width)
-imp_attr_reader(RbBitmap, height)
-imp_attr_reader(RbBitmap, filename)
-imp_attr_accessor(RbBitmap, font)
+imp_attr_reader(CRbBitmap, rect)
+imp_attr_reader(CRbBitmap, width)
+imp_attr_reader(CRbBitmap, height)
+imp_attr_reader(CRbBitmap, filename)
+imp_attr_accessor(CRbBitmap, font)

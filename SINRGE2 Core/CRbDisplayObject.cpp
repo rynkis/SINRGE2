@@ -5,8 +5,8 @@
 **
 ** Ruby Class DisplayObject
 */
-#include "RbDisplayObject.h"
-#include "RbViewport.h"
+#include "CRbDisplayObject.h"
+#include "CRbViewport.h"
 
 DisplayObject::DisplayObject()
 	: m_x(0), m_y(0), m_z(0)

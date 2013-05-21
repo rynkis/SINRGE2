@@ -1,5 +1,5 @@
-﻿#include "Kconv.h"
-#include "AutoBuffer.h"
+﻿#include "sin_kconv.h"
+#include "sin_auto_buffer.h"
 
 #include <Windows.h>
 //#include <assert.h>

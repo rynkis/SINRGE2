@@ -5,8 +5,8 @@
 **
 ** Ruby Class LFont
 */
-#ifndef __CLASS_RB_LFONT_H__
-#define __CLASS_RB_LFONT_H__
+#ifndef __C_RB_LFONT_H__
+#define __C_RB_LFONT_H__
 
 #ifdef WIN32
 #pragma once
@@ -14,22 +14,22 @@
 
 #define MAX_SIZE  65536
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 #include "sin_bitmap.h"
 #include "sin_types.h"
 
-class RbColor;
+class CRbColor;
 
-class RbLFont : public RbClassBase
+class CRbLFont : public CRbClassBase
 {
 public:
-	RbLFont();
-	virtual ~RbLFont();
+	CRbLFont();
+	virtual ~CRbLFont();
 
 public:
 	static void				InitLibrary();
 
-	RbColor *				GetColorPtr() const { return m_color_ptr; }
+	CRbColor *				GetColorPtr() const { return m_color_ptr; }
 	//bool					IsShadow() const { return RTEST(m_shadow); }
 
 protected:
@@ -49,7 +49,7 @@ protected:
 	VALUE					m_italic;*/
 	VALUE					m_shadow;
 
-	RbColor *				m_color_ptr;
+	CRbColor *				m_color_ptr;
 
 	bool					m_disposed;
 
@@ -70,7 +70,7 @@ protected:
 	//attr_accessor(shadow)
 
 private:
-	friend class	RbLFont;
+	friend class	CRbLFont;
 };
 
-#endif // __CLASS_RB_LFONT_H__
+#endif // __C_RB_LFONT_H__

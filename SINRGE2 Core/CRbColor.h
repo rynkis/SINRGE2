@@ -5,19 +5,19 @@
 **
 ** Ruby Class Color
 */
-#ifndef __RB_COLOR_H__
-#define __RB_COLOR_H__
+#ifndef __C_RB_COLOR_H__
+#define __C_RB_COLOR_H__
 
 #ifdef WIN32
 #pragma once
 #endif
 
-#include "RbClassBase.h"
+#include "CRbClassBase.h"
 
-class RbColor : public RbClassBase
+class CRbColor : public CRbClassBase
 {
 public:
-	RbColor();													//	allocate
+	CRbColor();													//	allocate
 
 public:
 	static void		InitLibrary();
@@ -63,4 +63,4 @@ protected:
 	attr_accessor(alpha)
 };
 
-#endif  //__RB_COLOR_H__
+#endif  //__C_RB_COLOR_H__

@@ -3,26 +3,26 @@
 ** Copyright (C) 2013 Syalon, Shy07
 ** Gernischt@gmail.com
 **
-** Cpp Struct RbRenderTree
+** Cpp Struct CRbRenderTree
 */
-#include "RbRenderTree.h"
-#include "RbViewport.h"
+#include "CRbRenderTree.h"
+#include "CRbViewport.h"
 #include "sin_app.h"
 
-HGE* RbRenderState::s_pHge = 0;
+HGE* CRbRenderState::s_pHge = 0;
 
-//RbRenderNode*	RbRenderTree::s_pViewportLists	= 0;
-RbRenderNode *	RbRenderTree::s_pRenderHead		= 0;
-RbRenderNode *	RbRenderTree::s_pRenderTail		= 0;
+//RbRenderNode*	CRbRenderTree::s_pViewportLists	= 0;
+RbRenderNode *	CRbRenderTree::s_pRenderHead		= 0;
+RbRenderNode *	CRbRenderTree::s_pRenderTail		= 0;
 
-void RbRenderTree::Init()
+void CRbRenderTree::Init()
 {
 }
 
 /**
  *	äÖÈ¾º¯Êý
  */
-bool RbRenderTree::RenderProc()
+bool CRbRenderTree::RenderProc()
 {
 	if(!NIL_P(rb_errinfo()))
 		return true;
@@ -53,17 +53,17 @@ bool RbRenderTree::RenderProc()
 	return false;
 }
 
-//void RbRenderTree::ViewportAddToFront(RbRenderNode* node)
+//void CRbRenderTree::ViewportAddToFront(RbRenderNode* node)
 //{
 //	s_pViewportLists = DoubleLinkAddToFront(s_pViewportLists, node);
 //}
 //
-//void RbRenderTree::ViewportDelete(RbRenderNode* node)
+//void CRbRenderTree::ViewportDelete(RbRenderNode* node)
 //{
 //	s_pViewportLists = DoubleLinkDelete(s_pViewportLists, node);
 //}
 
-RbRenderNode *	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
+RbRenderNode *	CRbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s32 z, VALUE viewport)
 {
 	RbRenderNode * node	= ALLOC(RbRenderNode);
 	{
@@ -79,7 +79,7 @@ RbRenderNode *	RbRenderTree::AllocNode(RbRenderProc proc, VALUE value, u32 id, s
 	return node;
 }
 
-RbRenderNode *	RbRenderTree::DeleteNode(RbRenderNode * node)
+RbRenderNode *	CRbRenderTree::DeleteNode(RbRenderNode * node)
 {
 	RbRenderNode	* p1;
 	RbRenderNodePtr	* cur_head, * cur_tail;
@@ -91,8 +91,8 @@ RbRenderNode *	RbRenderTree::DeleteNode(RbRenderNode * node)
 	}
 	else
 	{
-		RbViewport * vp;
-		Data_Get_Struct(node->viewport, RbViewport, vp);
+		CRbViewport * vp;
+		Data_Get_Struct(node->viewport, CRbViewport, vp);
 		cur_head = vp->GetHeadPtr();
 		cur_tail = vp->GetTailPtr();
 	}
@@ -133,7 +133,7 @@ RbRenderNode *	RbRenderTree::DeleteNode(RbRenderNode * node)
 	return p1;
 }
 
-void RbRenderTree::InsertNode(RbRenderNode * node)
+void CRbRenderTree::InsertNode(RbRenderNode * node)
 {	
 	RbRenderNode	* p1;
 	RbRenderNodePtr	* cur_head, * cur_tail;
@@ -145,8 +145,8 @@ void RbRenderTree::InsertNode(RbRenderNode * node)
 	}
 	else
 	{
-		RbViewport * vp;
-		Data_Get_Struct(node->viewport, RbViewport, vp);
+		CRbViewport * vp;
+		Data_Get_Struct(node->viewport, CRbViewport, vp);
 		cur_head = vp->GetHeadPtr();
 		cur_tail = vp->GetTailPtr();
 	}
@@ -186,7 +186,7 @@ void RbRenderTree::InsertNode(RbRenderNode * node)
 	}
 }
 
-void RbRenderTree::DestroyNode(RbRenderNodePtr * node)
+void CRbRenderTree::DestroyNode(RbRenderNodePtr * node)
 {
 	if (*node)
 	{
@@ -200,7 +200,7 @@ void RbRenderTree::DestroyNode(RbRenderNodePtr * node)
 	}
 }
 
-void RbRenderTree::FreeNode(RbRenderNodePtr * node)
+void CRbRenderTree::FreeNode(RbRenderNodePtr * node)
 {
 	if (*node)
 	{
@@ -209,7 +209,7 @@ void RbRenderTree::FreeNode(RbRenderNodePtr * node)
 	}
 }
 
-RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode * list, RbRenderNode * node)
+RbRenderNode* CRbRenderTree::DoubleLinkAddToFront(RbRenderNode * list, RbRenderNode * node)
 {
 	if (!node)
 		return list;
@@ -223,7 +223,7 @@ RbRenderNode* RbRenderTree::DoubleLinkAddToFront(RbRenderNode * list, RbRenderNo
 	return node;
 }
 
-RbRenderNode* RbRenderTree::DoubleLinkDelete(RbRenderNode * list, RbRenderNode * node)
+RbRenderNode* CRbRenderTree::DoubleLinkDelete(RbRenderNode * list, RbRenderNode * node)
 {
 	if (!node)
 		return list;
