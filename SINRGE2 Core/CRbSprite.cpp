@@ -476,11 +476,12 @@ VALUE CRbSprite::get_angle()
 VALUE CRbSprite::set_angle(VALUE angle)
 {
 	check_raise();
-	SafeFixnumValue(angle);
+	SafeNumericValue(angle);
 
-	m_angle_rad = angle;
+	int agl = NUM2INT(angle);
+	m_angle_rad = INT2FIX(agl);
 
-	m_angle = SinDeg2Rad(360.0f - FIX2INT(angle));
+	m_angle = SinDeg2Rad(360.0f - agl);
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
 

@@ -1642,26 +1642,6 @@ VALUE CRbBitmap::blur()
 VALUE CRbBitmap::flip_h()
 {
 	check_raise();
-
-	s32 width = m_bmp.width;
-	s32 height = m_bmp.height;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-	if (!pTexData) return Qfalse;
-	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
-	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
-	for (s32 ly = 0; ly < height; ++ly)
-		memcpy(pTexData + (m_bmp.width * ly), pTempData + (m_bmp.width * (height - ly - 1)), sizeof(DWORD) * width);
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-	free(pTempData);
-	//	增加 修改计数值
-	++m_modify_count;
-
-	return Qnil;
-}
-
-VALUE CRbBitmap::flip_v()
-{
-	check_raise();
 	
 	s32 width = m_bmp.width;
 	s32 height = m_bmp.height;
@@ -1677,6 +1657,26 @@ VALUE CRbBitmap::flip_v()
 			pTexData[v + lx] = pTempData[v + (width - lx - 1)];
 
 	}
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	free(pTempData);
+	//	增加 修改计数值
+	++m_modify_count;
+
+	return Qnil;
+}
+
+VALUE CRbBitmap::flip_v()
+{
+	check_raise();
+
+	s32 width = m_bmp.width;
+	s32 height = m_bmp.height;
+	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	if (!pTexData) return Qfalse;
+	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
+	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
+	for (s32 ly = 0; ly < height; ++ly)
+		memcpy(pTexData + (m_bmp.width * ly), pTempData + (m_bmp.width * (height - ly - 1)), sizeof(DWORD) * width);
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
 	free(pTempData);
 	//	增加 修改计数值

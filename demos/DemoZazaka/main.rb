@@ -52,7 +52,7 @@ while true
     spt[0].zoom_x += spt[2] * dt
     spt[0].zoom_y = spt[0].zoom_x
     spt[2] = -spt[2] if spt[0].zoom_x > 2.0 || spt[0].zoom_x < 0.5
-    spt[0].angle += Integer(spt[3] * dt)
+    spt[0].angle += spt[3] * dt
   end
 end
 
