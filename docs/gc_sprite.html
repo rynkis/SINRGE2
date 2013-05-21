@@ -64,14 +64,14 @@
     <p>注意：全局只允许一个 Sprite 实例播放视频。</p>
   </dd>
 
-  <dt>is_playing</dt>
+  <dt>playing?</dt>
   <dd>
     <p>获取视频播放状态，正在播放时返回 true。</p>
   </dd>
 
   <dt>replay_at_finish</dt>
   <dd>
-    <p>当视频播放到结尾时自动从头开始播放，相当于 rewind_movie unless is_playing 。</p>
+    <p>当视频播放到结尾时自动从头开始播放，相当于 rewind_movie unless playing? 。</p>
     <p>此方法需要每帧调用。</p>
   </dd>
 
