@@ -17,9 +17,9 @@ class SINRGE2::LFont
   # => char_bitmap
   #
   alias demo_origin_char_bitmap char_bitmap
-  def char_bitmap(texts)
+  def char_bitmap(str)
     @cache ||= {}
-    char = texts.slice(0, 1)
+    char = str.slice(0, 1)
     if @cache[char]
       @cache[char] = demo_origin_char_bitmap(char) if @cache[char].disposed?
     else
