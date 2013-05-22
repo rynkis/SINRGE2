@@ -6,11 +6,19 @@ SINRGE2.init_video
 
 class SINRGE2::LFont
   #
+  # => cache_clear
+  #
+  def cache_clear
+    if @cache
+      @cache.each_value {|bmp| bmp.dispose }
+      @cache.clear
+    end
+  end
+  #
   # => dispose
   #
   alias demo_origin_dispose dispose
   def dispose
-    @cache.each_value {|bmp| bmp.dispose } if @cache
     demo_origin_dispose
   end
   #
