@@ -4,6 +4,31 @@ include SINRGE2
 Frame.title = "DemoLFont"
 SINRGE2.init_video
 
+class SINRGE2::LFont
+  #
+  # => dispose
+  #
+  alias demo_origin_dispose dispose
+  def dispose
+    @cache.each_value {|bmp| bmp.dispose } if @cache
+    demo_origin_dispose
+  end
+  #
+  # => char_bitmap
+  #
+  alias demo_origin_char_bitmap char_bitmap
+  def char_bitmap(texts)
+    @cache ||= {}
+    char = texts.slice(0, 1)
+    if @cache[char]
+      @cache[char] = demo_origin_char_bitmap(char) if @cache[char].disposed?
+    else
+      @cache[char] = demo_origin_char_bitmap(char)
+    end
+    @cache[char]
+  end
+end
+
 buffer = open("Unicode12", "rb") {|f| f.read }
 buffer = Zlib::Inflate.inflate(buffer)
 @lfont12 = LFont.new(buffer, 12, true)
@@ -17,21 +42,16 @@ buffer = Zlib::Inflate.inflate(buffer)
 @spt = Sprite.new
 @spt.bitmap = Bitmap.new(800, 600)
 
-def draw_lfont_text(lfont, texts, x: nil, y: nil, width: nil, height: nil, rect: nil, halign: 0, valign: 1)
+def draw_lfont_text(lfont, str, x: nil, y: nil, width: nil, height: nil, rect: nil, halign: 0, valign: 1)
   if rect
     x = rect.x
     y = rect.y
     width = rect.width
     height = rect.height
   end
-
+  texts = str.clone
   if halign == 1 || halign == 2
-    temp = texts.clone
-    tw = 0
-    while !temp.empty?
-      text = temp.slice!(0, 1)
-      tw += lfont.char_width(text)
-    end
+    tw = lfont.text_width(texts)
     if width - tw > 0
       x += (width - tw) / (3 - halign)
     end
@@ -43,8 +63,7 @@ def draw_lfont_text(lfont, texts, x: nil, y: nil, width: nil, height: nil, rect:
     text = texts.slice!(0, 1)
     bmp = lfont.char_bitmap(text)
     @spt.bitmap.blt(x, y, bmp, bmp.rect)
-    x += lfont.char_width(text)
-    bmp.dispose
+    x += lfont.text_width(text)
   end
 end
 

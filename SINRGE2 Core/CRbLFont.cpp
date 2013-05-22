@@ -53,7 +53,7 @@ void CRbLFont::InitLibrary()
 	rb_define_method(rb_cLFont, "disposed?",			(RbFunc)dm_is_disposed,	0);
 	
 	rb_define_method(rb_cLFont, "char_bitmap",			(RbFunc)dm_get_char_bmp,1);
-	rb_define_method(rb_cLFont, "char_width",			(RbFunc)dm_char_width,	1);
+	rb_define_method(rb_cLFont, "text_width",			(RbFunc)dm_text_width,	1);
 	//rb_define_method(rb_cLFont, "draw_text",			(RbFunc)dm_draw_text,	-1);
 	
 
@@ -201,25 +201,20 @@ __failed_return:
 	return Qnil;
 }
 
-VALUE CRbLFont::char_width(VALUE str)
+VALUE CRbLFont::text_width(VALUE str)
 {
 	SafeStringValue(str);
-	DWORD char_index = Kconv::UTF8ToUnicode(RSTRING_PTR(str))[0];
-	if (char_index < 128)
-		return INT2FIX(m_size / 2);
-	else
-		return INT2FIX(m_size);
-	/*wchar_t * text = Kconv::UTF8ToUnicode(RSTRING_PTR(str));
+	wchar_t * text = Kconv::UTF8ToUnicode(RSTRING_PTR(str));
 	DWORD len = wcslen(text);
 	long width = 0;
-	for (DWORD l = 0; l < len; ++l)
+	for (DWORD i = 0; i < len; ++i)
 	{
-		if (text[len] < 128)
+		if (text[i] < 128)
 			width += m_size / 2;
 		else
 			width += m_size;
 	}
-	return LONG2FIX(width);*/
+	return LONG2FIX(width);
 }
 
 VALUE CRbLFont::get_size()
@@ -265,7 +260,7 @@ imp_method(CRbLFont, dispose)
 imp_method(CRbLFont, is_disposed)
 imp_method(CRbLFont, get_size)
 imp_method01(CRbLFont, get_char_bmp)
-imp_method01(CRbLFont, char_width)
+imp_method01(CRbLFont, text_width)
 //imp_method_vargs(CRbLFont, draw_text)
 
 imp_attr_accessor(CRbLFont, color)

@@ -61,7 +61,7 @@ protected:
 	dm_method(get_size)
 	
 	dm_method01(get_char_bmp)
-	dm_method01(char_width)
+	dm_method01(text_width)
 	//dm_method_vargs(draw_text)
 
 	/*attr_accessor(bold)
