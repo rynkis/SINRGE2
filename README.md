@@ -59,5 +59,7 @@ SINRGE2.stop # stop SINRGE2 with looping Graphics#update
 ```
 You can get the same effect in RGSS too.  
 
-unfinished
+## Platforms
+
+Windows Only.
 
