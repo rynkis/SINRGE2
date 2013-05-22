@@ -47,19 +47,19 @@ class SINIME < Sprite
     enorcn
   end
   #
-  #
+  # => contents
   #
   def contents
     @contents.bitmap
   end
   #
-  #
+  # => active
   #
   def active
     @active
   end
   #
-  #
+  # => active=
   #
   def active=(value)
     @active = value
