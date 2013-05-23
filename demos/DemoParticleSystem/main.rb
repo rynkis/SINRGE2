@@ -12,15 +12,15 @@ begin
   @pars = []
   map = [[96,32],[96,96],[0,0],[32,32],[64,64],[0,0],[32,0],[96,96],[0,32]]
   (0..8).each do |i|
-      par = ParticleSystem.new("par/particle#{i+1}.psi")
+    par = ParticleSystem.new("par/particle#{i+1}.psi")
       
-      btm01 = Bitmap.new(32,32)
-      btm01.blt(0,0, bigall, Rect.new(map[i][0], map[i][1], 32, 32))
+    btm01 = Bitmap.new(32,32)
+    btm01.blt(0,0, bigall, Rect.new(map[i][0], map[i][1], 32, 32))
       
-      par.bitmap = btm01
+    par.bitmap = btm01
       
-      par.fire_at(i % 3 * 256 + 128, i / 3 * 200 + 100)
-      @pars << par
+    par.fire_at(i % 3 * 256 + 128, i / 3 * 200 + 100)
+    @pars << par
   end
 
   while true
@@ -36,7 +36,7 @@ begin
       @pars[4].stop
     elsif Input.click? 0x02
       @pars[4].stop(true)
-    elsif Input.click? 0x31
+    elsif Input.click? 0x04
       @pars[4].fire
     end
 
