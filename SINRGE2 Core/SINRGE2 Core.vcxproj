@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6CF7C524-819C-4389-A524-2D2513708EA2}</ProjectGuid>
+    <ProjectGuid>{38CBEF20-8D49-4EDA-9125-1F7C6E94D0E3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SINRGE2Core</RootNamespace>
   </PropertyGroup>
@@ -24,9 +24,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -40,12 +39,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <GenerateManifest>false</GenerateManifest>
-    <TargetName>SINRGE2</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,15 +50,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Contrib\include;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/lib/seal/seal.lib;$(SolutionDir)Contrib/lib/seal/OpenAL32.lib;$(SolutionDir)Contrib/lib/seal/libogg.lib;$(SolutionDir)Contrib/lib/seal/libvorbis.lib;$(SolutionDir)Contrib/lib/seal/libmpg123.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>msvcrtd.lib</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,157 +64,16 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;HGE_DIRECTX_VER=9;HAVE_STRUCT_TIMEVAL;SIN_USE_SEAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Contrib\DirectShow\include;$(SolutionDir)Contrib\DXSDK81\include;$(SolutionDir)Contrib\include;$(ProjectDir);$(ProjectDir)hge;$(ProjectDir)hge\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
-      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <DisableSpecificWarnings>
-      </DisableSpecificWarnings>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;winmm.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <IgnoreSpecificDefaultLibraries>msvcrt.lib;libci.lib</IgnoreSpecificDefaultLibraries>
-      <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
-      <StackReserveSize>0</StackReserveSize>
     </Link>
-    <Manifest>
-      <AdditionalManifestFiles>$(SolutionDir)XPManifest.xml %(AdditionalManifestFiles)</AdditionalManifestFiles>
-    </Manifest>
-    <PreBuildEvent>
-      <Command>ruby version_generator.rb</Command>
-    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="CRb7pkgWriter.cpp" />
-    <ClCompile Include="CRbBitmap.cpp" />
-    <ClCompile Include="CRbColor.cpp" />
-    <ClCompile Include="CRbDisplayObject.cpp" />
-    <ClCompile Include="CRbFont.cpp" />
-    <ClCompile Include="CRbLFont.cpp" />
-    <ClCompile Include="CRbParticleSystem.cpp" />
-    <ClCompile Include="CRbPlane.cpp" />
-    <ClCompile Include="CRbRect.cpp" />
-    <ClCompile Include="CRbRenderTree.cpp" />
-    <ClCompile Include="CRbSprite.cpp" />
-    <ClCompile Include="CRbTable.cpp" />
-    <ClCompile Include="CRbTone.cpp" />
-    <ClCompile Include="CRbViewport.cpp" />
-    <ClCompile Include="CRbWin32API.cpp" />
-    <ClCompile Include="Entry.cpp" />
-    <ClCompile Include="hge\resource.cpp" />
-    <ClCompile Include="MRbAudio.cpp" />
-    <ClCompile Include="hge\graphics.cpp" />
-    <ClCompile Include="hge\hgecolor.cpp" />
-    <ClCompile Include="hge\hgedistort.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="hge\hgerect.cpp" />
-    <ClCompile Include="hge\hgesprite.cpp" />
-    <ClCompile Include="hge\hgevector.cpp" />
-    <ClCompile Include="hge\power.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="hge\random.cpp" />
-    <ClCompile Include="hge\system.cpp" />
-    <ClCompile Include="MRbSinCore.cpp" />
-    <ClCompile Include="MRbInput.cpp" />
-    <ClCompile Include="MRbSeal.cpp" />
-    <ClCompile Include="RubyExt\nonblock.c" />
-    <ClCompile Include="RubyExt\wait.c" />
-    <ClCompile Include="RubyExt\zlib.c" />
-    <ClCompile Include="sin_kconv.cpp" />
-    <ClCompile Include="sin_sprite.cpp" />
-    <ClCompile Include="sin_app.cpp" />
-    <ClCompile Include="sin_timer.cpp" />
-    <ClCompile Include="sin_video.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Contrib\include\ruby.h" />
-    <ClInclude Include="..\Contrib\include\ruby\backward\classext.h" />
-    <ClInclude Include="..\Contrib\include\ruby\backward\rubyio.h" />
-    <ClInclude Include="..\Contrib\include\ruby\backward\rubysig.h" />
-    <ClInclude Include="..\Contrib\include\ruby\backward\st.h" />
-    <ClInclude Include="..\Contrib\include\ruby\backward\util.h" />
-    <ClInclude Include="..\Contrib\include\ruby\config.h" />
-    <ClInclude Include="..\Contrib\include\ruby\debug.h" />
-    <ClInclude Include="..\Contrib\include\ruby\defines.h" />
-    <ClInclude Include="..\Contrib\include\ruby\digest.h" />
-    <ClInclude Include="..\Contrib\include\ruby\dl.h" />
-    <ClInclude Include="..\Contrib\include\ruby\encoding.h" />
-    <ClInclude Include="..\Contrib\include\ruby\intern.h" />
-    <ClInclude Include="..\Contrib\include\ruby\io.h" />
-    <ClInclude Include="..\Contrib\include\ruby\missing.h" />
-    <ClInclude Include="..\Contrib\include\ruby\oniguruma.h" />
-    <ClInclude Include="..\Contrib\include\ruby\re.h" />
-    <ClInclude Include="..\Contrib\include\ruby\regex.h" />
-    <ClInclude Include="..\Contrib\include\ruby\ruby.h" />
-    <ClInclude Include="..\Contrib\include\ruby\st.h" />
-    <ClInclude Include="..\Contrib\include\ruby\subst.h" />
-    <ClInclude Include="..\Contrib\include\ruby\thread.h" />
-    <ClInclude Include="..\Contrib\include\ruby\util.h" />
-    <ClInclude Include="..\Contrib\include\ruby\version.h" />
-    <ClInclude Include="..\Contrib\include\ruby\vm.h" />
-    <ClInclude Include="..\Contrib\include\ruby\win32.h" />
-    <ClInclude Include="..\Contrib\include\seal.h" />
-    <ClInclude Include="..\Contrib\include\zconf.h" />
-    <ClInclude Include="..\Contrib\include\zlib.h" />
-    <ClInclude Include="CRb7pkgWriter.h" />
-    <ClInclude Include="CRbBitmap.h" />
-    <ClInclude Include="CRbClassBase.h" />
-    <ClInclude Include="CRbColor.h" />
-    <ClInclude Include="CRbDisplayObject.h" />
-    <ClInclude Include="CRbFont.h" />
-    <ClInclude Include="CRbLFont.h" />
-    <ClInclude Include="CRbParticleSystem.h" />
-    <ClInclude Include="CRbPlane.h" />
-    <ClInclude Include="CRbRect.h" />
-    <ClInclude Include="CRbRenderTree.h" />
-    <ClInclude Include="CRbSprite.h" />
-    <ClInclude Include="CRbTable.h" />
-    <ClInclude Include="CRbTone.h" />
-    <ClInclude Include="CRbViewport.h" />
-    <ClInclude Include="CRbWin32API.h" />
-    <ClInclude Include="sin_auto_buffer.h" />
-    <ClInclude Include="sin_kconv.h" />
-    <ClInclude Include="sin_revision.h" />
-    <ClInclude Include="TANGRAM.h" />
-    <ClInclude Include="hge\include\hge.h" />
-    <ClInclude Include="hge\include\hgeanim.h" />
-    <ClInclude Include="hge\include\hgecolor.h" />
-    <ClInclude Include="hge\include\hgedistort.h" />
-    <ClInclude Include="hge\include\hgeparticle.h" />
-    <ClInclude Include="hge\include\hgerect.h" />
-    <ClInclude Include="hge\include\hgesprite.h" />
-    <ClInclude Include="hge\include\hgestrings.h" />
-    <ClInclude Include="hge\include\hgevector.h" />
-    <ClInclude Include="MRbAudio.h" />
-    <ClInclude Include="MRbSinCore.h" />
-    <ClInclude Include="MRbInput.h" />
-    <ClInclude Include="MRbSeal.h" />
-    <ClInclude Include="sin_seal_ex.h" />
-    <ClInclude Include="sin_sprite.h" />
-    <ClInclude Include="sin_app.h" />
-    <ClInclude Include="sin_bitmap.h" />
-    <ClInclude Include="sin_color.h" />
-    <ClInclude Include="hge\hge_impl.h" />
-    <ClInclude Include="RbExport.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="sin_common.h" />
-    <ClInclude Include="sin_timer.h" />
-    <ClInclude Include="sin_types.h" />
-    <ClInclude Include="sin_video.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SINRGE2.def" />
-    <None Include="version_generator.rb" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="SINRGE2 Core.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
