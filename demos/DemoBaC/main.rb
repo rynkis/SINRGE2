@@ -4,7 +4,7 @@ include SINRGE2
 
 Frame.start_width = 640
 Frame.start_height = 480
-Frame.title = "DemoB&C"
+Frame.title = "DemoBaC"
 SINRGE2.init_video
 
 class Bulls_And_Cows
