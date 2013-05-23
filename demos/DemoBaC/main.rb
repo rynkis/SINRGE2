@@ -18,7 +18,7 @@ class Bulls_And_Cows
   def initialize
     @sprite = Sprite.new
     @bitmap = Bitmap.new(640, 480)
-    @bitmap.font.size = 20
+    @bitmap.font.size = 24
     @bitmap.font.shadow = false
     @bitmap.fill_rect(@bitmap.rect, BLACK)
     @sprite.bitmap = @bitmap
