@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="cn">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Color</title>
+  <link href="./style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<h1>Color</h1>
+<p>RGBA 颜色的类。所有属性均使用 <a href="sc_float.html">Float</a> 处理。</p>
+<h2>超类</h2>
+<ul>
+  <li>Object</li>
+</ul>
+<h2>类方法</h2>
+<dl>
+
+  <dt>Color.new(<var>red</var>, <var>green</var>, <var>blue</var>[, <var>alpha</var>])</dt>
+  <dd>
+    <p>生成 Color 实例。<var>alpha</var> 值省略时使用 255。</p>
+  </dd>
+
+  <dt>Color.new(<var>color</var>)</dt>
+  <dd>
+    <p>生成 Color 实例。color 可以是 Color 实例，也可以是 32 位颜色（Bignum）</p>
+  </dd>
+
+</dl>
+<h2>方法</h2>
+<dl>
+
+  <dt>set(<var>red</var>, <var>green</var>, <var>blue</var>[, <var>alpha</var>])</dt>
+  <dt>set(<var>color</var>)</dt>
+  <dd>
+    <p>一次设置所有属性。</p>
+    <p>第二种形式中 color 可以是 Color 实例，也可以是 32 位颜色（Bignum）。</p>
+  </dd>
+
+</dl>
+<h2>属性</h2>
+<dl>
+
+  <dt>red</dt>
+  <dd>
+    <p>R 值（0～255）。超出范围的数值会自动修正。</p>
+  </dd>
+
+  <dt>green</dt>
+  <dd>
+    <p>G 值（0～255）。超出范围的数值会自动修正。</p>
+  </dd>
+
+  <dt>blue</dt>
+  <dd>
+    <p>B 值（0～255）。超出范围的数值会自动修正。</p>
+  </dd>
+
+  <dt>alpha</dt>
+  <dd>
+    <p>A 值（0～255）。超出范围的数值会自动修正。</p>
+  </dd>
+
+</dl>
+<h6></h6>
+</body>
+</html>

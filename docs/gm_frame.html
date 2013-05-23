@@ -1,0 +1,95 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="cn">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Frame</title>
+  <link href="./style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<h1>Frame</h1>
+<p>管理游戏窗口模块。</p>
+<h2>模块方法</h2>
+<dl>
+
+  <dt>Frame.hwnd</dt>
+  <dd>
+    <p>获取窗口句柄。</p>
+  </dd>
+
+  <dt>Frame.title</dt>
+  <dd>
+    <p>获取窗口标题。</p>
+  </dd>
+
+  <dt>Frame.title=(str)</dt>
+  <dd>
+    <p>设置窗口标题。</p>
+    <p>仅在初始化 SINRGE2 之前有效。</p>
+  </dd>
+
+  <dt>Frame.fullscreen_start</dt>
+  <dd>
+    <p>获取是否全屏启动。</p>
+  </dd>
+
+  <dt>Frame.fullscreen_start=(value)</dt>
+  <dd>
+    <p>设置是否全屏启动。</p>
+    <p>仅在初始化 SINRGE2 之前有效。</p>
+  </dd>
+
+  <dt>Frame.forbid_fullscreen</dt>
+  <dd>
+    <p>获取是否禁止切换到全屏。</p>
+  </dd>
+
+  <dt>Frame.forbid_fullscreen=(value)</dt>
+  <dd>
+    <p>设置是否禁止切换到全屏。</p>
+  </dd>
+
+  <dt>Frame.forbid_switch</dt>
+  <dd>
+    <p>获取是否禁止窗口和全屏之间的切换。</p>
+  </dd>
+
+  <dt>Frame.forbid_switch=(value)</dt>
+  <dd>
+    <p>设置是否禁止窗口和全屏之间的切换。</p>
+  </dd>
+
+  <dt>Frame.start_width=(width)</dt>
+  <dd>
+    <p>设置启动时窗口的宽度。</p>
+    <p>仅在初始化 SINRGE2 之前有效。</p>
+  </dd>
+
+  <dt>Frame.start_height=(height)</dt>
+  <dd>
+    <p>设置启动时窗口的高度。</p>
+    <p>仅在初始化 SINRGE2 之前有效。</p>
+  </dd>
+
+  <dt>Frame.show_mouse</dt>
+  <dd>
+    <p>获取鼠标是否显示。</p>
+    <p>仅在初始化 SINRGE2 之后有效。</p>
+  </dd>
+
+  <dt>Frame.show_mouse=(value)</dt>
+  <dd>
+    <p>设置鼠标是否显示。</p>
+    <p>仅在初始化 SINRGE2 之后有效。</p>
+  </dd>
+
+  <dt>Frame.peek_message</dt>
+  <dd>
+    <p>处理窗口消息。在不方便调用 Graphics.update 又必须处理窗口消息时可以调用这个方法。</p>
+    <p>仅在初始化 SINRGE2 之后有效。</p>
+  </dd>
+
+</dl>
+<h6></h6>
+</body>
+</html>

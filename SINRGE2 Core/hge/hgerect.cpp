@@ -17,7 +17,7 @@ void hgeRect::Encapsulate(float x, float y)
 	{
 		x1=x2=x;
 		y1=y2=y;
-		bClean=0;
+		bClean=false;
 	}
 	else
 	{
@@ -28,18 +28,18 @@ void hgeRect::Encapsulate(float x, float y)
 	}
 }
 
-BOOL hgeRect::TestPoint(float x, float y) const
+bool hgeRect::TestPoint(float x, float y) const
 {
-	if(x>=x1 && x<x2 && y>=y1 && y<y2) return 1;
+	if(x>=x1 && x<x2 && y>=y1 && y<y2) return true;
 
-	return 0;
+	return false;
 }
 
-BOOL hgeRect::Intersect(const hgeRect *rect) const
+bool hgeRect::Intersect(const hgeRect *rect) const
 {
 	if(fabs(x1 + x2 - rect->x1 - rect->x2) < (x2 - x1 + rect->x2 - rect->x1))
 		if(fabs(y1 + y2 - rect->y1 - rect->y2) < (y2 - y1 + rect->y2 - rect->y1))
-			return 1;
+			return true;
 
-	return 0;
+	return false;
 }

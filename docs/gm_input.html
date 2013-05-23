@@ -1,0 +1,90 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="cn">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title>Input</title>
+  <link href="./style.css" type="text/css" rel="stylesheet">
+</head>
+<body>
+<h1>Input</h1>
+<p>处理键盘输入信息的模块。</p>
+<h2>模块方法</h2>
+<dl>
+
+  <dt>Input.update</dt>
+  <dd>
+    <p>更新输入信息。原则上是每一帧调用此方法一次。</p>
+  </dd>
+
+  <dt>Input.press?(<var>num</var>)</dt>
+  <dd>
+    <p>判断指定的按键是否处于按下状态。</p>
+    <pre>
+if Input.press?(0x32)
+  do_something
+end
+</pre>
+
+  </dd>
+  <dt>Input.trigger?(<var>num</var>)</dt>
+  <dd>
+    <p>判断指定的按键是否按下。</p>
+  </dd>
+
+  <dt>Input.repeat?(<var>num</var>)</dt>
+  <dd>
+    <p>判断指定的按键是否重复按下。</p>
+  </dd>
+
+  <dt>Input.dir4</dt>
+  <dd>
+    <p>判断方向键的状态，将信息转换成特殊的 4 方向形式，并返回与数字键盘方向对应的数字。（2、4、6、8）。</p>
+    <p>若无任何方向键（或任何相对应的按键）按下，则返回 0。</p>
+  </dd>
+
+  <dt>Input.dir8</dt>
+  <dd>
+    <p>判断方向键的状态，将信息转换成特殊的 8 方向形式，并返回与数字键盘方向对应的数字。（1、2、3、4、6、7、8、9）。</p>
+    <p>若无任何方向键（或任何相对应的按键）按下，则返回 0。</p>
+  </dd>
+
+  <dt>Input.on_focus?</dt>
+  <dd>
+    <p>判断游戏窗口是否输入焦点。</p>
+  </dd>
+
+  <dt>Input.click?(num)</dt>
+  <dd>
+    <p>判断指定的按键是否被单击。</p>
+  </dd>
+
+  <dt>Input.dblclk?(num)</dt>
+  <dd>
+    <p>判断指定的按键是否被双击。</p>
+  </dd>
+
+  <dt>Input.mouse_wheel</dt>
+  <dd>
+    <p>获取鼠标滚轮信息。</p>
+  </dd>
+
+  <dt>Input.mouse_over?</dt>
+  <dd>
+    <p>判断鼠标是否在游戏窗口范围内。</p>
+  </dd>
+
+  <dt>Input.mouse_pos</dt>
+  <dd>
+    <p>获取鼠标位置 <a href="sc_array.html">Array</a>。</p>
+  </dd>
+
+  <dt>Input.character</dt>
+  <dd>
+    <p>获取被按下按键对应的字符。</p>
+  </dd>
+
+</dl>
+<h6></h6>
+</body>
+</html>
