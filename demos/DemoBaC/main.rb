@@ -4,7 +4,7 @@ include SINRGE2
 
 Frame.start_width = 640
 Frame.start_height = 480
-Frame.title = "DemoB&C"
+Frame.title = "DemoBaC"
 SINRGE2.init_video
 
 class Bulls_And_Cows
@@ -18,7 +18,7 @@ class Bulls_And_Cows
   def initialize
     @sprite = Sprite.new
     @bitmap = Bitmap.new(640, 480)
-    @bitmap.font.size = 20
+    @bitmap.font.size = 24
     @bitmap.font.shadow = false
     @bitmap.fill_rect(@bitmap.rect, BLACK)
     @sprite.bitmap = @bitmap

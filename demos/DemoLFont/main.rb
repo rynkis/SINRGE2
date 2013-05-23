@@ -19,6 +19,7 @@ class SINRGE2::LFont
   #
   alias demo_origin_dispose dispose
   def dispose
+    cache_clear
     demo_origin_dispose
   end
   #
