@@ -815,23 +815,23 @@ void HGE_Impl::_AdjustWindow()
 	}
 }
 
-void HGE_Impl::_Resize(int width, int height)
-{
-	if(hwndParent)
-	{
-		//if(procFocusLostFunc) procFocusLostFunc();
-
-		d3dppW.BackBufferWidth=width;
-		d3dppW.BackBufferHeight=height;
-		nScreenWidth=width;
-		nScreenHeight=height;
-
-		_SetProjectionMatrix(nScreenWidth, nScreenHeight);
-		_GfxRestore();
-
-		//if(procFocusGainFunc) procFocusGainFunc();
-	}
-}
+//void HGE_Impl::_Resize(int width, int height)
+//{
+//	if(hwndParent)
+//	{
+//		//if(procFocusLostFunc) procFocusLostFunc();
+//
+//		d3dppW.BackBufferWidth=width;
+//		d3dppW.BackBufferHeight=height;
+//		nScreenWidth=width;
+//		nScreenHeight=height;
+//
+//		_SetProjectionMatrix(nScreenWidth, nScreenHeight);
+//		_GfxRestore();
+//
+//		//if(procFocusGainFunc) procFocusGainFunc();
+//	}
+//}
 
 void HGE_Impl::_GfxDone()
 {

@@ -61,28 +61,8 @@ void CALL HGE_Impl::Release()
 
 bool CALL HGE_Impl::System_Initiate()
 {
-	//OSVERSIONINFO	os_ver;
-	//SYSTEMTIME		tm;
-	//MEMORYSTATUS	mem_st;
 	WNDCLASS		winclass;
 	int				width, height;
-
-	// Log system info
-
-	//System_Log(L"HGE Started..\n");
-
-	//System_Log(L"HGE version: %X.%X", HGE_VERSION>>8, HGE_VERSION & 0xFF);
-	//GetLocalTime(&tm);
-	//System_Log(L"Date: %02d.%02d.%d, %02d:%02d:%02d\n", tm.wDay, tm.wMonth, tm.wYear, tm.wHour, tm.wMinute, tm.wSecond);
-
-	//System_Log(L"Application: %s",szWinTitle);
-	//os_ver.dwOSVersionInfoSize=sizeof(os_ver);
-	//GetVersionEx(&os_ver);
-	//System_Log(L"OS: Windows %ld.%ld.%ld",os_ver.dwMajorVersion,os_ver.dwMinorVersion,os_ver.dwBuildNumber);
-
-	//GlobalMemoryStatus(&mem_st);
-	//System_Log(L"Memory: %ldK total, %ldK free\n",mem_st.dwTotalPhys/1024L,mem_st.dwAvailPhys/1024L);
-
 
 	// Register window class
 	
@@ -96,8 +76,6 @@ bool CALL HGE_Impl::System_Initiate()
 	winclass.hbrBackground	= (HBRUSH)GetStockObject(BLACK_BRUSH);
 	winclass.lpszMenuName	= NULL; 
 	winclass.lpszClassName	= WINDOW_CLASS_NAME;
-	/*if(szIcon) winclass.hIcon = LoadIcon(hInstance, szIcon);
-	else winclass.hIcon = LoadIcon(NULL, IDI_APPLICATION);*/
 	
 	if (!RegisterClass(&winclass)) {
 		_PostError(L"Can't register window class");
@@ -235,7 +213,7 @@ void CALL HGE_Impl::System_SetStateBool(hgeBoolState state, bool value)
 {
 	switch(state)
 	{
-		case HGE_WINDOWED:		if(VertArray || hwndParent) break;
+		case HGE_WINDOWED:		if(VertArray) break;
 								if(pD3DDevice && bWindowed != value)
 								{
 									if(d3dppW.BackBufferFormat==D3DFMT_UNKNOWN || d3dppFS.BackBufferFormat==D3DFMT_UNKNOWN) break;
@@ -291,13 +269,13 @@ void CALL HGE_Impl::System_SetStateFunc(hgeFuncState state, hgeCallback value)
 	}
 }
 
-void CALL HGE_Impl::System_SetStateHwnd(hgeHwndState state, HWND value)
-{
-	switch(state)
-	{
-		case HGE_HWNDPARENT:	if(!hwnd) hwndParent=value; break;
-	}
-}
+//void CALL HGE_Impl::System_SetStateHwnd(hgeHwndState state, HWND value)
+//{
+//	switch(state)
+//	{
+//		case HGE_HWNDPARENT:	if(!hwnd) hwndParent=value; break;
+//	}
+//}
 
 void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 {
@@ -384,7 +362,7 @@ HWND CALL HGE_Impl::System_GetStateHwnd(hgeHwndState state)
 	switch(state)
 	{
 		case HGE_HWND:			return hwnd;
-		case HGE_HWNDPARENT:	return hwndParent;
+		//case HGE_HWNDPARENT:	return hwndParent;
 	}
 
 	return 0;
@@ -567,7 +545,7 @@ HGE_Impl::HGE_Impl()
 	
 	bHideMouse=true;
 	bDontSuspend=false;
-	hwndParent=0;
+	//hwndParent=0;
 
 	/*nPowerStatus=HGEPWR_UNSUPPORTED;
 	hKrnl32 = NULL;
@@ -697,11 +675,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_MOUSEWHEEL:
 		pHGE->mouseWheel = (short)HIWORD(wparam);
 		return FALSE;
-
-	//case WM_SIZE:
-	//	if(pHGE->pD3D && wparam==SIZE_RESTORED) pHGE->_Resize(LOWORD(lparam), HIWORD(lparam));
-	//	//return FALSE;
-	//	break;
 
 	case WM_SYSCOMMAND:
 		if (wparam == SC_KEYMENU)

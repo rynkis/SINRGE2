@@ -66,7 +66,7 @@ public:
 	// +++SINRGE2+++
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
-	virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
+	//virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
 	virtual void			CALL	System_SetStateInt   (hgeIntState    state, int         value);
 	virtual void			CALL	System_SetStateString(hgeStringState state, const wchar_t *value);
 	virtual bool			CALL	System_GetStateBool  (hgeBoolState  );
@@ -145,7 +145,7 @@ public:
 	int						nHGEFPS;
 	bool					bHideMouse;
 	bool					bDontSuspend;
-	HWND					hwndParent;
+	//HWND					hwndParent;
 
 	// Power
 	/*int							nPowerStatus;
@@ -192,7 +192,7 @@ public:
 	void				_GfxDone();
 	bool				_GfxRestore();
 	void				_AdjustWindow();
-	void				_Resize(int width, int height);
+	//void				_Resize(int width, int height);
 	bool				_init_lost();
 	void				_render_batch(bool bEndScene=false);
 	int					_format_id(D3DFORMAT fmt);
