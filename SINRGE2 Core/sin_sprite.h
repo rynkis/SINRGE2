@@ -36,7 +36,6 @@ public:
 	void		SetFlip(bool bX, bool bY, bool bHotSpot = false);
 
 	HTEXTURE	GetTexture() const { return quad.tex; }
-	void		GetTextureRect(float * x, float * y, float * w, float * h) const { *x = tx; *y = ty; *w = m_width; *h = m_height; }
 	DWORD		GetColor(int i=0) const { return quad.v[i].col; }
 	float		GetZ(int i=0) const { return quad.v[i].z; }
 	int			GetBlendMode() const { return quad.blend; }
@@ -68,8 +67,6 @@ protected:
 	static HGE *hge;
 
 	hgeQuad		quad;
-	float		tx, ty;
-	float		tex_width, tex_height;
 	
 	//	精灵位图的宽度和高度
 	float		m_width, m_height;

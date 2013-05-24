@@ -162,25 +162,18 @@ void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 
 void SinSprite::SetTexture(HTEXTURE tex)
 {
-	float tw,th;
+	quad.tex = tex;
 
-	quad.tex=tex;
-
-	if(tex)
+	if (tex)
 	{
-		tw = (float)hge->Texture_GetWidth(tex);
-		th = (float)hge->Texture_GetHeight(tex);
+		m_width = (float)hge->Texture_GetWidth(tex);
+		m_height = (float)hge->Texture_GetHeight(tex);
 	}
 	else
 	{
-		tw = 1.0f;
-		th = 1.0f;
+		m_width = 1.0f;
+		m_height = 1.0f;
 	}
-
-	m_width = tw;
-	m_height = th;
-	tex_width = tw;
-	tex_height = th;
 }
 
 
@@ -202,20 +195,19 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 		return;
 
 	float tx1, ty1, tx2, ty2, sint, cost;
-
-	tx=x;
-	ty=y;
 	
-	tx1=tx/tex_width; ty1=ty/tex_height;
-	tx2=(tx+w)/tex_width; ty2=(ty+h)/tex_height;
+	tx1 = x / m_width;
+	ty1 = y / m_height;
+	tx2 = (x + w) / m_width;
+	ty2 = (y + h) / m_height;
 
-	quad.v[0].tx=tx1; quad.v[0].ty=ty1;
-	quad.v[1].tx=tx2; quad.v[1].ty=ty1;
-	quad.v[2].tx=tx2; quad.v[2].ty=ty2;
-	quad.v[3].tx=tx1; quad.v[3].ty=ty2;
+	quad.v[0].tx = tx1; quad.v[0].ty = ty1;
+	quad.v[1].tx = tx2; quad.v[1].ty = ty1;
+	quad.v[2].tx = tx2; quad.v[2].ty = ty2;
+	quad.v[3].tx = tx1; quad.v[3].ty = ty2;
 
 	//if(m_zoom_y==0) m_zoom_y=m_zoom_x;
-	if (m_zoom_y==0) return;
+	if (m_zoom_y == 0) return;
 
 	tx1 = -m_ox * m_zoom_x * m_flip_x;
 	ty1 = -m_oy * m_zoom_y * m_flip_y;
@@ -227,24 +219,24 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 		cost = cosf(m_angle);
 		sint = sinf(m_angle);
 		
-		quad.v[0].x  = tx1*cost - ty1*sint/* + x*/;
-		quad.v[0].y  = tx1*sint + ty1*cost/* + y*/;
+		quad.v[0].x  = tx1*cost - ty1*sint;
+		quad.v[0].y  = tx1*sint + ty1*cost;
 
-		quad.v[1].x  = tx2*cost - ty1*sint/* + x*/;
-		quad.v[1].y  = tx2*sint + ty1*cost/* + y*/;
+		quad.v[1].x  = tx2*cost - ty1*sint;
+		quad.v[1].y  = tx2*sint + ty1*cost;
 
-		quad.v[2].x  = tx2*cost - ty2*sint/* + x*/;
-		quad.v[2].y  = tx2*sint + ty2*cost/* + y*/;
+		quad.v[2].x  = tx2*cost - ty2*sint;
+		quad.v[2].y  = tx2*sint + ty2*cost;
 
-		quad.v[3].x  = tx1*cost - ty2*sint/* + x*/;
-		quad.v[3].y  = tx1*sint + ty2*cost/* + y*/;
+		quad.v[3].x  = tx1*cost - ty2*sint;
+		quad.v[3].y  = tx1*sint + ty2*cost;
 	}
 	else
 	{
-		quad.v[0].x = tx1/* + x*/; quad.v[0].y = ty1/* + y*/;
-		quad.v[1].x = tx2/* + x*/; quad.v[1].y = ty1/* + y*/;
-		quad.v[2].x = tx2/* + x*/; quad.v[2].y = ty2/* + y*/;
-		quad.v[3].x = tx1/* + x*/; quad.v[3].y = ty2/* + y*/;
+		quad.v[0].x = tx1; quad.v[0].y = ty1;
+		quad.v[1].x = tx2; quad.v[1].y = ty1;
+		quad.v[2].x = tx2; quad.v[2].y = ty2;
+		quad.v[3].x = tx1; quad.v[3].y = ty2;
 	}
 	
 	m_x1 = quad.v[0].x; m_y1 = quad.v[0].y;
