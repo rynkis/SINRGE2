@@ -56,12 +56,12 @@
     <p>获取 Bitmap 的矩形范围（<a href="gc_rect.html">Rect</a>）。</p>
   </dd>
 
-  <dt>blt(<var>x</var>, <var>y</var>, <var>src_bitmap</var>,
-    <var>src_rect</var>[, <var>opacity</var>])</dt>
+  <dt>blt(<var>x</var>, <var>y</var>[, <var>src_bitmap</var>], <var>src_rect</var>[, <var>opacity</var>])</dt>
   <dd>
     <p>将源 Bitmap 指定区域的像素绘制到 Bitmap 的指定区域。<var>x</var>, <var>y</var> 为指定区域的左上角坐标。</p>
     <p><var>src_bitmap</var> 为源 Bitmap 。<var>src_rect</var>（<a href="gc_rect.html">Rect</a>）为源 Bitmap 指定区域的矩形范围。</p>
     <p><var>opacity</var> 为透明度，范围 0～255。</p>
+    <p>不指定 <var>src_bitmap</var> 的时候，会以自身作为源 Bitmap。</p>
   </dd>
 
   <dt>stretch_blt(<var>dest_rect</var>, <var>src_bitmap</var>,
