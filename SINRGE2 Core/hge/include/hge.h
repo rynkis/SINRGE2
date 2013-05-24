@@ -128,7 +128,6 @@ enum hgeFuncState
 enum hgeHwndState
 {
 	HGE_HWND			= 15,	// int		window handle: read only
-	//HGE_HWNDPARENT		= 16,	// int		parent win handle	(default: 0)
 	
 	HGEHWNDSTATE_FORCE_DWORD = 0x7FFFFFFF
 };
@@ -141,8 +140,6 @@ enum hgeIntState
 	
 	HGE_FPS				= 24,	// int		fixed fps			(default: HGEFPS_UNLIMITED)
 
-	//HGE_POWERSTATUS		= 25,   // int		battery life percent + status
-	
 	HGEINTSTATE_FORCE_DWORD = 0x7FFFFFF
 };
 
@@ -150,9 +147,6 @@ enum hgeStringState
 {
 	HGE_TITLE			= 27,   // char*	window title		(default: "HGE")
 	
-	//HGE_INIFILE			= 28,   // char*	ini file			(default: NULL) (meaning no file)
-	//HGE_LOGFILE			= 29,   // char*	log file			(default: NULL) (meaning no file)
-
 	HGESTRINGSTATE_FORCE_DWORD = 0x7FFFFFFF
 };
 
@@ -240,7 +234,6 @@ public:
 private:
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value) = 0;
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value) = 0;
-	//virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value) = 0;
 	virtual void			CALL	System_SetStateInt   (hgeIntState    state, int         value) = 0;
 	virtual void			CALL	System_SetStateString(hgeStringState state, const wchar_t *value) = 0;
 	virtual bool			CALL	System_GetStateBool  (hgeBoolState   state) = 0;
@@ -252,7 +245,6 @@ private:
 public:
 	inline void						System_SetState(hgeBoolState   state, bool        value) { System_SetStateBool  (state, value); }
 	inline void						System_SetState(hgeFuncState   state, hgeCallback value) { System_SetStateFunc  (state, value); }
-	//inline void						System_SetState(hgeHwndState   state, HWND        value) { System_SetStateHwnd  (state, value); }
 	inline void						System_SetState(hgeIntState    state, int         value) { System_SetStateInt   (state, value); }
 	inline void						System_SetState(hgeStringState state, const wchar_t *value) { System_SetStateString(state, value); }
 	inline bool						System_GetState(hgeBoolState   state) { return System_GetStateBool  (state); }

@@ -125,9 +125,6 @@
     <ClCompile Include="hge\hgerect.cpp" />
     <ClCompile Include="hge\hgesprite.cpp" />
     <ClCompile Include="hge\hgevector.cpp" />
-    <ClCompile Include="hge\power.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="hge\random.cpp" />
     <ClCompile Include="hge\system.cpp" />
     <ClCompile Include="MRbSinCore.cpp" />

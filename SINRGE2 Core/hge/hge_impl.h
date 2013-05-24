@@ -15,7 +15,6 @@
 #include <d3d8.h>
 #include <d3dx8.h>
 
-//#define DEMO
 
 #define D3DFVF_HGEVERTEX (D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define VERTEX_BUFFER_SIZE 4000
@@ -66,7 +65,6 @@ public:
 	// +++SINRGE2+++
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
-	//virtual void			CALL	System_SetStateHwnd  (hgeHwndState   state, HWND        value);
 	virtual void			CALL	System_SetStateInt   (hgeIntState    state, int         value);
 	virtual void			CALL	System_SetStateString(hgeStringState state, const wchar_t *value);
 	virtual bool			CALL	System_GetStateBool  (hgeBoolState  );
@@ -105,7 +103,6 @@ public:
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height);
 	virtual HTEXTURE		CALL	Texture_CreateFromScreen();
-	//virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false);
 	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0);
 	virtual void			CALL	Texture_Free(HTEXTURE tex);
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false);
@@ -145,16 +142,6 @@ public:
 	int						nHGEFPS;
 	bool					bHideMouse;
 	bool					bDontSuspend;
-	//HWND					hwndParent;
-
-	// Power
-	/*int							nPowerStatus;
-	HMODULE						hKrnl32;
-	GetSystemPowerStatusFunc	lpfnGetSystemPowerStatus;
-
-	void					_InitPowerStatus();
-	void					_UpdatePowerStatus();
-	void					_DonePowerStatus();*/
 
 	// Graphics
 	D3DPRESENT_PARAMETERS*  d3dpp;
@@ -192,7 +179,6 @@ public:
 	void				_GfxDone();
 	bool				_GfxRestore();
 	void				_AdjustWindow();
-	//void				_Resize(int width, int height);
 	bool				_init_lost();
 	void				_render_batch(bool bEndScene=false);
 	int					_format_id(D3DFORMAT fmt);

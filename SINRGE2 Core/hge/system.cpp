@@ -99,16 +99,6 @@ bool CALL HGE_Impl::System_Initiate()
 	rectFS.bottom = nScreenHeight;
 	styleFS = WS_POPUP | WS_VISIBLE; //WS_POPUP
 
-	/*if (hwndParent)
-	{
-		rectW.left = 0;
-		rectW.top = 0;
-		rectW.right = nScreenWidth;
-		rectW.bottom = nScreenHeight;
-		styleW = WS_CHILD | WS_VISIBLE; 
-		bWindowed = true;
-	}*/
-
 	if (bWindowed)
 		hwnd = CreateWindowExW(0, WINDOW_CLASS_NAME, szWinTitle, styleW,
 				rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top,
@@ -129,15 +119,7 @@ bool CALL HGE_Impl::System_Initiate()
 
 	timeBeginPeriod(1);
 	Random_Seed();
-	//_InitPowerStatus();
 	if(!_GfxInit()) { System_Shutdown(); return false; }
-
-	//System_Log(L"Init done.\n");
-
-	/*fTime=0.0f;
-	t0=t0fps=timeGetTime();
-	dt=cfps=0;
-	nFPS=0;*/
 
 	// Done
 
@@ -146,11 +128,8 @@ bool CALL HGE_Impl::System_Initiate()
 
 void CALL HGE_Impl::System_Shutdown()
 {
-	//System_Log(L"\nFinishing..");
-
 	timeEndPeriod(1);
 	_GfxDone();
-	//_DonePowerStatus();
 
 	if(hwnd)
 	{
@@ -159,8 +138,6 @@ void CALL HGE_Impl::System_Shutdown()
 	}
 
 	if(hInstance) UnregisterClass(WINDOW_CLASS_NAME, hInstance);
-
-	//System_Log(L"The End.");
 }
 
 bool CALL HGE_Impl::System_Update()
@@ -269,14 +246,6 @@ void CALL HGE_Impl::System_SetStateFunc(hgeFuncState state, hgeCallback value)
 	}
 }
 
-//void CALL HGE_Impl::System_SetStateHwnd(hgeHwndState state, HWND value)
-//{
-//	switch(state)
-//	{
-//		case HGE_HWNDPARENT:	if(!hwnd) hwndParent=value; break;
-//	}
-//}
-
 void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 {
 	switch(state)
@@ -309,8 +278,6 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 									}
 								}
 								nHGEFPS=value;
-								/*if(nHGEFPS>0) nFixedDelta=int(1000.0f/value);
-								else nFixedDelta=0;*/
 								break;
 	}
 }
@@ -323,12 +290,6 @@ void CALL HGE_Impl::System_SetStateString(hgeStringState state, const wchar_t *v
 		if(pHGE->hwnd)
 			SetWindowText(pHGE->hwnd, szWinTitle);
 	}
-	/*switch(state)
-	{
-		case HGE_TITLE:			wcscpy_s(szWinTitle,value);
-								if(pHGE->hwnd) SetWindowText(pHGE->hwnd, szWinTitle);
-								break;
-	}*/
 }
 
 bool CALL HGE_Impl::System_GetStateBool(hgeBoolState state)
@@ -362,7 +323,6 @@ HWND CALL HGE_Impl::System_GetStateHwnd(hgeHwndState state)
 	switch(state)
 	{
 		case HGE_HWND:			return hwnd;
-		//case HGE_HWNDPARENT:	return hwndParent;
 	}
 
 	return 0;
@@ -376,7 +336,6 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 		case HGE_SCREENHEIGHT:	return nScreenHeight;
 		case HGE_SCREENBPP:		return nScreenBPP;
 		case HGE_FPS:			return nHGEFPS;
-		//case HGE_POWERSTATUS:	return nPowerStatus;
 	}
 
 	return 0;
@@ -385,9 +344,6 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 const wchar_t* CALL HGE_Impl::System_GetStateString(hgeStringState state) {
 	if (state == HGE_TITLE)
 		return szWinTitle;
-	/*switch(state) {
-		case HGE_TITLE:			return szWinTitle;
-	}*/
 	return NULL;
 }
 
@@ -473,7 +429,6 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 		int ti = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
-			//if (!System_PeekMessage()) GetAppPtr()->Quit();
 			GetAppPtr()->SystemUpdate();
 			GET_ARGB_8888(pTexData[tv + lx], a, r, g, b);
 			pDesData[ti + lx] = MAKE_ARGB_8888(255, r, g, b);
@@ -545,11 +500,6 @@ HGE_Impl::HGE_Impl()
 	
 	bHideMouse=true;
 	bDontSuspend=false;
-	//hwndParent=0;
-
-	/*nPowerStatus=HGEPWR_UNSUPPORTED;
-	hKrnl32 = NULL;
-	lpfnGetSystemPowerStatus = NULL;*/
 	
 	GetModuleFileName(GetModuleHandle(NULL), szAppPath, sizeof(szAppPath));
 	int i;
