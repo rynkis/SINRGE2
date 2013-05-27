@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Ex", "SINRGE2 Ex\SINRGE2Ex.vcxproj", "{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7pkgCmd", "7pkgCmd\zpCmd.vcxproj", "{64EC7A26-97C8-4526-A29A-097D53D7C9B5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "7pkgEditor", "7pkgEditor\zpEditor.vcxproj", "{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release_editor|Win32 = Release_editor|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Debug|Win32.Build.0 = Debug|Win32
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Release_editor|Win32.ActiveCfg = Release|Win32
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Release_editor|Win32.Build.0 = Release|Win32
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Release|Win32.ActiveCfg = Release|Win32
+		{AC98E8DB-BC29-40AB-A1F7-5C5638BDA2FB}.Release|Win32.Build.0 = Release|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Debug|Win32.Build.0 = Debug|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Release_editor|Win32.ActiveCfg = Release_editor|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Release_editor|Win32.Build.0 = Release_editor|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Release|Win32.ActiveCfg = Release|Win32
+		{64EC7A26-97C8-4526-A29A-097D53D7C9B5}.Release|Win32.Build.0 = Release|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Debug|Win32.Build.0 = Debug|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Release_editor|Win32.ActiveCfg = Release_editor|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Release_editor|Win32.Build.0 = Release_editor|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Release|Win32.ActiveCfg = Release|Win32
+		{DA24099C-7164-49A4-BFC5-5CDD91A6D7B1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
