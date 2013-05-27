@@ -374,6 +374,9 @@
     <ClInclude Include="CRbClassBase.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
+    <ClInclude Include="CRbTilemap.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SINRGE2 Core.rc">

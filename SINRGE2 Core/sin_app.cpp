@@ -133,14 +133,14 @@ namespace
 			file_size = GetAppPtr()->Get7pkgReader()->FileLength(filenameW);
 			if (!file_size)
 				goto __load_from_hd;
-
+			
 			if (!(data = malloc(file_size)))
 				goto __failed_return;
 
 			if (!GetAppPtr()->Get7pkgReader()->LoadData(filenameW, data))
 				goto __failed_return;
-
-			rbread = rb_str_new2((char *)data);
+			
+			rbread = rb_str_new((char *)data, file_size);
 			rbdata = rb_marshal_load(rbread);
 			rbread = Qnil;
 			if (data)
