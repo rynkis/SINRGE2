@@ -75,11 +75,12 @@ VALUE CRbTable::initialize(int argc, VALUE * argv, VALUE obj)
 
 	if (m_size != 0)
 	{
-		m_data = (VALUE*)xmalloc(sizeof(VALUE) * m_size);
-	
+		m_data = (short *)malloc(sizeof(short) * m_size);
+		memset(m_data, 0, sizeof(short) * m_size);
+
 	//	memset(m_data, RUBY_0, sizeof(VALUE) * m_size);	//	single byte set
-		for(i = 0; i < m_size; ++i)
-			m_data[i] = RUBY_0;
+		/*for(i = 0; i < m_size; ++i)
+			m_data[i] = RUBY_0;*/
 	}
 
 	return obj;
@@ -88,25 +89,31 @@ VALUE CRbTable::initialize(int argc, VALUE * argv, VALUE obj)
 VALUE CRbTable::_dump(VALUE depth)
 {
 	//	|dims|dim_size[3]|size|size * sizeof(VALUE)|
-	VALUE base = rb_str_new((const char*)&m_dump_data[0], sizeof(m_dump_data));
+	int temp_data[5];
 
-	return rb_str_buf_cat(base, (const char*)m_data, sizeof(VALUE) * m_size);
+	temp_data[0] = m_dims;
+	temp_data[1] = m_dim_size[0];
+	temp_data[2] = m_dim_size[1];
+	temp_data[3] = m_dim_size[2];
+	temp_data[4] = m_size;
+	
+	VALUE base = rb_str_new((const char*)&temp_data[0], sizeof(temp_data));
+
+	return rb_str_buf_cat(base, (const char *)m_data, sizeof(short) * m_size);
 }
 
 VALUE CRbTable::dm_load(VALUE klass, VALUE str)
 {
-	int		dump_data[5];
-
-	VALUE	__argv[3];
-
-	long	len = RSTRING_LEN(str);
+	int	dump_data[5];
+	VALUE __argv[3];
+	long len = RSTRING_LEN(str);
 	
 	if (len < sizeof(dump_data))					//	error
 		return Qnil;
 
 	memcpy(dump_data, RSTRING_PTR(str), sizeof(dump_data));
 
-	if (len != sizeof(dump_data) + sizeof(VALUE) * dump_data[4])
+	if (len != sizeof(dump_data) + sizeof(short) * dump_data[4])
 		return Qnil;
 
 	for (int i = 0; i < dump_data[0]; ++i)
@@ -116,7 +123,7 @@ VALUE CRbTable::dm_load(VALUE klass, VALUE str)
 
 	CRbTable* tbl = GetObjectPtr<CRbTable>(obj);
 
-	memcpy(tbl->m_data, RSTRING_PTR(str) + sizeof(dump_data), sizeof(VALUE) * dump_data[4]);
+	memcpy(tbl->m_data, RSTRING_PTR(str) + sizeof(dump_data), sizeof(short) * dump_data[4]);
 
 	return obj;
 }
@@ -152,24 +159,24 @@ VALUE CRbTable::resize(int argc, VALUE * argv, VALUE obj)
 	{
 		if (m_data)
 		{
-			xfree(m_data);
+			free(m_data);
 			m_data = 0;
 		}
 	}
 	else
 	{
-		VALUE* tmp = (VALUE*)xmalloc(sizeof(VALUE) * m_size);
+		short * tmp = (short *)malloc(sizeof(short) * m_size);
 
 		if (origin_size > m_size)
-			memcpy(tmp, m_data, sizeof(VALUE) * m_size);
+			memcpy(tmp, m_data, sizeof(short) * m_size);
 		else
 		{
-			memcpy(tmp, m_data, sizeof(VALUE) * origin_size);
+			memcpy(tmp, m_data, sizeof(short) * origin_size);
 			for(i = 0; i < m_size - origin_size; ++i)
-				tmp[origin_size + i] = RUBY_0;
+				tmp[origin_size + i] = 0;
 		}
 
-		xfree(m_data);
+		free(m_data);
 		m_data = tmp;
 	}
 
@@ -182,33 +189,33 @@ VALUE CRbTable::get_element(int argc, VALUE * argv, VALUE obj)
 	int i, pos, x, y, z;
 
 	/* Check arguments nums */
-	if(m_dims != argc)
+	if (m_dims != argc)
 		rb_raise(rb_eArgError, "wrong # of arguments (%d for %d)", argc, m_dims);
 
 	/* return Qnil if size is 0 */
-	if(m_size == 0)
+	if (m_size == 0)
 		return Qnil;
 
 	/* Check arguments validity */
-	for(i = 0; i < argc; ++i)
+	for (i = 0; i < argc; ++i)
 	{
 		SafeFixnumValue(argv[i]);
-		if(FIX2INT(argv[i]) >= m_dim_size[i])
+		if (FIX2INT(argv[i]) >= m_dim_size[i])
 			return Qnil;
 	}
 
 	/* calculate the element pos */
 	x = y = z = 0;
-	switch(argc)
+	switch (argc)
 	{
 		case 3:	z = FIX2INT(argv[2]);
 		case 2:	y = FIX2INT(argv[1]);
 		case 1:	x = FIX2INT(argv[0]);
-		default:break;
+		default: break;
 	}
 	pos	= z * m_dim_size[0] * m_dim_size[1] + y * m_dim_size[0] + x;
 
-	return m_data[pos];
+	return INT2FIX(m_data[pos]);
 }
 
 VALUE CRbTable::set_element(int argc, VALUE * argv, VALUE obj)
@@ -217,34 +224,35 @@ VALUE CRbTable::set_element(int argc, VALUE * argv, VALUE obj)
 	int i, pos, x, y, z;
 
 	/* Check arguments nums */
-	if(m_dims != argc - 1)
+	if (m_dims != argc - 1)
 		rb_raise(rb_eArgError, "wrong # of arguments (%d for %d)", argc, m_dims + 1);
 
 	/* return Qnil if size is 0 */
-	if(m_size == 0)
+	if (m_size == 0)
 		return Qnil;
 
 	/* Check arguments validity */
-	for(i = 0; i < argc - 1; ++i)
+	for (i = 0; i < argc - 1; ++i)
 	{
 		SafeFixnumValue(argv[i]);
-		if(FIX2INT(argv[i]) >= m_dim_size[i])
+		if (FIX2INT(argv[i]) >= m_dim_size[i])
 			return argv[argc - 1];
 	}
+	SafeFixnumValue(argv[argc - 1]);
 
 	/* calculate the element pos */
 	x = y = z = 0;
-	switch(argc - 1)
+	switch (argc - 1)
 	{
 		case 3:	z = FIX2INT(argv[2]);
 		case 2:	y = FIX2INT(argv[1]);
 		case 1:	x = FIX2INT(argv[0]);
-		default:break;
+		default: break;
 	}
 
 	pos	= z * m_dim_size[0] * m_dim_size[1] + y * m_dim_size[0] + x;
 
-	m_data[pos] = argv[argc - 1];
+	m_data[pos] = (short)FIX2INT(argv[argc - 1]);
 	return m_data[pos];
 }
 

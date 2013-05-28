@@ -35,10 +35,7 @@ protected:
 
 protected:
 	DWORD			m_color;
-	double			m_r;
-	double			m_g;
-	double			m_b;
-	double			m_a;
+	double			m_col_data[4];
 
 	union
 	{
@@ -49,7 +46,6 @@ protected:
 			VALUE	m_blue;
 			VALUE	m_alpha;
 		};
-		VALUE		m_dump_data[4];	//	for _dump and load ...
 	};
 
 protected:

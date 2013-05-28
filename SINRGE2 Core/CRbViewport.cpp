@@ -167,7 +167,7 @@ void CRbViewport::render(u32 id)
 		return;
 
 	//	根据viewport矩形进行裁剪
-	GetAppPtr()->GetRenderState()->ClipAndSave(m_rect_ptr->x, m_rect_ptr->y, m_rect_ptr->width, m_rect_ptr->height);
+	GetAppPtr()->GetRenderState()->ClipAndSave(m_rect_ptr->m_rect_data[0], m_rect_ptr->m_rect_data[1], m_rect_ptr->m_rect_data[2], m_rect_ptr->m_rect_data[3]);
 
 	//	渲染viewport中的所有对象
 	for (RbRenderNode * p = m_head; p; p = p->next)
@@ -183,10 +183,10 @@ void CRbViewport::render(u32 id)
 	// render it only the icolor isn't zero
 	if (m_color_ptr->GetColor() != 0 || m_tone_ptr->GetColor() != 0 || m_flash_duration > 0)
 	{
-		m_quad.v[0].x = (float)m_rect_ptr->x;						m_quad.v[0].y = (float)m_rect_ptr->y;
-		m_quad.v[1].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[1].y = (float)m_rect_ptr->y;
-		m_quad.v[2].x = (float)m_rect_ptr->x + m_rect_ptr->width;	m_quad.v[2].y = (float)m_rect_ptr->y + m_rect_ptr->height;
-		m_quad.v[3].x = (float)m_rect_ptr->x;						m_quad.v[3].y = (float)m_rect_ptr->y + m_rect_ptr->height;
+		m_quad.v[0].x = (float)m_rect_ptr->m_rect_data[0]; m_quad.v[0].y = (float)m_rect_ptr->m_rect_data[1];
+		m_quad.v[1].x = (float)(m_rect_ptr->m_rect_data[0] + m_rect_ptr->m_rect_data[2]); m_quad.v[1].y = (float)m_rect_ptr->m_rect_data[1];
+		m_quad.v[2].x = (float)m_rect_ptr->m_rect_data[0] + m_rect_ptr->m_rect_data[1]; m_quad.v[2].y = (float)(m_rect_ptr->m_rect_data[1] + m_rect_ptr->m_rect_data[3]);
+		m_quad.v[3].x = (float)m_rect_ptr->m_rect_data[0]; m_quad.v[3].y = (float)(m_rect_ptr->m_rect_data[1] + m_rect_ptr->m_rect_data[3]);
 	}
 
 	//	视口混合颜色

@@ -13,15 +13,12 @@ VALUE rb_cColor;
 
 CRbColor::CRbColor()
 	: m_color(0)
-	, m_r(0)
-	, m_g(0)
-	, m_b(0)
-	, m_a(0)
 	, m_red(RUBY_0)
 	, m_green(RUBY_0)
 	, m_blue(RUBY_0)
 	, m_alpha(RUBY_0)
 {
+	memset(m_col_data, 0, sizeof(m_col_data));
 }
 
 void CRbColor::InitLibrary()
@@ -80,16 +77,18 @@ VALUE CRbColor::initialize(int argc, VALUE * argv, VALUE obj)
 		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
 		{
 			DWORD col = NUM2ULONG(argv[0]);
-			GET_ARGB_8888(col, m_a, m_r, m_g, m_b);
+			BYTE r, g, b, a;
+			GET_ARGB_8888(col, a, r, g, b);
+			m_col_data[0] = r;
+			m_col_data[1] = g;
+			m_col_data[2] = b;
+			m_col_data[3] = a;
 		}
 		else
 		{
 			SafeColorValue(argv[0]);
 			CRbColor * color = GetObjectPtr<CRbColor>(argv[0]);
-			m_r = color->m_r;
-			m_g = color->m_g;
-			m_b = color->m_b;
-			m_a = color->m_a;
+			memcpy(m_col_data, color->m_col_data, sizeof(m_col_data));
 			color = NULL;
 		}
 	}
@@ -100,23 +99,23 @@ VALUE CRbColor::initialize(int argc, VALUE * argv, VALUE obj)
 		for (int i = 0; i < argc; ++i)
 			SafeNumericValue(argv[i]);
 
-		m_r = NUM2DBL(m_red);
-		m_g = NUM2DBL(m_green);
-		m_b = NUM2DBL(m_blue);
-		m_a = (NIL_P(m_alpha) ? 255 : NUM2DBL(m_alpha));
-
- 		m_r = SinBound(m_r, 0, 255);
-		m_g = SinBound(m_g, 0, 255);
-		m_b = SinBound(m_b, 0, 255);
-		m_a = SinBound(m_a, 0, 255);
+		m_col_data[0] = NUM2DBL(m_red);
+		m_col_data[1] = NUM2DBL(m_green);
+		m_col_data[2] = NUM2DBL(m_blue);
+		m_col_data[3] = (NIL_P(m_alpha) ? 255 : NUM2DBL(m_alpha));
+		
+ 		m_col_data[0] = SinBound(m_col_data[0], 0, 255);
+ 		m_col_data[1] = SinBound(m_col_data[1], 0, 255);
+ 		m_col_data[2] = SinBound(m_col_data[2], 0, 255);
+ 		m_col_data[3] = SinBound(m_col_data[3], 0, 255);
 	}
 
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
 
-	m_red	= DBL2NUM(m_r);
-	m_green = DBL2NUM(m_g);
-	m_blue	= DBL2NUM(m_b);
-	m_alpha = DBL2NUM(m_a);
+	m_red	= DBL2NUM(m_col_data[0]);
+	m_green = DBL2NUM(m_col_data[1]);
+	m_blue	= DBL2NUM(m_col_data[2]);
+	m_alpha = DBL2NUM(m_col_data[3]);
 
 	return obj;
 }
@@ -128,7 +127,7 @@ VALUE CRbColor::set(int argc, VALUE * argv, VALUE obj)
 
 VALUE CRbColor::_dump(VALUE depth)
 {
-	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
+	return rb_str_new((const char *)&m_col_data[0], sizeof(m_col_data));
 }
 
 VALUE CRbColor::clone()
@@ -140,7 +139,7 @@ VALUE CRbColor::clone()
 
 VALUE CRbColor::to_string()
 {
-	return rb_sprintf("#<%s(%f, %f, %f, %f)>", obj_classname(), m_r, m_g, m_b, m_a);
+	return rb_sprintf("#<%s(%f, %f, %f, %f)>", obj_classname(), m_col_data[0], m_col_data[1], m_col_data[2], m_col_data[3]);
 }
 
 VALUE CRbColor::get_red()
@@ -152,11 +151,11 @@ VALUE CRbColor::set_red(VALUE red)
 {
 	SafeNumericValue(red);
 
-	m_r = NUM2DBL(red);
-	m_r = SinBound(m_r, 0, 255);
+	m_col_data[0] = NUM2DBL(red);
+	m_col_data[0] = SinBound(m_col_data[0], 0, 255);
 
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
-	m_red	= DBL2NUM(m_r);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
+	m_red	= DBL2NUM(m_col_data[0]);
 
 	return m_red;
 }
@@ -170,11 +169,11 @@ VALUE CRbColor::set_green(VALUE green)
 {
 	SafeNumericValue(green);
 
-	m_g = NUM2DBL(green);
-	m_g = SinBound(m_g, 0, 255);
+	m_col_data[1] = NUM2DBL(green);
+	m_col_data[1] = SinBound(m_col_data[1], 0, 255);
 	
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
-	m_green	= DBL2NUM(m_g);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
+	m_green	= DBL2NUM(m_col_data[1]);
 
 	return m_green;
 }
@@ -188,11 +187,11 @@ VALUE CRbColor::set_blue(VALUE blue)
 {
 	SafeNumericValue(blue);
 
-	m_b = NUM2DBL(blue);
-	m_b = SinBound(m_b, 0, 255);
+	m_col_data[2] = NUM2DBL(blue);
+	m_col_data[2] = SinBound(m_col_data[2], 0, 255);
 	
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
-	m_blue	= DBL2NUM(m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
+	m_blue	= DBL2NUM(m_col_data[2]);
 
 	return m_blue;
 }
@@ -206,11 +205,11 @@ VALUE CRbColor::set_alpha(VALUE alpha)
 {
 	SafeNumericValue(alpha);
 
-	m_a = NUM2DBL(alpha);
-	m_a = SinBound(m_a, 0, 255);
+	m_col_data[3] = NUM2DBL(alpha);
+	m_col_data[3] = SinBound(m_col_data[3], 0, 255);
 	
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
-	m_alpha	= DBL2NUM(m_a);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
+	m_alpha	= DBL2NUM(m_col_data[3]);
 
 	return m_alpha;
 }
@@ -220,10 +219,13 @@ VALUE CRbColor::set_alpha(VALUE alpha)
  */
 VALUE CRbColor::dm_load(VALUE klass, VALUE str)
 {
-	if (4 * sizeof(VALUE) != RSTRING_LEN(str))	//	error
+	if (4 * sizeof(double) != RSTRING_LEN(str))	//	error
 		return Qnil;
-
-	return rb_class_new_instance(4, (VALUE*)RSTRING_PTR(str), klass);
+	double * col = (double *)RSTRING_PTR(str);
+	VALUE __argv[4] = { DBL2NUM(col[0]), DBL2NUM(col[1]), DBL2NUM(col[2]), DBL2NUM(col[3]) };
+	VALUE new_col = rb_class_new_instance(4, __argv, klass);
+	col = NULL;
+	return new_col;
 }
 
 imp_method_vargs(CRbColor, set)

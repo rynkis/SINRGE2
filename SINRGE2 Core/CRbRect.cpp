@@ -63,15 +63,15 @@ VALUE CRbRect::initialize(int argc, VALUE * argv, VALUE obj)
 		vx = vy = vw = vh = RUBY_0;
 	}
 
-	x		= NUM2INT(vx);
-	y		= NUM2INT(vy);
-	width	= NUM2INT(vw);
-	height	= NUM2INT(vh);
+	m_rect_data[0] = NUM2INT(vx);
+	m_rect_data[1] = NUM2INT(vy);
+	m_rect_data[2] = NUM2INT(vw);
+	m_rect_data[3] = NUM2INT(vh);
 	
-	vx		= INT2FIX(x);
-	vy		= INT2FIX(y);
-	vw		= INT2FIX(width);
-	vh		= INT2FIX(height);
+	vx = INT2FIX(m_rect_data[0]);
+	vy = INT2FIX(m_rect_data[1]);
+	vw = INT2FIX(m_rect_data[2]);
+	vh = INT2FIX(m_rect_data[3]);
 
 	return obj;
 }
@@ -85,8 +85,8 @@ VALUE CRbRect::set_x(VALUE nx)
 {
 	SafeNumericValue(nx);
 	
-	x	= NUM2INT(nx);
-	vx	= INT2FIX(x);
+	m_rect_data[0] = NUM2INT(nx);
+	vx = INT2FIX(m_rect_data[0]);
 
 	return nx;
 }
@@ -100,8 +100,8 @@ VALUE CRbRect::set_y(VALUE ny)
 {
 	SafeNumericValue(ny);
 	
-	y	= NUM2INT(ny);
-	vy	= INT2FIX(y);
+	m_rect_data[1] = NUM2INT(ny);
+	vy = INT2FIX(m_rect_data[1]);
 
 	return ny;
 }
@@ -115,8 +115,8 @@ VALUE CRbRect::set_width(VALUE nw)
 {
 	SafeNumericValue(nw);
 	
-	width	= NUM2INT(nw);
-	vw		= INT2FIX(width);
+	m_rect_data[2] = NUM2INT(nw);
+	vw = INT2FIX(m_rect_data[2]);
 
 	return nw;
 }
@@ -130,8 +130,8 @@ VALUE CRbRect::set_height(VALUE nh)
 {
 	SafeNumericValue(nh);
 	
-	height	= NUM2INT(nh);
-	vh		= INT2FIX(height);
+	m_rect_data[3] = NUM2INT(nh);
+	vh = INT2FIX(m_rect_data[3]);
 
 	return nh;
 }
@@ -143,13 +143,13 @@ VALUE CRbRect::set(int argc, VALUE * argv, VALUE obj)
 
 VALUE CRbRect::_dump(VALUE depth)
 {
-	return rb_str_new((const char *)&m_dump_data[0], sizeof(m_dump_data));
+	return rb_str_new((const char *)&m_rect_data[0], sizeof(m_rect_data));
 }
 
 VALUE CRbRect::empty()
 {
 	vx = vy = vw = vh = RUBY_0;
-	x = y = width = height = 0;
+	memset(m_rect_data, 0, sizeof(m_rect_data));
 	return __obj;
 }
 
@@ -162,15 +162,18 @@ VALUE CRbRect::clone()
 
 VALUE CRbRect::to_string()
 {
-	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), x, y, width, height);
+	return rb_sprintf("#<%s(%d, %d, %d, %d)>", obj_classname(), m_rect_data[0], m_rect_data[1], m_rect_data[2], m_rect_data[3]);
 }
 
 VALUE CRbRect::dm_load(VALUE klass, VALUE str)
 {
-	if (4 * sizeof(VALUE) != RSTRING_LEN(str))	//	error
+	if (4 * sizeof(int) != RSTRING_LEN(str))	//	error
 		return Qnil;
-
-	return rb_class_new_instance(4, (VALUE*)RSTRING_PTR(str), klass);
+	int * rect = (int *)RSTRING_PTR(str);
+	VALUE __argv[4] = { INT2FIX(rect[0]), INT2FIX(rect[1]), INT2FIX(rect[2]), INT2FIX(rect[3]) };
+	VALUE new_rect = rb_class_new_instance(4, __argv, klass);
+	rect = NULL;
+	return new_rect;
 }
 
 VALUE CRbRect::dm_set(int argc, VALUE * argv, VALUE obj)

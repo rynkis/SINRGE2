@@ -14,13 +14,8 @@
 class CRbRect : public CRbClassBase
 {
 public:
-	CRbRect()
-		: x(0), y(0), width(0), height(0)							//	allocate
-	{
-	}
-	virtual ~CRbRect()												//	free
-	{
-	}						
+	CRbRect() { memset(m_rect_data, 0, sizeof(m_rect_data)); }
+	virtual ~CRbRect() {}
 
 public:
 	static void		InitLibrary();
@@ -35,7 +30,7 @@ protected:
 	virtual VALUE	to_string();
 
 public:
-	s32				x, y, width, height;
+	int				m_rect_data[4];
 
 protected:
 	union
@@ -44,7 +39,6 @@ protected:
 		{
 			VALUE	vx, vy, vw, vh;
 		};
-		VALUE		m_dump_data[4];	//	for _dump and load ...
 	};
 
 protected:

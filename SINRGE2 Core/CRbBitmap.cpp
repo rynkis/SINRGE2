@@ -860,10 +860,10 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 
 	bitmap_p des = &m_bmp;
 	CRbRect* srcRect = GetObjectPtr<CRbRect>(src_rect);
-	int sx = srcRect->x;
-	int sy = srcRect->y;
-	int sw = srcRect->width;
-	int sh = srcRect->height;
+	int sx = srcRect->m_rect_data[0];
+	int sy = srcRect->m_rect_data[1];
+	int sw = srcRect->m_rect_data[2];
+	int sh = srcRect->m_rect_data[3];
 	int dx = FIX2INT(x);
 	int dy = FIX2INT(y);
 	int op;
@@ -957,17 +957,17 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	SafeRectValue(src_rect);
 	
 	CRbRect * desRect = GetObjectPtr<CRbRect>(dest_rect);
-	int dx = desRect->x;
-	int dy = desRect->y;
-	int dw = desRect->width;
-	int dh = desRect->height;
+	int dx = desRect->m_rect_data[0];
+	int dy = desRect->m_rect_data[1];
+	int dw = desRect->m_rect_data[2];
+	int dh = desRect->m_rect_data[3];
 	CRbBitmap * srcBmp = GetObjectPtr<CRbBitmap>(src_bitmap);
 	src = srcBmp->GetBitmapPtr();
 	CRbRect * srcRect = GetObjectPtr<CRbRect>(src_rect);
-	int sx = srcRect->x;
-	int sy = srcRect->y;
-	int sw = srcRect->width;
-	int sh = srcRect->height;
+	int sx = srcRect->m_rect_data[0];
+	int sy = srcRect->m_rect_data[1];
+	int sw = srcRect->m_rect_data[2];
+	int sh = srcRect->m_rect_data[3];
 	int op;
 	if (NIL_P(opacity))
 		op = 255;
@@ -1069,10 +1069,10 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 		SafeRectValue(argv[0]);
 
 		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
-		x = rect->x;
-		y = rect->y;
-		width = rect->width;
-		height = rect->height;
+		x = rect->m_rect_data[0];
+		y = rect->m_rect_data[1];
+		width = rect->m_rect_data[2];
+		height = rect->m_rect_data[3];
 
 		if (rb_obj_is_kind_of(argv[1], rb_cInteger))
 			color = NUM2ULONG(argv[1]);
@@ -1248,10 +1248,10 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		//SafeStringValue(vstr);
 
 		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
-		ix = rect->x;
-		iy = rect->y;
-		width = rect->width;
-		height = rect->height;
+		ix = rect->m_rect_data[0];
+		iy = rect->m_rect_data[1];
+		width = rect->m_rect_data[2];
+		height = rect->m_rect_data[3];
 	}
 	VALUE vStr = NIL_P(vstr) ? rb_str_new2("nil") : rb_obj_as_string(vstr);
 	pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vstr));
@@ -1460,10 +1460,10 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 		SafeRectValue(argv[0]);
 
 		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
-		x = rect->x;
-		y = rect->y;
-		width = rect->width;
-		height = rect->height;
+		x = rect->m_rect_data[0];
+		y = rect->m_rect_data[1];
+		width = rect->m_rect_data[2];
+		height = rect->m_rect_data[3];
 	}
 	
 	if (m_bmp.width - x <= 0 || m_bmp.height - y <= 0)
@@ -1583,10 +1583,10 @@ VALUE CRbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 	{
 		SafeRectValue(argv[0]);
 		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
-		x = rect->x;
-		y = rect->y;
-		width = rect->width;
-		height = rect->height;
+		x = rect->m_rect_data[0];
+		y = rect->m_rect_data[1];
+		width = rect->m_rect_data[2];
+		height = rect->m_rect_data[3];
 	}
 
 	//	ÐÞÕý¾ØÐÎÇøÓò

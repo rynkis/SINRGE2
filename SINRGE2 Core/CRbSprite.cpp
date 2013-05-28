@@ -192,7 +192,7 @@ void CRbSprite::render(u32 id)
 	process_tone_texture();
 
 	//	设置源矩形
-	m_pSpr->SetTextureRect(m_src_rect_ptr->x, m_src_rect_ptr->y, m_src_rect_ptr->width, m_src_rect_ptr->height);
+	m_pSpr->SetTextureRect(m_src_rect_ptr->m_rect_data[0], m_src_rect_ptr->m_rect_data[1], m_src_rect_ptr->m_rect_data[2], m_src_rect_ptr->m_rect_data[3]);
 
 	//	关于精灵混合颜色的管理：
 
@@ -287,8 +287,8 @@ void CRbSprite::render(u32 id)
 	{
 		const CRbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
 
-		x = m_x + rect_ptr->x - m_viewport_ptr->m_ox;
-		y = m_y + rect_ptr->y - m_viewport_ptr->m_oy;
+		x = m_x + rect_ptr->m_rect_data[0] - m_viewport_ptr->m_ox;
+		y = m_y + rect_ptr->m_rect_data[1] - m_viewport_ptr->m_oy;
 	}
 
 	//	草丛深度不为0并且草丛不透明度不为255的情况下才描绘草丛透明度
@@ -506,13 +506,13 @@ VALUE CRbSprite::set_mirror(VALUE mirror)
 VALUE CRbSprite::get_width()
 {
 	check_raise();
-	return LONG2FIX(m_src_rect_ptr->width);
+	return INT2FIX(m_src_rect_ptr->m_rect_data[2]);
 }
 
 VALUE CRbSprite::get_height()
 {
 	check_raise();
-	return LONG2FIX(m_src_rect_ptr->height);
+	return INT2FIX(m_src_rect_ptr->m_rect_data[3]);
 }
 
 VALUE CRbSprite::get_bush_depth()

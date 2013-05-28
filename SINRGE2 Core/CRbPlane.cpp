@@ -233,11 +233,11 @@ void CRbPlane::render(u32 id)
 		{
 			const CRbRect* rect_ptr = m_viewport_ptr->GetRectPtr();
 
-			wrap_w = rect_ptr->width;
-			wrap_h = rect_ptr->height;
+			wrap_w = rect_ptr->m_rect_data[2];
+			wrap_h = rect_ptr->m_rect_data[3];
 
-			ofs_x = rect_ptr->x - m_viewport_ptr->m_ox;
-			ofs_y = rect_ptr->y - m_viewport_ptr->m_oy;
+			ofs_x = rect_ptr->m_rect_data[0] - m_viewport_ptr->m_ox;
+			ofs_y = rect_ptr->m_rect_data[1] - m_viewport_ptr->m_oy;
 		}
 	}
 

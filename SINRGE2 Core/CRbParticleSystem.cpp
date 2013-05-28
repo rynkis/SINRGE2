@@ -378,8 +378,8 @@ void CRbParticleSystem::render(u32 id)
 	if (m_viewport_ptr)
 	{
 		const CRbRect * rect_ptr = m_viewport_ptr->GetRectPtr();
-		x = rect_ptr->x - m_viewport_ptr->m_ox;
-		y = rect_ptr->y - m_viewport_ptr->m_oy;
+		x = rect_ptr->m_rect_data[0] - m_viewport_ptr->m_ox;
+		y = rect_ptr->m_rect_data[1] - m_viewport_ptr->m_oy;
 	}
 	Render(x, y);
 }

@@ -26,7 +26,7 @@ public:
 	{
 		if (m_data)
 		{
-			xfree(m_data);
+			free(m_data);
 			m_data = 0;
 		}
 	}
@@ -35,14 +35,14 @@ public:
 	static void		InitLibrary();
 
 public:
-	VALUE *			GetDataPtr() const { return m_data; }
+	short *			GetDataPtr() const { return m_data; }
 
 protected:
 	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 	virtual VALUE	_dump(VALUE depth);
 
 protected:
-	VALUE *			m_data;
+	short *			m_data;
 	union
 	{
 		struct
@@ -51,7 +51,6 @@ protected:
 			int		m_dim_size[3];
 			int		m_size;
 		};
-		int			m_dump_data[5];	//	for _dump and load ...
 	};
 
 protected:

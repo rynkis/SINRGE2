@@ -55,18 +55,20 @@ VALUE CRbTone::initialize(int argc, VALUE * argv, VALUE obj)
 		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
 		{
 			DWORD col = NUM2ULONG(argv[0]);
-			GET_ARGB_8888(col, m_a, m_r, m_g, m_b);
+			BYTE r, g, b, a;
+			GET_ARGB_8888(col, a, r, g, b);
+			m_col_data[0] = r;
+			m_col_data[1] = g;
+			m_col_data[2] = b;
+			m_col_data[3] = a;
 		}
 		else
 		{
 			SafeToneValue(argv[0]);
 
 			CRbTone * tone = GetObjectPtr<CRbTone>(argv[0]);
-
-			m_r = tone->m_r;
-			m_g = tone->m_g;
-			m_b = tone->m_b;
-			m_a = tone->m_a;
+			memcpy(m_col_data, tone->m_col_data, sizeof(m_col_data));
+			tone = NULL;
 		}
 	}
 	else
@@ -77,24 +79,24 @@ VALUE CRbTone::initialize(int argc, VALUE * argv, VALUE obj)
 		{
 			SafeNumericValue(argv[i]);
 		}
-
-		m_r = NUM2DBL(m_red);
-		m_g = NUM2DBL(m_green);
-		m_b = NUM2DBL(m_blue);
-		m_a = (NIL_P(m_alpha) ? 0 : NUM2DBL(m_alpha));
-
- 		m_r = SinBound(m_r, 0, 255);
-		m_g = SinBound(m_g, 0, 255);
-		m_b = SinBound(m_b, 0, 255);
-		m_a = SinBound(m_a, 0, 255);
+		
+		m_col_data[0] = NUM2DBL(m_red);
+		m_col_data[1] = NUM2DBL(m_green);
+		m_col_data[2] = NUM2DBL(m_blue);
+		m_col_data[3] = (NIL_P(m_alpha) ? 255 : NUM2DBL(m_alpha));
+		
+ 		m_col_data[0] = SinBound(m_col_data[0], 0, 255);
+ 		m_col_data[1] = SinBound(m_col_data[1], 0, 255);
+ 		m_col_data[2] = SinBound(m_col_data[2], 0, 255);
+ 		m_col_data[3] = SinBound(m_col_data[3], 0, 255);
 	}
 
-	m_color = MAKE_ARGB_8888((BYTE)m_a, (BYTE)m_r, (BYTE)m_g, (BYTE)m_b);
+	m_color = MAKE_ARGB_8888((BYTE)m_col_data[3], (BYTE)m_col_data[0], (BYTE)m_col_data[1], (BYTE)m_col_data[2]);
 
-	m_red	= DBL2NUM(m_r);
-	m_green = DBL2NUM(m_g);
-	m_blue	= DBL2NUM(m_b);
-	m_alpha = DBL2NUM(m_a);
+	m_red	= DBL2NUM(m_col_data[0]);
+	m_green = DBL2NUM(m_col_data[1]);
+	m_blue	= DBL2NUM(m_col_data[2]);
+	m_alpha = DBL2NUM(m_col_data[3]);
 
 	return obj;
 }

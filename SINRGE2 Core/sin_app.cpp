@@ -124,7 +124,7 @@ namespace
 	{
 		SafeStringValue(filename);
 		VALUE rbread, rbdata;
-		void * data = 0;
+		void * data = NULL;
 		DWORD file_size;
 		wchar_t * filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(filename));
 
@@ -164,7 +164,7 @@ __failed_return:
 		if (data)
 		{
 			free(data);
-			data = 0;
+			data = NULL;
 		}
 		return Qnil;
 	}

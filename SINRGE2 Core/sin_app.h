@@ -29,8 +29,8 @@ public:
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
-	inline DWORD				GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
-	inline DWORD				GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
+	inline long					GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
+	inline long					GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
 	
 	inline IC7pkgReader *		Get7pkgReader() const { return m_7pkgReader; }
 	
