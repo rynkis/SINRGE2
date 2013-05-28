@@ -77,10 +77,6 @@ VALUE CRbTable::initialize(int argc, VALUE * argv, VALUE obj)
 	{
 		m_data = (short *)malloc(sizeof(short) * m_size);
 		memset(m_data, 0, sizeof(short) * m_size);
-
-	//	memset(m_data, RUBY_0, sizeof(VALUE) * m_size);	//	single byte set
-		/*for(i = 0; i < m_size; ++i)
-			m_data[i] = RUBY_0;*/
 	}
 
 	return obj;
