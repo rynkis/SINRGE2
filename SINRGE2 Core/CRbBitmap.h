@@ -42,8 +42,8 @@ public:
 	static HTEXTURE			LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx);
 
 public:
-	u32						GetWidth()					const { return m_bmp.width; }
-	u32						GetHeight()					const { return m_bmp.height; }
+	int						GetWidth()					const { return m_bmp.width; }
+	int						GetHeight()					const { return m_bmp.height; }
 	/*u32						GetMemWidth()				const { return m_bmp.texw; }
 	u32						GetMemHeight()				const { return m_bmp.texh; }*/
 	bitmap_p				GetBitmapPtr()				{ return &m_bmp; }
@@ -95,6 +95,7 @@ protected:
 	dm_method(flip_h)
 	dm_method(flip_v)
 	dm_method_vargs(save_to_file)
+	dm_method(to_str)
 
 	attr_reader(rect)
 	attr_reader(width)

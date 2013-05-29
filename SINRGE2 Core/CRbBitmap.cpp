@@ -141,6 +141,7 @@ void CRbBitmap::InitLibrary()
 	
 	rb_define_method(rb_cBitmap, "flip_h",				(RbFunc)dm_flip_h ,				0);
 	rb_define_method(rb_cBitmap, "flip_v",				(RbFunc)dm_flip_v ,				0);
+	rb_define_method(rb_cBitmap, "to_str",				(RbFunc)dm_to_str ,				0);
 
 	// object attribute
 	rb_define_method(rb_cBitmap, "width",				(RbFunc)dm_get_width,			0);
@@ -1731,14 +1732,14 @@ VALUE CRbBitmap::get_width()
 {
 	check_raise();
 
-	return INT2FIX(GetWidth());
+	return INT2FIX(m_bmp.width);
 }
 
 VALUE CRbBitmap::get_height()
 {
 	check_raise();
 
-	return INT2FIX(GetHeight());
+	return INT2FIX(m_bmp.height);
 }
 
 VALUE CRbBitmap::get_filename()
@@ -1823,6 +1824,39 @@ failed_return:
 	return Qfalse;
 }
 
+VALUE CRbBitmap::to_str()
+{
+	check_raise();
+
+	static const char * characters = "MNHQ$OC?7>!;-:. ";//"M80V1;:*-. ";
+	int count = strlen(characters);
+	int span = 0xFF / count;
+	long strLen = m_bmp.width * m_bmp.height + m_bmp.height;
+	char * charmap = (char *)malloc(strLen * sizeof(char));
+	
+	BYTE a, r, g, b;
+	long lx, ly, lineno, offset, cidx;
+	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, true);
+	for (ly = 0; ly < m_bmp.height; ++ly)
+	{
+		lineno = m_bmp.width * ly;
+		for (lx = 0; lx < m_bmp.width; ++lx)
+		{
+			offset = lineno + lx;
+			GET_ARGB_8888(pTexData[offset], a, r, g, b);
+			cidx = (r + g + b) / 3 / span;
+			cidx = SinBound(cidx, 0, count - 1);
+			charmap[offset + ly] = characters[cidx];
+		}
+		charmap[offset + ly + 1] = '\n';
+	}
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+
+	VALUE vstr = rb_str_new(charmap, strLen);
+	free(charmap);
+	return vstr;
+}
+
 imp_method(CRbBitmap, dispose)
 imp_method(CRbBitmap, is_disposed)
 imp_method_vargs(CRbBitmap, save_to_file)
@@ -1846,6 +1880,7 @@ imp_method02(CRbBitmap, radial_blur)
 
 imp_method(CRbBitmap, flip_h)
 imp_method(CRbBitmap, flip_v)
+imp_method(CRbBitmap, to_str)
 
 imp_attr_reader(CRbBitmap, rect)
 imp_attr_reader(CRbBitmap, width)

@@ -119,6 +119,7 @@ private:
 	CTimer *					m_fps_timer;
 	unsigned int				m_frame, m_t0, m_t1, m_last_fps, m_real_fps;
 	float						m_seconds;
+	int							m_last_limit;
 
 	unsigned int				m_current_ticks, m_target_ticks, f_frame_count, m_last_ticks, m_the_delay;
 	float						m_rate_ticks;

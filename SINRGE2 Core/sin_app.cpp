@@ -203,6 +203,7 @@ CApplication::CApplication()
 	, m_t0(0)
 	, m_last_fps(0)
 	, m_last(0)
+	, m_last_limit(0)
 
 	, m_current_delta(0)
 
@@ -627,7 +628,7 @@ bool CApplication::InitVideo()
 	m_pHge->System_SetState(HGE_SCREENHEIGHT, m_frm_struct.m_screen_height);
 	m_pHge->System_SetState(HGE_SCREENBPP, 32);
  	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
-	m_pHge->System_SetState(HGE_FPS, 60);
+	m_pHge->System_SetState(HGE_FPS, m_pHge->System_GetState(HGE_FPS));
 	
 	if(!m_pHge->System_Initiate())
 		return false;
@@ -697,11 +698,15 @@ void CApplication::LimitFps(int limit)
 	{
 		m_fps_timer->Start();
 		m_current_ticks = 0;
-		m_target_ticks  = 0;
-		m_last_ticks    = 0;
-		f_frame_count   = 0;
-		m_rate_ticks    = 1000.0f / limit;
+		m_target_ticks = 0;
+		m_last_ticks = 0;
+		f_frame_count = 0;
 		return;
+	}
+	if (m_last_limit != limit)
+	{
+		m_rate_ticks = 1000.0f / limit;
+		m_last_limit = limit;
 	}
 	f_frame_count++;
 	m_current_ticks = m_fps_timer->GetTicks();

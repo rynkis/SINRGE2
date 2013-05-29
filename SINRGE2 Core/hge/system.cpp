@@ -483,7 +483,7 @@ HGE_Impl::HGE_Impl()
 	VertArray=0;
 	textures=0;
 
-	nHGEFPS=HGEFPS_UNLIMITED;
+	nHGEFPS=60;
 	
 	procRenderFunc=0;
 	procFocusLostFunc=0;
