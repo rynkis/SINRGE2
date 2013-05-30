@@ -185,7 +185,7 @@ void CRbViewport::render(u32 id)
 	{
 		m_quad.v[0].x = (float)m_rect_ptr->m_rect_data[0]; m_quad.v[0].y = (float)m_rect_ptr->m_rect_data[1];
 		m_quad.v[1].x = (float)(m_rect_ptr->m_rect_data[0] + m_rect_ptr->m_rect_data[2]); m_quad.v[1].y = (float)m_rect_ptr->m_rect_data[1];
-		m_quad.v[2].x = (float)m_rect_ptr->m_rect_data[0] + m_rect_ptr->m_rect_data[1]; m_quad.v[2].y = (float)(m_rect_ptr->m_rect_data[1] + m_rect_ptr->m_rect_data[3]);
+		m_quad.v[2].x = (float)m_rect_ptr->m_rect_data[0] + m_rect_ptr->m_rect_data[2]; m_quad.v[2].y = (float)(m_rect_ptr->m_rect_data[1] + m_rect_ptr->m_rect_data[3]);
 		m_quad.v[3].x = (float)m_rect_ptr->m_rect_data[0]; m_quad.v[3].y = (float)(m_rect_ptr->m_rect_data[1] + m_rect_ptr->m_rect_data[3]);
 	}
 

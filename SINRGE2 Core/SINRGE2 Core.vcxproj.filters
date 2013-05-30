@@ -150,6 +150,12 @@
     <ClCompile Include="CRbTone.cpp">
       <Filter>源文件\RbClass\base</Filter>
     </ClCompile>
+    <ClCompile Include="CRbSpriteLite.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbCharmap.cpp">
+      <Filter>源文件\RbClass</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -375,6 +381,12 @@
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
     <ClInclude Include="CRbTilemap.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbSpriteLite.h">
+      <Filter>源文件\RbClass</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbCharmap.h">
       <Filter>源文件\RbClass</Filter>
     </ClInclude>
   </ItemGroup>

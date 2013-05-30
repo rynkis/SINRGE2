@@ -518,7 +518,6 @@ VALUE CRbPlane::set_z(VALUE z)
 		m_node->z = m_z;
 		CRbRenderTree::InsertNode(CRbRenderTree::DeleteNode(m_node));
 	}
-
 	return z;
 }
 

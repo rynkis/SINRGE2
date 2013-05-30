@@ -40,6 +40,7 @@ protected:
 	virtual VALUE	set_viewport(VALUE viewport);
 
 protected:
+	void			check_raise();
 	void			process_tone_texture();
 
 protected:
@@ -61,9 +62,6 @@ protected:
 	CRbBitmap *		m_bitmap_ptr;
 	CRbColor *		m_color_ptr;
 	CRbTone *		m_tone_ptr;
-	
-protected:
-	void			check_raise();
 
 protected:
 	dm_method(dispose)

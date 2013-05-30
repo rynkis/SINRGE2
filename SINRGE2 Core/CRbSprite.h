@@ -86,6 +86,10 @@ protected:
 	attr_accessor(wave_length)
 	attr_accessor(wave_speed)
 	attr_accessor(wave_phase)
+	
+private:
+	friend class	CRbCharmap;
+
 };
 
 #endif

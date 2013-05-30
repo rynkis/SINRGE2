@@ -101,6 +101,7 @@
   <ItemGroup>
     <ClCompile Include="CRb7pkgWriter.cpp" />
     <ClCompile Include="CRbBitmap.cpp" />
+    <ClCompile Include="CRbCharmap.cpp" />
     <ClCompile Include="CRbColor.cpp" />
     <ClCompile Include="CRbDisplayObject.cpp" />
     <ClCompile Include="CRbFont.cpp" />
@@ -110,6 +111,9 @@
     <ClCompile Include="CRbRect.cpp" />
     <ClCompile Include="CRbRenderTree.cpp" />
     <ClCompile Include="CRbSprite.cpp" />
+    <ClCompile Include="CRbSpriteLite.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="CRbTable.cpp" />
     <ClCompile Include="CRbTone.cpp" />
     <ClCompile Include="CRbViewport.cpp" />
@@ -171,6 +175,7 @@
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="CRb7pkgWriter.h" />
     <ClInclude Include="CRbBitmap.h" />
+    <ClInclude Include="CRbCharmap.h" />
     <ClInclude Include="CRbClassBase.h" />
     <ClInclude Include="CRbColor.h" />
     <ClInclude Include="CRbDisplayObject.h" />
@@ -181,6 +186,7 @@
     <ClInclude Include="CRbRect.h" />
     <ClInclude Include="CRbRenderTree.h" />
     <ClInclude Include="CRbSprite.h" />
+    <ClInclude Include="CRbSpriteLite.h" />
     <ClInclude Include="CRbTable.h" />
     <ClInclude Include="CRbTilemap.h" />
     <ClInclude Include="CRbTone.h" />

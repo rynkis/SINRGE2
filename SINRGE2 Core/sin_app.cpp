@@ -25,6 +25,7 @@
 #include "CRbWin32API.h"
 #include "CRb7pkgWriter.h"
 #include "CRbLFont.h"
+#include "CRbCharmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
 #include "sin_video.h"
@@ -560,6 +561,7 @@ void CApplication::InitExportSinInterface()
 	CRbWin32API::InitLibrary();
 
 	CRbLFont::InitLibrary();
+	CRbCharmap::InitLibrary();
 	
 	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(rdf_msgboxp), -1);
 	rb_define_module_function(rb_mSin, "msgbox",	RbFunc(rdf_msgbox), -1);
