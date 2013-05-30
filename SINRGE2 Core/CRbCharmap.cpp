@@ -154,13 +154,6 @@ VALUE CRbCharmap::reset(VALUE bitmap)
 
 	int count = m_bitmap_ptr->GetWidth() / m_charsize;
 	int span = 0xFF / count;
-	/*m_charmap_size = bmp_ptr->GetBitmapPtr()->width * bmp_ptr->GetBitmapPtr()->height + bmp_ptr->GetBitmapPtr()->height;
-	if (charmap)
-	{
-		free(charmap);
-		charmap = NULL;
-	}
-	charmap = (char *)malloc(m_charmap_size * sizeof(char));*/
 	
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	BYTE a, r, g, b;
