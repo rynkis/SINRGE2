@@ -49,7 +49,7 @@ void CRbCharmap::InitLibrary()
 	rb_define_method(rb_cCharmap, "dispose",		(RbFunc)dm_dispose,			0);
 	rb_define_method(rb_cCharmap, "disposed?",		(RbFunc)dm_is_disposed,		0);
 
-	rb_define_method(rb_cCharmap, "reset",			(RbFunc)dm_reset,			1);
+	rb_define_method(rb_cCharmap, "reset",			(RbFunc)dm_reset,			-1);
 
 	// object attribute
 	/*rb_define_method(rb_cCharmap, "viewport",		(RbFunc)dm_get_viewport,	0);
@@ -141,9 +141,12 @@ void CRbCharmap::render(u32 id)
 	}
 }
 
-VALUE CRbCharmap::reset(VALUE bitmap)
+VALUE CRbCharmap::reset(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
+
+	VALUE bitmap, vgray;
+	rb_scan_args(argc, argv, "11", &bitmap, &vgray);
 
 	SafeBitmapValue(bitmap);
 	CRbBitmap * bmp_ptr = GetObjectPtr<CRbBitmap>(bitmap);
@@ -152,6 +155,7 @@ VALUE CRbCharmap::reset(VALUE bitmap)
 		rb_raise(rb_eSinError, "wrong size of bitmap: %d * %d.\ncharmap is: %d * %d",
 			bmp_ptr->GetBitmapPtr()->width, bmp_ptr->GetBitmapPtr()->height, m_width, m_height);
 
+	bool gray = RTEST(vgray);
 	int count = m_bitmap_ptr->GetWidth() / m_charsize;
 	int span = 0xFF / count;
 	
@@ -166,7 +170,8 @@ VALUE CRbCharmap::reset(VALUE bitmap)
 		{
 			offset = lineno + lx;
 			GET_ARGB_8888(pTexData[offset], a, r, g, b);
-			cidx = (r + g + b) / 3 / span;
+			cidx = gray ? r : (r + g + b) / 3;//(r * 38 + g * 75 + b * 15 ) >> 7;//
+			cidx /= span;
 			cidx = SinBound(cidx, 0, count - 1);
 			charmap[offset + ly] = cidx;
 		}
@@ -249,6 +254,6 @@ VALUE CRbCharmap::set_z(VALUE z)
 imp_method(CRbCharmap, dispose)
 imp_method(CRbCharmap, is_disposed)
 
-imp_method01(CRbCharmap, reset)
+imp_method_vargs(CRbCharmap, reset)
 
 imp_attr_accessor(CRbCharmap, bitmap)

@@ -56,7 +56,7 @@ protected:
 	dm_method(dispose)
 	dm_method(is_disposed)
 
-	dm_method01(reset)
+	dm_method_vargs(reset)
 	
 	attr_accessor(bitmap)
 };
