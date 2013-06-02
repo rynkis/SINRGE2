@@ -186,7 +186,11 @@ VALUE CRbCharmap::dispose()
 {
 	if (m_disposed)
 		return Qnil;
-
+	if (charmap)
+	{
+		free(charmap);
+		charmap = NULL;
+	}
 	m_bitmap_ptr = NULL;
 	m_disposed = true;
 	return Qnil;
