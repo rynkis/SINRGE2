@@ -111,9 +111,6 @@
     <ClCompile Include="CRbRect.cpp" />
     <ClCompile Include="CRbRenderTree.cpp" />
     <ClCompile Include="CRbSprite.cpp" />
-    <ClCompile Include="CRbSpriteLite.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="CRbTable.cpp" />
     <ClCompile Include="CRbTone.cpp" />
     <ClCompile Include="CRbViewport.cpp" />
@@ -186,7 +183,6 @@
     <ClInclude Include="CRbRect.h" />
     <ClInclude Include="CRbRenderTree.h" />
     <ClInclude Include="CRbSprite.h" />
-    <ClInclude Include="CRbSpriteLite.h" />
     <ClInclude Include="CRbTable.h" />
     <ClInclude Include="CRbTilemap.h" />
     <ClInclude Include="CRbTone.h" />
