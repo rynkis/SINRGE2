@@ -11,15 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{38CBEF20-8D49-4EDA-9125-1F7C6E94D0E3}</ProjectGuid>
-    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}</ProjectGuid>
     <RootNamespace>SINRGE2Core</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
@@ -37,43 +36,101 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>SINRGE2</TargetName>
     <LinkIncremental>false</LinkIncremental>
+    <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;SINRGE2CORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Contrib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HAVE_STRUCT_TIMEVAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
+      <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
+      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
+      <StackReserveSize>0</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Contrib\include\gl\FGL.H" />
+    <ClInclude Include="..\Contrib\include\gl\FGLU.H" />
+    <ClInclude Include="..\Contrib\include\gl\FGLUT.H" />
+    <ClInclude Include="..\Contrib\include\gl\gl.h" />
+    <ClInclude Include="..\Contrib\include\gl\glew.h" />
+    <ClInclude Include="..\Contrib\include\gl\GLSMAP.H" />
+    <ClInclude Include="..\Contrib\include\gl\glu.h" />
+    <ClInclude Include="..\Contrib\include\gl\GLUT.H" />
+    <ClInclude Include="..\Contrib\include\gl\glxew.h" />
+    <ClInclude Include="..\Contrib\include\gl\TUBE.H" />
+    <ClInclude Include="..\Contrib\include\gl\wglew.h" />
+    <ClInclude Include="..\Contrib\include\ruby.h" />
+    <ClInclude Include="..\Contrib\include\ruby\backward\classext.h" />
+    <ClInclude Include="..\Contrib\include\ruby\backward\rubyio.h" />
+    <ClInclude Include="..\Contrib\include\ruby\backward\rubysig.h" />
+    <ClInclude Include="..\Contrib\include\ruby\backward\st.h" />
+    <ClInclude Include="..\Contrib\include\ruby\backward\util.h" />
+    <ClInclude Include="..\Contrib\include\ruby\config.h" />
+    <ClInclude Include="..\Contrib\include\ruby\debug.h" />
+    <ClInclude Include="..\Contrib\include\ruby\defines.h" />
+    <ClInclude Include="..\Contrib\include\ruby\digest.h" />
+    <ClInclude Include="..\Contrib\include\ruby\dl.h" />
+    <ClInclude Include="..\Contrib\include\ruby\encoding.h" />
+    <ClInclude Include="..\Contrib\include\ruby\intern.h" />
+    <ClInclude Include="..\Contrib\include\ruby\io.h" />
+    <ClInclude Include="..\Contrib\include\ruby\missing.h" />
+    <ClInclude Include="..\Contrib\include\ruby\oniguruma.h" />
+    <ClInclude Include="..\Contrib\include\ruby\re.h" />
+    <ClInclude Include="..\Contrib\include\ruby\regex.h" />
+    <ClInclude Include="..\Contrib\include\ruby\ruby.h" />
+    <ClInclude Include="..\Contrib\include\ruby\st.h" />
+    <ClInclude Include="..\Contrib\include\ruby\subst.h" />
+    <ClInclude Include="..\Contrib\include\ruby\thread.h" />
+    <ClInclude Include="..\Contrib\include\ruby\util.h" />
+    <ClInclude Include="..\Contrib\include\ruby\version.h" />
+    <ClInclude Include="..\Contrib\include\ruby\vm.h" />
+    <ClInclude Include="..\Contrib\include\ruby\win32.h" />
+    <ClInclude Include="..\Contrib\include\zconf.h" />
+    <ClInclude Include="..\Contrib\include\zlib.h" />
+    <ClInclude Include="sin_auto_buffer.h" />
+    <ClInclude Include="sin_bitmap.h" />
+    <ClInclude Include="sin_color.h" />
+    <ClInclude Include="sin_graphics.h" />
+    <ClInclude Include="sin_kconv.h" />
+    <ClInclude Include="sin_timer.h" />
+    <ClInclude Include="sin_types.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Entry.cpp" />
+    <ClCompile Include="RubyExt\nonblock.c" />
+    <ClCompile Include="RubyExt\wait.c" />
+    <ClCompile Include="RubyExt\zlib.c" />
+    <ClCompile Include="sin_kconv.cpp" />
+    <ClCompile Include="sin_timer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SINRGE2.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
