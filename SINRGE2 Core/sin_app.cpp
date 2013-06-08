@@ -50,7 +50,7 @@ namespace
 			rb_str_buf_append(str, rb_default_rs);
 		}
 		// 清除多余消息队列
-		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+		GetAppPtr()->SystemUpdate();
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
 
 		return Qnil;
@@ -72,7 +72,7 @@ namespace
 			rb_str_buf_append(str, rb_enc_associate(NIL_P(argv[i]) ? rb_str_new2("nil") : rb_obj_as_string(argv[i]), enc));
 		}
 		// 清除多余消息队列
-		MSG msg; PeekMessage(&msg, NULL, 0, 0, PM_REMOVE);
+		GetAppPtr()->SystemUpdate();
 		MessageBoxW(GetAppPtr()->GetMainHwnd(), Kconv::UTF8ToUnicode(RSTRING_PTR(str)), GetAppPtr()->GetTitle(), 0);
 
 		return Qnil;
@@ -399,15 +399,15 @@ void CApplication::InitRubyInterpreter()
 {
 	///<	初始化解释器
 	int		argc = 0;
-	char**	argv = 0;
+	char **	argv = 0;
 
 	ruby_sysinit(&argc, &argv);
 	{
 		RUBY_INIT_STACK
 		ruby_init();
 		ruby_set_argv(argc - 1, argv + 1);
-		//	rb_set_kcode("utf8");
-		//  ruby_init_loadpath();
+		//rb_set_kcode("utf8");
+		//ruby_init_loadpath();
 		ruby_incpush("./");
 		ruby_script(SIN_CORENAME);
 	}
@@ -712,7 +712,7 @@ void CApplication::LimitFps(int limit)
 	}
 	f_frame_count++;
 	m_current_ticks = m_fps_timer->GetTicks();
-	m_target_ticks = m_last_ticks + (unsigned int) ((float) f_frame_count * m_rate_ticks);
+	m_target_ticks = m_last_ticks + (unsigned int)((float)f_frame_count * m_rate_ticks);
 
 	m_frame_count++;
 

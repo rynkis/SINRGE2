@@ -24,7 +24,7 @@ public:
 	inline const wchar_t *		GetTitle() const { return m_frm_struct.m_title; }
 	inline HGE *				GetHgePtr() const { return m_pHge; }
 	inline CRbRenderState *		GetRenderState() const { return m_pRenderState; }
-	inline IDirect3D8 *			GetD3DPtr() const { return m_ref_d3d; }
+	//inline IDirect3D8 *			GetD3DPtr() const { return m_ref_d3d; }
 	inline IDirect3DDevice8 *	GetD3DDevicePtr() const { return m_ref_device; }
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
