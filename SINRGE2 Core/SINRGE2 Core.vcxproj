@@ -19,12 +19,14 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v100</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -56,35 +58,24 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir)Contrib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Contrib\include;$(SolutionDir)Contrib\DXSDK81\include;$(ProjectDir)hge\include;$(ProjectDir)hge;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HAVE_STRUCT_TIMEVAL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;HAVE_STRUCT_TIMEVAL;HGE_DIRECTX_VER=8;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <IgnoreSpecificDefaultLibraries>msvcrt.lib</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>msvcrt.lib;libci.lib</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
-      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;winmm.lib;$(SolutionDir)Contrib/lib/msvcr100-ruby200-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <StackReserveSize>0</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Contrib\include\gl\FGL.H" />
-    <ClInclude Include="..\Contrib\include\gl\FGLU.H" />
-    <ClInclude Include="..\Contrib\include\gl\FGLUT.H" />
-    <ClInclude Include="..\Contrib\include\gl\gl.h" />
-    <ClInclude Include="..\Contrib\include\gl\glew.h" />
-    <ClInclude Include="..\Contrib\include\gl\GLSMAP.H" />
-    <ClInclude Include="..\Contrib\include\gl\glu.h" />
-    <ClInclude Include="..\Contrib\include\gl\GLUT.H" />
-    <ClInclude Include="..\Contrib\include\gl\glxew.h" />
-    <ClInclude Include="..\Contrib\include\gl\TUBE.H" />
-    <ClInclude Include="..\Contrib\include\gl\wglew.h" />
     <ClInclude Include="..\Contrib\include\ruby.h" />
     <ClInclude Include="..\Contrib\include\ruby\backward\classext.h" />
     <ClInclude Include="..\Contrib\include\ruby\backward\rubyio.h" />
@@ -113,24 +104,73 @@
     <ClInclude Include="..\Contrib\include\ruby\win32.h" />
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
-    <ClInclude Include="sin_auto_buffer.h" />
-    <ClInclude Include="sin_bitmap.h" />
-    <ClInclude Include="sin_color.h" />
-    <ClInclude Include="sin_graphics.h" />
-    <ClInclude Include="sin_kconv.h" />
-    <ClInclude Include="sin_timer.h" />
-    <ClInclude Include="sin_types.h" />
+    <ClInclude Include="hge\hge_impl.h" />
+    <ClInclude Include="hge\include\hge.h" />
+    <ClInclude Include="hge\include\hgecolor.h" />
+    <ClInclude Include="hge\include\hgedistort.h" />
+    <ClInclude Include="hge\include\hgeparticle.h" />
+    <ClInclude Include="hge\include\hgerect.h" />
+    <ClInclude Include="hge\include\hgesprite.h" />
+    <ClInclude Include="hge\include\hgevector.h" />
+    <ClInclude Include="hge\include\hge_gapi.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="sin_auto_buffer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="sin_bitmap.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="sin_color.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="sin_common.h" />
+    <ClInclude Include="sin_kconv.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="sin_revision.h" />
+    <ClInclude Include="sin_timer.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="sin_types.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Entry.cpp" />
-    <ClCompile Include="RubyExt\nonblock.c" />
-    <ClCompile Include="RubyExt\wait.c" />
-    <ClCompile Include="RubyExt\zlib.c" />
-    <ClCompile Include="sin_kconv.cpp" />
-    <ClCompile Include="sin_timer.cpp" />
+    <ClCompile Include="Entry.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="hge\graphics.cpp" />
+    <ClCompile Include="hge\hgecolor.cpp" />
+    <ClCompile Include="hge\hgedistort.cpp" />
+    <ClCompile Include="hge\hgeparticle.cpp" />
+    <ClCompile Include="hge\hgerect.cpp" />
+    <ClCompile Include="hge\hgesprite.cpp" />
+    <ClCompile Include="hge\hgevector.cpp" />
+    <ClCompile Include="hge\random.cpp" />
+    <ClCompile Include="hge\resource.cpp" />
+    <ClCompile Include="hge\system.cpp" />
+    <ClCompile Include="hge\timer.cpp" />
+    <ClCompile Include="RubyExt\nonblock.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="RubyExt\wait.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="RubyExt\zlib.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="sin_kconv.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="sin_timer.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SINRGE2.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SINRGE2 Core.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

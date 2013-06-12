@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Player", "SINRGE2 Player\SINRGE2 Player.vcxproj", "{535383FC-CD0C-4134-81FA-9CE22E8E0A66}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{39964674-954C-4436-BC64-A7427B36B60A}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SINRGE2 Core", "SINRGE2 Core\SINRGE2 Core.vcxproj", "{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Debug|Win32.ActiveCfg = Debug|Win32
+		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Debug|Win32.Build.0 = Debug|Win32
+		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.ActiveCfg = Release|Win32
+		{535383FC-CD0C-4134-81FA-9CE22E8E0A66}.Release|Win32.Build.0 = Release|Win32
+		{39964674-954C-4436-BC64-A7427B36B60A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{39964674-954C-4436-BC64-A7427B36B60A}.Debug|Win32.Build.0 = Debug|Win32
+		{39964674-954C-4436-BC64-A7427B36B60A}.Release|Win32.ActiveCfg = Release|Win32
+		{39964674-954C-4436-BC64-A7427B36B60A}.Release|Win32.Build.0 = Release|Win32
+		{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}.Debug|Win32.Build.0 = Debug|Win32
+		{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}.Release|Win32.ActiveCfg = Release|Win32
+		{35A90ED2-8A3A-4E2C-8D66-827C38F52EBF}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

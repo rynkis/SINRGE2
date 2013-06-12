@@ -1,2 +1,2 @@
-﻿# NEXT OPENGL
+﻿# NEXT
 

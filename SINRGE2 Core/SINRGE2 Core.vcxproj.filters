@@ -13,15 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="头文件\ruby">
-      <UniqueIdentifier>{f3ebef76-f1cc-459f-a897-95c51d213ab7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\ruby\bak">
-      <UniqueIdentifier>{d0cfad19-f3fb-45c8-8f2f-6d990902c59f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="头文件\gl">
-      <UniqueIdentifier>{6f1b2ae2-cf17-4ad9-8912-23aadeb431b1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="源文件\SINRGE2">
       <UniqueIdentifier>{00690c0e-e372-4865-a4cf-5b5df35c9ab8}</UniqueIdentifier>
     </Filter>
@@ -31,8 +22,23 @@
     <Filter Include="源文件\RbInterface">
       <UniqueIdentifier>{94a617b1-1e97-41d7-8225-25ee92570f79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="源文件\nge">
-      <UniqueIdentifier>{18878753-13d9-4984-b6b2-f190502c17b5}</UniqueIdentifier>
+    <Filter Include="头文件\hge">
+      <UniqueIdentifier>{63989020-32f7-471d-a0eb-a1a2ea0df487}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ruby">
+      <UniqueIdentifier>{48abc0f7-9637-460e-913f-e4296b3143b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\ruby\back">
+      <UniqueIdentifier>{9e8b6772-82ac-4eca-81fd-ca6b88b6b98c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\HGE">
+      <UniqueIdentifier>{c697d5ef-5420-4490-99d7-14da0358714f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\SINRGE2\header">
+      <UniqueIdentifier>{ecb80b76-5c67-4cdf-82e6-c3eb2b52c254}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\HGE\core">
+      <UniqueIdentifier>{17d893be-04cb-4b58-b036-03032e62a74a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,6 +50,39 @@
     </ClInclude>
     <ClInclude Include="..\Contrib\include\zlib.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_types.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_color.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_kconv.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_timer.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hge.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hge_gapi.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgedistort.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgeparticle.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgerect.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgesprite.h">
+      <Filter>头文件\hge</Filter>
+    </ClInclude>
+    <ClInclude Include="hge\include\hgevector.h">
+      <Filter>头文件\hge</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\config.h">
       <Filter>头文件\ruby</Filter>
@@ -106,73 +145,40 @@
       <Filter>头文件\ruby</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\classext.h">
-      <Filter>头文件\ruby\bak</Filter>
+      <Filter>头文件\ruby\back</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\rubyio.h">
-      <Filter>头文件\ruby\bak</Filter>
+      <Filter>头文件\ruby\back</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\rubysig.h">
-      <Filter>头文件\ruby\bak</Filter>
+      <Filter>头文件\ruby\back</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\st.h">
-      <Filter>头文件\ruby\bak</Filter>
+      <Filter>头文件\ruby\back</Filter>
     </ClInclude>
     <ClInclude Include="..\Contrib\include\ruby\backward\util.h">
-      <Filter>头文件\ruby\bak</Filter>
+      <Filter>头文件\ruby\back</Filter>
     </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\FGL.H">
-      <Filter>头文件\gl</Filter>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\FGLU.H">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\FGLUT.H">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\gl.h">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\glew.h">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\GLSMAP.H">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\glu.h">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\GLUT.H">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\glxew.h">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\TUBE.H">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Contrib\include\gl\wglew.h">
-      <Filter>头文件\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="sin_auto_buffer.h">
+    <ClInclude Include="sin_revision.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="sin_types.h">
+    <ClInclude Include="sin_common.h">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_auto_buffer.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
     <ClInclude Include="sin_bitmap.h">
       <Filter>源文件\SINRGE2</Filter>
     </ClInclude>
-    <ClInclude Include="sin_color.h">
-      <Filter>源文件\SINRGE2</Filter>
+    <ClInclude Include="hge\hge_impl.h">
+      <Filter>源文件\HGE\core</Filter>
     </ClInclude>
-    <ClInclude Include="sin_kconv.h">
-      <Filter>源文件\SINRGE2</Filter>
-    </ClInclude>
-    <ClInclude Include="sin_timer.h">
-      <Filter>源文件\SINRGE2</Filter>
-    </ClInclude>
-    <ClInclude Include="sin_graphics.h">
-      <Filter>源文件\SINRGE2</Filter>
+    <ClInclude Include="hge\include\hgecolor.h">
+      <Filter>头文件\hge</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,10 +200,48 @@
     <ClCompile Include="RubyExt\zlib.c">
       <Filter>源文件\RubyExt</Filter>
     </ClCompile>
+    <ClCompile Include="hge\hgedistort.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgeparticle.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgerect.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgesprite.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgevector.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\graphics.cpp">
+      <Filter>源文件\HGE\core</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\random.cpp">
+      <Filter>源文件\HGE\core</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\resource.cpp">
+      <Filter>源文件\HGE\core</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\system.cpp">
+      <Filter>源文件\HGE\core</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\timer.cpp">
+      <Filter>源文件\HGE\core</Filter>
+    </ClCompile>
+    <ClCompile Include="hge\hgecolor.cpp">
+      <Filter>源文件\HGE</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SINRGE2.def">
       <Filter>源文件</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SINRGE2 Core.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
