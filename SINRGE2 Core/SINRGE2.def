@@ -1,6 +1,8 @@
 VERSION 2.0
 EXPORTS
+
 SINRGE2Entry
+
 FD_CLR=rb_w32_fdclr
 FD_ISSET=rb_w32_fdisset
 InitVM_Enumerator

@@ -121,7 +121,7 @@
     <ClCompile Include="hge\graphics.cpp" />
     <ClCompile Include="hge\hgecolor.cpp" />
     <ClCompile Include="hge\hgedistort.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="hge\hgerect.cpp" />
     <ClCompile Include="hge\hgesprite.cpp" />
@@ -167,7 +167,6 @@
     <ClInclude Include="..\Contrib\include\ruby\version.h" />
     <ClInclude Include="..\Contrib\include\ruby\vm.h" />
     <ClInclude Include="..\Contrib\include\ruby\win32.h" />
-    <ClInclude Include="..\Contrib\include\seal.h" />
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
     <ClInclude Include="CRb7pkgWriter.h" />
@@ -193,13 +192,11 @@
     <ClInclude Include="sin_revision.h" />
     <ClInclude Include="TANGRAM.h" />
     <ClInclude Include="hge\include\hge.h" />
-    <ClInclude Include="hge\include\hgeanim.h" />
     <ClInclude Include="hge\include\hgecolor.h" />
     <ClInclude Include="hge\include\hgedistort.h" />
     <ClInclude Include="hge\include\hgeparticle.h" />
     <ClInclude Include="hge\include\hgerect.h" />
     <ClInclude Include="hge\include\hgesprite.h" />
-    <ClInclude Include="hge\include\hgestrings.h" />
     <ClInclude Include="hge\include\hgevector.h" />
     <ClInclude Include="MRbAudio.h" />
     <ClInclude Include="MRbSinCore.h" />

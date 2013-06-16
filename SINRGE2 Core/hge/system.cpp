@@ -6,12 +6,18 @@
 ** Core system functions
 */
 
+//+++SINRGE2+++
 #include "CRbBitmap.h"
 #include "MRbSinCore.h"
 #include "MRbInput.h"
+//+++SINRGE2+++
+
 #include "hge_impl.h"
+
+//+++SINRGE2+++
 #include "sin_color.h"
 #include "sin_app.h"
+//+++SINRGE2+++
 
 
 #define LOWORDINT(n) ((int)((signed short)(LOWORD(n))))
@@ -138,39 +144,6 @@ void CALL HGE_Impl::System_Shutdown()
 	}
 
 	if(hInstance) UnregisterClass(WINDOW_CLASS_NAME, hInstance);
-}
-
-bool CALL HGE_Impl::System_Update()
-{
-	if (!System_PeekMessage())
-		return false;
-	// If HGE window is focused or we have the "don't suspend" state - process the main loop
-	if(bActive || bDontSuspend)
-	{
-		if(procRenderFunc)
-			procRenderFunc();
-
-		if (bShowFps)
-		{
-			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetAppPtr()->GetRealFps());
-			SetWindowText(hwnd, szTitleFps);
-		}
-	}
-	GetAppPtr()->LimitFps(nHGEFPS);
-	return true;
-}
-
-bool CALL HGE_Impl::System_PeekMessage()
-{
-	// Process window messages
-	if(PeekMessage(&m_msg, NULL, 0, 0, PM_REMOVE)){
-		if(m_msg.message == WM_QUIT){
-			bActive=false;
-			return false;
-		}
-		DispatchMessage(&m_msg);
-	}
-	return true;
 }
 
 bool CALL HGE_Impl::System_Start()
@@ -414,53 +387,6 @@ __failed_return:
 	return 0;
 }
 
-HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
-{
-	int width, height;
-	DWORD * pTexData = System_Snapshot(width, height);
-	if (!pTexData) return 0;
-	HTEXTURE tex = Texture_Create(nScreenWidth, height);
-
-	DWORD * pDesData = Texture_Lock(tex, false);
-	BYTE a, r, g, b;
-	for (int ly = 0; ly < height; ++ly)
-	{
-		int tv = ly * width;
-		int ti = GetAppPtr()->GetFrameWidth() * ly;
-		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
-		{
-			GetAppPtr()->SystemUpdate();
-			GET_ARGB_8888(pTexData[tv + lx], a, r, g, b);
-			pDesData[ti + lx] = MAKE_ARGB_8888(255, r, g, b);
-		}
-	}
-	Texture_Unlock(tex);
-	free(pTexData);
-	return tex;
-}
-
-void CALL HGE_Impl::System_Resize(int width, int height)
-{
-	nScreenWidth = width;
-	nScreenHeight = height;
-
-	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
-	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
-
-	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
-	rectW.right = rectW.left + width;
-	rectW.bottom = rectW.top + height;
-
-	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
-
-	d3dppW.BackBufferWidth = nScreenWidth;
-	d3dppW.BackBufferHeight = nScreenHeight;
-
-	_SetProjectionMatrix(nScreenWidth, nScreenHeight);
-	_GfxRestore();
-}
-
 //////// Implementation ////////
 
 
@@ -649,6 +575,106 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 ** Ruby Moudle SINRGE2
 */
 
+bool CALL HGE_Impl::System_Update()
+{
+	if (!System_PeekMessage())
+		return false;
+	// If HGE window is focused or we have the "don't suspend" state - process the main loop
+	if(bActive || bDontSuspend)
+	{
+		if(procRenderFunc)
+			procRenderFunc();
+
+		if (bShowFps)
+		{
+			wsprintfW(szTitleFps, L"%s - %d FPS", szWinTitle, GetAppPtr()->GetRealFps());
+			SetWindowText(hwnd, szTitleFps);
+		}
+	}
+	GetAppPtr()->LimitFps(nHGEFPS);
+	return true;
+}
+
+bool CALL HGE_Impl::System_PeekMessage()
+{
+	// Process window messages
+	if (PeekMessage(&m_msg, NULL, 0, 0, PM_REMOVE))
+	{
+		if (m_msg.message == WM_QUIT)
+		{
+			bActive=false;
+			return false;
+		}
+		DispatchMessage(&m_msg);
+	}
+	return true;
+}
+
+HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
+{
+	int width, height;
+	DWORD * pTexData = System_Snapshot(width, height);
+	if (!pTexData) return 0;
+	HTEXTURE tex = Texture_Create(nScreenWidth, height);
+
+	DWORD * pDesData = Texture_Lock(tex, false);
+	for (int ly = 0; ly < height; ++ly)
+	{
+		int tv = ly * width;
+		int ti = GetAppPtr()->GetFrameWidth() * ly;
+		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
+		{
+			GetAppPtr()->SystemUpdate();
+			pDesData[ti + lx] = SETA(pTexData[tv + lx], 255);
+		}
+	}
+	Texture_Unlock(tex);
+	free(pTexData);
+	return tex;
+}
+
+void CALL HGE_Impl::System_Resize(int width, int height)
+{
+	nScreenWidth = width;
+	nScreenHeight = height;
+
+	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+
+	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.right = rectW.left + width;
+	rectW.bottom = rectW.top + height;
+
+	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
+
+	d3dppW.BackBufferWidth = nScreenWidth;
+	d3dppW.BackBufferHeight = nScreenHeight;
+
+	_SetProjectionMatrix(nScreenWidth, nScreenHeight);
+	_GfxRestore();
+}
+
+bool MRbInput::OnFocus()
+{
+	return pHGE->bOnFocus;
+}
+
+int MRbInput::MouseWheel()
+{   
+	return pHGE->mouseWheel;
+}
+
+int MRbInput::MouseDblClk(int iKey)
+{
+	return pHGE->mouseButton & (iKey<<6);
+}
+
+//int MRbInput::GetMouseMove()
+//{
+//	return pHGE->mouseMove;
+//}
+
 void MRbSinCore::Freeze()
 {
 	if (pHGE->freezeTex) pHGE->Texture_Free(pHGE->freezeTex);
@@ -679,40 +705,12 @@ void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 
 	hgeQuad frzQuad, newQuad;
 	frzQuad.tex = pHGE->freezeTex;
-	frzQuad.blend = BLEND_DEFAULT;
-	frzQuad.blend_color = 0x00000000;
-	for (int i = 0; i < 4; i++)
-	{
-		frzQuad.v[i].z = 0.5f;
-		frzQuad.v[i].col = 0xffffffff;
-	}
-	frzQuad.v[0].tx = 0; frzQuad.v[0].ty = 0;
-	frzQuad.v[1].tx = 1; frzQuad.v[1].ty = 0;
-	frzQuad.v[2].tx = 1; frzQuad.v[2].ty = 1;
-	frzQuad.v[3].tx = 0; frzQuad.v[3].ty = 1;
-		
-	frzQuad.v[0].x = tempx1; frzQuad.v[0].y = tempy1;
-	frzQuad.v[1].x = tempx2; frzQuad.v[1].y = tempy1;
-	frzQuad.v[2].x = tempx2; frzQuad.v[2].y = tempy2;
-	frzQuad.v[3].x = tempx1; frzQuad.v[3].y = tempy2;
+	QUAD_INIT(frzQuad);
+	QUAD_SET_VRECT(frzQuad, tempx1, tempy1, tempx2, tempy2);
 
 	newQuad.tex = newTex;
-	newQuad.blend = BLEND_DEFAULT;
-	newQuad.blend_color = 0x00000000;
-	for (int i = 0; i < 4; i++)
-	{
-		newQuad.v[i].z = 0.5f;
-		newQuad.v[i].col = 0xffffffff;
-	}
-	newQuad.v[0].tx = 0; newQuad.v[0].ty = 0;
-	newQuad.v[1].tx = 1; newQuad.v[1].ty = 0;
-	newQuad.v[2].tx = 1; newQuad.v[2].ty = 1;
-	newQuad.v[3].tx = 0; newQuad.v[3].ty = 1;
-		
-	newQuad.v[0].x = tempx1; newQuad.v[0].y = tempy1;
-	newQuad.v[1].x = tempx2; newQuad.v[1].y = tempy1;
-	newQuad.v[2].x = tempx2; newQuad.v[2].y = tempy2;
-	newQuad.v[3].x = tempx1; newQuad.v[3].y = tempy2;
+	QUAD_INIT(newQuad);
+	QUAD_SET_VRECT(newQuad, tempx1, tempy1, tempx2, tempy2);
 
 	if (filename[0])
 	{
@@ -924,26 +922,6 @@ void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 	pHGE->Texture_Free(pHGE->freezeTex);
 	pHGE->freezeTex = 0;
 }
-
-bool MRbInput::OnFocus()
-{
-	return pHGE->bOnFocus;
-}
-
-int MRbInput::MouseWheel()
-{   
-	return pHGE->mouseWheel;
-}
-
-int MRbInput::MouseDblClk(int iKey)
-{
-	return pHGE->mouseButton & (iKey<<6);
-}
-
-//int MRbInput::GetMouseMove()
-//{
-//	return pHGE->mouseMove;
-//}
 
 void MRbSinCore::HideMouse(bool hide)
 {

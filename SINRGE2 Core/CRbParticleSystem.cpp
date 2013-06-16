@@ -395,7 +395,7 @@ void CRbParticleSystem::Render(float offset_x, float offset_y)
 	for(i=0; i<nParticlesAlive; i++)
 	{
 		if(info.colColorStart.r < 0)
-			info.sprite->SetColor(SETA(info.sprite->GetColor(),par->colColor.a*255));
+			info.sprite->SetColor(SETA(info.sprite->GetColor(), (BYTE)(par->colColor.a * 255)));
 		else
 			info.sprite->SetColor(par->colColor.GetHWColor());
 		info.sprite->RenderEx(par->vecLocation.x*fScale+fTx+offset_x, par->vecLocation.y*fScale+fTy+offset_y, par->fSpin*par->fAge, par->fSize*fScale);

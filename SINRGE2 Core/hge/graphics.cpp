@@ -648,7 +648,7 @@ void HGE_Impl::_SetProjectionMatrix(int width, int height)
 
 bool HGE_Impl::_GfxInit()
 {
-	static const char *szFormats[]={"UNKNOWN", "R5G6B5", "X1R5G5B5", "A1R5G5B5", "X8R8G8B8", "A8R8G8B8"};
+	static const wchar_t *szFormats[] = {L"UNKNOWN", L"R5G6B5", L"X1R5G5B5", L"A1R5G5B5", L"X8R8G8B8", L"A8R8G8B8"};
 	D3DADAPTER_IDENTIFIER8 AdID;
 	D3DDISPLAYMODE Mode;
 	D3DFORMAT Format=D3DFMT_UNKNOWN;
@@ -752,9 +752,27 @@ bool HGE_Impl::_GfxInit()
 	
 // Create D3D Device
 
-	if( FAILED( pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd,
+	/*if( FAILED( pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd,
                                   D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE,
                                   d3dpp, &pD3DDevice ) ) )
+	{
+		_PostError(L"Can't create D3D device");
+		return false;
+	}*/
+	/*D3DCAPS8 caps;
+	pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
+	unsigned int vp;
+	if((caps.VertexShaderVersion < D3DVS_VERSION(1,1)) || !(caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT))
+	{
+		System_Log(L"Software Vertex-processing device selected");
+		vp = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
+	}
+	else
+	{
+		System_Log(L"Hardware Vertex-processing device selected");
+		vp = D3DCREATE_HARDWARE_VERTEXPROCESSING;
+	}*/
+	if( FAILED( pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hwnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_FPU_PRESERVE, d3dpp, &pD3DDevice ) ) )
 	{
 		_PostError(L"Can't create D3D device");
 		return false;

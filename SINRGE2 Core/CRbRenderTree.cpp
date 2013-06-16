@@ -9,7 +9,7 @@
 #include "CRbViewport.h"
 #include "sin_app.h"
 
-HGE* CRbRenderState::s_pHge = 0;
+HGE * CRbRenderState::s_pHge = 0;
 
 //RbRenderNode*	CRbRenderTree::s_pViewportLists	= 0;
 RbRenderNode *	CRbRenderTree::s_pRenderHead		= 0;

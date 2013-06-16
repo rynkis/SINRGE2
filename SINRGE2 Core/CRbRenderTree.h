@@ -88,7 +88,7 @@ private:
 	RbRenderClipRect			m_rect;
 	bool						m_render2texture;
 
-	static HGE*					s_pHge;
+	static HGE *				s_pHge;
 };
 
 /*

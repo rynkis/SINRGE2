@@ -241,17 +241,7 @@ __bitmap_create:
 
 __finish:
 	{
-		quad.blend = BLEND_DEFAULT;
-		quad.blend_color = 0x00000000;
-		for (int i = 0; i < 4; i++)
-		{
-			quad.v[i].z = 0.5f;
-			quad.v[i].col = 0xffffffff;
-		}
-		quad.v[0].tx = 0; quad.v[0].ty = 0;
-		quad.v[1].tx = 1; quad.v[1].ty = 0;
-		quad.v[2].tx = 1; quad.v[2].ty = 1;
-		quad.v[3].tx = 0; quad.v[3].ty = 1;
+		QUAD_INIT(quad);
 		
 		m_bmp.quad = quad;
 		m_bmp.width = hge->Texture_GetWidth(quad.tex);

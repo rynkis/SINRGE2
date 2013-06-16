@@ -73,16 +73,48 @@ typedef DWORD HCHANNEL;
 /*
 ** Hardware color macros
 */
-#define ARGB(a,r,g,b)	((DWORD(a)<<24) + (DWORD(r)<<16) + (DWORD(g)<<8) + DWORD(b))
-#define GETA(col)		((col)>>24)
-#define GETR(col)		(((col)>>16) & 0xFF)
-#define GETG(col)		(((col)>>8) & 0xFF)
-#define GETB(col)		((col) & 0xFF)
-#define SETA(col,a)		(((col) & 0x00FFFFFF) + (DWORD(a)<<24))
-#define SETR(col,r)		(((col) & 0xFF00FFFF) + (DWORD(r)<<16))
-#define SETG(col,g)		(((col) & 0xFFFF00FF) + (DWORD(g)<<8))
-#define SETB(col,b)		(((col) & 0xFFFFFF00) + DWORD(b))
+//#define ARGB(a,r,g,b)	((DWORD(a)<<24) + (DWORD(r)<<16) + (DWORD(g)<<8) + DWORD(b))
+//#define GETA(col)		((col)>>24)
+//#define GETR(col)		(((col)>>16) & 0xFF)
+//#define GETG(col)		(((col)>>8) & 0xFF)
+//#define GETB(col)		((col) & 0xFF)
+//#define SETA(col,a)		(((col) & 0x00FFFFFF) + (DWORD(a)<<24))
+//#define SETR(col,r)		(((col) & 0xFF00FFFF) + (DWORD(r)<<16))
+//#define SETG(col,g)		(((col) & 0xFFFF00FF) + (DWORD(g)<<8))
+//#define SETB(col,b)		(((col) & 0xFFFFFF00) + DWORD(b))
 
+#define ARGB(a, r, g, b)	(b | (g << 8) | (r << 16) | (a << 24))
+#define GETA(col)			(col >> 24)
+#define GETR(col)			((col >> 16) & 0xFF)
+#define GETG(col)			((col >> 8) & 0xFF)
+#define GETB(col)			(col & 0xFF)
+#define SETA(col, a)		((col & 0x00FFFFFF) + (a << 24))
+#define SETR(col, r)		((col & 0xFF00FFFF) + (r << 16))
+#define SETG(col, g)		((col & 0xFFFF00FF) + (g << 8))
+#define SETB(col, b)		((col & 0xFFFFFF00) + b)
+
+//+++
+#define QUAD_INIT(quad) {\
+	quad.blend = BLEND_DEFAULT;\
+	quad.blend_color = 0x00000000;\
+	for (int i = 0; i < 4; i++)\
+	{\
+		quad.v[i].z = 0.5f;\
+		quad.v[i].col = 0xffffffff;\
+	}\
+	quad.v[0].tx = 0; quad.v[0].ty = 0;\
+	quad.v[1].tx = 1; quad.v[1].ty = 0;\
+	quad.v[2].tx = 1; quad.v[2].ty = 1;\
+	quad.v[3].tx = 0; quad.v[3].ty = 1;\
+};
+
+#define QUAD_SET_VRECT(quad, x1, y1, x2, y2) {\
+	quad.v[0].x = x1; quad.v[0].y = y1;\
+	quad.v[1].x = x2; quad.v[1].y = y1;\
+	quad.v[2].x = x2; quad.v[2].y = y2;\
+	quad.v[3].x = x1; quad.v[3].y = y2;\
+};
+//+++
 
 /*
 ** HGE Blending constants
