@@ -278,7 +278,7 @@ void CRbSprite::render(u32 id)
 	// render the sprite to the screen
 	float x, y;
 
-	if (!m_viewport_ptr || GetAppPtr()->GetRenderState()->IsRenderToTexture())
+	if (!m_viewport_ptr)
 	{
 		x = m_x;
 		y = m_y;
@@ -327,8 +327,7 @@ void CRbSprite::render(u32 id)
 
 		//	其次描绘透明草丛部分
 		// half opacity : simulate bush effect
-		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));
-		//m_pSpr->SetColor(ARGB(m_opacity / 2,255,255,255));
+		m_pSpr->SetColor(0x00FFFFFF + ((m_opacity * m_bush_opacity / 255) << 24));//MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));
 
 		min_x = SinMax(clip_rect.x, bottom_rect.x1);
 		min_y = SinMax(clip_rect.y, bottom_rect.y1);
@@ -346,7 +345,7 @@ void CRbSprite::render(u32 id)
 		}
 
 		GetAppPtr()->GetRenderState()->Restore();
-		m_pSpr->SetColor(MAKE_ARGB_8888(m_opacity, 255, 255, 255));
+		m_pSpr->SetColor(0x00FFFFFF + (m_opacity << 24));//MAKE_ARGB_8888(m_opacity, 255, 255, 255));
 	} 
 	else
 	{

@@ -111,11 +111,16 @@ void CRbViewport::mark()
 VALUE CRbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	//	检查参数个数
-	if(argc != 1 && argc != 4)
+	if(argc != 0 && argc != 1 && argc != 4)
 		rb_raise(rb_eArgError, "wrong number of arguments (%d for 4)", argc);
 
-	//	Viewport.new(rect) 的情况
-	if(argc == 1)
+	if (argc == 0)
+	{
+		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(GetAppPtr()->GetFrameWidth()), INT2FIX(GetAppPtr()->GetFrameHeight())};
+		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
+		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
+	}
+	else if (argc == 1)
 	{
 		//	检查参数类型
 		SafeRectValue(argv[0])
@@ -123,7 +128,6 @@ VALUE CRbViewport::initialize(int argc, VALUE * argv, VALUE obj)
 		//	保存rect对象
 		m_rect_ptr = GetObjectPtr<CRbRect>(argv[0]);
 	}
-	//	Viewport.new(x, y, width, height) 的情况
 	else
 	{
 		//	检查参数类型

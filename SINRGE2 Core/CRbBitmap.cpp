@@ -14,7 +14,6 @@
 #include "CRbTone.h"
 #include "sin_app.h"
 #include <math.h>
-#include <d3dx8tex.h>
 
 
 VALUE rb_cBitmap;
@@ -230,8 +229,8 @@ __bitmap_create:
 		s32 w = FIX2INT(arg01);
 		s32 h = FIX2INT(arg02);
 
-		if (w > GetAppPtr()->GetMaxTexW() || h > GetAppPtr()->GetMaxTexH())
-			rb_raise(rb_eSinError, "Too large width or height, Graphics card won't support.\n %d x %d", w, h);
+		/*if (w > GetAppPtr()->GetMaxTexW() || h > GetAppPtr()->GetMaxTexH())
+			rb_raise(rb_eSinError, "Too large width or height, Graphics card won't support.\n %d x %d", w, h);*/
 
 		quad.tex = hge->Texture_Create(w, h);
 		if(!quad.tex)
@@ -607,19 +606,11 @@ void CRbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int
 			GET_ARGB_8888(srcData[tx2 + ty1 * srcWidth], a21, r21, g21, b21);
 			GET_ARGB_8888(srcData[tx1 + ty2 * srcWidth], a12, r12, g12, b12);
 			GET_ARGB_8888(srcData[tx2 + ty2 * srcWidth], a22, r22, g22, b22);
-			/*color11 = srcData[tx1 + ty1 * srcWidth];
-			color21 = srcData[tx2 + ty1 * srcWidth];
-			color12 = srcData[tx1 + ty2 * srcWidth];
-			color22 = srcData[tx2 + ty2 * srcWidth];*/
 			// 计算颜色
 			a = (a11 * p11 + a21 * p21 + a12 * p12 + a22 * p22) / 10000;
 			r = (r11 * p11 + r21 * p21 + r12 * p12 + r22 * p22) / 10000;
 			g = (g11 * p11 + g21 * p21 + g12 * p12 + g22 * p22) / 10000;
 			b = (b11 * p11 + b21 * p21 + b12 * p12 + b22 * p22) / 10000;
-			/*a = (GET_ARGB_A(color11) * p11 + GET_ARGB_A(color21) * p21 + GET_ARGB_A(color12) * p12 + GET_ARGB_A(color22) * p22) / 10000;
-			r = (GET_ARGB_R(color11) * p11 + GET_ARGB_R(color21) * p21 + GET_ARGB_R(color12) * p12 + GET_ARGB_R(color22) * p22) / 10000;
-			g = (GET_ARGB_G(color11) * p11 + GET_ARGB_G(color21) * p21 + GET_ARGB_G(color12) * p12 + GET_ARGB_G(color22) * p22) / 10000;
-			b = (GET_ARGB_B(color11) * p11 + GET_ARGB_B(color21) * p21 + GET_ARGB_B(color12) * p12 + GET_ARGB_B(color22) * p22) / 10000;*/
 			desData[lx + ly * desWidth] = MAKE_ARGB_8888(a, r, g, b);
 		}
 	}
@@ -1616,12 +1607,15 @@ VALUE CRbBitmap::blur()
 	double rate = 1.8;
 	int tmpWidth = (int)(m_bmp.width / rate), tmpHegiht = (int)(m_bmp.height / rate);
 	DWORD * pTmpData = (DWORD *)malloc(tmpWidth * tmpHegiht * sizeof(DWORD));
+
 	mathW = tmpWidth + ceil(sqrt(sqrt((double)tmpWidth / (double)m_bmp.width)));
 	mathH = tmpHegiht + ceil(sqrt(sqrt((double)tmpHegiht / (double)m_bmp.height)));
 	BilinearZoom(pTexData, pTmpData, m_bmp.width, m_bmp.height, tmpWidth, tmpHegiht, mathW, mathH);
+
 	mathW = m_bmp.width + ceil(sqrt(sqrt((double)m_bmp.width / (double)tmpWidth)));
 	mathH = m_bmp.height + ceil(sqrt(sqrt((double)m_bmp.height / (double)tmpHegiht)));
 	BilinearZoom(pTmpData, pTexData, tmpWidth, tmpHegiht, m_bmp.width, m_bmp.height, mathW, mathH);
+
 	free(pTmpData);
 	hge->Texture_Unlock(m_bmp.quad.tex);
 	//	增加 修改计数值
@@ -1640,7 +1634,6 @@ VALUE CRbBitmap::flip_h()
 	if (!pTexData) return Qfalse;
 	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
 	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
-	
 	for (s32 ly = 0; ly < height; ++ly)
 	{
 		int v = m_bmp.width * ly;
@@ -1768,49 +1761,10 @@ VALUE CRbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
 
 	SafeStringValue(filepath);
 
-	LPDIRECT3DSURFACE8 pDst = NULL;
-	LPDIRECT3DSURFACE8 pSrc = NULL;
-
-	if (FAILED(GetAppPtr()->GetD3DDevicePtr()->CreateImageSurface(m_bmp.width, m_bmp.height, D3DFMT_A8R8G8B8, &pDst)))
-		return Qfalse;
-
-	POINT	pt = {0, };
-	RECT	rt = {0, };
-
-	pt.x = 0;
-	pt.y = 0;
-	rt.right = m_bmp.width;
-	rt.bottom = m_bmp.height;
-
-	if (FAILED(((LPDIRECT3DTEXTURE8)m_bmp.quad.tex)->GetSurfaceLevel(0, &pSrc)))
-		goto failed_return;
-
-	if (FAILED(GetAppPtr()->GetD3DDevicePtr()->CopyRects(pSrc, &rt, 1, pDst, &pt)))
-		goto failed_return;
-
-	pSrc->Release();
-	pSrc = NULL;
-
-	//	This function supports the following file formats: .bmp and .dds.
-	if (SUCCEEDED(D3DXSaveSurfaceToFileW(Kconv::UTF8ToUnicode(RSTRING_PTR(filepath)), 
-		D3DXIFF_BMP, pDst, NULL, NULL)))
-	{
-		pDst->Release();
-		pDst = NULL;
+	if (GetAppPtr()->GetHgePtr()->Texture_Save2File(m_bmp.quad.tex,
+		m_bmp.width, m_bmp.height, Kconv::UTF8ToUnicode(RSTRING_PTR(filepath))))
 		return Qtrue;
-	}
 	
-failed_return:
-	if (pDst)
-	{
-		pDst->Release();
-		pDst = NULL;
-	}
-	if (pSrc)
-	{
-		pSrc->Release();
-		pSrc = NULL;
-	}
 	return Qfalse;
 }
 

@@ -183,7 +183,6 @@
     <ClInclude Include="CRbRenderTree.h" />
     <ClInclude Include="CRbSprite.h" />
     <ClInclude Include="CRbTable.h" />
-    <ClInclude Include="CRbTilemap.h" />
     <ClInclude Include="CRbTone.h" />
     <ClInclude Include="CRbViewport.h" />
     <ClInclude Include="CRbWin32API.h" />

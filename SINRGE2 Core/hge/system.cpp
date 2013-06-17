@@ -610,6 +610,28 @@ bool CALL HGE_Impl::System_PeekMessage()
 	return true;
 }
 
+void CALL HGE_Impl::System_Resize(int width, int height)
+{
+	nScreenWidth = width;
+	nScreenHeight = height;
+
+	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+
+	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.right = rectW.left + width;
+	rectW.bottom = rectW.top + height;
+
+	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
+
+	d3dppW.BackBufferWidth = nScreenWidth;
+	d3dppW.BackBufferHeight = nScreenHeight;
+
+	_SetProjectionMatrix(nScreenWidth, nScreenHeight);
+	_GfxRestore();
+}
+
 HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 {
 	int width, height;
@@ -633,26 +655,51 @@ HTEXTURE CALL HGE_Impl::Texture_CreateFromScreen()
 	return tex;
 }
 
-void CALL HGE_Impl::System_Resize(int width, int height)
+bool CALL HGE_Impl::Texture_Save2File(HTEXTURE tex, int width, int height, wchar_t *filename)
 {
-	nScreenWidth = width;
-	nScreenHeight = height;
+	LPDIRECT3DSURFACE8 pDst = NULL;
+	LPDIRECT3DSURFACE8 pSrc = NULL;
 
-	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
-	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+	if (FAILED(pD3DDevice->CreateImageSurface(width, height, D3DFMT_A8R8G8B8, &pDst)))
+		return false;
 
-	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
-	rectW.right = rectW.left + width;
-	rectW.bottom = rectW.top + height;
+	POINT	pt = {0, };
+	RECT	rt = {0, };
 
-	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
+	pt.x = 0;
+	pt.y = 0;
+	rt.right = width;
+	rt.bottom = height;
 
-	d3dppW.BackBufferWidth = nScreenWidth;
-	d3dppW.BackBufferHeight = nScreenHeight;
+	if (FAILED(((LPDIRECT3DTEXTURE8)tex)->GetSurfaceLevel(0, &pSrc)))
+		goto failed_return;
 
-	_SetProjectionMatrix(nScreenWidth, nScreenHeight);
-	_GfxRestore();
+	if (FAILED(pD3DDevice->CopyRects(pSrc, &rt, 1, pDst, &pt)))
+		goto failed_return;
+
+	pSrc->Release();
+	pSrc = NULL;
+
+	//	This function supports the following file formats: .bmp and .dds.
+	if (SUCCEEDED(D3DXSaveSurfaceToFileW(filename, D3DXIFF_BMP, pDst, NULL, NULL)))
+	{
+		pDst->Release();
+		pDst = NULL;
+		return true;
+	}
+	
+failed_return:
+	if (pDst)
+	{
+		pDst->Release();
+		pDst = NULL;
+	}
+	if (pSrc)
+	{
+		pSrc->Release();
+		pSrc = NULL;
+	}
+	return false;
 }
 
 bool MRbInput::OnFocus()

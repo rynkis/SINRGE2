@@ -221,7 +221,7 @@ void CRbPlane::render(u32 id)
 
 		// render the sprite to the screen
 		
-		if (!m_viewport_ptr || GetAppPtr()->GetRenderState()->IsRenderToTexture())
+		if (!m_viewport_ptr)
 		{
 			wrap_w = GetAppPtr()->GetFrameWidth();
 			wrap_h = GetAppPtr()->GetFrameHeight();

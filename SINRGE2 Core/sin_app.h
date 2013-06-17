@@ -12,7 +12,6 @@
 #include "hge.h"
 #include "sin_timer.h"
 #include "TANGRAM.h"
-#include <d3d8.h>
 
 /***
  *	应用程序核心类
@@ -24,18 +23,11 @@ public:
 	inline const wchar_t *		GetTitle() const { return m_frm_struct.m_title; }
 	inline HGE *				GetHgePtr() const { return m_pHge; }
 	inline CRbRenderState *		GetRenderState() const { return m_pRenderState; }
-	//inline IDirect3D8 *			GetD3DPtr() const { return m_ref_d3d; }
-	inline IDirect3DDevice8 *	GetD3DDevicePtr() const { return m_ref_device; }
 	inline int					GetFrameWidth() const { return m_frm_struct.m_screen_width; }
 	inline int					GetFrameHeight() const { return m_frm_struct.m_screen_height; }
 
-	inline long					GetMaxTexW() const { return m_d3d_caps.MaxTextureWidth; }
-	inline long					GetMaxTexH() const { return m_d3d_caps.MaxTextureHeight; }
-	
 	inline IC7pkgReader *		Get7pkgReader() const { return m_7pkgReader; }
-	
 	inline double				GetCurrentDelta() const { return m_current_delta; }
-
 	inline HMODULE				GetSealHmodule() const { return m_hSeal; }
 
 //private:
@@ -105,16 +97,11 @@ private:
 
 	bool						m_inited;
 
-	IDirect3D8 *				m_ref_d3d;
-	IDirect3DDevice8 *			m_ref_device;
-	D3DCAPS8					m_d3d_caps;
-
 	hgeQuad						m_quad;
 	int							m_brightness;
 	int							m_saved_brghtness;
 
 	u32							m_frame_count;
-
 	//fps
 	CTimer *					m_fps_timer;
 	unsigned int				m_frame, m_t0, m_t1, m_last_fps, m_real_fps;
@@ -125,9 +112,7 @@ private:
 	float						m_rate_ticks;
 
 	unsigned int				m_last;
-
 	double						m_current_delta;
-
 	HMODULE						m_hSeal;
 
 private:

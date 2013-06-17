@@ -25,14 +25,19 @@ namespace
 	static const int	MAGIC_COUNT_REPEAT		= 2;
 	static const int	MAGIC_REPEAT_DELAY		= 24;
 
-	inline static bool isPress(int vk)
+	inline static bool vk_is_press(int vk)
 	{
 		return s_iRepeatCount[vk] > MAGIC_COUNT_PRESS;
 	}
 
-	inline static bool isTrigger(int vk)
+	inline static bool vk_is_trigger(int vk)
 	{
 		return s_iRepeatCount[vk] == MAGIC_COUNT_TRIGGER;
+	}
+
+	inline static bool vk_is_click(int vk)
+	{
+		return s_iLastRepeatCount[vk] > MAGIC_COUNT_PRESS && s_iRepeatCount[vk] == MAGIC_COUNT_PRESS;
 	}
 
 	void update_vk_states()
@@ -55,31 +60,16 @@ namespace
 				s_iRepeatCount[vk] = 0;
 
 			///<	¸üÐÂrepeat×´Ì¬
-			s_bRepeatBool[vk] = (isPress(vk) && (isTrigger(vk) || s_iRepeatCount[vk] > MAGIC_REPEAT_DELAY));
+			s_bRepeatBool[vk] = (vk_is_press(vk) && (vk_is_trigger(vk) || s_iRepeatCount[vk] > MAGIC_REPEAT_DELAY));
 			if (s_bRepeatBool[vk] && s_iRepeatCount[vk] > MAGIC_COUNT_REPEAT)
 				s_iRepeatCount[vk] = MAGIC_COUNT_REPEAT;
 		}
 	}
 
-	/*int vk_is_press(int vk)
-	{
-		return (int)isPress(vk);
-	}
-
-	int vk_is_trigger(int vk)
-	{
-		return (int)isTrigger(vk);
-	}
-
-	int vk_is_repeat(int vk)
+	/*int vk_is_repeat(int vk)
 	{
 		return (int)s_bRepeatBool[vk];
 	}*/
-
-	bool vk_is_click(int vk)
-	{
-		return s_iLastRepeatCount[vk] > MAGIC_COUNT_PRESS && s_iRepeatCount[vk] == MAGIC_COUNT_PRESS;
-	}
 }
 
 /*
@@ -127,7 +117,7 @@ VALUE MRbInput::mouse_over()
 VALUE MRbInput::is_press(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return C2RbBool(isPress(FIX2INT(key)));
+	return C2RbBool(vk_is_press(FIX2INT(key)));
 }
 
 /*
@@ -138,7 +128,7 @@ VALUE MRbInput::is_press(int argc, VALUE key)
 VALUE MRbInput::is_trigger(int argc, VALUE key)
 {
 	SafeFixnumValue(key);
-	return C2RbBool(isTrigger(FIX2INT(key)));
+	return C2RbBool(vk_is_trigger(FIX2INT(key)));
 }
 
 /*
@@ -170,13 +160,13 @@ VALUE MRbInput::is_click(int argc, VALUE key)
 */
 VALUE MRbInput::get_dir4()
 {
-	if (isPress(VK_DOWN) || isPress(VK_NUMPAD2))
+	if (vk_is_press(VK_DOWN) || vk_is_press(VK_NUMPAD2))
 		return INT2FIX(2);
-	if (isPress(VK_LEFT) || isPress(VK_NUMPAD4))
+	if (vk_is_press(VK_LEFT) || vk_is_press(VK_NUMPAD4))
 		return INT2FIX(4);
-	if (isPress(VK_RIGHT) || isPress(VK_NUMPAD6))
+	if (vk_is_press(VK_RIGHT) || vk_is_press(VK_NUMPAD6))
 		return INT2FIX(6);
-	if (isPress(VK_UP) || isPress(VK_NUMPAD8))
+	if (vk_is_press(VK_UP) || vk_is_press(VK_NUMPAD8))
 		return INT2FIX(8);
 	
 	return RUBY_0;
@@ -189,45 +179,45 @@ VALUE MRbInput::get_dir4()
 */
 VALUE MRbInput::get_dir8()
 {
-	if (isPress(VK_LEFT))
+	if (vk_is_press(VK_LEFT))
 	{
-		if (isPress(VK_DOWN))
+		if (vk_is_press(VK_DOWN))
 			return INT2FIX(1);
-		if (isPress(VK_UP))
+		if (vk_is_press(VK_UP))
 			return INT2FIX(7);
 		return INT2FIX(4);
 	}
-	if (isPress(VK_DOWN))
+	if (vk_is_press(VK_DOWN))
 	{
-		if (isPress(VK_LEFT))
+		if (vk_is_press(VK_LEFT))
 			return INT2FIX(1);
-		if (isPress(VK_RIGHT))
+		if (vk_is_press(VK_RIGHT))
 			return INT2FIX(3);
 		return INT2FIX(2);
 	}
-	if (isPress(VK_RIGHT))
+	if (vk_is_press(VK_RIGHT))
 	{
-		if (isPress(VK_DOWN))
+		if (vk_is_press(VK_DOWN))
 			return INT2FIX(3);
-		if (isPress(VK_UP))
+		if (vk_is_press(VK_UP))
 			return INT2FIX(9);
 		return INT2FIX(6);
 	}
-	if (isPress(VK_UP))
+	if (vk_is_press(VK_UP))
 	{
-		if (isPress(VK_LEFT))
+		if (vk_is_press(VK_LEFT))
 			return INT2FIX(7);
-		if (isPress(VK_RIGHT))
+		if (vk_is_press(VK_RIGHT))
 			return INT2FIX(9);
 		return INT2FIX(8);
 	}
-	if (isPress(VK_NUMPAD1))
+	if (vk_is_press(VK_NUMPAD1))
 		return INT2FIX(1);
-	if (isPress(VK_NUMPAD3))
+	if (vk_is_press(VK_NUMPAD3))
 		return INT2FIX(3);
-	if (isPress(VK_NUMPAD7))
+	if (vk_is_press(VK_NUMPAD7))
 		return INT2FIX(7);
-	if (isPress(VK_NUMPAD9))
+	if (vk_is_press(VK_NUMPAD9))
 		return INT2FIX(9);
 	
 	return get_dir4();
@@ -283,59 +273,59 @@ VALUE MRbInput::get_mouse_pos()
 
 VALUE MRbInput::get_character()
 {
-	bool capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || isPress(VK_LSHIFT) || isPress(VK_RSHIFT);
+	bool capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || vk_is_press(VK_LSHIFT) || vk_is_press(VK_RSHIFT);
 
-	//if (isTrigger(VK_SPACE))		return rb_str_new2(" ");
+	//if (vk_is_trigger(VK_SPACE))		return rb_str_new2(" ");
 
-	if (isTrigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
-	if (isTrigger(VK_B))			return rb_str_new2(capital ? "B" : "b");
-	if (isTrigger(VK_C))			return rb_str_new2(capital ? "C" : "c");
-	if (isTrigger(VK_D))			return rb_str_new2(capital ? "D" : "d");
-	if (isTrigger(VK_E))			return rb_str_new2(capital ? "E" : "e");
-	if (isTrigger(VK_F))			return rb_str_new2(capital ? "F" : "f");
-	if (isTrigger(VK_G))			return rb_str_new2(capital ? "G" : "g");
-	if (isTrigger(VK_H))			return rb_str_new2(capital ? "H" : "h");
-	if (isTrigger(VK_I))			return rb_str_new2(capital ? "I" : "i");
-	if (isTrigger(VK_J))			return rb_str_new2(capital ? "J" : "j");
-	if (isTrigger(VK_K))			return rb_str_new2(capital ? "K" : "k");
-	if (isTrigger(VK_L))			return rb_str_new2(capital ? "L" : "l");
-	if (isTrigger(VK_M))			return rb_str_new2(capital ? "M" : "m");
-	if (isTrigger(VK_N))			return rb_str_new2(capital ? "N" : "n");
-	if (isTrigger(VK_O))			return rb_str_new2(capital ? "O" : "o");
-	if (isTrigger(VK_P))			return rb_str_new2(capital ? "P" : "p");
-	if (isTrigger(VK_Q))			return rb_str_new2(capital ? "Q" : "q");
-	if (isTrigger(VK_R))			return rb_str_new2(capital ? "R" : "r");
-	if (isTrigger(VK_S))			return rb_str_new2(capital ? "S" : "s");
-	if (isTrigger(VK_T))			return rb_str_new2(capital ? "T" : "t");
-	if (isTrigger(VK_U))			return rb_str_new2(capital ? "U" : "u");
-	if (isTrigger(VK_V))			return rb_str_new2(capital ? "V" : "v");
-	if (isTrigger(VK_W))			return rb_str_new2(capital ? "W" : "w");
-	if (isTrigger(VK_X))			return rb_str_new2(capital ? "X" : "x");
-	if (isTrigger(VK_Y))			return rb_str_new2(capital ? "Y" : "y");
-	if (isTrigger(VK_Z))			return rb_str_new2(capital ? "Z" : "z");
+	if (vk_is_trigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
+	if (vk_is_trigger(VK_B))			return rb_str_new2(capital ? "B" : "b");
+	if (vk_is_trigger(VK_C))			return rb_str_new2(capital ? "C" : "c");
+	if (vk_is_trigger(VK_D))			return rb_str_new2(capital ? "D" : "d");
+	if (vk_is_trigger(VK_E))			return rb_str_new2(capital ? "E" : "e");
+	if (vk_is_trigger(VK_F))			return rb_str_new2(capital ? "F" : "f");
+	if (vk_is_trigger(VK_G))			return rb_str_new2(capital ? "G" : "g");
+	if (vk_is_trigger(VK_H))			return rb_str_new2(capital ? "H" : "h");
+	if (vk_is_trigger(VK_I))			return rb_str_new2(capital ? "I" : "i");
+	if (vk_is_trigger(VK_J))			return rb_str_new2(capital ? "J" : "j");
+	if (vk_is_trigger(VK_K))			return rb_str_new2(capital ? "K" : "k");
+	if (vk_is_trigger(VK_L))			return rb_str_new2(capital ? "L" : "l");
+	if (vk_is_trigger(VK_M))			return rb_str_new2(capital ? "M" : "m");
+	if (vk_is_trigger(VK_N))			return rb_str_new2(capital ? "N" : "n");
+	if (vk_is_trigger(VK_O))			return rb_str_new2(capital ? "O" : "o");
+	if (vk_is_trigger(VK_P))			return rb_str_new2(capital ? "P" : "p");
+	if (vk_is_trigger(VK_Q))			return rb_str_new2(capital ? "Q" : "q");
+	if (vk_is_trigger(VK_R))			return rb_str_new2(capital ? "R" : "r");
+	if (vk_is_trigger(VK_S))			return rb_str_new2(capital ? "S" : "s");
+	if (vk_is_trigger(VK_T))			return rb_str_new2(capital ? "T" : "t");
+	if (vk_is_trigger(VK_U))			return rb_str_new2(capital ? "U" : "u");
+	if (vk_is_trigger(VK_V))			return rb_str_new2(capital ? "V" : "v");
+	if (vk_is_trigger(VK_W))			return rb_str_new2(capital ? "W" : "w");
+	if (vk_is_trigger(VK_X))			return rb_str_new2(capital ? "X" : "x");
+	if (vk_is_trigger(VK_Y))			return rb_str_new2(capital ? "Y" : "y");
+	if (vk_is_trigger(VK_Z))			return rb_str_new2(capital ? "Z" : "z");
 	
-	if (isTrigger(VK_1))			return rb_str_new2(capital ? "!" : "1");
-	if (isTrigger(VK_2))			return rb_str_new2(capital ? "@" : "2");
-	if (isTrigger(VK_3))			return rb_str_new2(capital ? "#" : "3");
-	if (isTrigger(VK_4))			return rb_str_new2(capital ? "$" : "4");
-	if (isTrigger(VK_5))			return rb_str_new2(capital ? "%%": "5");
-	if (isTrigger(VK_6))			return rb_str_new2(capital ? "^" : "6");
-	if (isTrigger(VK_7))			return rb_str_new2(capital ? "&" : "7");
-	if (isTrigger(VK_8))			return rb_str_new2(capital ? "*" : "8");
-	if (isTrigger(VK_9))			return rb_str_new2(capital ? "(" : "9");
-	if (isTrigger(VK_0))			return rb_str_new2(capital ? ")" : "0");
+	if (vk_is_trigger(VK_1))			return rb_str_new2(capital ? "!" : "1");
+	if (vk_is_trigger(VK_2))			return rb_str_new2(capital ? "@" : "2");
+	if (vk_is_trigger(VK_3))			return rb_str_new2(capital ? "#" : "3");
+	if (vk_is_trigger(VK_4))			return rb_str_new2(capital ? "$" : "4");
+	if (vk_is_trigger(VK_5))			return rb_str_new2(capital ? "%%": "5");
+	if (vk_is_trigger(VK_6))			return rb_str_new2(capital ? "^" : "6");
+	if (vk_is_trigger(VK_7))			return rb_str_new2(capital ? "&" : "7");
+	if (vk_is_trigger(VK_8))			return rb_str_new2(capital ? "*" : "8");
+	if (vk_is_trigger(VK_9))			return rb_str_new2(capital ? "(" : "9");
+	if (vk_is_trigger(VK_0))			return rb_str_new2(capital ? ")" : "0");
 	
-	if (isTrigger(VK_OEM_1))		return rb_str_new2(capital ? ":" : ";");
-	if (isTrigger(VK_OEM_PLUS))		return rb_str_new2(capital ? "+" : "=");
-	if (isTrigger(VK_OEM_COMMA))	return rb_str_new2(capital ? "<" : ",");
-	if (isTrigger(VK_OEM_MINUS))	return rb_str_new2(capital ? "_" : "-");
-	if (isTrigger(VK_OEM_PERIOD))	return rb_str_new2(capital ? ">" : ".");
-	if (isTrigger(VK_OEM_2))		return rb_str_new2(capital ? "?" : "/");
-	if (isTrigger(VK_OEM_3))		return rb_str_new2(capital ? "~" : "`");
-	if (isTrigger(VK_OEM_4))		return rb_str_new2(capital ? "{" : "[");
-	if (isTrigger(VK_OEM_5))		return rb_str_new2(capital ? "|" : "\\");
-	if (isTrigger(VK_OEM_6))		return rb_str_new2(capital ? "}" : "]");
-	if (isTrigger(VK_OEM_7))		return rb_str_new2(capital ? "\"" : "'");
+	if (vk_is_trigger(VK_OEM_1))		return rb_str_new2(capital ? ":" : ";");
+	if (vk_is_trigger(VK_OEM_PLUS))		return rb_str_new2(capital ? "+" : "=");
+	if (vk_is_trigger(VK_OEM_COMMA))	return rb_str_new2(capital ? "<" : ",");
+	if (vk_is_trigger(VK_OEM_MINUS))	return rb_str_new2(capital ? "_" : "-");
+	if (vk_is_trigger(VK_OEM_PERIOD))	return rb_str_new2(capital ? ">" : ".");
+	if (vk_is_trigger(VK_OEM_2))		return rb_str_new2(capital ? "?" : "/");
+	if (vk_is_trigger(VK_OEM_3))		return rb_str_new2(capital ? "~" : "`");
+	if (vk_is_trigger(VK_OEM_4))		return rb_str_new2(capital ? "{" : "[");
+	if (vk_is_trigger(VK_OEM_5))		return rb_str_new2(capital ? "|" : "\\");
+	if (vk_is_trigger(VK_OEM_6))		return rb_str_new2(capital ? "}" : "]");
+	if (vk_is_trigger(VK_OEM_7))		return rb_str_new2(capital ? "\"" : "'");
 
 	return Qnil;
 }

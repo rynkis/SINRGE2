@@ -62,6 +62,9 @@ public:
 	virtual bool			CALL	System_Update();
 	virtual bool			CALL	System_PeekMessage();
 	virtual void			CALL	System_Resize(int width, int height);
+	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx);
+	virtual HTEXTURE		CALL	Texture_CreateFromScreen();
+	virtual bool			CALL	Texture_Save2File(HTEXTURE tex, int width, int height, wchar_t *filename);
 	// +++SINRGE2+++
 	virtual void			CALL	System_SetStateBool  (hgeBoolState   state, bool        value);
 	virtual void			CALL	System_SetStateFunc  (hgeFuncState   state, hgeCallback value);
@@ -78,7 +81,6 @@ public:
 	virtual DWORD*			CALL	System_Snapshot(int& width,int& height);
 
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0);
-	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx);
 	virtual void			CALL	Resource_Free(void *res);
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0);
 
@@ -102,7 +104,6 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target);
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height);
-	virtual HTEXTURE		CALL	Texture_CreateFromScreen();
 	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0);
 	virtual void			CALL	Texture_Free(HTEXTURE tex);
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false);

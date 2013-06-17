@@ -192,8 +192,8 @@ CApplication::CApplication()
 
 	, pScripts(0)
 	, m_pRenderState(0)
-	, m_ref_d3d(0)
-	, m_ref_device(0)
+	/*, m_ref_d3d(0)
+	, m_ref_device(0)*/
 	, m_with_console(false)
 	, m_brightness(255)
 	, m_saved_brghtness(255)
@@ -216,7 +216,7 @@ CApplication::CApplication()
 	szAppPath[0] = 0;
 	szIniPath[0] = 0;
 	szScripts[0] = 0;
-	memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
+	//memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
 	m_pHge = hgeCreate(HGE_VERSION);
 	
 	m_quad.v[0].z = 
@@ -645,41 +645,16 @@ bool CApplication::InitVideo()
 	m_pRenderState = new CRbRenderState();
 	m_pRenderState->Save(0, 0, GetFrameWidth(), GetFrameHeight());
 
-	//	Hack the D3D pointer & D3DDevice pointer
-	HTEXTURE pTmpTex = m_pHge->Texture_Create(2, 2); 
-	if (!pTmpTex)
-		goto failed_return;
-
-	if (FAILED((reinterpret_cast<LPDIRECT3DTEXTURE8>(pTmpTex))->GetDevice(&m_ref_device)))
-		goto failed_return;
-
-	if (FAILED(m_ref_device->GetDirect3D(&m_ref_d3d)))
-		goto failed_return;
-
-	if (FAILED(m_ref_d3d->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &m_d3d_caps)))
-		goto failed_return;
-
-	m_pHge->Texture_Free(pTmpTex);
-	pTmpTex = NULL;
-
 	// video
 	m_pVideoMgr = new CVideoMgr();
 	if (!m_pVideoMgr)
-		goto failed_return;
+		return false;
 	if (!m_pVideoMgr->Init())
-		goto failed_return;
+		return false;
 
 	m_inited = true;
 
 	return m_inited;
-
-failed_return:
-	if (pTmpTex)
-	{
-		m_pHge->Texture_Free(pTmpTex);
-		pTmpTex = NULL;
-	}
-	return false;
 }
 
 bool CApplication::InitAudio()

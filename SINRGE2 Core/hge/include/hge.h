@@ -255,9 +255,14 @@ public:
 	virtual bool			CALL	System_Initiate() = 0;
 	virtual void			CALL	System_Shutdown() = 0;
 	virtual bool			CALL	System_Start() = 0;
+	// +++SINRGE2+++
 	virtual bool			CALL	System_Update() = 0;
 	virtual bool			CALL	System_PeekMessage() = 0;
 	virtual void			CALL	System_Resize(int width, int height) = 0;
+	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx) = 0;
+	virtual HTEXTURE		CALL	Texture_CreateFromScreen() = 0;
+	virtual bool			CALL	Texture_Save2File(HTEXTURE tex, int width, int height, wchar_t *filename) = 0;
+	// +++SINRGE2+++
 	virtual wchar_t*		CALL	System_GetErrorMessage() = 0;
 	virtual	void			CALL	System_Log(const wchar_t *format, ...) = 0;
 	virtual bool			CALL	System_Launch(const wchar_t *url) = 0;
@@ -286,7 +291,6 @@ public:
 	inline const wchar_t*			System_GetState(hgeStringState state) { return System_GetStateString(state); }
 	
 	virtual void*			CALL	Resource_Load(const wchar_t *filename, DWORD *size=0) = 0;
-	virtual void*			CALL	Resource_Load_Without_Suffix(const wchar_t *filename, DWORD *size, wchar_t *suffixs[], int suffixs_size, int *suffix_idx) = 0;
 	virtual void			CALL	Resource_Free(void *res) = 0;
 	virtual wchar_t*		CALL	Resource_MakePath(const wchar_t *filename=0) = 0;
 
@@ -310,7 +314,6 @@ public:
 	virtual HTEXTURE		CALL	Target_GetTexture(HTARGET target) = 0;
 
 	virtual HTEXTURE		CALL	Texture_Create(int width, int height) = 0;
-	virtual HTEXTURE		CALL	Texture_CreateFromScreen() = 0;
 	virtual HTEXTURE		CALL	Texture_Load(const wchar_t *filename, DWORD size=0, bool bMipmap=false, DWORD dwColorKey = 0) = 0;
 	virtual void			CALL	Texture_Free(HTEXTURE tex) = 0;
 	virtual int				CALL	Texture_GetWidth(HTEXTURE tex, bool bOriginal=false) = 0;

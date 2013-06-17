@@ -40,7 +40,7 @@ public:
 
 public:
 	CRbRenderState()
-		: m_render2texture(false)
+		//: m_render2texture(false)
 	{
 		s_pHge = hgeCreate(HGE_VERSION);
 	}
@@ -74,19 +74,19 @@ public:
 
 	inline const RbRenderClipRect& GetClipRect() const { return m_rect; }
 
-	inline void	SetRenderToTexture(bool b)
+	/*inline void	SetRenderToTexture(bool b)
 	{
 		m_render2texture = b;
-	}
+	}*/
 
-	inline bool	IsRenderToTexture() const
+	/*inline bool	IsRenderToTexture() const
 	{
 		return m_render2texture;
-	}
+	}*/
 
 private:
 	RbRenderClipRect			m_rect;
-	bool						m_render2texture;
+	//bool						m_render2texture;
 
 	static HGE *				s_pHge;
 };
