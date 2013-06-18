@@ -14,13 +14,14 @@
 class CRbRect : public CRbClassBase
 {
 public:
-	CRbRect() { memset(m_rect_data, 0, sizeof(m_rect_data)); }
-	virtual ~CRbRect() {}
+	CRbRect();
+	//virtual ~CRbRect() {}
 
 public:
 	static void		InitLibrary();
 
 protected:
+	virtual void	mark();
 	virtual VALUE	initialize(int argc, VALUE * argv, VALUE obj);	//	initialize
 
 	virtual VALUE	set(int argc, VALUE * argv, VALUE obj);

@@ -58,9 +58,13 @@ void CRbColor::InitLibrary()
 	rb_define_method(rb_cColor, "clone",	(RbFunc)dm_clone,		0);
 }
 
-/*
- *	以下为ruby方法的c实现
- */
+void CRbColor::mark()
+{
+	rb_gc_mark(m_red);
+	rb_gc_mark(m_green);
+	rb_gc_mark(m_blue);
+	rb_gc_mark(m_alpha);
+}
 
 /**
  *	@call

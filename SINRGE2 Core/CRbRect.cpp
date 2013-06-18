@@ -9,6 +9,15 @@
 
 VALUE rb_cRect;
 
+CRbRect::CRbRect()
+	: vx(RUBY_0)
+	, vy(RUBY_0)
+	, vw(RUBY_0)
+	, vh(RUBY_0)
+{
+	memset(m_rect_data, 0, sizeof(m_rect_data));
+}
+
 void CRbRect::InitLibrary()
 {
 	/**
@@ -45,6 +54,14 @@ void CRbRect::InitLibrary()
 	// supplement
  	rb_define_method(rb_cRect,	"to_s",		(RbFunc)dm_to_string,	0);
 	rb_define_method(rb_cRect,	"clone",	(RbFunc)dm_clone,		0);
+}
+
+void CRbRect::mark()
+{
+	rb_gc_mark(vx);
+	rb_gc_mark(vy);
+	rb_gc_mark(vw);
+	rb_gc_mark(vh);
 }
 
 VALUE CRbRect::initialize(int argc, VALUE * argv, VALUE obj)
