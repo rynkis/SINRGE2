@@ -52,7 +52,7 @@ protected:
 
 	// 保存位图修改计数值和先前色调值
 	s32				m_ref_bitmap_modify_count;
-	DWORD			m_ref_tone;
+	u32				m_ref_tone;
 	HTEXTURE		m_tone_tex;
 	int				m_tone_tex_width;
 	int				m_tone_tex_height;

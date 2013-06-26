@@ -13,8 +13,7 @@
 #endif
 
 #include "CRbClassBase.h"
-#include "sin_bitmap.h"
-#include "sin_types.h"
+#include "sin_image.h"
 
 class CRbRect;
 class CRbFont;
@@ -27,26 +26,26 @@ public:
 
 public:
 	static void				InitLibrary();
-	static bool				AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone);
-	static bool				AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone);
+	static bool				AdjustTexturesTone(const image_p pimage, u32 dwTone);
+	static bool				AdjustTexturesToneDouble(const image_p pSrcBmp, const HTEXTURE pDstTex, u32 dwTone);
 	static void				ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float &V);
 	static void				ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, BYTE &B);
 	static bool				GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC);
 
-	static bitmap_p			CloneBitmap(bitmap_p pBmp);
-	static HTEXTURE			CutTexture(int x, int y, int width, int height, bitmap_p pBmp);
-	static void				BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight);
+	static image_p			CloneImage(image_p pimage);
+	static HTEXTURE			CutTexture(int x, int y, int width, int height, image_p pimage);
+	static void				BilinearZoom(u32 * srcData, u32 * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight);
 	
-	static bool				ScreenToBitmap(bitmap_p pBmp);
+	static bool				ScreenToBitmap(image_p pimage);
 
-	static HTEXTURE			LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx);
+	static HTEXTURE			LoadTexture(const wchar_t * filename, u32 colorKey, int &suffix_idx);
 
 public:
-	int						GetWidth()					const { return m_bmp.width; }
-	int						GetHeight()					const { return m_bmp.height; }
-	/*u32						GetMemWidth()				const { return m_bmp.texw; }
-	u32						GetMemHeight()				const { return m_bmp.texh; }*/
-	bitmap_p				GetBitmapPtr()				{ return &m_bmp; }
+	int						GetWidth()					const { return m_image.width; }
+	int						GetHeight()					const { return m_image.height; }
+	/*u32						GetMemWidth()				const { return m_image.texw; }
+	u32						GetMemHeight()				const { return m_image.texh; }*/
+	image_p					GetBitmapPtr()				{ return &m_image; }
 
 	int						GetModifyCount()			const { return m_modify_count; }
 	void					SetModifyCount()			{ m_modify_count++; }
@@ -63,13 +62,13 @@ protected:
 
 protected:
 	bool					m_disposed;
-	bitmap_t				m_bmp;
+	image_t					m_image;
 	int						m_modify_count;
 
 	VALUE					m_filename;		// mark
 
 	CRbRect *				m_rect_ptr;
-	CRbFont *				m_font_ptr;
+	//CRbFont *				m_font_ptr;
 
 protected:
 	dm_method(dispose)
@@ -85,7 +84,7 @@ protected:
 	dm_method02(get_pixel)
 	dm_method03(set_pixel)
 	dm_method_vargs(draw_text)
-	dm_method01(text_size)
+	dm_method02(text_size)
 
 	dm_method_vargs(gradient_fill_rect)
 	dm_method_vargs(clear_rect)
@@ -101,7 +100,7 @@ protected:
 	attr_reader(width)
 	attr_reader(height)
 	attr_reader(filename)
-	attr_accessor(font)
+	//attr_accessor(font)
 
 private:
 	friend class	CRbBitmap;

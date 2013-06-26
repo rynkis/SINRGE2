@@ -6,7 +6,6 @@
 ** Ruby Class Color
 */
 #include "CRbColor.h"
-#include "sin_types.h"
 #include "sin_color.h"
 
 VALUE rb_cColor;
@@ -80,7 +79,7 @@ VALUE CRbColor::initialize(int argc, VALUE * argv, VALUE obj)
 	{
 		if (rb_obj_is_kind_of(argv[0], rb_cInteger))
 		{
-			DWORD col = NUM2ULONG(argv[0]);
+			u32 col = NUM2ULONG(argv[0]);
 			BYTE r, g, b, a;
 			GET_ARGB_8888(col, a, r, g, b);
 			m_col_data[0] = r;

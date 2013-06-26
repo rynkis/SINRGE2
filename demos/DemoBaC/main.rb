@@ -12,14 +12,15 @@ class Bulls_And_Cows
   # => 常量
   #
   BLACK = Color.new(0, 0, 0, 128)
+  SIMHEI24 = Font.new("simhei", 24)
   #
   # => 初始化对像
   #
   def initialize
     @sprite = Sprite.new
     @bitmap = Bitmap.new(640, 480)
-    @bitmap.font.size = 24
-    @bitmap.font.shadow = false
+    # @bitmap.font.size = 24
+    # @bitmap.font.shadow = false
     @bitmap.fill_rect(@bitmap.rect, BLACK)
     @sprite.bitmap = @bitmap
     restart
@@ -45,11 +46,11 @@ class Bulls_And_Cows
     @index = 0
     @game_over = false
     @bitmap.fill_rect(@bitmap.rect, BLACK)
-    @bitmap.draw_text(0, 0, 640, 24, "上下键增减数字，左右键移动光标，空格键确定, ESC键重置", 1)
-    (0..4).each {|i| @bitmap.draw_text(i * 160,  64, 160, 24, 0.to_s, 1)}
-    @bitmap.draw_text(@index * 160, 90, 160, 24, "-", 1)
-    @bitmap.draw_text(  0, 128, 320, 24, "0 A 0 B", 1)
-    @bitmap.draw_text(320, 128, 320, 24, "0 Step", 1)
+    draw_text(0, 0, 640, 24, "上下键增减数字，左右键移动光标，空格键确定, ESC键重置", 1)
+    (0..4).each {|i| draw_text(i * 160,  64, 160, 24, 0.to_s, 1)}
+    draw_text(@index * 160, 90, 160, 24, "-", 1)
+    draw_text(  0, 128, 320, 24, "0 A 0 B", 1)
+    draw_text(320, 128, 320, 24, "0 Step", 1)
   end
   #
   # => 检索AB
@@ -73,7 +74,14 @@ class Bulls_And_Cows
     y = @step <= 4 ? @step : @step - 4
     str = ""
     @your_answer.each {|n| str += n.to_s }
-    @bitmap.draw_text(x, y * 24 + 240, 320, 24, str + " #{a}A#{b}B", 1)
+    draw_text(x, y * 24 + 240, 320, 24, str + " #{a}A#{b}B", 1)
+  end
+  #
+  #
+  #
+  def draw_text(*args)
+    args.insert 0, SIMHEI24
+    @bitmap.draw_text *args
   end
   #
   # => 更新
@@ -87,42 +95,42 @@ class Bulls_And_Cows
       @step += 1
       if a == 4
         msgbox "回答正确\n"
-        @bitmap.draw_text(0, 184, 640, 24, "回答正确", 1)
+        draw_text(0, 184, 640, 24, "回答正确", 1)
         str = "正确答案："
         @true_answer.each {|n| str += n.to_s }
         x = @step <= 4 ? 0 : 320
         y = @step <= 4 ? @step : @step-4
-        @bitmap.draw_text(x, y * 24 + 240, 320, 24, str, 1)
+        draw_text(x, y * 24 + 240, 320, 24, str, 1)
         @game_over = true
       elsif @step == 8
         msgbox "游戏结束\n"
-        @bitmap.draw_text(0, 184, 640, 24, "游戏结束", 1)
+        draw_text(0, 184, 640, 24, "游戏结束", 1)
         str = "正确答案："
         @true_answer.each {|n| str += n.to_s }
-        @bitmap.draw_text(320, (@step-4) * 24 + 240, 320, 24, str, 1)
+        draw_text(320, (@step-4) * 24 + 240, 320, 24, str, 1)
         @game_over = true
       else
         draw_step(a, b)
         @bitmap.fill_rect(  0, 128, 640, 24, BLACK)
-        @bitmap.draw_text(  0, 128, 320, 24, "#{a} A #{b} B", 1)
-        @bitmap.draw_text(320, 128, 320, 24, "#{@step} Step", 1)
+        draw_text(  0, 128, 320, 24, "#{a} A #{b} B", 1)
+        draw_text(320, 128, 320, 24, "#{@step} Step", 1)
       end
     elsif Input.trigger?(0x25)
       @bitmap.fill_rect(@index * 160, 90, 160, 24, BLACK)
       @index == 0 ? @index = 3 : @index -= 1
-      @bitmap.draw_text(@index * 160, 90, 160, 24, "-", 1)
+      draw_text(@index * 160, 90, 160, 24, "-", 1)
     elsif Input.trigger?(0x27)
       @bitmap.fill_rect(@index * 160, 90, 160, 24, BLACK)
       @index == 3 ? @index = 0 : @index += 1
-      @bitmap.draw_text(@index * 160, 90, 160, 24, "-", 1)
+      draw_text(@index * 160, 90, 160, 24, "-", 1)
     elsif Input.trigger?(0x26)
       @bitmap.fill_rect((@index) * 160, 64, 160, 24, BLACK)
       @your_answer[@index] == 9 ? @your_answer[@index] = 0 : @your_answer[@index] += 1
-      @bitmap.draw_text(@index * 160, 64, 160, 24, @your_answer[@index].to_s, 1)
+      draw_text(@index * 160, 64, 160, 24, @your_answer[@index].to_s, 1)
     elsif Input.trigger?(0x28)
       @bitmap.fill_rect((@index) * 160, 64, 160, 24, BLACK)
       @your_answer[@index] == 0 ? @your_answer[@index] = 9 : @your_answer[@index] -= 1
-      @bitmap.draw_text(@index * 160, 64, 160, 24, @your_answer[@index].to_s, 1)
+      draw_text(@index * 160, 64, 160, 24, @your_answer[@index].to_s, 1)
     elsif Input.trigger?(0x10) # 作弊 = =
       str = "正确答案："
       @true_answer.each {|n| str += n.to_s }

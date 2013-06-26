@@ -162,7 +162,7 @@ VALUE CRbCharmap::reset(int argc, VALUE * argv, VALUE obj)
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	BYTE a, r, g, b;
 	long lx, ly, lineno, offset, cidx;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(bmp_ptr->GetBitmapPtr()->quad.tex, true);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(bmp_ptr->GetBitmapPtr()->quad.tex, true);
 	for (ly = 0; ly < bmp_ptr->GetBitmapPtr()->height; ++ly)
 	{
 		lineno = bmp_ptr->GetBitmapPtr()->width * ly;

@@ -86,16 +86,16 @@ CRbBitmap::CRbBitmap()
 	, m_modify_count(0)
 	, m_filename(Qnil)
 	, m_rect_ptr(0)
-	, m_font_ptr(0)
+	//, m_font_ptr(0)
 {
 }
 
 CRbBitmap::~CRbBitmap()
 {
-	if (m_bmp.quad.tex)
+	if (m_image.quad.tex)
 	{
-		GetAppPtr()->GetHgePtr()->Texture_Free(m_bmp.quad.tex);
-		m_bmp.quad.tex = 0;
+		GetAppPtr()->GetHgePtr()->Texture_Free(m_image.quad.tex);
+		m_image.quad.tex = 0;
 	}
 }
 
@@ -131,7 +131,7 @@ void CRbBitmap::InitLibrary()
 	rb_define_method(rb_cBitmap, "set_pixel",			(RbFunc)dm_set_pixel,			3);
 
 	rb_define_method(rb_cBitmap, "draw_text",			(RbFunc)dm_draw_text,			-1);
-	rb_define_method(rb_cBitmap, "text_size",			(RbFunc)dm_text_size,			1);
+	rb_define_method(rb_cBitmap, "text_size",			(RbFunc)dm_text_size,			2);
 
 	rb_define_method(rb_cBitmap, "gradient_fill_rect",	(RbFunc)dm_gradient_fill_rect,	-1);
 	rb_define_method(rb_cBitmap, "clear_rect",			(RbFunc)dm_clear_rect,			-1);
@@ -148,8 +148,8 @@ void CRbBitmap::InitLibrary()
 	rb_define_method(rb_cBitmap, "rect",				(RbFunc)dm_get_rect,			0);
 	rb_define_method(rb_cBitmap, "filename",			(RbFunc)dm_get_filename,		0);
 
-	rb_define_method(rb_cBitmap, "font",				(RbFunc)dm_get_font,			0);
-	rb_define_method(rb_cBitmap, "font=",				(RbFunc)dm_set_font,			1);
+	/*rb_define_method(rb_cBitmap, "font",				(RbFunc)dm_get_font,			0);
+	rb_define_method(rb_cBitmap, "font=",				(RbFunc)dm_set_font,			1);*/
 
 	// supplement
  	rb_define_method(rb_cBitmap, "to_s",				(RbFunc)dm_to_string,			0);
@@ -159,7 +159,7 @@ void CRbBitmap::InitLibrary()
 void CRbBitmap::mark()
 {
 	if (m_rect_ptr)	m_rect_ptr->MarkObject();
-	if (m_font_ptr)	m_font_ptr->MarkObject();
+	//if (m_font_ptr)	m_font_ptr->MarkObject();
 
 	if (RTEST(m_filename))
 		rb_gc_mark(m_filename);
@@ -169,7 +169,7 @@ VALUE CRbBitmap::initialize(int argc, VALUE * argv, VALUE obj)
 {
 	VALUE arg01, arg02;
 
-	DWORD dwColorValue = 0;
+	u32 dwColorValue = 0;
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	hgeQuad quad;
 
@@ -242,19 +242,19 @@ __finish:
 	{
 		QUAD_INIT(quad);
 		
-		m_bmp.quad = quad;
-		m_bmp.width = hge->Texture_GetWidth(quad.tex);
-		m_bmp.height = hge->Texture_GetHeight(quad.tex);
-		m_bmp.owidth = hge->Texture_GetWidth(quad.tex, true);
-		m_bmp.oheight = hge->Texture_GetHeight(quad.tex, true);
+		m_image.quad = quad;
+		m_image.width = hge->Texture_GetWidth(quad.tex);
+		m_image.height = hge->Texture_GetHeight(quad.tex);
+		m_image.owidth = hge->Texture_GetWidth(quad.tex, true);
+		m_image.oheight = hge->Texture_GetHeight(quad.tex, true);
 
 		//	create rect
-		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_bmp.width), INT2FIX(m_bmp.height)};
+		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_image.width), INT2FIX(m_image.height)};
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
 		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
 		// create a font object for the bitmap-obj
-		VALUE font = rb_class_new_instance(0, 0, rb_cFont);
-		m_font_ptr = GetObjectPtr<CRbFont>(font);
+		/*VALUE font = rb_class_new_instance(0, 0, rb_cFont);
+		m_font_ptr = GetObjectPtr<CRbFont>(font);*/
 		m_disposed = false;
 	}
 	return obj;
@@ -264,23 +264,23 @@ VALUE CRbBitmap::clone()
 {
 	check_raise();
 
-	VALUE __argv[] = { INT2FIX(m_bmp.width), INT2FIX(m_bmp.height) };
+	VALUE __argv[] = { INT2FIX(m_image.width), INT2FIX(m_image.height) };
 	VALUE bitmap = rb_class_new_instance(2, __argv, obj_class());
 	CRbBitmap * bmp_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 
 	HGE * hge = GetAppPtr()->GetHgePtr();
-	//memcpy(bmp_ptr->GetBitmapPtr(), &m_bmp, sizeof(bitmap_t));
-	DWORD * pSrcTexData = hge->Texture_Lock(m_bmp.quad.tex, true);
-	DWORD * pDesTexData = hge->Texture_Lock(bmp_ptr->m_bmp.quad.tex, false);
+	//memcpy(bmp_ptr->GetBitmapPtr(), &m_image, sizeof(image_t));
+	u32 * pSrcTexData = hge->Texture_Lock(m_image.quad.tex, true);
+	u32 * pDesTexData = hge->Texture_Lock(bmp_ptr->m_image.quad.tex, false);
 	if (!pSrcTexData || !pDesTexData)
 		rb_raise(rb_eSinError, "Failed to clone bitmap.");
 
-	memcpy(pDesTexData, pSrcTexData, m_bmp.width * m_bmp.height * sizeof(DWORD));
-	hge->Texture_Unlock(m_bmp.quad.tex);
-	hge->Texture_Unlock(bmp_ptr->m_bmp.quad.tex);
+	memcpy(pDesTexData, pSrcTexData, m_image.width * m_image.height * sizeof(u32));
+	hge->Texture_Unlock(m_image.quad.tex);
+	hge->Texture_Unlock(bmp_ptr->m_image.quad.tex);
 
 	bmp_ptr->m_filename = m_filename;
-	bmp_ptr->m_font_ptr = m_font_ptr;
+	//bmp_ptr->m_font_ptr = m_font_ptr;
 	bmp_ptr->m_modify_count = m_modify_count;
 	bmp_ptr->m_rect_ptr = m_rect_ptr;
 	
@@ -288,14 +288,14 @@ VALUE CRbBitmap::clone()
 	return bitmap;
 }
 
-HTEXTURE CRbBitmap::LoadTexture(const wchar_t * filename, DWORD colorKey, int &suffix_idx)
+HTEXTURE CRbBitmap::LoadTexture(const wchar_t * filename, u32 colorKey, int &suffix_idx)
 {
 	HGE* hge = GetAppPtr()->GetHgePtr();
 	HTEXTURE tex = hge->Texture_Load(filename, 0, false, colorKey);
 	if (!tex)
 	{
 		void * data;
-		DWORD size;
+		u32 size;
 
 		static wchar_t * szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
 		static int		uSuffixCnt	= SinArrayCount(szSuffix);
@@ -323,7 +323,7 @@ void CRbBitmap::check_raise()
 		rb_raise(rb_eSinError, "disposed bitmap");
 }
 
-bool CRbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
+bool CRbBitmap::AdjustTexturesTone(const image_p pimage, u32 dwTone)
 {
 	if (!dwTone)
 		return true;
@@ -331,16 +331,16 @@ bool CRbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
 
-	DWORD * pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(pBmp->quad.tex, false);
+	u32 * pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(pimage->quad.tex, false);
 	if (!pSrcTexData)
 		return false;
-
-	for (s32 x = 0; x < pBmp->width; ++x)
+	int tmp_i;
+	for (s32 x = 0; x < pimage->width; ++x)
 	{
-		for (s32 y = 0; y < pBmp->height; ++y)
+		for (s32 y = 0; y < pimage->height; ++y)
 		{
-			int v = pBmp->width * y + x;
-			GET_ARGB_8888(pSrcTexData[v], a2, r2, g2, b2);
+			tmp_i = pimage->width * y + x;
+			GET_ARGB_8888(pSrcTexData[tmp_i], a2, r2, g2, b2);
 			if (a1 == 0)
 			{
 				r2 = sTable768_low[r2 + r1];
@@ -355,18 +355,18 @@ bool CRbBitmap::AdjustTexturesTone(const bitmap_p pBmp, DWORD dwTone)
 				g2 = sTable768_low[g1 + g2 + (gray - g2) * a1 / 256];
 				b2 = sTable768_low[b1 + b2 + (gray - b2) * a1 / 256];
 			}
-			pSrcTexData[v] = MAKE_ARGB_8888(a2, r2, g2, b2);
+			pSrcTexData[tmp_i] = MAKE_ARGB_8888(a2, r2, g2, b2);
 		}
 	}
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(pBmp->quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(pimage->quad.tex);
 
 	return true;
 }
 
-bool CRbBitmap::AdjustTexturesToneDouble(const bitmap_p pSrcBmp, const HTEXTURE pDstTex, DWORD dwTone)
+bool CRbBitmap::AdjustTexturesToneDouble(const image_p pSrcBmp, const HTEXTURE pDstTex, u32 dwTone)
 {
-	DWORD * pSrcTexData = 0;
-	DWORD * pDstTexData = 0;
+	u32 * pSrcTexData = 0;
+	u32 * pDstTexData = 0;
 
 	if (!pSrcBmp->quad.tex)
 		return false;
@@ -507,53 +507,45 @@ void CRbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, B
 bool CRbBitmap::GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC)
 {
 	HDC hScreenDC;
-
 	if (hDC)	
 		hScreenDC = hDC;
 	else	
 		hScreenDC = GetDC(NULL);
-
 	HGDIOBJ Save = SelectObject(hScreenDC, (HGDIOBJ)hFont);
-
 	SIZE size;
-
 	BOOL bRet = GetTextExtentPoint32(hScreenDC, pStr, wcslen(pStr), &size);
-
 	if (bRet)
 	{
 		cx = size.cx;
 		cy = size.cy;
 	}
-
 	SelectObject(hScreenDC, Save);
-
 	if (hDC == NULL)
 		ReleaseDC(NULL, hScreenDC);
-
 	return (bRet != 0);
 }
 
-bitmap_p CRbBitmap::CloneBitmap(bitmap_p pBmp)
+image_p CRbBitmap::CloneImage(image_p pimage)
 {
 	HGE * hge = GetAppPtr()->GetHgePtr();
-	bitmap_p clone = (bitmap_p)malloc(sizeof(bitmap_t));
-	memcpy(clone, pBmp, sizeof(bitmap_t));
-	clone->quad.tex = hge->Texture_Create(pBmp->width, pBmp->height);
-	DWORD * pSrcTexData = hge->Texture_Lock(pBmp->quad.tex, true);
-	DWORD * pDesTexData = hge->Texture_Lock(clone->quad.tex, false);
-	memcpy(pDesTexData, pSrcTexData, pBmp->width * pBmp->height * sizeof(DWORD));
-	hge->Texture_Unlock(pBmp->quad.tex);
+	image_p clone = (image_p)malloc(sizeof(image_t));
+	memcpy(clone, pimage, sizeof(image_t));
+	clone->quad.tex = hge->Texture_Create(pimage->width, pimage->height);
+	u32 * pSrcTexData = hge->Texture_Lock(pimage->quad.tex, true);
+	u32 * pDesTexData = hge->Texture_Lock(clone->quad.tex, false);
+	memcpy(pDesTexData, pSrcTexData, pimage->width * pimage->height * sizeof(u32));
+	hge->Texture_Unlock(pimage->quad.tex);
 	hge->Texture_Unlock(clone->quad.tex);
 	return clone;
 }
 
-HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBmp)
+HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, image_p pimage)
 {
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (pBmp->width - x < width)	{ width = pBmp->width - x; }
-	if (pBmp->height - y < height)	{ height = pBmp->height - y; }
+	if (pimage->width - x < width)	{ width = pimage->width - x; }
+	if (pimage->height - y < height)	{ height = pimage->height - y; }
 
 	if (width <= 0 || height <= 0)
 		return 0;
@@ -561,21 +553,21 @@ HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, bitmap_p pBm
 	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	HTEXTURE cut = hge->Texture_Create(width, height);
-	DWORD * pSrcTexData = hge->Texture_Lock(pBmp->quad.tex, true);//, x, y, width, height);
-	DWORD * pDesTexData = hge->Texture_Lock(cut, false);
-	//memcpy(pDesTexData, pSrcTexData, width * height *sizeof(DWORD));
+	u32 * pSrcTexData = hge->Texture_Lock(pimage->quad.tex, true);//, x, y, width, height);
+	u32 * pDesTexData = hge->Texture_Lock(cut, false);
+	//memcpy(pDesTexData, pSrcTexData, width * height *sizeof(u32));
 	for (s32 ly = 0; ly < height; ++ly)
-		memcpy(pDesTexData + (width * ly), pSrcTexData + (pBmp->width * (y + ly) + x), sizeof(DWORD) * width);
-	hge->Texture_Unlock(pBmp->quad.tex);
+		memcpy(pDesTexData + (width * ly), pSrcTexData + (pimage->width * (y + ly) + x), sizeof(u32) * width);
+	hge->Texture_Unlock(pimage->quad.tex);
 	hge->Texture_Unlock(cut);
 	return cut;
 }
 
-void CRbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
+void CRbBitmap::BilinearZoom(u32 * srcData, u32 * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
 {
 	long lx, ly, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
 	
-	//DWORD color11, color21, color12, color22;
+	//u32 color11, color21, color12, color22;
 	BYTE a, r, g, b;
 	BYTE a11, r11, g11, b11;
 	BYTE a21, r21, g21, b21;
@@ -616,38 +608,38 @@ void CRbBitmap::BilinearZoom(DWORD * srcData, DWORD * desData, int srcWidth, int
 	}
 }
 
-bool CRbBitmap::ScreenToBitmap(bitmap_p pBmp)
+bool CRbBitmap::ScreenToBitmap(image_p pimage)
 {
 	int width, height;
 	HGE * hge = GetAppPtr()->GetHgePtr();
-	DWORD * pSrcData = hge->System_Snapshot(width, height);
+	u32 * pSrcData = hge->System_Snapshot(width, height);
 
 	if (!pSrcData)
 		return false;
 
-	if (pBmp->quad.tex)
-		GetAppPtr()->GetHgePtr()->Texture_Free(pBmp->quad.tex);
+	if (pimage->quad.tex)
+		GetAppPtr()->GetHgePtr()->Texture_Free(pimage->quad.tex);
 
-	pBmp->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
-	DWORD* pDesData = hge->Texture_Lock(pBmp->quad.tex, false);
-	
-	BYTE a, r, g, b;
+	pimage->quad.tex = hge->Texture_Create(GetAppPtr()->GetFrameWidth(), height);
+	u32* pDesData = hge->Texture_Lock(pimage->quad.tex, false);
+	//BYTE a, r, g, b;
+	int tmp_i;
 	for (int ly = 0; ly < height; ++ly)
 	{
-		int v = ly * width;
+		tmp_i = ly * width;
 		int i = GetAppPtr()->GetFrameWidth() * ly;
 		for (int lx = 0; lx < GetAppPtr()->GetFrameWidth(); ++lx)
 		{
-			GET_ARGB_8888(pSrcData[v + lx], a, r, g, b);
-			pDesData[i + lx] = MAKE_ARGB_8888(255, r, g, b);
+			//GET_ARGB_8888(pSrcData[tmp_i + lx], a, r, g, b);
+			pDesData[i + lx] = SETA(pSrcData[tmp_i + lx], 255);//MAKE_ARGB_8888(255, r, g, b);
 		}
 	}
-		//memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(DWORD));
-	hge->Texture_Unlock(pBmp->quad.tex);
+		//memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(u32));
+	hge->Texture_Unlock(pimage->quad.tex);
 	free(pSrcData);
 
-	pBmp->width		= GetAppPtr()->GetFrameWidth();//hge->Texture_GetWidth(pBmp->quad.tex, true);
-	pBmp->height	= height;//hge->Texture_GetHeight(pBmp->quad.tex, true);
+	pimage->width	= GetAppPtr()->GetFrameWidth();//hge->Texture_GetWidth(pimage->quad.tex, true);
+	pimage->height	= height;//hge->Texture_GetHeight(pimage->quad.tex, true);
 
 	return true;
 }
@@ -657,10 +649,10 @@ VALUE CRbBitmap::dispose()
 	if (m_disposed)
 		return Qnil;
 
-	if(m_bmp.quad.tex)
+	if(m_image.quad.tex)
 	{
-		GetAppPtr()->GetHgePtr()->Texture_Free(m_bmp.quad.tex);
-		m_bmp.quad.tex = 0;
+		GetAppPtr()->GetHgePtr()->Texture_Free(m_image.quad.tex);
+		m_image.quad.tex = 0;
 	}
 
 	m_disposed = true;
@@ -704,30 +696,26 @@ VALUE CRbBitmap::hue_change(VALUE hue)
 	float h, s, l;
 	BYTE a, r, g, b;
 
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-
-	//int v;
-	for (s32 x = 0; x < m_bmp.width; ++x)
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
+	int tmp_i;
+	for (s32 x = 0; x < m_image.width; ++x)
 	{
-		for (s32 y = 0; y < m_bmp.height; ++y)
+		for (s32 y = 0; y < m_image.height; ++y)
 		{
-			int v = m_bmp.width * y + x;
-			GET_ARGB_8888(pTexData[v], a, r, g, b);
+			tmp_i = m_image.width * y + x;
+			GET_ARGB_8888(pTexData[tmp_i], a, r, g, b);
 			/*r = (BYTE)SinBound(r*matrix[0]+g*matrix[1]+b*matrix[2], 0, 255);
 			g = (BYTE)SinBound(r*matrix[3]+g*matrix[4]+b*matrix[5], 0, 255);
 			b = (BYTE)SinBound(r*matrix[6]+g*matrix[7]+b*matrix[8], 0, 255);*/
 			ColorSpaceRGB2HSV(r, g, b, h, s, l);
 			h += iHue;
 			ColorSpaceHSV2RGB(h, s, l, r, g, b);
-			pTexData[v] = MAKE_ARGB_8888(a, r, g, b);
+			pTexData[tmp_i] = MAKE_ARGB_8888(a, r, g, b);
 		}
 	}
-
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -736,36 +724,29 @@ VALUE CRbBitmap::brightness_change(VALUE brightness)
 	check_raise();
 
 	SafeFixnumValue(brightness);
-
 	int iBrightness = FIX2INT(brightness);
-
 	if(!iBrightness) return Qnil;
-
 	iBrightness = SinBound(iBrightness, -255, 255);
 
 	BYTE a, r, g, b;
-
-	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-
-	for (s32 y = 0; y < m_bmp.height; ++y)
+	u32* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
+	int tmp_i1, tmp_i2;
+	for (s32 y = 0; y < m_image.height; ++y)
 	{
-		int th = m_bmp.width * y;
-		for (s32 x = 0; x < m_bmp.width; ++x)
+		tmp_i1 = m_image.width * y;
+		for (s32 x = 0; x < m_image.width; ++x)
 		{
-			int tv = th + x;
-			GET_ARGB_8888(pTexData[tv], a, r, g, b);
+			tmp_i2 = tmp_i1 + x;
+			GET_ARGB_8888(pTexData[tmp_i2], a, r, g, b);
 			r = sTable768_mid[r + iBrightness + 256];
 			g = sTable768_mid[g + iBrightness + 256];
 			b = sTable768_mid[b + iBrightness + 256];
-			pTexData[tv] = MAKE_ARGB_8888(a, r, g, b);
+			pTexData[tmp_i2] = MAKE_ARGB_8888(a, r, g, b);
 		}
 	}
-	
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -775,7 +756,7 @@ VALUE CRbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 
 	int a, r, g, b;
 	VALUE red, green, blue, gray;
-	DWORD tone = 0;
+	u32 tone = 0;
 
 	if (argc == 1)
 	{
@@ -805,12 +786,9 @@ VALUE CRbBitmap::tone_change(int argc, VALUE * argv, VALUE obj)
 
 		tone = MAKE_ARGB_8888(a, r, g, b);
 	}
-
-	AdjustTexturesTone(&m_bmp, tone);
-
+	AdjustTexturesTone(&m_image, tone);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -819,7 +797,7 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	check_raise();
 
 	VALUE x, y, src_bitmap, src_rect, opacity;
-	bitmap_p src;
+	image_p src;
 	bool with_self = false;
 
 	if (rb_obj_class((argv[2])) == rb_cBitmap)
@@ -833,14 +811,14 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	else
 	{
 		rb_scan_args(argc, argv, "31", &x, &y, &src_rect, &opacity);
-		src = &m_bmp;
+		src = &m_image;
 		with_self = true;
 	}
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
 	SafeRectValue(src_rect);
 
-	bitmap_p des = &m_bmp;
+	image_p des = &m_image;
 	CRbRect* srcRect = GetObjectPtr<CRbRect>(src_rect);
 	int sx = srcRect->m_rect_data[0];
 	int sy = srcRect->m_rect_data[1];
@@ -875,29 +853,29 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	if (sw <= 0)	return Qfalse;
 	if (sh <= 0)	return Qfalse;
 
-	DWORD * pTempData;
-	DWORD * pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(src->quad.tex, true);
+	u32 * pTempData;
+	u32 * pSrcTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(src->quad.tex, true);
 	if (with_self)
 	{
-		pTempData = (DWORD *)malloc(src->width * src->height * sizeof(DWORD));
-		memcpy(pTempData, pSrcTexData, src->width * src->height * sizeof(DWORD));
+		pTempData = (u32 *)malloc(src->width * src->height * sizeof(u32));
+		memcpy(pTempData, pSrcTexData, src->width * src->height * sizeof(u32));
 		GetAppPtr()->GetHgePtr()->Texture_Unlock(src->quad.tex);
 	}
 	else
 	{
 		pTempData = pSrcTexData;
 	}
-	DWORD* pDstTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(des->quad.tex,false);
+	u32* pDstTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(des->quad.tex,false);
 	if (!pTempData || !pDstTexData)
 		return Qfalse;
-	DWORD color1, color2;
+	u32 color1, color2;
 	BYTE a, r, g, b;
-	
+	int tmp_i;
 	for (int lx = sx; lx < sx + sw; ++lx)
 	{
 		for (int ly = sy; ly < sy + sh; ++ly)
 		{
-			int v = des->width * (ly - sy + dy) + lx - sx + dx;
+			tmp_i = des->width * (ly - sy + dy) + lx - sx + dx;
 			color1 = pTempData[src->width * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
 			//	跳过透明像素
@@ -906,9 +884,9 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 			//	跳过透明像素
 			if (!a) continue;
 			color1 = MAKE_ARGB_8888(a, r, g, b);
-			color2 = pDstTexData[v];
+			color2 = pDstTexData[tmp_i];
 			BLEND_ARGB_8888(color1, color2);
-			pDstTexData[v] = color2;
+			pDstTexData[tmp_i] = color2;
 		}
 	}
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(des->quad.tex);
@@ -919,10 +897,8 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 		pTempData = NULL;
 		GetAppPtr()->GetHgePtr()->Texture_Unlock(src->quad.tex);
 	}
-	
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -931,7 +907,7 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	check_raise();
 
 	VALUE dest_rect, src_bitmap, src_rect, opacity;
-	bitmap_p src;
+	image_p src;
 	rb_scan_args(argc, argv, "31", &dest_rect, &src_bitmap, &src_rect, &opacity);
 	
 	SafeRectValue(dest_rect);
@@ -962,8 +938,8 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	
 	if (dx + dw <= 0) return Qfalse;
 	if (dy + dh <= 0) return Qfalse;
-	if (m_bmp.width - dx <= 0) return Qfalse;
-	if (m_bmp.height - dy <= 0) return Qfalse;
+	if (m_image.width - dx <= 0) return Qfalse;
+	if (m_image.height - dy <= 0) return Qfalse;
 	
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
@@ -975,26 +951,26 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 
 	if (!tmpTex) return Qfalse;
 
-	DWORD * pSrcTexData = hge->Texture_Lock(tmpTex, true);
+	u32 * pSrcTexData = hge->Texture_Lock(tmpTex, true);
 	if (!pSrcTexData) return Qfalse;
-	DWORD * pTempData = (DWORD *)malloc(dw * dh * sizeof(DWORD));
-	int mathW = dw + ceil(sqrt(sqrt((double)dw / (double)sw)));
-	int mathH = dh + ceil(sqrt(sqrt((double)dh / (double)sh)));
+	u32 * pTempData = (u32 *)malloc(dw * dh * sizeof(u32));
+	int mathW = dw + (int)ceil(sqrt(sqrt((double)dw / (double)sw)));
+	int mathH = dh + (int)ceil(sqrt(sqrt((double)dh / (double)sh)));
 	BilinearZoom(pSrcTexData, pTempData, sw, sh, dw, dh, mathW, mathH);
 
-	DWORD * pDstTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
-	DWORD color1, color2;
+	u32 * pDstTexData = hge->Texture_Lock(m_image.quad.tex, false);
+	u32 color1, color2;
 	BYTE a, r, g, b;
 
 	int ndw = dw;
-	if (dw + dx > m_bmp.width) dw = m_bmp.width - dx;
-	if (dh + dy > m_bmp.height) dh = m_bmp.height - dy;
-
+	if (dw + dx > m_image.width) dw = m_image.width - dx;
+	if (dh + dy > m_image.height) dh = m_image.height - dy;
+	int tmp_i;
 	for (s32 lx = 0; lx < dw; ++lx)
 	{
 		for (s32 ly = 0; ly < dh; ++ly)
 		{
-			int v = m_bmp.width * (ly + dy) + lx + dx;
+			tmp_i = m_image.width * (ly + dy) + lx + dx;
 			color1 = pTempData[ndw * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
 			//	跳过透明像素
@@ -1003,21 +979,19 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 			//	跳过透明像素
 			if (!a) continue;
 			color1 = MAKE_ARGB_8888(a, r, g, b);
-			color2 = pDstTexData[v];
+			color2 = pDstTexData[tmp_i];
 			BLEND_ARGB_8888(color1, color2);
-			pDstTexData[v] = color2;
+			pDstTexData[tmp_i] = color2;
 		}
 	}
-	hge->Texture_Unlock(m_bmp.quad.tex);
+	hge->Texture_Unlock(m_image.quad.tex);
 	hge->Texture_Unlock(tmpTex);
 	//if (sx != 0 || sy != 0 || sw != src->width || sh != src->height)
 	hge->Texture_Free(tmpTex);
 	tmpTex = 0;
 	free(pTempData);
-	
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1026,7 +1000,7 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 	check_raise();
 
 	int x, y, width, height;
-	DWORD color;
+	u32 color;
 
 	if (argc == 5)
 	{
@@ -1074,43 +1048,39 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (m_bmp.width - x < width)		{ width = m_bmp.width - x; }
-	if (m_bmp.height - y < height)	{ height = m_bmp.height - y; }
+	if (m_image.width - x < width)		{ width = m_image.width - x; }
+	if (m_image.height - y < height)	{ height = m_image.height - y; }
 
 	if (width <= 0 || height <= 0)
 		return Qfalse;
 
 	//	填充
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData)
 		return Qfalse;
 	
-	//int v;
+	int tmp_i;
 	for (s32 ly = y; ly < y + height; ++ly)
 	{
-		int v = m_bmp.width * ly;
+		tmp_i = m_image.width * ly;
 		for (s32 lx = x; lx < x + width; ++lx)
-			pTexData[v + lx] = color;
+			pTexData[tmp_i + lx] = color;
 	}
-
 	for (s32 ly = y + 1; ly < y + height; ++ly)
-		memcpy(pTexData + (m_bmp.width * ly) + x, pTexData + (m_bmp.width * y + x), sizeof(DWORD) * width);
-
-	//DWORD color2;
+		memcpy(pTexData + (m_image.width * ly) + x, pTexData + (m_image.width * y + x), sizeof(u32) * width);
+	//u32 color2;
 	//for (s32 lx = x; lx < x + width; ++lx)
 	//{
 	//	for (s32 ly = y; ly < y + height; ++ly)
 	//	{
-	//		color2 = pTexData[m_bmp.width * ly + lx];
+	//		color2 = pTexData[m_image.width * ly + lx];
 	//		BLEND_ARGB_8888(color, color2);
-	//		pTexData[m_bmp.width * ly + lx] = color2;
+	//		pTexData[m_image.width * ly + lx] = color2;
 	//	}
 	//}
-
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1118,19 +1088,15 @@ VALUE CRbBitmap::clear()
 {
 	check_raise();
 
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData)
 		return Qfalse;
-
-	/*for (int y = 0; y < m_bmp.height; ++y)
-		memset(&pTexData[m_bmp.width * y], 0, sizeof(DWORD) * m_bmp.width);*/
-	ZeroMemory(pTexData, sizeof(DWORD) * m_bmp.width * m_bmp.height);
-
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-
+	/*for (int y = 0; y < m_image.height; ++y)
+		memset(&pTexData[m_image.width * y], 0, sizeof(u32) * m_image.width);*/
+	ZeroMemory(pTexData, sizeof(u32) * m_image.width * m_image.height);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1140,19 +1106,17 @@ VALUE CRbBitmap::get_pixel(VALUE x, VALUE y)
 	
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
-	
 	int dx = FIX2INT(x);
 	int dy = FIX2INT(y);
-
-	if (dx < 0 || dy < 0 || dx >= m_bmp.width || dy >= m_bmp.height)
+	if (dx < 0 || dy < 0 || dx >= m_image.width || dy >= m_image.height)
 		return Qnil;
 
 	int a, r, g, b;
 	
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qnil;
-	GET_ARGB_8888(pTexData[m_bmp.width * dy + dx], a, r, g, b);
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GET_ARGB_8888(pTexData[m_image.width * dy + dx], a, r, g, b);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 
 	VALUE __argv[] = {INT2FIX(r), INT2FIX(g), INT2FIX(b), INT2FIX(a)};
 	VALUE pixel = rb_class_new_instance(4, __argv, rb_cColor);
@@ -1167,11 +1131,10 @@ VALUE CRbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	SafeFixnumValue(y);
 	int dx = FIX2INT(x);
 	int dy = FIX2INT(y);
-	
-	if (dx < 0 || dy < 0 || dx >= m_bmp.width || dy >= m_bmp.height)
+	if (dx < 0 || dy < 0 || dx >= m_image.width || dy >= m_image.height)
 		return Qnil;
 	
-	DWORD col;
+	u32 col;
 	if (rb_obj_is_kind_of(color, rb_cInteger))
 		col = NUM2ULONG(color);
 	else
@@ -1183,18 +1146,16 @@ VALUE CRbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	/*if (!GET_ARGB_A(dwColor))
 		return Qfalse;*/
 
-	//DWORD color2;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	//u32 color2;
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData)
 		return Qfalse;
-	//color2 = pTexData[m_bmp.width * dy + dx];
+	//color2 = pTexData[m_image.width * dy + dx];
 	//BLEND_ARGB_8888(dwColor, color2);
-	pTexData[m_bmp.width * dy + dx] = col;//color2;
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
-	
+	pTexData[m_image.width * dy + dx] = col;//color2;
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1202,21 +1163,18 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
 
-	VALUE vx, vy, vw, vh, vstr, ha, va, rect;
+	VALUE font, rect, vstr, ha, va, vx, vy, vw, vh;
 	int ix, iy, width, height;
 	wchar_t * pStr;
 	int halign, valign;
 
-	if (FIXNUM_P(argv[0]))
+	if (FIXNUM_P(argv[1]))
 	{
-		rb_scan_args(argc, argv, "52", &vx, &vy, &vw, &vh, &vstr, &ha, &va);
-		
+		rb_scan_args(argc, argv, "62", &font, &vx, &vy, &vw, &vh, &vstr, &ha, &va);
 		SafeFixnumValue(vx);
 		SafeFixnumValue(vy);
 		SafeFixnumValue(vw);
 		SafeFixnumValue(vh);
-		//SafeStringValue(vstr);
-
 		ix = FIX2INT(vx);
 		iy = FIX2INT(vy);
 		width = FIX2INT(vw);
@@ -1224,100 +1182,145 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 	}
 	else
 	{
-		rb_scan_args(argc, argv, "22", &rect, &vstr, &ha, &va);
-
-		SafeRectValue(argv[0]);
-		//SafeStringValue(vstr);
-
-		CRbRect * rect = GetObjectPtr<CRbRect>(argv[0]);
-		ix = rect->m_rect_data[0];
-		iy = rect->m_rect_data[1];
-		width = rect->m_rect_data[2];
-		height = rect->m_rect_data[3];
+		rb_scan_args(argc, argv, "32", &font, &rect, &vstr, &ha, &va);
+		SafeRectValue(rect);
+		CRbRect * prect = GetObjectPtr<CRbRect>(rect);
+		ix = prect->m_rect_data[0];
+		iy = prect->m_rect_data[1];
+		width = prect->m_rect_data[2];
+		height = prect->m_rect_data[3];
+		prect = NULL;
 	}
+	
+	SafeFontValue(font);
+	CRbFont * pfont = GetObjectPtr<CRbFont>(font);
+
 	VALUE vStr = NIL_P(vstr) ? rb_str_new2("nil") : rb_obj_as_string(vstr);
-	pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vstr));
+	pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vStr));
 	halign = NIL_P(ha) ? 0 : FIX2INT(ha);
 	valign = NIL_P(va) ? 1 : FIX2INT(va);
 
-	if (width <= 0 || height <= 0)
-		return Qfalse;
+	if (width <= 0 || height <= 0) return Qfalse;
 
 	int iCharCount = wcslen(pStr);
-	if (!iCharCount)
-		return Qfalse;
+	if (!iCharCount) return Qfalse;
 
-	DWORD draw_color = m_font_ptr->GetColorPtr()->GetColor();
+	u32 draw_color = pfont->GetColorPtr()->GetColor();
 	BYTE da = GET_ARGB_A(draw_color);
-	DWORD drgb = draw_color & 0x00FFFFFF;
-	if (!da)
-		return Qfalse;
+	u32 drgb = draw_color & 0x00FFFFFF;
+	if (!da) return Qfalse;
 
-	bool shadow = m_font_ptr->IsShadow();
-
-	DWORD color1, color2 = 0;
-
+	bool shadow = pfont->IsShadow();
+	u32 color1, color2 = 0;
 	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	//	开始正式描绘文字
-	HDC	hScreenDC = GetDC(NULL);
-
-	do
+	HDC	hScreenDC = NULL;
+	/*do
+	{*/
+	s32 cx, cy;
+	if (pfont->IsLattice())
 	{
-		s32 cx, cy;
-
-		if (!GetTextRect(m_font_ptr->GetHFont(), pStr, cx, cy, hScreenDC))
-			break;
-
-		if (shadow) cy += 1;
-
-		int offset_x = 0, offset_y = 0;
-
-		switch (halign % 3)
+		cx = pfont->GetTextWidth(pStr);
+		cy = FIX2INT(pfont->m_size);
+		if (!cx || !cy) return Qfalse;
+	}
+	else
+	{
+		hScreenDC = GetDC(NULL);
+		if (!GetTextRect(pfont->GetHFont(), pStr, cx, cy, hScreenDC))
 		{
-			case 0:offset_x = 0;				break;
-			case 1:offset_x = (width - cx) / 2;	break;
-			case 2:offset_x = (width - cx);		break;
+			ReleaseDC(NULL, hScreenDC);
+			return Qfalse;
 		}
+	}
+	if (shadow) cy += 1;
+	int offset_x = 0, offset_y = 0;
 
-		switch (valign % 3)
+	switch (halign % 3)
+	{
+		case 0:offset_x = 0;				break;
+		case 1:offset_x = (width - cx) / 2;	break;
+		case 2:offset_x = (width - cx);		break;
+	}
+	switch (valign % 3)
+	{
+		case 0:offset_y = 0;				break;
+		case 1:offset_y = (height - cy) / 2;break;
+		case 2:offset_y = (height - cy);	break;
+	}
+
+	//	锁定纹理
+	u32 * pTexData = hge->Texture_Lock(m_image.quad.tex, false);
+	//	锁定失败：退出
+	if (!pTexData)
+	{
+		if (hScreenDC) ReleaseDC(NULL, hScreenDC);
+		return Qfalse;
+	}
+	int iCharOffset = 0;
+	//	临时变量
+	int tmp_x, tmp_y;
+	if (pfont->IsLattice())
+	{
+		if (offset_x < 0) offset_x = 0;
+		if (offset_y < 0) offset_y = 0;
+		u8 fc = 0;
+		u32 offset = 0;
+		int fsize = FIX2INT(pfont->m_size);
+		int fwidth = fsize == 14 ? 16 : fsize;
+		//	循环逐字描绘
+		for (int i = 0; i < iCharCount; ++i)
 		{
-			case 0:offset_y = 0;					break;
-			case 1:offset_y = (height - cy) / 2;	break;
-			case 2:offset_y = (height - cy);		break;
+			u32 char_index = pStr[i];
+			s32 o1 = ix + offset_x + iCharOffset;
+			tmp_x = 0, tmp_y = 0;
+			for (u32 ii = 0; ii < pfont->m_count; ++ii)
+			{
+				fc = pfont->m_font_data[char_index * pfont->m_count + ii];
+				for (int l = 0; l < 8; ++l)
+				{
+					if (tmp_x >= fwidth)
+					{
+						++tmp_y;
+						tmp_x = 0;
+					}
+					s32 o2 = iy + offset_y + tmp_y;
+					if (o1 + tmp_x < 0 || o1 + tmp_x >= m_image.width || o2 < 0 || o2 >= m_image.height)
+						continue;
+					offset = o2 * m_image.width + o1 + tmp_x;
+					if (fc & (1 << l))
+					{
+						color2 = pTexData[offset];
+						BLEND_ARGB_8888(draw_color, color2);
+						pTexData[offset] = color2;
+					}
+					++tmp_x;
+				}
+			}
+			iCharOffset += char_index < 128 ? fsize / 2 : fsize;
 		}
-
-		int iCharOffset = 0;
-
+	}
+	else
+	{
 		GLYPHMETRICS	gm;
 		TEXTMETRIC		tm;
 
 		static MAT2		mmat2 = {0, 1, 0, 0, 0, 0, 0, 1};
 
 		static BYTE		alphatable65[] = // 65.times{|i| 255 * i / (65 - 1)
-									{0,3,7,11,15,19,23,27,31,35,39,43,47,51,55,59,63,67,71,75,79,83,
-									87,91,95,99,103,107,111,115,119,123,127,131,135,139,143,147,151,
-									155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,
-									219,223,227,231,235,239,243,247,251,255};
+										{0,3,7,11,15,19,23,27,31,35,39,43,47,51,55,59,63,67,71,75,79,83,
+										87,91,95,99,103,107,111,115,119,123,127,131,135,139,143,147,151,
+										155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,
+										219,223,227,231,235,239,243,247,251,255};
 
 		static BYTE		buffer[1024];
 
-		//	锁定纹理
-		DWORD * pTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
-
-		//	锁定失败：退出
-		if (!pTexData)
-			break;
-
-		HFONT hOldFont = (HFONT)SelectObject(hScreenDC, m_font_ptr->GetHFont());
-
-		//	临时变量
-		int tmp_x, tmp_y;
-
+		HFONT hOldFont = (HFONT)SelectObject(hScreenDC, pfont->GetHFont());
 		//	循环逐字描绘
 		for (int i = 0; i < iCharCount; ++i)
 		{
-			DWORD dwBufferSize = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, 0, NULL, &mmat2);
+			u32 dwBufferSize = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, 0, NULL, &mmat2);
 
 			if (dwBufferSize > SinArrayCount(buffer))
 				rb_raise(rb_eSinError, "buffer size too small.");
@@ -1325,32 +1328,27 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 			if (dwBufferSize > 0)
 			{
 				int nLentemp = GetGlyphOutline(hScreenDC, pStr[i],GGO_GRAY8_BITMAP,&gm,dwBufferSize,buffer,&mmat2);
-
 				GetTextMetrics(hScreenDC, &tm);
-
 				int stride = dwBufferSize / gm.gmBlackBoxY;
-
 				//	逐像素描绘
 				for (UINT y = 0; y < gm.gmBlackBoxY; ++y)
 				{
 					tmp_y = y + tm.tmAscent - gm.gmptGlyphOrigin.y + iy + offset_y;
-					int h1 = (tmp_y + 1) * m_bmp.width;
-					int h2 = tmp_y * m_bmp.width;
+					int h1 = (tmp_y + 1) * m_image.width;
+					int h2 = tmp_y * m_image.width;
 					for (UINT x = 0; x < gm.gmBlackBoxX; ++x)
 					{
 						//	过滤掉越界的像素
 						tmp_x = x + gm.gmptGlyphOrigin.x + iCharOffset + ix + offset_x;
-						if (tmp_x < 0 || tmp_x >= m_bmp.width || tmp_y < 0 || tmp_y >= m_bmp.height)
+						if (tmp_x < 0 || tmp_x >= m_image.width || tmp_y < 0 || tmp_y >= m_image.height)
 							continue;
 
 						//	过滤全透明区域
 						BYTE tmp_gray = alphatable65[buffer[y * stride + x]];
-						if (!tmp_gray)
-							continue;
+						if (!tmp_gray) continue;
 
 						tmp_gray = (BYTE)((float)tmp_gray * da / 255);
-						if (!tmp_gray)
-							continue;
+						if (!tmp_gray) continue;
 
 						if (shadow)
 						{
@@ -1361,7 +1359,6 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 							BLEND_ARGB_8888(color1, color2);
 							pTexData[v1] = color2;
 						}
-
 						int v2 = h2 + tmp_x;
 						//	处理像素颜色
 						color1 = drgb + (tmp_gray<<24);
@@ -1371,46 +1368,44 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 					}
 				}
 			}
-
 			iCharOffset += gm.gmCellIncX;
 		}
-
-		// 取消锁定
-		hge->Texture_Unlock(m_bmp.quad.tex);
-		
 		SelectObject(hScreenDC, hOldFont);
-		
-		//	增加 修改计数值
-		++m_modify_count;
-
-	} while (0);
-	
-	//	释放DC
-	ReleaseDC(NULL, hScreenDC);
-
+	}
+	// 取消锁定
+	hge->Texture_Unlock(m_image.quad.tex);
+	//	增加 修改计数值
+	++m_modify_count;
+	//} while (0);
+	pfont = NULL;
 	return Qnil;
 }
 
-VALUE CRbBitmap::text_size(VALUE str)
+VALUE CRbBitmap::text_size(VALUE font, VALUE str)
 {
-	VALUE vStr = NIL_P(str) ? rb_str_new2("nil") : rb_obj_as_string(str);
+	SafeFontValue(font);
+	CRbFont * pfont = GetObjectPtr<CRbFont>(font);
 
+	VALUE vStr = NIL_P(str) ? rb_str_new2("nil") : rb_obj_as_string(str);
 	wchar_t * pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vStr));
 	
-	s32 cx, cy;
+	s32 cx = 0, cy = 0;
 	VALUE rect;
 
-	if (GetTextRect(m_font_ptr->GetHFont(), pStr, cx, cy, NULL))
+	if (pfont->IsLattice())
 	{
-		if (m_font_ptr->IsShadow()) cy += 1;
-		VALUE __argv[] = {RUBY_0, RUBY_0, LONG2FIX(cx), LONG2FIX(cy)};
-		rect = rb_class_new_instance(4, __argv, rb_cRect);
+		cx = pfont->GetTextWidth(pStr);
+		cy = FIX2INT(pfont->m_size);
 	}
 	else
 	{
-		VALUE __argv[] = {RUBY_0, RUBY_0, RUBY_0, RUBY_0,};
-		rect = rb_class_new_instance(4, __argv, rb_cRect);
+		if (GetTextRect(pfont->GetHFont(), pStr, cx, cy, NULL))
+			if (pfont->IsShadow())
+				cy += 1;
 	}
+	VALUE __argv[] = {RUBY_0, RUBY_0, LONG2FIX(cx), LONG2FIX(cy)};
+	rect = rb_class_new_instance(4, __argv, rb_cRect);
+	pfont = NULL;
 	return rect;
 }
 
@@ -1448,13 +1443,13 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 		height = rect->m_rect_data[3];
 	}
 	
-	if (m_bmp.width - x <= 0 || m_bmp.height - y <= 0)
+	if (m_image.width - x <= 0 || m_image.height - y <= 0)
 		return Qfalse;
 
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qfalse;
 
-	DWORD color1, color2;
+	u32 color1, color2;
 	if (rb_obj_is_kind_of(vcolor1, rb_cInteger))
 		color1 = NUM2ULONG(vcolor1);
 	else
@@ -1484,7 +1479,7 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	rateG = (g2 - g1) / value1;
 	rateB = (b2 - b1) / value1;
 
-	DWORD* pline = (DWORD *)malloc(value1 * sizeof(DWORD));
+	u32* pline = (u32 *)malloc(value1 * sizeof(u32));
 	for (s32 ln = 0; ln < value1; ++ln)
 	{
 		a2 = a1 + ln * rateA;
@@ -1496,13 +1491,13 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (m_bmp.width - x < width)	{ width = m_bmp.width - x; }
-	if (m_bmp.height - y < height)	{ height = m_bmp.height - y; }
+	if (m_image.width - x < width)	{ width = m_image.width - x; }
+	if (m_image.height - y < height)	{ height = m_image.height - y; }
 
 	if (!vertical)
 	{
 		for (s32 ly = y; ly < y + height; ++ly)
-			memcpy(pTexData + (m_bmp.width * ly), pline, sizeof(DWORD) * width);
+			memcpy(pTexData + (m_image.width * ly), pline, sizeof(u32) * width);
 		//for (s32 lx = x; lx < x + width; ++lx)
 		//{
 		//	color1 = pline[lx - x];
@@ -1511,38 +1506,36 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 		//		continue;
 		//	for (s32 ly = y; ly < y + height; ++ly)
 		//	{
-		//		color2 = pTexData[m_bmp.width * ly + lx];
+		//		color2 = pTexData[m_image.width * ly + lx];
 		//		BLEND_ARGB_8888(color1, color2);
-		//		pTexData[m_bmp.width * ly + lx] = color2;
+		//		pTexData[m_image.width * ly + lx] = color2;
 		//	}
 		//}
 	}
 	else
 	{
-		//int v;
+		int tmp_i;
 		for (s32 ly = y; ly < y + height; ++ly)
 		{
 			color1 = pline[ly - y];
-			int v = m_bmp.width * ly;
+			tmp_i = m_image.width * ly;
 			for (s32 lx = x; lx < x + width; ++lx)
-				pTexData[v + lx] = color1;
+				pTexData[tmp_i + lx] = color1;
 			//	跳过透明像素
 			/*if (!GET_ARGB_A(color1))
 				continue;
 			for (s32 lx = x; lx < x + width; ++lx)
 			{
-				color2 = pTexData[m_bmp.width * ly + lx];
+				color2 = pTexData[m_image.width * ly + lx];
 				BLEND_ARGB_8888(color1, color2);
-				pTexData[m_bmp.width * ly + lx] = color2;
+				pTexData[m_image.width * ly + lx] = color2;
 			}*/
 		}
 	}
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pline);
-
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1574,19 +1567,19 @@ VALUE CRbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 	//	修正矩形区域
 	if (x < 0)						{ width += x; x = 0; }
 	if (y < 0)						{ height += y; y = 0; }
-	if (m_bmp.width - x < width)	{ width = m_bmp.width - x; }
-	if (m_bmp.height - y < height)	{ height = m_bmp.height - y; }
+	if (m_image.width - x < width)	{ width = m_image.width - x; }
+	if (m_image.height - y < height)	{ height = m_image.height - y; }
 
 	if (width <= 0 || height <= 0)
 		return Qfalse;
 
-	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	u32* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qfalse;
 
 	for (int ly = y; ly < y + height; ++ly)
-		memset(&pTexData[m_bmp.width * ly + x], 0, sizeof(DWORD) * width);
+		memset(&pTexData[m_image.width * ly + x], 0, sizeof(u32) * width);
 
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	
 	//	增加 修改计数值
 	++m_modify_count;
@@ -1602,22 +1595,22 @@ VALUE CRbBitmap::blur()
 	int mathW, mathH;
 
 	// 让高斯模糊见鬼去吧，我赌五毛 RGSS 的 blur 就是这么实现的 = =b
-	DWORD * pTexData = hge->Texture_Lock(m_bmp.quad.tex, false);
+	u32 * pTexData = hge->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qnil;
 	double rate = 1.8;
-	int tmpWidth = (int)(m_bmp.width / rate), tmpHegiht = (int)(m_bmp.height / rate);
-	DWORD * pTmpData = (DWORD *)malloc(tmpWidth * tmpHegiht * sizeof(DWORD));
+	int tmpWidth = (int)(m_image.width / rate), tmpHegiht = (int)(m_image.height / rate);
+	u32 * pTmpData = (u32 *)malloc(tmpWidth * tmpHegiht * sizeof(u32));
 
-	mathW = tmpWidth + ceil(sqrt(sqrt((double)tmpWidth / (double)m_bmp.width)));
-	mathH = tmpHegiht + ceil(sqrt(sqrt((double)tmpHegiht / (double)m_bmp.height)));
-	BilinearZoom(pTexData, pTmpData, m_bmp.width, m_bmp.height, tmpWidth, tmpHegiht, mathW, mathH);
+	mathW = tmpWidth + ceil(sqrt(sqrt((double)tmpWidth / (double)m_image.width)));
+	mathH = tmpHegiht + ceil(sqrt(sqrt((double)tmpHegiht / (double)m_image.height)));
+	BilinearZoom(pTexData, pTmpData, m_image.width, m_image.height, tmpWidth, tmpHegiht, mathW, mathH);
 
-	mathW = m_bmp.width + ceil(sqrt(sqrt((double)m_bmp.width / (double)tmpWidth)));
-	mathH = m_bmp.height + ceil(sqrt(sqrt((double)m_bmp.height / (double)tmpHegiht)));
-	BilinearZoom(pTmpData, pTexData, tmpWidth, tmpHegiht, m_bmp.width, m_bmp.height, mathW, mathH);
+	mathW = m_image.width + ceil(sqrt(sqrt((double)m_image.width / (double)tmpWidth)));
+	mathH = m_image.height + ceil(sqrt(sqrt((double)m_image.height / (double)tmpHegiht)));
+	BilinearZoom(pTmpData, pTexData, tmpWidth, tmpHegiht, m_image.width, m_image.height, mathW, mathH);
 
 	free(pTmpData);
-	hge->Texture_Unlock(m_bmp.quad.tex);
+	hge->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
 
@@ -1628,20 +1621,20 @@ VALUE CRbBitmap::flip_h()
 {
 	check_raise();
 	
-	s32 width = m_bmp.width;
-	s32 height = m_bmp.height;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	s32 width = m_image.width;
+	s32 height = m_image.height;
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qfalse;
-	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
-	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
+	u32 * pTempData = (u32 *)malloc(width * height * sizeof(u32));
+	memcpy(pTempData, pTexData, width * height * sizeof(u32));
+	int tmp_i;
 	for (s32 ly = 0; ly < height; ++ly)
 	{
-		int v = m_bmp.width * ly;
+		tmp_i = m_image.width * ly;
 		for (s32 lx = 0; lx < width; ++lx)
-			pTexData[v + lx] = pTempData[v + (width - lx - 1)];
-
+			pTexData[tmp_i + lx] = pTempData[tmp_i + (width - lx - 1)];
 	}
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pTempData);
 	//	增加 修改计数值
 	++m_modify_count;
@@ -1653,19 +1646,18 @@ VALUE CRbBitmap::flip_v()
 {
 	check_raise();
 
-	s32 width = m_bmp.width;
-	s32 height = m_bmp.height;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
+	s32 width = m_image.width;
+	s32 height = m_image.height;
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qfalse;
-	DWORD * pTempData = (DWORD *)malloc(width * height * sizeof(DWORD));
-	memcpy(pTempData, pTexData, width * height * sizeof(DWORD));
+	u32 * pTempData = (u32 *)malloc(width * height * sizeof(u32));
+	memcpy(pTempData, pTexData, width * height * sizeof(u32));
 	for (s32 ly = 0; ly < height; ++ly)
-		memcpy(pTexData + (m_bmp.width * ly), pTempData + (m_bmp.width * (height - ly - 1)), sizeof(DWORD) * width);
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+		memcpy(pTexData + (m_image.width * ly), pTempData + (m_image.width * (height - ly - 1)), sizeof(u32) * width);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pTempData);
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
@@ -1690,79 +1682,69 @@ VALUE CRbBitmap::radial_blur(VALUE angle, VALUE division)
 	float alpha = 0, rot = 0;*/
 
 	
-	/*s32 width = m_bmp.width;
-	s32 height = m_bmp.height;
-	DWORD* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, false);
-	DWORD* pTempData = (DWORD*)malloc(width * height * sizeof(DWORD));
+	/*s32 width = m_image.width;
+	s32 height = m_image.height;
+	u32* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
+	u32* pTempData = (u32*)malloc(width * height * sizeof(u32));
 
 	
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pTempData);*/
 	//	增加 修改计数值
 	++m_modify_count;
-
 	return Qnil;
 }
 
 VALUE CRbBitmap::get_rect()
 {
 	check_raise();
-
 	return ReturnObject(m_rect_ptr);
 }
 
 VALUE CRbBitmap::get_width()
 {
 	check_raise();
-
-	return INT2FIX(m_bmp.width);
+	return INT2FIX(m_image.width);
 }
 
 VALUE CRbBitmap::get_height()
 {
 	check_raise();
-
-	return INT2FIX(m_bmp.height);
+	return INT2FIX(m_image.height);
 }
 
 VALUE CRbBitmap::get_filename()
 {
 	check_raise();
-
 	return m_filename;
 }
 
-VALUE CRbBitmap::get_font()
-{
-	check_raise();
-
-	return ReturnObject(m_font_ptr);
-}
-
-VALUE CRbBitmap::set_font(VALUE font)
-{
-	check_raise();
-
-	SafeFontValue(font);
-	m_font_ptr = GetObjectPtr<CRbFont>(font);
-	return font;
-}
+//VALUE CRbBitmap::get_font()
+//{
+//	check_raise();
+//	return ReturnObject(m_font_ptr);
+//}
+//
+//VALUE CRbBitmap::set_font(VALUE font)
+//{
+//	check_raise();
+//	SafeFontValue(font);
+//	m_font_ptr = GetObjectPtr<CRbFont>(font);
+//	return font;
+//}
 
 VALUE CRbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
-
 	VALUE filepath, fileformat;
-
 	if (rb_scan_args(argc, argv, "11", &filepath, &fileformat) == 1)
 		fileformat = INT2FIX(3);
 	else
 		SafeFixnumValue(fileformat);
 
 	SafeStringValue(filepath);
-
-	if (GetAppPtr()->GetHgePtr()->Texture_Save2File(m_bmp.quad.tex,
-		m_bmp.width, m_bmp.height, Kconv::UTF8ToUnicode(RSTRING_PTR(filepath))))
+	if (GetAppPtr()->GetHgePtr()->Texture_Save2File(m_image.quad.tex,
+		m_image.width, m_image.height, Kconv::UTF8ToUnicode(RSTRING_PTR(filepath))))
 		return Qtrue;
 	
 	return Qfalse;
@@ -1775,16 +1757,16 @@ VALUE CRbBitmap::to_str()
 	static const char * characters = "MNHQ$OC?7>!;-:. ";//"M80V1;:*-. ";
 	int count = strlen(characters);
 	int span = 0xFF / count;
-	long strLen = m_bmp.width * m_bmp.height + m_bmp.height;
+	long strLen = m_image.width * m_image.height + m_image.height;
 	char * charmap = (char *)malloc(strLen * sizeof(char));
 	
 	BYTE a, r, g, b;
 	long lx, ly, lineno, offset, cidx;
-	DWORD * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_bmp.quad.tex, true);
-	for (ly = 0; ly < m_bmp.height; ++ly)
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, true);
+	for (ly = 0; ly < m_image.height; ++ly)
 	{
-		lineno = m_bmp.width * ly;
-		for (lx = 0; lx < m_bmp.width; ++lx)
+		lineno = m_image.width * ly;
+		for (lx = 0; lx < m_image.width; ++lx)
 		{
 			offset = lineno + lx;
 			GET_ARGB_8888(pTexData[offset], a, r, g, b);
@@ -1794,7 +1776,7 @@ VALUE CRbBitmap::to_str()
 		}
 		charmap[offset + ly + 1] = '\n';
 	}
-	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_bmp.quad.tex);
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 
 	VALUE vstr = rb_str_new(charmap, strLen);
 	free(charmap);
@@ -1815,7 +1797,7 @@ imp_method(CRbBitmap, clear)
 imp_method02(CRbBitmap, get_pixel)
 imp_method03(CRbBitmap, set_pixel)
 imp_method_vargs(CRbBitmap, draw_text)
-imp_method01(CRbBitmap, text_size)
+imp_method02(CRbBitmap, text_size)
 
 imp_method_vargs(CRbBitmap, gradient_fill_rect)
 imp_method_vargs(CRbBitmap, clear_rect)
@@ -1830,4 +1812,4 @@ imp_attr_reader(CRbBitmap, rect)
 imp_attr_reader(CRbBitmap, width)
 imp_attr_reader(CRbBitmap, height)
 imp_attr_reader(CRbBitmap, filename)
-imp_attr_accessor(CRbBitmap, font)
+//imp_attr_accessor(CRbBitmap, font)

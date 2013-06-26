@@ -124,11 +124,12 @@
     <p>暂未实现</p>
   </dd>
 
-  <dt>draw_text(<var>x</var>, <var>y</var>, <var>width</var>, <var>height</var>, <var>str</var>[, <var>halign</var>[, <var>valign</var>]])</dt>
-  <dt>draw_text(<var>rect</var>, <var>str</var>[, <var>halign</var>[, <var>valign</var>]])</dt>
+  <dt>draw_text(<var>font</var>, <var>x</var>, <var>y</var>, <var>width</var>, <var>height</var>, <var>str</var>[, <var>halign</var>[, <var>valign</var>]])</dt>
+  <dt>draw_text(<var>font</var>, <var>rect</var>, <var>str</var>[, <var>halign</var>[, <var>valign</var>]])</dt>
   <dd>
     <p>在 Bitmap 指定区域 (<var>x</var>, <var>y</var>, <var>width</var>, <var>height</var>) 或 <var>rect</var>（<a href="gc_rect.html">Rect</a>）中绘制字符串 <var>str</var> 。</p>
     <p>若 <var>str</var> 不是字符串对象，则会调用 to_s 方法转换成字符串。</p>
+    <p>font 为绘制字符串时所使用的字体。</p>
   </dd>
   <dd>
     <p>文字的横向对齐方式预设为 0 靠左对齐，可以设置 <var>halign</var> 为 1 居中对齐，或设置为 2 靠右对齐。</p>
@@ -136,9 +137,10 @@
     <p>此处理需要花费时间，因此不建议每帧重复绘制文字。</p>
   </dd>
 
-  <dt>text_size(<var>str</var>)</dt>
+  <dt>text_size(<var>font</var>, <var>str</var>)</dt>
   <dd>
     <p>获取使用 draw_text 方法描绘 <var>str</var> 字符串时所需要的矩形范围（<a href="gc_rect.html">Rect</a>）。不包含斜体倾斜的文字部分。</p>
+    <p>font 为计算范围时所使用的字体。</p>
   </dd>
   <dd>
     <p>若 <var>str</var> 不是字符串对象，则会调用 to_s 方法转换成字符串。</p>
@@ -174,15 +176,6 @@
   <dt>save_to_file(<var>filename</var>)</dt>
   <dd>
     <p>将 Bitmap 保存为指定文件名 <var>filename</var> 的 bmp 格式位图文件。</p>
-  </dd>
-
-</dl>
-<h2>属性</h2>
-<dl>
-
-  <dt>font</dt>
-  <dd>
-    <p>使用 draw_text 方法描绘字符串时所使用的字体。（<a href="gc_font.html">Font</a>）。</p>
   </dd>
 
 </dl>

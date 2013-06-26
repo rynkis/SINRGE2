@@ -41,7 +41,7 @@ protected:
 	int					m_flash_duration;					//	视口闪烁帧数
 	int					m_flash_reduce_count_per_frame;		//	视口闪烁每帧降低的透明度
 	int					m_flash_hide_spr;					//	是否消去视口，仅当闪烁颜色指定为nil时才消去视口。
-	DWORD				m_flash_color;						//	视口闪烁的颜色值。
+	u32					m_flash_color;						//	视口闪烁的颜色值。
 
 	hgeQuad				m_quad;
 

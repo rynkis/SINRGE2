@@ -3,10 +3,10 @@
 ** Copyright (C) 2013 Shy07
 ** Gernischt@gmail.com
 **
-** SINRGE2 Bitmap Header
+** SINRGE2 Image Header
 */
-#ifndef __SIN_BITMAP_H__
-#define __SIN_BITMAP_H__
+#ifndef __SIN_IMAGE_H__
+#define __SIN_IMAGE_H__
 
 #ifdef WIN32
 #pragma once
@@ -14,7 +14,7 @@
 
 #include "hge.h"
 
-typedef struct tagBitmap
+typedef struct tagImage
 {
 	hgeQuad		quad;
 	int			width;	/**< Í¼Æ¬ÌùÍ¼¿í */
@@ -23,6 +23,6 @@ typedef struct tagBitmap
 	int			oheight;   /**< Í¼Æ¬Ô­¸ß */
 	//float		rcentrex; /**< Í¼ÏñÖÐÐÄx */
 	//float		rcentrey; /**< Í¼ÏñÖÐÐÄy */
-} bitmap_t, * bitmap_p;
+} image_t, * image_p;
 
-#endif //__SIN_BITMAP_H__
+#endif //__SIN_IMAGE_H__

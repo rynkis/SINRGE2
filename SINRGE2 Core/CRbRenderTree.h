@@ -13,7 +13,6 @@
 #endif
 
 #include "RbExport.h"
-#include "sin_types.h"
 #include "hge.h"
 
 class CRbRenderState

@@ -6,7 +6,6 @@
 ** Ruby Class Win32API
 */
 #include "CRbWin32API.h"
-#include "sin_types.h"
 
 VALUE rb_cWin32API;
 

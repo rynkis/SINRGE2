@@ -23,6 +23,7 @@ class SINIME < Sprite
   #
   @@background = Bitmap.new(328, 52)
   @@background.fill_rect(@@background.rect, Color.new(255, 255, 255))
+  @@SIMHEI20 = Font.new("simhei", 20)
   #
   # => 初始化对象
   #
@@ -101,15 +102,31 @@ class SINIME < Sprite
     @contents = Sprite.new(self.viewport)
     @contents.bitmap = self.bitmap.clone
     contents.clear
-    contents.font.size  = 20
-    contents.font.shadow = false
-    contents.font.color = Color.new(0, 0, 255)
-    contents.draw_text(@ime_rect, "简易输入法", 2)
-    contents.font.color = Color.new(0, 0, 0)
+    # contents.font.size  = 20
+    # contents.font.shadow = false
+    # contents.font.color = Color.new(0, 0, 255)
+    # draw_text(@ime_rect, "简易输入法", 2)
+    # contents.font.color = Color.new(0, 0, 0)
+    @@SIMHEI20.color = Color.new(0, 0, 255)
+    draw_text(@ime_rect, "简易输入法", 2)
+    @@SIMHEI20.color = Color.new(0, 0, 0)
     @contents.x = self.x
     @contents.y = self.y
     @contents.z = self.z + 1
     @contents.visible = false
+  end
+  #
+  #
+  #
+  def draw_text(*args)
+    args.insert 0, @@SIMHEI20
+    contents.draw_text *args
+  end
+  #
+  #
+  #
+  def text_size(str)
+    contents.text_size(@@SIMHEI20, str)
   end
   #
   # => 更新画面
@@ -205,8 +222,8 @@ class SINIME < Sprite
   #
   def refresh_letter
     contents.clear_rect(@letter_rect)
-    contents.draw_text(@letter_rect, @temp_text1)
-    rect = contents.text_size(@temp_text1)
+    draw_text(@letter_rect, @temp_text1)
+    rect = text_size(@temp_text1)
     contents.fill_rect(rect.width + 6, 4, 1, 20, Color.new(128, 128, 128))
   end
   #
@@ -221,7 +238,7 @@ class SINIME < Sprite
     end
     refresh_letter
     contents.clear_rect(@hanzi_rect)
-    contents.draw_text(@hanzi_rect, @temp_text2)
+    draw_text(@hanzi_rect, @temp_text2)
   end
   #
   # => 更新汉字组
@@ -248,9 +265,11 @@ class SINIME < Sprite
     @e_mode = !@e_mode
     str = @e_mode ? "英" : "中"
     contents.clear_rect(@mode_rect)
-    contents.font.color = Color.new(0, 0, 255)
-    contents.draw_text(@mode_rect, str, 2)
-    contents.font.color = Color.new(0, 0, 0)
+    # contents.font.color = Color.new(0, 0, 255)
+    @@SIMHEI20.color = Color.new(0, 0, 255)
+    draw_text(@mode_rect, str, 2)
+    # contents.font.color = Color.new(0, 0, 0)
+    @@SIMHEI20.color = Color.new(0, 0, 0)
     clear
   end
   #

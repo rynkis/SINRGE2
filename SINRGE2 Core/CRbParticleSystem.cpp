@@ -387,7 +387,7 @@ void CRbParticleSystem::render(u32 id)
 void CRbParticleSystem::Render(float offset_x, float offset_y)
 {
 	int i;
-	DWORD col;
+	u32 col;
 	hgeParticle * par=particles;
 
 	col=info.sprite->GetColor();

@@ -341,9 +341,6 @@
     <ClInclude Include="sin_color.h">
       <Filter>源文件\SINRGE2\header</Filter>
     </ClInclude>
-    <ClInclude Include="sin_bitmap.h">
-      <Filter>源文件\SINRGE2\header</Filter>
-    </ClInclude>
     <ClInclude Include="sin_common.h">
       <Filter>源文件\SINRGE2\header</Filter>
     </ClInclude>
@@ -379,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="MRbSeal.h">
       <Filter>源文件\RbInterface\module</Filter>
+    </ClInclude>
+    <ClInclude Include="sin_image.h">
+      <Filter>源文件\SINRGE2\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

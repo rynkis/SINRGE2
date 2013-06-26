@@ -6,7 +6,6 @@
 ** Ruby Class Table
 */
 #include "CRbTable.h"
-#include "sin_types.h"
 
 VALUE rb_cTable;
 

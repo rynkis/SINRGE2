@@ -24,7 +24,7 @@
 #include "CRbParticleSystem.h"
 #include "CRbWin32API.h"
 #include "CRb7pkgWriter.h"
-#include "CRbLFont.h"
+//#include "CRbLFont.h"
 #include "CRbCharmap.h"
 #include "sin_common.h"
 #include "sin_app.h"
@@ -126,7 +126,7 @@ namespace
 		SafeStringValue(filename);
 		VALUE rbread, rbdata;
 		void * data = NULL;
-		DWORD file_size;
+		u32 file_size;
 		wchar_t * filenameW = Kconv::UTF8ToUnicode(RSTRING_PTR(filename));
 
 		if (GetAppPtr()->Get7pkgReader())
@@ -416,7 +416,7 @@ void CApplication::InitRubyInterpreter()
 int CApplication::GetRuntimeInfos()
 {
 	// appÂ·¾¶
-	DWORD len = ::GetModuleFileNameW(NULL, szAppPath, MAX_PATH);
+	u32 len = ::GetModuleFileNameW(NULL, szAppPath, MAX_PATH);
 	for (--len; len > 0; --len)
 	{
 		if (szAppPath[len] == L'\\' || szAppPath[len] == L'/')
@@ -560,7 +560,7 @@ void CApplication::InitExportSinInterface()
 	CRbParticleSystem::InitLibrary();
 	CRbWin32API::InitLibrary();
 
-	CRbLFont::InitLibrary();
+	//CRbLFont::InitLibrary();
 	CRbCharmap::InitLibrary();
 	
 	rb_define_module_function(rb_mSin, "msgbox_p",	RbFunc(rdf_msgboxp), -1);

@@ -8,9 +8,7 @@
 #include "sin_sprite.h"
 #include <math.h>
 
-
 HGE * SinSprite::hge = 0;
-
 
 SinSprite::SinSprite()
 	: m_width(0), m_height(0)
@@ -53,7 +51,6 @@ void SinSprite::Render(float x, float y)
 	hge->Gfx_RenderQuad(&quad);
 }
 
-
 void SinSprite::RenderEx(float x, float y, float rot, float hscale, float vscale)
 {
 	float tx1, ty1, tx2, ty2;
@@ -94,7 +91,6 @@ void SinSprite::RenderEx(float x, float y, float rot, float hscale, float vscale
 	hge->Gfx_RenderQuad(&quad);
 }
 
-
 void SinSprite::RenderStretch(float x1, float y1, float x2, float y2)
 {
 	quad.v[0].x = x1; quad.v[0].y = y1;
@@ -105,7 +101,6 @@ void SinSprite::RenderStretch(float x1, float y1, float x2, float y2)
 	hge->Gfx_RenderQuad(&quad);
 }
 
-
 void SinSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3)
 {
 	quad.v[0].x = x0; quad.v[0].y = y0;
@@ -115,7 +110,6 @@ void SinSprite::Render4V(float x0, float y0, float x1, float y1, float x2, float
 
 	hge->Gfx_RenderQuad(&quad);
 }
-
 
 hgeRect * SinSprite::GetBoundingBoxEx(float x, float y, hgeRect *rect) const
 {
@@ -159,7 +153,6 @@ void SinSprite::SetFlip(bool bX, bool bY, bool bHotSpot)
 	}
 }
 
-
 void SinSprite::SetTexture(HTEXTURE tex)
 {
 	quad.tex = tex;
@@ -175,7 +168,6 @@ void SinSprite::SetTexture(HTEXTURE tex)
 		m_height = 1.0f;
 	}
 }
-
 
 void SinSprite::SetTextureRect(int x, int y, int w, int h)
 {
@@ -248,8 +240,7 @@ void SinSprite::SetTextureRect(int x, int y, int w, int h)
 	m_src_rect_dirty = false;
 }
 
-
-void SinSprite::SetColor(DWORD col, int i)
+void SinSprite::SetColor(u32 col, int i)
 {
 	if(i != -1)
 		quad.v[i].col = col;

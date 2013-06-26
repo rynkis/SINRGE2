@@ -105,7 +105,9 @@
     <ClCompile Include="CRbColor.cpp" />
     <ClCompile Include="CRbDisplayObject.cpp" />
     <ClCompile Include="CRbFont.cpp" />
-    <ClCompile Include="CRbLFont.cpp" />
+    <ClCompile Include="CRbLFont.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="CRbParticleSystem.cpp" />
     <ClCompile Include="CRbPlane.cpp" />
     <ClCompile Include="CRbRect.cpp" />
@@ -176,7 +178,9 @@
     <ClInclude Include="CRbColor.h" />
     <ClInclude Include="CRbDisplayObject.h" />
     <ClInclude Include="CRbFont.h" />
-    <ClInclude Include="CRbLFont.h" />
+    <ClInclude Include="CRbLFont.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="CRbParticleSystem.h" />
     <ClInclude Include="CRbPlane.h" />
     <ClInclude Include="CRbRect.h" />
@@ -204,7 +208,7 @@
     <ClInclude Include="sin_seal_ex.h" />
     <ClInclude Include="sin_sprite.h" />
     <ClInclude Include="sin_app.h" />
-    <ClInclude Include="sin_bitmap.h" />
+    <ClInclude Include="sin_image.h" />
     <ClInclude Include="sin_color.h" />
     <ClInclude Include="hge\hge_impl.h" />
     <ClInclude Include="RbExport.h" />

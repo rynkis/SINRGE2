@@ -6,7 +6,6 @@
 ** Ruby Moudle Audio
 */
 #include "MRbAudio.h"
-#include "sin_types.h"
 #include "sin_app.h"
 
 #ifndef SIN_USE_SEAL

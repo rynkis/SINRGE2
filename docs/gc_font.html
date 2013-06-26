@@ -16,9 +16,10 @@
 <h2>类方法</h2>
 <dl>
 
-  <dt>Font.new([<var>name</var>[, <var>size</var>]])</dt>
+  <dt>Font.new(<var>name</var>, <var>size</var>[, is_lattice])</dt>
   <dd>
     <p>生成 Font 实例。</p>
+    <p>is_lattice 为 true 时表示生成点阵字体。</p>
   </dd>
 
   <dt>Font.exist?(<var>name</var>)</dt>
@@ -33,47 +34,37 @@
   <dt>name</dt>
   <dd>
     <p>字体的名称。</p>
+    <p>该属性点阵字体无法改变。</p>
   </dd>
 
   <dt>size</dt>
   <dd>
     <p>字体大小，预设为 20。</p>
+    <p>该属性点阵字体无法改变。</p>
   </dd>
 
   <dt>bold</dt>
   <dd>
     <p>粗体标记。预设为 false。</p>
+    <p>该属性点阵字体无法改变。</p>
   </dd>
 
   <dt>italic</dt>
   <dd>
     <p>斜体标记。预设为 false。</p>
+    <p>该属性点阵字体无法改变。</p>
   </dd>
 
   <dt>shadow</dt>
   <dd>
     <p>文字阴影标记。预设为 true。设为 true 时会在文字的右下方描绘黑色的文字阴影。</p>
+    <p>该属性点阵字体无法改变。</p>
   </dd>
 
   <dt>color</dt>
   <dd>
     <p>文字颜色（<a href="gc_color.html">Color</a>）。也可以调整 alpha 值。预设为 (255, 255, 255, 255)。</p>
     <p>alpha 值也同时用来描绘文字阴影。</p>
-  </dd>
-
-</dl>
-<h2>类属性</h2>
-<dl>
-
-  <dt>default_name</dt>
-  <dt>default_size</dt>
-  <dt>default_bold</dt>
-  <dt>default_italic</dt>
-  <dt>default_shadow</dt>
-  <dt>default_color</dt>
-  <dd>
-    <p>每样属性的默认值，在生成字体对象时应用。</p>
-    <pre>Font.default_name = "SimHei"<br>Font.default_bold = true<br></pre>
   </dd>
 
 </dl>

@@ -9,7 +9,6 @@
 #define __C_RB_RECT_H__
 
 #include "CRbClassBase.h"
-#include "sin_types.h"
 
 class CRbRect : public CRbClassBase
 {

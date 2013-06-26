@@ -7,47 +7,13 @@ Frame.start_height = 720
 Frame.title = "DemoBaCL"
 SINRGE2.init_video
 
-class SINRGE2::LFont
-  #
-  # => cache_clear
-  #
-  def cache_clear
-    if @cache
-      @cache.each_value {|bmp| bmp.dispose }
-      @cache.clear
-    end
-  end
-  #
-  # => dispose
-  #
-  alias demo_origin_dispose dispose
-  def dispose
-    cache_clear
-    demo_origin_dispose
-  end
-  #
-  # => char_bitmap
-  #
-  alias demo_origin_char_bitmap char_bitmap
-  def char_bitmap(str)
-    @cache ||= {}
-    char = str.slice(0, 1)
-    if @cache[char]
-      @cache[char] = demo_origin_char_bitmap(char) if @cache[char].disposed?
-    else
-      @cache[char] = demo_origin_char_bitmap(char)
-    end
-    @cache[char]
-  end
-end
-
 class Bulls_And_Cows
   #
   # => 常量
   #
   BLACK = Color.new(0, 0, 0)
   WHITE = Color.new(255, 255, 255)
-  CHAR = "MNHQ$OC?7>!;-:. "
+  UNICODE12 = Font.new("Unicode12", 12, true)
   #
   # => 初始化对像
   #
@@ -59,8 +25,9 @@ class Bulls_And_Cows
     @bitmap = Bitmap.new(160, 90)
     @bitmap.fill_rect(@bitmap.rect, WHITE)
     # @sprite.bitmap = @bitmap
-    @lfont12 = LFont.new("Unicode12", 12)
-    @lfont12.color = BLACK
+    # @lfont12 = LFont.new("Unicode12", 12)
+    # @lfont12.color = BLACK
+    UNICODE12.color = BLACK
     @charmap = Charmap.new(160, 90, 8)
     @charmap.bitmap = Bitmap.new("chars.png")
     restart
@@ -87,14 +54,14 @@ class Bulls_And_Cows
     @index = 0
     @game_over = false
     @bitmap.fill_rect(@bitmap.rect, WHITE)
-    (0..4).each {|i| draw_text("0", x:i*40, y:2, width:40, height:12, halign:1) }
+    (0..4).each {|i| draw_text(i*40, 2, 40, 12, "0", 1) }
     @bitmap.fill_rect(@index * 40 + 17, 15, 5, 1, BLACK)
-    draw_text("0 A 0 B", x:0, y:19, width:80, height:12, halign:1)
-    draw_text("0 Step", x:80, y:19, width:80, height:12, halign:1)
-    draw_text("操作：上下键增减数字", x:0, y:36, width:160, height:12)
-    draw_text("左右键移动光标", x:36, y:50, width:160, height:12)
-    draw_text("空格键确定", x:36, y:64, width:160, height:12)
-    draw_text("ESC键重置", x:36, y:78, width:160, height:12)
+    draw_text( 0, 19, 80, 12, "0 A 0 B", 1)
+    draw_text(80, 19, 80, 12, "0 Step", 1)
+    draw_text( 0, 36, 160, 12, "操作：上下键增减数字")
+    draw_text(36, 50, 160, 12, "左右键移动光标")
+    draw_text(36, 64, 160, 12, "空格键确定")
+    draw_text(36, 78, 160, 12, "ESC键重置")
     @show_help = true
     @dirty = true
   end
@@ -121,7 +88,7 @@ class Bulls_And_Cows
     y = y * 12 + 24
     str = ""
     @your_answer.each {|n| str += n.to_s }
-    draw_text(str + " #{a}A#{b}B", x:x, y:y, width:80, height:12, halign:1)
+    draw_text(x, y, 80, 12, str + " #{a}A#{b}B", 1)
   end
   #
   # => 更新
@@ -140,27 +107,27 @@ class Bulls_And_Cows
       if a == 4
         # msgbox "回答正确"
         @bitmap.fill_rect(  0, 19, 160, 12, WHITE)
-        draw_text("回答正确，按ESC重置", x:0, y:19, width:160, height:12, halign:1)
+        draw_text( 0, 19, 160, 12, "回答正确，按ESC重置", 1)
         str = "答案："
         @true_answer.each {|n| str += n.to_s }
         x = @step > 4 ? 80 : 0
         y = @step > 4 ? @step - 4 : @step
         y = y * 12 + 24
-        draw_text(str, x:x, y:y, width:80, height:12, halign:1)
+        draw_text(str, x, y, 80, 12, 1)
         @game_over = true
       elsif @step == 8
         # msgbox "游戏结束"
         @bitmap.fill_rect(  0, 19, 160, 12, WHITE)
-        draw_text("游戏结束，按ESC重置", x:0, y:19, width:160, height:12, halign:1)
+        draw_text( 0, 19, 160, 12, "游戏结束，按ESC重置", 1)
         str = "答案："
         @true_answer.each {|n| str += n.to_s }
-        draw_text(str, x:80, y:72, width:80, height:12, halign:1)
+        draw_text(str, 80, 72, 80, 12, 1)
         @game_over = true
       else
         draw_step(a, b)
         @bitmap.fill_rect(  0, 19, 160, 12, WHITE)
-        draw_text("#{a} A #{b} B", x:0, y:19, width:80, height:12, halign:1)
-        draw_text("#{@step} Step", x:80, y:19, width:80, height:12, halign:1)
+        draw_text( 0, 19, 80, 12, "#{a} A #{b} B", 1)
+        draw_text(80, 19, 80, 12, "#{@step} Step", 1)
       end
       @dirty = true
     elsif Input.trigger?(0x25)
@@ -176,12 +143,12 @@ class Bulls_And_Cows
     elsif Input.trigger?(0x26)
       @bitmap.fill_rect(@index * 40, 2, 40, 12, WHITE)
       @your_answer[@index] == 9 ? @your_answer[@index] = 0 : @your_answer[@index] += 1
-      draw_text(@your_answer[@index].to_s, x:@index*40, y:2, width:40, height:12, halign:1)
+      draw_text(@index*40, 2, 40, 12, @your_answer[@index].to_s, 1)
       @dirty = true
     elsif Input.trigger?(0x28)
       @bitmap.fill_rect(@index * 40, 2, 40, 12, WHITE)
       @your_answer[@index] == 0 ? @your_answer[@index] = 9 : @your_answer[@index] -= 1
-      draw_text(@your_answer[@index].to_s, x:@index*40, y:2, width:40, height:12, halign:1)
+      draw_text(@index*40, 2, 40, 12, @your_answer[@index].to_s, 1)
       @dirty = true
     elsif Input.trigger?(0x10) # 作弊 = =
       str = "正确答案："
@@ -212,29 +179,9 @@ class Bulls_And_Cows
   #
   # => 
   #
-  def draw_text(str, x: nil, y: nil, width: nil, height: nil, rect: nil, halign: 0, valign: 0)
-    if rect
-      x = rect.x
-      y = rect.y
-      width = rect.width
-      height = rect.height
-    end
-    texts = str.clone
-    if halign == 1 || halign == 2
-      tw = @lfont12.text_width(texts)
-      if width - tw > 0
-        x += (width - tw) / (3 - halign)
-      end
-    end
-    if height - @lfont12.size > 0 && valign != 0
-      y += (height - @lfont12.size) / (3 - valign)
-    end
-    while !texts.empty?
-      text = texts.slice!(0, 1)
-      bmp = @lfont12.char_bitmap(text)
-      @bitmap.blt(x, y, bmp, bmp.rect)
-      x += @lfont12.text_width(text)
-    end
+  def draw_text(*args)
+    args.insert 0, UNICODE12
+    @bitmap.draw_text *args
   end
 end
 

@@ -23,7 +23,7 @@ public:
 	static void		InitLibrary();
 
 public:
-	const DWORD		GetColor() const { return m_color; }
+	const u32		GetColor() const { return m_color; }
 
 protected:
 	virtual void	mark();
@@ -35,7 +35,7 @@ protected:
 	virtual VALUE	to_string();
 
 protected:
-	DWORD			m_color;
+	u32				m_color;
 	double			m_col_data[4];
 
 	union

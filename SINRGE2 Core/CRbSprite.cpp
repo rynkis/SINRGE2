@@ -179,23 +179,17 @@ void CRbSprite::render(u32 id)
 {
 	if (!m_bitmap_ptr)
 		return;
-
 	//	精灵对应的显示位图已经释放则直接返回
 	if (m_bitmap_ptr->IsDisposed())
 		return;
-
 	//	如果精灵处理闪烁中且闪烁颜色为nil则直接返回
 	if (m_flash_duration > 0 && m_flash_hide_spr > 0)
 		return;
-
 	//	处理色调
 	process_tone_texture();
-
 	//	设置源矩形
 	m_pSpr->SetTextureRect(m_src_rect_ptr->m_rect_data[0], m_src_rect_ptr->m_rect_data[1], m_src_rect_ptr->m_rect_data[2], m_src_rect_ptr->m_rect_data[3]);
-
 	//	关于精灵混合颜色的管理：
-
 	//	如果指定了flash颜色的情况下：
 	//		如果也指定了color颜色的情况下：
 	//			如果color颜色的不透明度大于flash颜色的不透明度，则以color颜色混合。否则以flash颜色混合。
@@ -203,17 +197,14 @@ void CRbSprite::render(u32 id)
 	//			直接以flash颜色混合。
 	//	如果没指定flash颜色的情况下：
 	//		如果指定了color颜色则以color颜色混合，否则不混合。
-
-	s32		save_blend_mode = -1;
-	DWORD	save_blend_color = 0;
-
+	s32	save_blend_mode = -1;
+	u32	save_blend_color = 0;
 	//	如果指定了flash颜色的情况下
 	if (m_flash_duration > 0 && m_flash_color != 0)
 	{
 		save_blend_mode = m_pSpr->GetBlendMode();
 		save_blend_color = m_flash_color;
 	}
-
 	//	如果指定了color颜色的情况下
 	if (m_color_ptr->GetColor() != 0)
 	{
@@ -246,7 +237,6 @@ void CRbSprite::render(u32 id)
 			save_blend_color = m_color_ptr->GetColor();
 		}
 	}
-	
 	//	混合颜色的处理
 	if (save_blend_mode > 0)
 	{
@@ -271,10 +261,8 @@ void CRbSprite::render(u32 id)
 			break;
 		}
 	}
-
 	// set the sprite's opacity
 	m_pSpr->SetColor(ARGB(m_opacity, 255, 255, 255));
-
 	// render the sprite to the screen
 	float x, y;
 
@@ -312,10 +300,8 @@ void CRbSprite::render(u32 id)
 		//	先描绘不透明部分
 		min_x = SinMax(clip_rect.x, top_rect.x1);
 		min_y = SinMax(clip_rect.y, top_rect.y1);
-
 		max_x = SinMin(clip_rect.x + clip_rect.width, top_rect.x2);
 		max_y = SinMin(clip_rect.y + clip_rect.height, top_rect.y2);
-
 		cw = max_x - min_x;
 		ch = max_y - min_y;
 
@@ -324,17 +310,13 @@ void CRbSprite::render(u32 id)
 			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 		}
-
 		//	其次描绘透明草丛部分
-		// half opacity : simulate bush effect
-		m_pSpr->SetColor(0x00FFFFFF + ((m_opacity * m_bush_opacity / 255) << 24));//MAKE_ARGB_8888(m_opacity * m_bush_opacity / 255, 255, 255, 255));
+		m_pSpr->SetColor(0x00FFFFFF + ((m_opacity * m_bush_opacity / 255) << 24));
 
 		min_x = SinMax(clip_rect.x, bottom_rect.x1);
 		min_y = SinMax(clip_rect.y, bottom_rect.y1);
-
 		max_x = SinMin(clip_rect.x + clip_rect.width,	bottom_rect.x2);
 		max_y = SinMin(clip_rect.y + clip_rect.height,	bottom_rect.y2);
-
 		cw = max_x - min_x;
 		ch = max_y - min_y;
 
@@ -343,21 +325,18 @@ void CRbSprite::render(u32 id)
 			GetAppPtr()->GetRenderState()->Clip(min_x, min_y, cw, ch);
 			m_pSpr->Render(x, y);
 		}
-
 		GetAppPtr()->GetRenderState()->Restore();
-		m_pSpr->SetColor(0x00FFFFFF + (m_opacity << 24));//MAKE_ARGB_8888(m_opacity, 255, 255, 255));
-	} 
+		m_pSpr->SetColor(0x00FFFFFF + (m_opacity << 24));
+	}
 	else
 	{
 		m_pSpr->Render(x, y);
 	}
-
 	//	如果混合了颜色的情况下则执行恢复处理
 	if (save_blend_mode > 0)
 	{
 		m_pSpr->SetBlendMode(save_blend_mode);
 		m_pSpr->SetBlendColor(0);
-
 		save_blend_mode = -1;
 	}
 }
@@ -368,8 +347,8 @@ VALUE CRbSprite::update()
 
 	if (m_movie_playing)
 	{
-		HGE* hge = GetAppPtr()->GetHgePtr();
-		DWORD* pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
+		HGE * hge = GetAppPtr()->GetHgePtr();
+		u32 * pTexData = hge->Texture_Lock(m_bitmap_ptr->GetBitmapPtr()->quad.tex, false);
 		GetVideoMgr()->UpdateMovieTexture(pTexData);
 		hge->Texture_Unlock(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_bitmap_ptr->SetModifyCount();
@@ -410,20 +389,17 @@ VALUE CRbSprite::set_bitmap(VALUE bitmap)
 	if (NIL_P(bitmap))
 	{
 		m_bitmap_ptr = 0;
-
 		rb_funcall(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, RUBY_0, RUBY_0, RUBY_0, RUBY_0);
 	}
 	else
 	{
 		SafeBitmapValue(bitmap);
-
 		m_bitmap_ptr = GetObjectPtr<CRbBitmap>(bitmap);
 
 		m_pSpr->SetTexture(m_bitmap_ptr->GetBitmapPtr()->quad.tex);
 		m_pSpr->SetSrcRectDirty();
 		
 		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_bitmap_ptr->GetWidth()), INT2FIX(m_bitmap_ptr->GetHeight()) };
-
 		rb_funcall2(m_src_rect_ptr->GetObject(), rb_intern("set"), 4, __argv);
 	}
 
@@ -437,7 +413,6 @@ VALUE CRbSprite::set_ox(VALUE ox)
 
 	m_pSpr->SetOX(m_ox);
 	m_pSpr->SetSrcRectDirty();
-
 	return ox;
 }
 
@@ -448,7 +423,6 @@ VALUE CRbSprite::set_oy(VALUE oy)
 
 	m_pSpr->SetOY(m_oy);
 	m_pSpr->SetSrcRectDirty();
-
 	return oy;
 }
 
@@ -483,7 +457,6 @@ VALUE CRbSprite::set_angle(VALUE angle)
 	m_angle = SinDeg2Rad(360.0f - agl);
 	m_pSpr->SetAngle(m_angle);
 	m_pSpr->SetSrcRectDirty();
-
 	return angle;
 }
 
@@ -526,7 +499,6 @@ VALUE CRbSprite::set_bush_depth(VALUE bush_depth)
 	SafeFixnumValue(bush_depth);
 
 	m_bush_depth = bush_depth;
-
 	return bush_depth;
 }
 
@@ -543,7 +515,6 @@ VALUE CRbSprite::set_bush_opacity(VALUE bush_opacity)
 
 	m_bush_opacity = FIX2INT(bush_opacity);
 	m_bush_opacity = SinBound(m_bush_opacity, 0, 255);
-
 	return bush_opacity;
 }
 
