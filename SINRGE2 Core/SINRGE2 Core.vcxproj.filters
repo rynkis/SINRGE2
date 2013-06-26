@@ -96,9 +96,6 @@
     <ClCompile Include="CRbBitmap.cpp">
       <Filter>源文件\RbInterface</Filter>
     </ClCompile>
-    <ClCompile Include="CRbLFont.cpp">
-      <Filter>源文件\RbInterface</Filter>
-    </ClCompile>
     <ClCompile Include="CRbParticleSystem.cpp">
       <Filter>源文件\RbInterface</Filter>
     </ClCompile>
@@ -291,9 +288,6 @@
       <Filter>源文件\RbInterface</Filter>
     </ClInclude>
     <ClInclude Include="CRbBitmap.h">
-      <Filter>源文件\RbInterface</Filter>
-    </ClInclude>
-    <ClInclude Include="CRbLFont.h">
       <Filter>源文件\RbInterface</Filter>
     </ClInclude>
     <ClInclude Include="CRbParticleSystem.h">

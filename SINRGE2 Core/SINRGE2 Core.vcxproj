@@ -105,9 +105,6 @@
     <ClCompile Include="CRbColor.cpp" />
     <ClCompile Include="CRbDisplayObject.cpp" />
     <ClCompile Include="CRbFont.cpp" />
-    <ClCompile Include="CRbLFont.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="CRbParticleSystem.cpp" />
     <ClCompile Include="CRbPlane.cpp" />
     <ClCompile Include="CRbRect.cpp" />
@@ -178,9 +175,6 @@
     <ClInclude Include="CRbColor.h" />
     <ClInclude Include="CRbDisplayObject.h" />
     <ClInclude Include="CRbFont.h" />
-    <ClInclude Include="CRbLFont.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="CRbParticleSystem.h" />
     <ClInclude Include="CRbPlane.h" />
     <ClInclude Include="CRbRect.h" />

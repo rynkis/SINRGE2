@@ -1,8 +1,8 @@
 
 MAJOR = 2   # => 主版本，即 YAR。历史版本：1. Draft
-MINOR = 3   # => 次版本，新增功能时提升
-TEENY = 3   # => 修订数，修正 bug 时提升
-MICRO = 3   # => 编译数，编译时自动提升
+MINOR = 4   # => 次版本，新增功能时提升
+TEENY = 0   # => 修订数，修正 bug 时提升
+MICRO = 1   # => 编译数，编译时自动提升
 
 data =<<_HERE_
 #ifndef __SIN_REVISION_H__
