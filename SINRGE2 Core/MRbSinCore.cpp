@@ -107,11 +107,6 @@ VALUE MRbSinCore::transition(int argc, VALUE * argv)
 	return Qnil;
 }
 
-//VALUE MRbSinCore::frame_reset()
-//{
-//	return Qnil;
-//}
-
 VALUE MRbSinCore::get_brightness()
 {
 	return INT2FIX(GetAppPtr()->m_brightness);
@@ -255,8 +250,6 @@ VALUE MRbSinCore::set_framecount(int argc, VALUE framecount)
 
 VALUE MRbSinCore::set_start_width(int argc, VALUE width)
 {
-	/*if (inited)
-		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(width);
 	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
 	return width;
@@ -264,8 +257,6 @@ VALUE MRbSinCore::set_start_width(int argc, VALUE width)
 
 VALUE MRbSinCore::set_start_height(int argc, VALUE height)
 {
-	/*if (inited)
-		rb_raise(rb_eRuntimeError, "NGE has been inited");*/
 	SafeFixnumValue(height);
 	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
 	return height;
@@ -319,7 +310,7 @@ VALUE MRbSinCore::set_forbid_switch(int argc, VALUE forbid_switch)
 VALUE MRbSinCore::set_show_mouse(int argc, VALUE show)
 {
 	if (!GetAppPtr()->IsInited())
-		rb_raise(rb_eSinError, "SINRGE2 has not ninited.");
+		rb_raise(rb_eSinError, "SINRGE2 has not inited.");
 
 	HideMouse(!RTEST(show));
 	return Qnil;
@@ -370,7 +361,6 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mGraphics, "freeze", RbFunc(freeze), 0);
 	rb_define_module_function(rb_mGraphics, "transition", RbFunc(transition), -1);
 	rb_define_module_function(rb_mGraphics, "snap_to_bitmap", RbFunc(snap_to_bitmap), 0);
-	//rb_define_module_function(rb_mGraphics, "frame_reset", RbFunc(frame_reset), 0);
 	rb_define_module_function(rb_mGraphics, "width", RbFunc(get_width), 0);
 	rb_define_module_function(rb_mGraphics, "height", RbFunc(get_height), 0);
 	rb_define_module_function(rb_mGraphics, "resize_screen", RbFunc(resize_screen), 2);

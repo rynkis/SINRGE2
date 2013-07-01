@@ -35,7 +35,6 @@ struct MRbSinCore
 	static VALUE freeze();
 	static VALUE transition(int argc, VALUE * argv);
 	static VALUE snap_to_bitmap();
-	//static VALUE frame_reset();
 	static VALUE get_width();
 	static VALUE get_height();
 	static VALUE resize_screen(int argc, VALUE width, VALUE height);

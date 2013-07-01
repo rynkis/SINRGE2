@@ -86,7 +86,6 @@ CRbBitmap::CRbBitmap()
 	, m_modify_count(0)
 	, m_filename(Qnil)
 	, m_rect_ptr(0)
-	//, m_font_ptr(0)
 {
 }
 
@@ -148,9 +147,6 @@ void CRbBitmap::InitLibrary()
 	rb_define_method(rb_cBitmap, "rect",				(RbFunc)dm_get_rect,			0);
 	rb_define_method(rb_cBitmap, "filename",			(RbFunc)dm_get_filename,		0);
 
-	/*rb_define_method(rb_cBitmap, "font",				(RbFunc)dm_get_font,			0);
-	rb_define_method(rb_cBitmap, "font=",				(RbFunc)dm_set_font,			1);*/
-
 	// supplement
  	rb_define_method(rb_cBitmap, "to_s",				(RbFunc)dm_to_string,			0);
 	rb_define_method(rb_cBitmap, "clone",				(RbFunc)dm_clone,				0);
@@ -159,7 +155,6 @@ void CRbBitmap::InitLibrary()
 void CRbBitmap::mark()
 {
 	if (m_rect_ptr)	m_rect_ptr->MarkObject();
-	//if (m_font_ptr)	m_font_ptr->MarkObject();
 
 	if (RTEST(m_filename))
 		rb_gc_mark(m_filename);
@@ -229,9 +224,6 @@ __bitmap_create:
 		s32 w = FIX2INT(arg01);
 		s32 h = FIX2INT(arg02);
 
-		/*if (w > GetAppPtr()->GetMaxTexW() || h > GetAppPtr()->GetMaxTexH())
-			rb_raise(rb_eSinError, "Too large width or height, Graphics card won't support.\n %d x %d", w, h);*/
-
 		quad.tex = hge->Texture_Create(w, h);
 		if(!quad.tex)
 			rb_raise(rb_eSinError, "Failed to create bitmap: %d x %d .", w, h);
@@ -252,9 +244,7 @@ __finish:
 		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_image.width), INT2FIX(m_image.height)};
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
 		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
-		// create a font object for the bitmap-obj
-		/*VALUE font = rb_class_new_instance(0, 0, rb_cFont);
-		m_font_ptr = GetObjectPtr<CRbFont>(font);*/
+
 		m_disposed = false;
 	}
 	return obj;
@@ -280,7 +270,6 @@ VALUE CRbBitmap::clone()
 	hge->Texture_Unlock(bmp_ptr->m_image.quad.tex);
 
 	bmp_ptr->m_filename = m_filename;
-	//bmp_ptr->m_font_ptr = m_font_ptr;
 	bmp_ptr->m_modify_count = m_modify_count;
 	bmp_ptr->m_rect_ptr = m_rect_ptr;
 	
@@ -1719,20 +1708,6 @@ VALUE CRbBitmap::get_filename()
 	return m_filename;
 }
 
-//VALUE CRbBitmap::get_font()
-//{
-//	check_raise();
-//	return ReturnObject(m_font_ptr);
-//}
-//
-//VALUE CRbBitmap::set_font(VALUE font)
-//{
-//	check_raise();
-//	SafeFontValue(font);
-//	m_font_ptr = GetObjectPtr<CRbFont>(font);
-//	return font;
-//}
-
 VALUE CRbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
 {
 	check_raise();
@@ -1812,4 +1787,3 @@ imp_attr_reader(CRbBitmap, rect)
 imp_attr_reader(CRbBitmap, width)
 imp_attr_reader(CRbBitmap, height)
 imp_attr_reader(CRbBitmap, filename)
-//imp_attr_accessor(CRbBitmap, font)

@@ -141,9 +141,6 @@
     <ClCompile Include="CRbWin32API.cpp">
       <Filter>源文件\RbInterface\base</Filter>
     </ClCompile>
-    <ClCompile Include="CRbDisplayObject.cpp">
-      <Filter>源文件\RbInterface\base</Filter>
-    </ClCompile>
     <ClCompile Include="CRbTable.cpp">
       <Filter>源文件\RbInterface\base</Filter>
     </ClCompile>
@@ -158,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="MRbSinCore.cpp">
       <Filter>源文件\RbInterface\module</Filter>
+    </ClCompile>
+    <ClCompile Include="CRbDisplayObject.cpp">
+      <Filter>源文件\RbInterface</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +350,6 @@
     <ClInclude Include="sin_types.h">
       <Filter>源文件\SINRGE2\header</Filter>
     </ClInclude>
-    <ClInclude Include="CRbDisplayObject.h">
-      <Filter>源文件\RbInterface\base</Filter>
-    </ClInclude>
     <ClInclude Include="CRbClassBase.h">
       <Filter>源文件\RbInterface\base</Filter>
     </ClInclude>
@@ -373,6 +370,9 @@
     </ClInclude>
     <ClInclude Include="sin_image.h">
       <Filter>源文件\SINRGE2\header</Filter>
+    </ClInclude>
+    <ClInclude Include="CRbDisplayObject.h">
+      <Filter>源文件\RbInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

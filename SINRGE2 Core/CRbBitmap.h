@@ -68,7 +68,6 @@ protected:
 	VALUE					m_filename;		// mark
 
 	CRbRect *				m_rect_ptr;
-	//CRbFont *				m_font_ptr;
 
 protected:
 	dm_method(dispose)
