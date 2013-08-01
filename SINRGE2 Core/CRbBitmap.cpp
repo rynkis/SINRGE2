@@ -531,9 +531,9 @@ image_p CRbBitmap::CloneImage(image_p pimage)
 HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, image_p pimage)
 {
 	//	ÐÞÕý¾ØÐÎÇøÓò
-	if (x < 0)						{ width += x; x = 0; }
-	if (y < 0)						{ height += y; y = 0; }
-	if (pimage->width - x < width)	{ width = pimage->width - x; }
+	if (x < 0)							{ width += x; x = 0; }
+	if (y < 0)							{ height += y; y = 0; }
+	if (pimage->width - x < width)		{ width = pimage->width - x; }
 	if (pimage->height - y < height)	{ height = pimage->height - y; }
 
 	if (width <= 0 || height <= 0)
@@ -1312,7 +1312,7 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 			u32 dwBufferSize = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, 0, NULL, &mmat2);
 
 			if (dwBufferSize > SinArrayCount(buffer))
-				rb_raise(rb_eSinError, "buffer size too small.");
+				rb_raise(rb_eSinError, "too small buffer size.");
 
 			if (dwBufferSize > 0)
 			{

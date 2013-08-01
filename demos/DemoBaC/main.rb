@@ -7,33 +7,31 @@ Frame.start_height = 480
 Frame.title = "DemoBaC"
 SINRGE2.init_video
 
-class Bulls_And_Cows
+class BullsAndCows
   #
-  # => 常量
+  # => Constants
   #
   BLACK = Color.new(0, 0, 0, 128)
   SIMHEI24 = Font.new("simhei", 24)
   #
-  # => 初始化对像
+  # => Object Initialization
   #
   def initialize
     @sprite = Sprite.new
     @bitmap = Bitmap.new(640, 480)
-    # @bitmap.font.size = 24
-    # @bitmap.font.shadow = false
     @bitmap.fill_rect(@bitmap.rect, BLACK)
     @sprite.bitmap = @bitmap
     restart
   end
   #
-  # => 释放
+  # => Free
   #
   def dispose
     @bitmap.dispose
     @sprite.dispose
   end
   #
-  # => 重新开始
+  # => reset the game
   #
   def restart
     loop do
@@ -53,7 +51,7 @@ class Bulls_And_Cows
     draw_text(320, 128, 320, 24, "0 Step", 1)
   end
   #
-  # => 检索AB
+  # => check play's answer
   #
   def check_ab
     a = b = 0
@@ -67,7 +65,7 @@ class Bulls_And_Cows
     return a, b
   end
   #
-  # => 绘制步骤
+  # => draw step describe
   #
   def draw_step(a, b)
     x = @step <= 4 ? 0 : 320
@@ -77,14 +75,14 @@ class Bulls_And_Cows
     draw_text(x, y * 24 + 240, 320, 24, str + " #{a}A#{b}B", 1)
   end
   #
-  #
+  # => draw texts
   #
   def draw_text(*args)
     args.insert 0, SIMHEI24
     @bitmap.draw_text *args
   end
   #
-  # => 更新
+  # => update game state
   #
   def update
     restart if Input.trigger?(0x1B)
@@ -131,14 +129,14 @@ class Bulls_And_Cows
       @bitmap.fill_rect((@index) * 160, 64, 160, 24, BLACK)
       @your_answer[@index] == 0 ? @your_answer[@index] = 9 : @your_answer[@index] -= 1
       draw_text(@index * 160, 64, 160, 24, @your_answer[@index].to_s, 1)
-    elsif Input.trigger?(0x10) # 作弊 = =
+    elsif Input.trigger?(0x10) # cheat = =
       str = "正确答案："
       @true_answer.each {|n| str += n.to_s }
       msgbox str
     end
   end
   #
-  # => 运行游戏
+  # => run and loop the game
   #
   def run
     loop do
@@ -149,4 +147,4 @@ class Bulls_And_Cows
   end
 end
 
-Bulls_And_Cows.new.run
+BullsAndCows.new.run
