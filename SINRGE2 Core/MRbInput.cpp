@@ -271,6 +271,11 @@ VALUE MRbInput::get_mouse_pos()
 	return ary;
 }
 
+/*
+**	call-seq:
+**		SINRGE2::Input.character	-> string
+**
+*/
 VALUE MRbInput::get_character()
 {
 	bool capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || vk_is_press(VK_LSHIFT) || vk_is_press(VK_RSHIFT);
