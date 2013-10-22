@@ -34,11 +34,7 @@ class BullsAndCows
   # => reset the game
   #
   def restart
-    loop do
-      @true_answer = [rand(10), rand(10), rand(10), rand(10)]
-      @true_answer.uniq!
-      break if @true_answer.size == 4
-    end
+    @true_answer = [*0..9].sample(4)
     @your_answer = [0, 0, 0, 0]
     @step  = 0
     @index = 0
