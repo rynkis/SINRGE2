@@ -224,7 +224,7 @@ class SINIME < Sprite
     contents.clear_rect(@letter_rect)
     draw_text(@letter_rect, @temp_text1)
     rect = text_size(@temp_text1)
-    contents.fill_rect(rect.width + 6, 4, 1, 20, Color.new(128, 128, 128))
+    contents.fill_rect(rect.width + 6, 4, 1, 20, 0xFF808080)#Color.new(128, 128, 128))
   end
   #
   # => 刷新汉字区
