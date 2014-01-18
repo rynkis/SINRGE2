@@ -113,7 +113,7 @@ class Bulls_And_Cows
         x = @step > 4 ? 80 : 0
         y = @step > 4 ? @step - 4 : @step
         y = y * 12 + 24
-        draw_text(str, x, y, 80, 12, 1)
+        draw_text(x, y, 80, 12, str, 1)
         @game_over = true
       elsif @step == 8
         # msgbox "游戏结束"
@@ -121,7 +121,7 @@ class Bulls_And_Cows
         draw_text( 0, 19, 160, 12, "游戏结束，按ESC重置", 1)
         str = "答案："
         @true_answer.each {|n| str += n.to_s }
-        draw_text(str, 80, 72, 80, 12, 1)
+        draw_text(80, 72, 80, 12, str, 1)
         @game_over = true
       else
         draw_step(a, b)
