@@ -1,9 +1,9 @@
 #ifndef INCLUDE_RUBY_CONFIG_H
 #define INCLUDE_RUBY_CONFIG_H 1
-//#if _MSC_VER != 1600
-//#error MSC version unmatch: _MSC_VER: 1600 is expected.
-//#endif
-#define RUBY_MSVCRT_VERSION 100
+#if _MSC_VER != 1800
+#error MSC version unmatch: _MSC_VER: 1800 is expected.
+#endif
+#define RUBY_MSVCRT_VERSION 120
 #define STDC_HEADERS 1
 #define HAVE_SYS_TYPES_H 1
 #define HAVE_SYS_STAT_H 1
@@ -23,9 +23,13 @@
 #define SIZEOF_VOIDP 4
 #define SIZEOF_FLOAT 4
 #define SIZEOF_DOUBLE 8
+#define SIGNEDNESS_OF_TIME_T -1
 #define SIZEOF_TIME_T 8
 #define TIMET2NUM(v) LL2NUM(v)
 #define NUM2TIMET(v) NUM2LL(v)
+#define CLOCKID2NUM(v) INT2NUM(v)
+#define NUM2CLOCKID(v) NUM2INT(v)
+#define SIZEOF_CLOCK_T 4
 #define SIZEOF_RLIM_T 0
 #define SIZEOF_SIZE_T 4
 #define SIZEOF_PTRDIFF_T 4
@@ -40,17 +44,22 @@
 #define FUNC_STDCALL(x) __stdcall x
 #define FUNC_CDECL(x) __cdecl x
 #define FUNC_FASTCALL(x) __fastcall x
+#define RUBY_FUNCTION_NAME_STRING __FUNCTION__
+#define PACKED_STRUCT(x) __pragma(pack(push, 1)) x __pragma(pack(pop))
+#define PACKED_STRUCT_UNALIGNED(x) x
 #define RUBY_EXTERN extern //__declspec(dllimport)
 #define HAVE_DECL_SYS_NERR 1
 #define HAVE_LIMITS_H 1
 #define HAVE_FCNTL_H 1
 #define HAVE_SYS_UTIME_H 1
 #define HAVE_FLOAT_H 1
+#define HAVE_TIME_H 1
 #define rb_pid_t int
 #define rb_gid_t int
 #define rb_uid_t int
 #define HAVE_STRUCT_STAT_ST_RDEV 1
 #define HAVE_ST_RDEV 1
+#define HAVE_STRUCT_TIMEVAL 1
 #define HAVE_STDINT_H 1
 #define HAVE_INT8_T 1
 #define HAVE_UINT8_T 1
@@ -77,11 +86,25 @@
 #define GETGROUPS_T int
 #define RETSIGTYPE void
 #define TYPEOF_TIMEVAL_TV_SEC long
+#define HAVE_ACOSH 1
+#define HAVE_ASINH 1
+#define HAVE_ATANH 1
+#define HAVE_CBRT 1
+#define HAVE_LOG2 1
+#define log2(x) log2(x)
+#define HAVE_ERF 1
+#define HAVE_ERFC 1
+#define HAVE_ROUND 1
+#define HAVE_TGAMMA 1
+#define HAVE_NEXTAFTER 1
 #define HAVE_ALLOCA 1
 #define HAVE_DUP2 1
 #define HAVE_MEMCMP 1
 #define HAVE_MEMMOVE 1
 #define HAVE_MKDIR 1
+#define HAVE_CLOCK_GETTIME 1
+#define HAVE_CLOCK_GETRES 1
+#define HAVE_SPAWNV 1
 #define HAVE_STRCASECMP 1
 #define HAVE_STRNCASECMP 1
 #define HAVE_STRERROR 1
@@ -103,8 +126,6 @@
 #define HAVE_GETCWD 1
 #define HAVE_TRUNCATE 1
 #define HAVE_FTRUNCATE 1
-#define HAVE_FSEEKO 1
-#define HAVE_FTELLO 1
 #define HAVE_TIMES 1
 #define HAVE_FCNTL 1
 #define HAVE_LINK 1
@@ -119,6 +140,7 @@
 #define HAVE_TZNAME 1
 #define HAVE_DAYLIGHT 1
 #define HAVE_GMTIME_R 1
+#define HAVE_TYPE_NET_LUID 1
 #define SETPGRP_VOID 1
 #define RSHIFT(x,y) ((x)>>(int)y)
 #define HAVE_RB_FD_INIT 1
@@ -133,10 +155,12 @@
 #define LOAD_RELATIVE 1
 #define DLEXT ".so"
 #define EXECUTABLE_EXTS ".exe",".com",".cmd",".bat"
-#define RUBY_COREDLL "msvcr100"
-#define LIBRUBY_SO "msvcr100-ruby200.dll"
+#define RUBY_COREDLL "msvcr120"
+#define LIBRUBY_SO "SINRGE2.dll"
+#define RUBY_PLATFORM "i386-mswin32_120"
+#define RUBY_SITEARCH "i386-msvcr120"
 #if 0
-!if "msvcr100-ruby200"!="$(RUBY_SO_NAME)" || "i386-mswin32_100"!="$(ARCH)-$(PLATFORM)"
+!if "SINRGE2"!="$(RUBY_SO_NAME)" || "i386-mswin32_120"!="$(ARCH)-$(PLATFORM)"
 config.h: nul
 !endif
 #endif

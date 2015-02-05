@@ -1,11 +1,17 @@
-VERSION 2.0
+VERSION 2.2
 EXPORTS
 
 SINRGE2Entry
 
+@rb_vm_opt_struct_aref@8
+@rb_vm_opt_struct_aset@8
 FD_CLR=rb_w32_fdclr
 FD_ISSET=rb_w32_fdisset
 InitVM_Enumerator
+InitVM_Random
+InitVM_Struct
+InitVM_process
+InitVM_transcode
 OnigAsciiLowerMap DATA
 OnigDefaultCaseFoldFlag DATA
 OnigDefaultSyntax DATA
@@ -34,6 +40,7 @@ RUBY_ENCODING_MASK DATA
 RUBY_FL_USER19 DATA
 RUBY_NODE_LMASK DATA
 Sleep@4=_rb_w32_Sleep@4
+_InlineInterlockedExchangePointer
 _rb_w32_Sleep@4
 _rb_w32_accept@12
 _rb_w32_bind@12
@@ -49,6 +56,7 @@ _rb_w32_getservbyport@8
 _rb_w32_getsockname@12
 _rb_w32_getsockopt@20
 _rb_w32_inet_ntop@16
+_rb_w32_inet_pton@12
 _rb_w32_ioctlsocket@12
 _rb_w32_listen@8
 _rb_w32_recv@16
@@ -63,36 +71,34 @@ _stat64=rb_w32_stati64
 _stati64=rb_w32_stati64
 accept@12=_rb_w32_accept@12
 access=rb_w32_access
-acosh
-asinh
-atanh
 bind@12=_rb_w32_bind@12
-cbrt
 chown
+clock_getres
+clock_gettime
 close=rb_w32_close
 connect@12=_rb_w32_connect@12
 crypt
 des_cipher
 des_setkey
-dln_find_exe
 dln_find_exe_r
-dln_find_file
 dln_find_file_r
 dln_load
+dup2=rb_w32_dup2
 eaccess
 encrypt
 endhostent
 endnetent
 endprotoent
 endservent
-erf
-erfc
+exc_cause
 fclose=rb_w32_fclose
 fcntl
 ffs
 flock
+freeifaddrs
 fstat=rb_w32_fstat
 fstati64=rb_w32_fstati64
+gc_stat_internal
 get_osfhandle=rb_w32_get_osfhandle
 getc=rb_w32_getc
 getcwd=rb_w32_getcwd
@@ -103,6 +109,7 @@ getgid
 gethostbyaddr@12=_rb_w32_gethostbyaddr@12
 gethostbyname@4=_rb_w32_gethostbyname@4
 gethostname@8=_rb_w32_gethostname@8
+getifaddrs
 getlogin
 getnetbyaddr
 getnetbyname
@@ -121,8 +128,9 @@ getsockopt@20=_rb_w32_getsockopt@20
 gettimeofday
 getuid
 gmtime_r
+hypot
 inet_ntop@16=_rb_w32_inet_ntop@16
-insn_operand_intern
+inet_pton@12=_rb_w32_inet_pton@12
 ioctl
 ioctlsocket@12=_rb_w32_ioctlsocket@12
 isatty=rb_w32_isatty
@@ -131,11 +139,9 @@ lgamma_r
 link
 listen@8=_rb_w32_listen@8
 localtime_r
-log2
 mkdir=rb_w32_mkdir
 nl_langinfo_codeset
 nucomp_canonicalization
-num_interval_step_size
 nurat_canonicalization
 onig_bbuf_init
 onig_chain_link_add
@@ -280,6 +286,9 @@ rb_Hash
 rb_Integer
 rb_Rational
 rb_String
+rb_absint_numwords
+rb_absint_singlebit_p
+rb_absint_size
 rb_add_event_hook
 rb_add_event_hook2
 rb_add_method
@@ -311,9 +320,9 @@ rb_ary_last
 rb_ary_memsize
 rb_ary_modify
 rb_ary_new
-rb_ary_new2
-rb_ary_new3
-rb_ary_new4
+rb_ary_new_capa
+rb_ary_new_from_args
+rb_ary_new_from_values
 rb_ary_plus
 rb_ary_pop
 rb_ary_push
@@ -331,6 +340,7 @@ rb_ary_sort_bang
 rb_ary_store
 rb_ary_subseq
 rb_ary_tmp_new
+rb_ary_tmp_new_fill
 rb_ary_to_ary
 rb_ary_to_s
 rb_ary_unshift
@@ -346,24 +356,28 @@ rb_autoload_p
 rb_autoloading_value
 rb_backref_get
 rb_backref_set
+rb_backref_set_string
 rb_backtrace
 rb_backtrace_p
 rb_backtrace_print_as_bugreport
+rb_backtrace_print_to
+rb_backtrace_to_location_ary
 rb_backtrace_to_str_ary
 rb_big2dbl
 rb_big2ll
 rb_big2long
 rb_big2str
-rb_big2str0
+rb_big2str_generic
+rb_big2str_poweroftwo
 rb_big2ull
 rb_big2ulong
-rb_big2ulong_pack
 rb_big_2comp
 rb_big_and
 rb_big_clone
 rb_big_cmp
 rb_big_div
 rb_big_divmod
+rb_big_divrem_normal
 rb_big_eq
 rb_big_eql
 rb_big_fdiv
@@ -372,6 +386,10 @@ rb_big_lshift
 rb_big_minus
 rb_big_modulo
 rb_big_mul
+rb_big_mul_balance
+rb_big_mul_karatsuba
+rb_big_mul_normal
+rb_big_mul_toom3
 rb_big_new
 rb_big_norm
 rb_big_or
@@ -380,18 +398,24 @@ rb_big_plus
 rb_big_pow
 rb_big_resize
 rb_big_rshift
+rb_big_sq_fast
 rb_big_uminus
 rb_big_unpack
 rb_big_xor
 rb_bigzero_p
+rb_binding_add_dynavars
+rb_binding_alloc
 rb_binding_new
-rb_binding_new_with_cfp
+rb_block_arity
 rb_block_call
+rb_block_clear_env_self
 rb_block_given_p
 rb_block_lambda
 rb_block_proc
 rb_bug
+rb_bug_context
 rb_bug_errno
+rb_bug_reporter_add
 rb_builtin_class_name
 rb_builtin_type_name
 rb_cArray DATA
@@ -443,8 +467,10 @@ rb_call_inits
 rb_call_super
 rb_catch
 rb_catch_obj
+rb_catch_protect
 rb_char_to_option_kcode
 rb_check_array_type
+rb_check_attr_id
 rb_check_backtrace
 rb_check_block_call
 rb_check_convert_type
@@ -458,8 +484,9 @@ rb_check_id_cstr
 rb_check_inheritable
 rb_check_regexp_type
 rb_check_safe_obj
-rb_check_safe_str
 rb_check_string_type
+rb_check_symbol
+rb_check_symbol_cstr
 rb_check_to_float
 rb_check_to_int
 rb_check_to_integer
@@ -468,6 +495,9 @@ rb_check_type
 rb_check_typeddata
 rb_class2name
 rb_class_boot
+rb_class_detach_module_subclasses
+rb_class_detach_subclasses
+rb_class_foreach_subclass
 rb_class_get_superclass
 rb_class_inherited
 rb_class_inherited_p
@@ -476,16 +506,23 @@ rb_class_name
 rb_class_new
 rb_class_new_instance
 rb_class_path
+rb_class_path_cached
 rb_class_path_no_cache
 rb_class_private_instance_methods
 rb_class_protected_instance_methods
 rb_class_public_instance_methods
 rb_class_real
+rb_class_remove_from_module_subclasses
+rb_class_remove_from_super_subclasses
+rb_class_search_ancestor
+rb_class_subclass_add
 rb_class_superclass
-rb_class_tbl DATA
 rb_clear_cache
-rb_clear_cache_by_class
+rb_clear_constant_cache
+rb_clear_method_cache_by_class
 rb_clear_trace_func
+rb_clock_getres
+rb_clock_gettime
 rb_cloexec_dup
 rb_cloexec_dup2
 rb_cloexec_fcntl_dupfd
@@ -505,6 +542,8 @@ rb_compile_warning
 rb_complex_new
 rb_complex_polar
 rb_complex_raw
+rb_complex_set_imag
+rb_complex_set_real
 rb_const_defined
 rb_const_defined_at
 rb_const_defined_from
@@ -512,15 +551,19 @@ rb_const_get
 rb_const_get_at
 rb_const_get_from
 rb_const_list
+rb_const_lookup
+rb_const_missing
 rb_const_remove
 rb_const_set
 rb_convert_type
 rb_copy_generic_ivar
+rb_copy_wb_protected_attribute
 rb_cstr2inum
 rb_cstr_to_dbl
 rb_cstr_to_inum
 rb_cstr_to_rat
 rb_current_realfilepath
+rb_current_receiver
 rb_cv_get
 rb_cv_set
 rb_cvar_defined
@@ -538,6 +581,7 @@ rb_debug_inspector_frame_self_get
 rb_debug_inspector_open
 rb_declare_transcoder
 rb_default_external_encoding
+rb_default_home_dir
 rb_default_internal_encoding
 rb_default_rs DATA
 rb_deferr DATA
@@ -551,7 +595,7 @@ rb_define_class_under
 rb_define_class_variable
 rb_define_const
 rb_define_dummy_encoding
-rb_define_final
+rb_define_finalizer
 rb_define_global_const
 rb_define_global_function
 rb_define_hooked_variable
@@ -570,12 +614,14 @@ rb_define_variable
 rb_define_virtual_variable
 rb_detach_process
 rb_dir_getwd
-rb_disable_super
 rb_during_gc
 rb_dvar_defined
 rb_eArgError DATA
 rb_eConverterNotFoundError DATA
+rb_eEAGAIN DATA
+rb_eEINPROGRESS DATA
 rb_eEOFError DATA
+rb_eEWOULDBLOCK DATA
 rb_eEncCompatError DATA
 rb_eEncodingError DATA
 rb_eException DATA
@@ -610,6 +656,7 @@ rb_eTypeError DATA
 rb_eUndefinedConversionError DATA
 rb_eZeroDivError DATA
 rb_each
+rb_econv_append
 rb_econv_asciicompat_encoding
 rb_econv_binmode
 rb_econv_check_error
@@ -634,12 +681,12 @@ rb_econv_str_append
 rb_econv_str_convert
 rb_econv_substr_append
 rb_econv_substr_convert
-rb_enable_super
 rb_enc_alias
 rb_enc_ascget
 rb_enc_associate
 rb_enc_associate_index
 rb_enc_check
+rb_enc_code_to_mbclen
 rb_enc_codelen
 rb_enc_codepoint
 rb_enc_codepoint_len
@@ -647,12 +694,15 @@ rb_enc_compatible
 rb_enc_copy
 rb_enc_default_external
 rb_enc_default_internal
+rb_enc_dummy_p
 rb_enc_fast_mbclen
 rb_enc_find
 rb_enc_find_index
+rb_enc_foreach_name
 rb_enc_from_encoding
 rb_enc_from_index
 rb_enc_get
+rb_enc_get_from_index
 rb_enc_get_index
 rb_enc_init
 rb_enc_mbclen
@@ -670,16 +720,20 @@ rb_enc_replicate
 rb_enc_set_base
 rb_enc_set_default_external
 rb_enc_set_default_internal
+rb_enc_set_dummy
 rb_enc_set_index
 rb_enc_sprintf
 rb_enc_str_asciionly_p
 rb_enc_str_buf_cat
 rb_enc_str_coderange
 rb_enc_str_new
+rb_enc_str_new_cstr
+rb_enc_str_new_static
 rb_enc_strlen
 rb_enc_strlen_cr
 rb_enc_symname2_p
 rb_enc_symname_p
+rb_enc_to_index
 rb_enc_tolower
 rb_enc_toupper
 rb_enc_uint_chr
@@ -699,9 +753,11 @@ rb_env_path_tainted
 rb_eof_error
 rb_eql
 rb_equal
+rb_equal_opt
 rb_errinfo
 rb_error_arity
 rb_error_frozen
+rb_error_frozen_object
 rb_error_untrusted
 rb_eval_cmd
 rb_eval_string
@@ -709,20 +765,16 @@ rb_eval_string_protect
 rb_eval_string_wrap
 rb_exc_fatal
 rb_exc_new
-rb_exc_new2
-rb_exc_new3
+rb_exc_new_cstr
+rb_exc_new_str
 rb_exc_raise
 rb_exc_set_backtrace
-rb_exec
-rb_exec_arg_addopt
-rb_exec_arg_fixup
-rb_exec_arg_init
 rb_exec_async_signal_safe
 rb_exec_end_proc
-rb_exec_err
 rb_exec_recursive
 rb_exec_recursive_outer
 rb_exec_recursive_paired
+rb_exec_recursive_paired_outer
 rb_execarg_addopt
 rb_execarg_extract_options
 rb_execarg_fixup
@@ -736,6 +788,8 @@ rb_extend_object
 rb_external_str_new
 rb_external_str_new_cstr
 rb_external_str_new_with_enc
+rb_external_str_with_enc
+rb_extract_keywords
 rb_f_abort
 rb_f_block_given_p
 rb_f_eval
@@ -743,7 +797,6 @@ rb_f_exec
 rb_f_exit
 rb_f_global_variables
 rb_f_kill
-rb_f_lambda
 rb_f_notimplement
 rb_f_public_send
 rb_f_require
@@ -762,6 +815,7 @@ rb_fdopen
 rb_feature_provided
 rb_fiber_alive_p
 rb_fiber_current
+rb_fiber_mark_self
 rb_fiber_new
 rb_fiber_reset_root_local_storage
 rb_fiber_resume
@@ -793,46 +847,65 @@ rb_fix2int
 rb_fix2short
 rb_fix2str
 rb_fix2ushort
+rb_float_new
 rb_float_new_in_heap
+rb_float_value
+rb_flt_rationalize
+rb_flt_rationalize_with_prec
 rb_frame_callee
+rb_frame_last_func
 rb_frame_method_id_and_class
 rb_frame_pop
 rb_frame_this_func
 rb_free_const_table
 rb_free_generic_ivar
-rb_free_m_table
+rb_free_m_tbl_wrapper
 rb_free_method_entry
 rb_free_tmp_buffer
+rb_freeze_singleton_class
 rb_frozen_class_p
 rb_fs DATA
+rb_fstring
+rb_fstring_new
 rb_funcall
-rb_funcall2
-rb_funcall3
 rb_funcall_passing_block
+rb_funcall_with_block
+rb_funcallv
+rb_funcallv_public
 rb_garbage_collect
 rb_gc
 rb_gc_call_finalizer_at_exit
 rb_gc_copy_finalizer
+rb_gc_count
 rb_gc_disable
 rb_gc_enable
 rb_gc_finalize_deferred
 rb_gc_force_recycle
+rb_gc_free_dsymbol
+rb_gc_free_node
+rb_gc_latest_gc_info
 rb_gc_mark
 rb_gc_mark_encodings
 rb_gc_mark_global_tbl
 rb_gc_mark_locations
 rb_gc_mark_machine_stack
 rb_gc_mark_maybe
-rb_gc_mark_parser
-rb_gc_mark_symbols
+rb_gc_mark_node
 rb_gc_mark_unlinked_live_method_entries
+rb_gc_mark_values
 rb_gc_register_address
 rb_gc_register_mark_object
-rb_gc_set_params
 rb_gc_set_stack_end
 rb_gc_start
+rb_gc_stat
+rb_gc_unprotect_logging
 rb_gc_unregister_address
+rb_gc_writebarrier_generational
+rb_gc_writebarrier_incremental
+rb_gc_writebarrier_remember
+rb_gc_writebarrier_unprotect
 rb_gcd
+rb_gcd_normal
 rb_gcdlcm
 rb_generic_ivar_memsize
 rb_generic_ivar_table
@@ -844,6 +917,7 @@ rb_get_argv
 rb_get_backtrace
 rb_get_coverages
 rb_get_expanded_load_path
+rb_get_kwargs
 rb_get_load_path
 rb_get_next_signal
 rb_get_path
@@ -877,42 +951,61 @@ rb_hash_aset
 rb_hash_assoc
 rb_hash_clear
 rb_hash_delete
+rb_hash_delete_entry
 rb_hash_delete_if
 rb_hash_dup
 rb_hash_fetch
 rb_hash_foreach
 rb_hash_freeze
+rb_hash_has_key
+rb_hash_ifnone
+rb_hash_iter_lev
 rb_hash_keep_if
+rb_hash_keys
 rb_hash_lookup
 rb_hash_lookup2
 rb_hash_method_entry
 rb_hash_new
 rb_hash_proc
 rb_hash_rassoc
+rb_hash_reject
 rb_hash_reject_bang
 rb_hash_select
 rb_hash_select_bang
+rb_hash_set_default_proc
+rb_hash_set_ifnone
+rb_hash_size
 rb_hash_start
 rb_hash_tbl
+rb_hash_tbl_raw
 rb_hash_update_by
+rb_hash_values
 rb_hash_values_at
-rb_home_dir
+rb_home_dir_of
 rb_id2name
 rb_id2str
+rb_id2sym
+rb_id_attrget
 rb_id_attrset
 rb_id_encoding
 rb_id_quote_unprintable
 rb_include_class_new
 rb_include_module
-rb_infinity DATA
+rb_init_parse
 rb_insecure_operation
+rb_insn_operand_intern
 rb_insns_name
 rb_insns_name_array
 rb_inspect
 rb_int2big
 rb_int2inum
+rb_int_positive_pow
+rb_int_pred
+rb_int_succ
 rb_integer_float_cmp
 rb_integer_float_eq
+rb_integer_pack
+rb_integer_unpack
 rb_intern
 rb_intern2
 rb_intern3
@@ -937,11 +1030,13 @@ rb_io_eof
 rb_io_extract_encoding_option
 rb_io_fdopen
 rb_io_flush
+rb_io_flush_raw
 rb_io_fptr_finalize
 rb_io_get_io
 rb_io_get_write_io
 rb_io_getbyte
 rb_io_gets
+rb_io_make_open_file
 rb_io_memsize
 rb_io_modestr_fmode
 rb_io_modestr_oflags
@@ -965,24 +1060,34 @@ rb_io_write
 rb_is_absolute_path
 rb_is_attrset_id
 rb_is_attrset_name
+rb_is_attrset_sym
 rb_is_class_id
 rb_is_class_name
+rb_is_class_sym
 rb_is_const_id
 rb_is_const_name
+rb_is_const_sym
 rb_is_global_id
 rb_is_global_name
+rb_is_global_sym
 rb_is_instance_id
 rb_is_instance_name
+rb_is_instance_sym
 rb_is_junk_id
 rb_is_junk_name
+rb_is_junk_sym
 rb_is_local_id
 rb_is_local_name
+rb_is_local_sym
 rb_is_method_name
 rb_isalnum
 rb_isalpha
 rb_isblank
 rb_iscntrl
 rb_isdigit
+rb_iseq_absolute_path
+rb_iseq_add_mark_object
+rb_iseq_base_label
 rb_iseq_build_for_ruby2cext
 rb_iseq_build_from_ary
 rb_iseq_clone
@@ -996,17 +1101,21 @@ rb_iseq_disasm_insn
 rb_iseq_eval
 rb_iseq_eval_main
 rb_iseq_first_lineno
+rb_iseq_klass
+rb_iseq_label
 rb_iseq_line_no
 rb_iseq_line_trace_all
 rb_iseq_line_trace_each
 rb_iseq_line_trace_specify
 rb_iseq_load
+rb_iseq_method_name
 rb_iseq_new
 rb_iseq_new_main
 rb_iseq_new_top
-rb_iseq_new_with_bopt
 rb_iseq_new_with_opt
+rb_iseq_original_iseq
 rb_iseq_parameters
+rb_iseq_path
 rb_iseq_translate_threaded_code
 rb_isgraph
 rb_islower
@@ -1027,6 +1136,7 @@ rb_ivar_foreach
 rb_ivar_get
 rb_ivar_set
 rb_jump_tag
+rb_keyword_error_new
 rb_last_status_clear
 rb_last_status_get
 rb_last_status_set
@@ -1038,6 +1148,7 @@ rb_ll2inum
 rb_load
 rb_load_fail
 rb_load_file
+rb_load_file_str
 rb_load_protect
 rb_loaderror
 rb_loaderror_with_path
@@ -1064,6 +1175,7 @@ rb_mWaitReadable DATA
 rb_mWaitWritable DATA
 rb_make_backtrace
 rb_make_exception
+rb_make_internal_id
 rb_make_metaclass
 rb_mark_end_proc
 rb_mark_generic_ivar
@@ -1084,7 +1196,6 @@ rb_math_hypot
 rb_math_log
 rb_math_sin
 rb_math_sinh
-rb_math_sqrt
 rb_maygvl_fd_fix_cloexec
 rb_mem_clear
 rb_memcicmp
@@ -1095,14 +1206,18 @@ rb_memsearch
 rb_method_basic_definition_p
 rb_method_boundp
 rb_method_call
+rb_method_call_with_block
 rb_method_entry
 rb_method_entry_arity
+rb_method_entry_at
 rb_method_entry_eq
 rb_method_entry_get_without_cache
 rb_method_entry_location
 rb_method_entry_set
 rb_method_entry_with_refinements
 rb_method_entry_without_refinements
+rb_method_for_self_aref
+rb_method_for_self_aset
 rb_method_get_iseq
 rb_method_location
 rb_method_name_error
@@ -1144,10 +1259,16 @@ rb_name_class
 rb_name_err_mesg_new
 rb_name_error
 rb_name_error_str
-rb_nan DATA
+rb_nativethread_lock_destroy
+rb_nativethread_lock_initialize
+rb_nativethread_lock_lock
+rb_nativethread_lock_unlock
+rb_nativethread_self
 rb_need_block
 rb_newobj
 rb_newobj_of
+rb_next_class_serial
+rb_node_memsize
 rb_node_newnode
 rb_notimplement
 rb_num2dbl
@@ -1173,12 +1294,15 @@ rb_obj_call_init
 rb_obj_class
 rb_obj_classname
 rb_obj_clone
+rb_obj_copy_ivar
 rb_obj_dup
 rb_obj_encoding
 rb_obj_equal
 rb_obj_freeze
 rb_obj_frozen_p
+rb_obj_gc_flags
 rb_obj_hash
+rb_obj_hide
 rb_obj_id
 rb_obj_infect
 rb_obj_init_copy
@@ -1193,6 +1317,7 @@ rb_obj_is_method
 rb_obj_is_mutex
 rb_obj_is_proc
 rb_obj_is_thread
+rb_obj_memsize_of
 rb_obj_method
 rb_obj_method_arity
 rb_obj_method_location
@@ -1205,6 +1330,11 @@ rb_obj_public_method
 rb_obj_public_methods
 rb_obj_remove_instance_variable
 rb_obj_respond_to
+rb_obj_reveal
+rb_obj_rgengc_promoted_p
+rb_obj_rgengc_writebarrier_protected_p
+rb_obj_setup
+rb_obj_singleton_method
 rb_obj_singleton_methods
 rb_obj_taint
 rb_obj_tainted
@@ -1213,12 +1343,18 @@ rb_obj_trust
 rb_obj_untaint
 rb_obj_untrust
 rb_obj_untrusted
+rb_objid_hash
 rb_objspace_data_type_memsize
 rb_objspace_data_type_name
 rb_objspace_each_objects
+rb_objspace_each_objects_without_setup
+rb_objspace_garbage_object_p
 rb_objspace_internal_object_p
 rb_objspace_markable_object_p
+rb_objspace_marked_object_p
 rb_objspace_reachable_objects_from
+rb_objspace_reachable_objects_from_root
+rb_objspace_set_event_hook
 rb_out_of_short
 rb_output_fs DATA
 rb_output_rs DATA
@@ -1229,7 +1365,9 @@ rb_parser_append_print
 rb_parser_calloc
 rb_parser_compile_cstr
 rb_parser_compile_file
+rb_parser_compile_file_path
 rb_parser_compile_string
+rb_parser_compile_string_path
 rb_parser_dump_tree
 rb_parser_encoding
 rb_parser_end_seen_p
@@ -1238,26 +1376,42 @@ rb_parser_get_yydebug
 rb_parser_malloc
 rb_parser_new
 rb_parser_realloc
+rb_parser_reg_compile
 rb_parser_set_yydebug
 rb_parser_while_loop
 rb_path2class
 rb_path_check
 rb_path_to_class
 rb_pipe
+rb_postponed_job_flush
+rb_postponed_job_register
+rb_postponed_job_register_one
 rb_prepend_module
+rb_print_backtrace
+rb_print_inaccessible
 rb_print_undef
 rb_print_undef_str
-rb_proc_alloc
 rb_proc_arity
 rb_proc_call
 rb_proc_call_with_block
 rb_proc_exec
-rb_proc_exec_n
 rb_proc_get_iseq
 rb_proc_lambda_p
 rb_proc_location
 rb_proc_new
 rb_proc_times
+rb_proc_wrap
+rb_profile_frame_absolute_path
+rb_profile_frame_base_label
+rb_profile_frame_classpath
+rb_profile_frame_first_lineno
+rb_profile_frame_full_label
+rb_profile_frame_label
+rb_profile_frame_method_name
+rb_profile_frame_path
+rb_profile_frame_qualified_method_name
+rb_profile_frame_singleton_method_p
+rb_profile_frames
 rb_protect
 rb_provide
 rb_provided
@@ -1267,8 +1421,6 @@ rb_public_const_defined_from
 rb_public_const_get
 rb_public_const_get_at
 rb_public_const_get_from
-rb_quad_pack
-rb_quad_unpack
 rb_raise
 rb_raise_jump
 rb_raise_method_missing
@@ -1279,10 +1431,12 @@ rb_random_ulong_limited
 rb_range_beg_len
 rb_range_new
 rb_range_values
+rb_rational_den
 rb_rational_new
+rb_rational_num
 rb_rational_raw
 rb_rational_reciprocal
-rb_read_check
+rb_readwrite_sys_fail
 rb_realpath_internal
 rb_refinement_module_get_refined_class
 rb_reg_adjust_startpos
@@ -1307,14 +1461,17 @@ rb_reg_options
 rb_reg_prepare_re
 rb_reg_quote
 rb_reg_regcomp
+rb_reg_region_copy
 rb_reg_regsub
 rb_reg_search
+rb_reg_search0
 rb_register_transcoder
 rb_remove_event_hook
 rb_remove_event_hook_with_data
 rb_remove_method
 rb_remove_method_id
 rb_require
+rb_require_internal
 rb_require_safe
 rb_rescue
 rb_rescue2
@@ -1328,8 +1485,6 @@ rb_rs DATA
 rb_ruby_debug_ptr
 rb_ruby_verbose_ptr
 rb_rubylevel_errinfo
-rb_run_exec_options
-rb_run_exec_options_err
 rb_safe_level
 rb_scan_args
 rb_secure
@@ -1341,12 +1496,14 @@ rb_set_end_proc
 rb_set_errinfo
 rb_set_safe_level
 rb_set_safe_level_force
+rb_setup_fake_str
 rb_signal_buff_size
 rb_signal_exec
 rb_singleton_class
 rb_singleton_class_attached
 rb_singleton_class_clone
 rb_singleton_class_clone_and_attach
+rb_singleton_class_get
 rb_sourcefile
 rb_sourcefilename
 rb_sourceline
@@ -1354,10 +1511,16 @@ rb_spawn
 rb_spawn_err
 rb_special_singleton_class
 rb_sprintf
+rb_st_copy
+rb_st_insert_id_and_value
+rb_stat_new
 rb_stderr DATA
 rb_stdin DATA
 rb_stdio_set_default_encoding
 rb_stdout DATA
+rb_str2big_karatsuba
+rb_str2big_normal
+rb_str2big_poweroftwo
 rb_str2inum
 rb_str_append
 rb_str_associate
@@ -1368,11 +1531,11 @@ rb_str_buf_cat2
 rb_str_buf_cat_ascii
 rb_str_buf_cat_escaped_char
 rb_str_buf_new
-rb_str_buf_new2
 rb_str_buf_new_cstr
 rb_str_capacity
 rb_str_cat
 rb_str_cat2
+rb_str_cat_cstr
 rb_str_catf
 rb_str_cmp
 rb_str_coderange_scan_restartable
@@ -1391,6 +1554,7 @@ rb_str_equal
 rb_str_export
 rb_str_export_locale
 rb_str_export_to_enc
+rb_str_fill_terminator
 rb_str_format
 rb_str_free
 rb_str_freeze
@@ -1400,17 +1564,15 @@ rb_str_inspect
 rb_str_intern
 rb_str_length
 rb_str_locktmp
+rb_str_locktmp_ensure
 rb_str_memsize
 rb_str_modify
 rb_str_modify_expand
 rb_str_new
-rb_str_new2
-rb_str_new3
-rb_str_new4
-rb_str_new5
 rb_str_new_cstr
 rb_str_new_frozen
 rb_str_new_shared
+rb_str_new_static
 rb_str_new_with_class
 rb_str_offset
 rb_str_ord
@@ -1419,12 +1581,14 @@ rb_str_quote_unprintable
 rb_str_replace
 rb_str_resize
 rb_str_resurrect
+rb_str_scrub
 rb_str_set_len
 rb_str_setter
 rb_str_shared_replace
 rb_str_split
 rb_str_strlen
 rb_str_sublen
+rb_str_subpos
 rb_str_subseq
 rb_str_substr
 rb_str_succ
@@ -1447,29 +1611,33 @@ rb_struct_alloc_noinit
 rb_struct_aref
 rb_struct_aset
 rb_struct_define
+rb_struct_define_under
 rb_struct_define_without_accessor
+rb_struct_define_without_accessor_under
 rb_struct_getmember
 rb_struct_init_copy
 rb_struct_initialize
-rb_struct_iv_get
 rb_struct_members
 rb_struct_new
 rb_struct_s_members
 rb_suppress_tracing
 rb_sweep_method_entry
+rb_sym2id
+rb_sym2str
 rb_sym_all_symbols
 rb_sym_to_s
 rb_symname_p
 rb_sys_fail
+rb_sys_fail_path_in
 rb_sys_fail_str
 rb_sys_warning
 rb_syserr_fail
+rb_syserr_fail_path_in
 rb_syserr_fail_str
 rb_syserr_new
 rb_syserr_new_str
 rb_syswait
 rb_tainted_str_new
-rb_tainted_str_new2
 rb_tainted_str_new_cstr
 rb_thread_add_event_hook
 rb_thread_add_event_hook2
@@ -1477,9 +1645,6 @@ rb_thread_alloc
 rb_thread_alone
 rb_thread_atfork
 rb_thread_atfork_before_exec
-rb_thread_blocking_region
-rb_thread_blocking_region_begin
-rb_thread_blocking_region_end
 rb_thread_call_with_gvl
 rb_thread_call_without_gvl
 rb_thread_call_without_gvl2
@@ -1499,24 +1664,21 @@ rb_thread_kill
 rb_thread_list
 rb_thread_local_aref
 rb_thread_local_aset
-rb_thread_lock_destroy
-rb_thread_lock_unlock
 rb_thread_main
 rb_thread_mark
 rb_thread_method_id_and_class
-rb_thread_polling
 rb_thread_recycle_stack_release
 rb_thread_remove_event_hook
 rb_thread_remove_event_hook_with_data
 rb_thread_reset_timer_thread
 rb_thread_run
 rb_thread_schedule
-rb_thread_select
 rb_thread_shield_destroy
 rb_thread_shield_new
 rb_thread_shield_release
 rb_thread_shield_wait
 rb_thread_sleep
+rb_thread_sleep_deadly
 rb_thread_sleep_forever
 rb_thread_start_timer_thread
 rb_thread_stop
@@ -1541,14 +1703,17 @@ rb_to_encoding_index
 rb_to_float
 rb_to_id
 rb_to_int
+rb_to_symbol
 rb_tolower
 rb_toupper
 rb_tracearg_binding
 rb_tracearg_defined_class
 rb_tracearg_event
+rb_tracearg_event_flag
 rb_tracearg_from_tracepoint
 rb_tracearg_lineno
 rb_tracearg_method_id
+rb_tracearg_object
 rb_tracearg_path
 rb_tracearg_raised_exception
 rb_tracearg_return_value
@@ -1566,30 +1731,37 @@ rb_ull2inum
 rb_undef
 rb_undef_alloc_func
 rb_undef_method
-rb_undefine_final
+rb_undefine_finalizer
 rb_uninterruptible
 rb_unlink_method_entry
 rb_update_max_fd
 rb_usascii_encindex
 rb_usascii_encoding
 rb_usascii_str_new
-rb_usascii_str_new2
 rb_usascii_str_new_cstr
+rb_usascii_str_new_static
 rb_using_module
 rb_using_refinement
 rb_utf8_encindex
 rb_utf8_encoding
+rb_utf8_str_new
+rb_utf8_str_new_cstr
+rb_utf8_str_new_static
 rb_uv_to_utf8
+rb_vm_add_root_module
+rb_vm_backtrace_location_ary
 rb_vm_backtrace_object
+rb_vm_backtrace_str_ary
 rb_vm_bugreport
 rb_vm_call
 rb_vm_call_cfunc
 rb_vm_cbase
-rb_vm_change_state
 rb_vm_check_redefinition_by_prepend
 rb_vm_control_frame_block_ptr
 rb_vm_control_frame_id_and_class
 rb_vm_cref
+rb_vm_cref_in_context
+rb_vm_env_local_variables
 rb_vm_ep_local_ep
 rb_vm_get_binding_creatable_next_cfp
 rb_vm_get_cref
@@ -1601,13 +1773,21 @@ rb_vm_inc_const_missing_count
 rb_vm_invoke_proc
 rb_vm_jump_tag_but_local_jump
 rb_vm_localjump_error
+rb_vm_make_binding
 rb_vm_make_env_object
 rb_vm_make_jump_tag_but_local_jump
 rb_vm_make_proc
+rb_vm_make_proc_lambda
 rb_vm_mark
+rb_vm_pop_cfunc_frame
+rb_vm_register_special_exception
+rb_vm_rewind_cfp
 rb_vm_set_progname
 rb_vm_stack_to_heap
+rb_vm_thread_backtrace
+rb_vm_thread_backtrace_locations
 rb_vm_top_self
+rb_vm_trace_mark_event_hooks
 rb_vmdebug_debug_print_post
 rb_vmdebug_debug_print_pre
 rb_vmdebug_debug_print_register
@@ -1626,9 +1806,9 @@ rb_w32_asynchronize
 rb_w32_check_interrupt
 rb_w32_close
 rb_w32_closedir
-rb_w32_cmdvector
 rb_w32_conv_from_wchar
 rb_w32_conv_from_wstr
+rb_w32_dup2
 rb_w32_fclose
 rb_w32_fd_copy
 rb_w32_fd_dup
@@ -1636,11 +1816,10 @@ rb_w32_fd_is_text
 rb_w32_fdclr
 rb_w32_fdisset
 rb_w32_fdset
+rb_w32_filecp
 rb_w32_free_environ
-rb_w32_fseeko
 rb_w32_fstat
 rb_w32_fstati64
-rb_w32_ftello
 rb_w32_ftruncate
 rb_w32_get_environ
 rb_w32_get_osfhandle
@@ -1649,11 +1828,11 @@ rb_w32_getcwd
 rb_w32_getenv
 rb_w32_getpid
 rb_w32_getppid
-rb_w32_init_file
 rb_w32_io_cancelable_p
 rb_w32_is_socket
 rb_w32_isatty
 rb_w32_map_errno
+rb_w32_mbstr_to_wstr
 rb_w32_mkdir
 rb_w32_open
 rb_w32_opendir
@@ -1668,9 +1847,9 @@ rb_w32_rewinddir
 rb_w32_rmdir
 rb_w32_seekdir
 rb_w32_select_with_thread
+rb_w32_set_nonblock
 rb_w32_sleep
 rb_w32_snprintf=ruby_snprintf
-rb_w32_socketpair
 rb_w32_spawn
 rb_w32_special_folder
 rb_w32_stat
@@ -1683,9 +1862,13 @@ rb_w32_time_subtract
 rb_w32_times
 rb_w32_truncate
 rb_w32_uaccess
+rb_w32_uaspawn
+rb_w32_uaspawn_flags
 rb_w32_uchdir
 rb_w32_uchmod
 rb_w32_uchown
+rb_w32_udln_find_exe_r
+rb_w32_udln_find_file_r
 rb_w32_ugetenv
 rb_w32_ulink
 rb_w32_umkdir
@@ -1695,6 +1878,7 @@ rb_w32_uopen
 rb_w32_uopendir
 rb_w32_urename
 rb_w32_urmdir
+rb_w32_uspawn
 rb_w32_ustati64
 rb_w32_utime
 rb_w32_uunlink
@@ -1706,6 +1890,7 @@ rb_w32_wopen
 rb_w32_wrap_io_handle
 rb_w32_write
 rb_w32_write_console
+rb_w32_wstr_to_mbstr
 rb_wait_for_single_fd
 rb_waitpid
 rb_warn
@@ -1714,6 +1899,7 @@ rb_write_error
 rb_write_error2
 rb_write_error_str
 rb_yield
+rb_yield_block
 rb_yield_refine_block
 rb_yield_splat
 rb_yield_values
@@ -1724,10 +1910,10 @@ recvfrom@24=_rb_w32_recvfrom@24
 recvmsg
 rename=rb_w32_rename
 rmdir=rb_w32_rmdir
-round
 ruby_Init_Continuation_body
 ruby_Init_Fiber_as_Coroutine
 ruby_api_version DATA
+ruby_binding_data_type DATA
 ruby_brace_glob
 ruby_brace_glob_with_enc
 ruby_cleanup
@@ -1743,8 +1929,9 @@ ruby_debug_print_value
 ruby_debug_printf
 ruby_default_signal
 ruby_description DATA
+ruby_digit36_to_number_table DATA
 ruby_digitmap DATA
-ruby_disable_gc_stress DATA
+ruby_disable_gc DATA
 ruby_dln_librefs DATA
 ruby_dtoa
 ruby_dummy_gdb_enums DATA
@@ -1763,6 +1950,7 @@ ruby_finalize
 ruby_float_mod
 ruby_float_step
 ruby_gc_debug_indent DATA
+ruby_gc_set_params
 ruby_get_inplace_mode
 ruby_getcwd
 ruby_glob
@@ -1778,9 +1966,12 @@ ruby_init_setproctitle
 ruby_init_stack
 ruby_initial_gc_stress_ptr DATA
 ruby_initial_load_paths DATA
+ruby_kill
+ruby_mimfree
 ruby_mimmalloc
 ruby_native_thread_p
 ruby_node_name
+ruby_num_interval_step_size
 ruby_options
 ruby_patchlevel DATA
 ruby_platform DATA
@@ -1788,8 +1979,11 @@ ruby_process_options
 ruby_prog_init
 ruby_push_include
 ruby_qsort
+ruby_register_rollback_func_for_ensure
 ruby_release_date DATA
+ruby_require_internal
 ruby_run_node
+ruby_safe_level_4_warning
 ruby_scan_hex
 ruby_scan_oct
 ruby_script
@@ -1804,9 +1998,13 @@ ruby_show_version
 ruby_sig_finalize
 ruby_signal_name
 ruby_sip_hash24
+ruby_sized_xfree
+ruby_sized_xrealloc
+ruby_sized_xrealloc2
 ruby_snprintf
 ruby_stack_check
 ruby_stack_length
+ruby_stack_overflowed_p
 ruby_stop
 ruby_strdup
 ruby_strtod
@@ -1826,7 +2024,7 @@ ruby_vm_const_missing_count DATA
 ruby_vm_debug_ptr
 ruby_vm_destruct
 ruby_vm_event_flags DATA
-ruby_vm_redefined_flag DATA
+ruby_vm_sysstack_error_copy
 ruby_vm_verbose_ptr
 ruby_vsnprintf
 ruby_w32_rtc_error DATA
@@ -1851,9 +2049,8 @@ setservent
 setsockopt@20=_rb_w32_setsockopt@20
 setuid
 shutdown@8=_rb_w32_shutdown@8
-signbit
 socket@12=_rb_w32_socket@12
-socketpair=rb_w32_socketpair
+socketpair
 st_add_direct
 st_cleanup_safe
 st_clear
@@ -1881,13 +2078,18 @@ st_init_table
 st_init_table_with_size
 st_insert
 st_insert2
+st_keys
+st_keys_check
+st_locale_insensitive_strcasecmp
+st_locale_insensitive_strncasecmp
 st_lookup
 st_memsize
 st_numcmp
 st_numhash
-st_strcasecmp
-st_strncasecmp
+st_shift
 st_update
+st_values
+st_values_check
 stat=rb_w32_stat
 stati64=rb_w32_stati64
 strcasecmp=msvcrt.stricmp
@@ -1895,15 +2097,9 @@ strerror=rb_w32_strerror
 strlcat
 strlcpy
 strncasecmp=msvcrt.strnicmp
-tgamma
 times=rb_w32_times
 unlink=rb_w32_unlink
 utime=rb_w32_utime
-vm_backtrace_location_ary
-vm_backtrace_str_ary
-vm_thread_backtrace
-vm_thread_backtrace_locations
-vm_trace_mark_event_hooks
 wait
 waitpid
 write=rb_w32_write
