@@ -52,9 +52,10 @@ as usual.
 
 And in SINRGE2 you can print it on screen. This is a sample:  
 ```ruby
+ARIAL20 = Font.new("Arial", 20)
 @spt = Sprite.new # create a sprite
 @spt.bitmap = Bitmap.new(128, 32) # create a 128 * 32 bitmap
-@spt.bitmap.draw_text(0, 0, 128, 32, "Hello world") # draw text
+@spt.bitmap.draw_text(ARIAL20, 0, 0, 128, 32, "Hello world") # draw text
 SINRGE2.stop # stop SINRGE2 with looping Graphics#update
 ```
 You can get the same effect in RGSS too.  
