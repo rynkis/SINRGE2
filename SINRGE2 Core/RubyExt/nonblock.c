@@ -2,7 +2,7 @@
 
   io/wait.c -
 
-  $Author: kosaki $
+  $Author: usa $
   created at: Tue Jul 14 21:53:18 2009
 
   All the files in this distribution are covered under the Ruby's
@@ -30,6 +30,12 @@ io_nonblock_mode(int fd)
 #endif
 
 #ifdef F_GETFL
+/*
+ * call-seq:
+ *   io.nonblock? -> boolean
+ *
+ * Returns +true+ if an IO object is in non-blocking mode.
+ */
 static VALUE
 rb_io_nonblock_p(VALUE io)
 {
@@ -61,12 +67,22 @@ io_nonblock_set(int fd, int f, int nb)
 	rb_sys_fail(0);
 }
 
+/*
+ * call-seq:
+ *   io.nonblock = boolean -> boolean
+ *
+ * Enables non-blocking mode on a stream when set to
+ * +true+, and blocking mode when set to +false+.
+ */
 static VALUE
 rb_io_nonblock_set(VALUE io, VALUE nb)
 {
     rb_io_t *fptr;
     GetOpenFile(io, fptr);
-    io_nonblock_set(fptr->fd, io_nonblock_mode(fptr->fd), RTEST(nb));
+    if (RTEST(nb))
+	rb_io_set_nonblock(fptr);
+    else
+	io_nonblock_set(fptr->fd, io_nonblock_mode(fptr->fd), RTEST(nb));
     return io;
 }
 
@@ -79,6 +95,16 @@ io_nonblock_restore(VALUE arg)
     return Qnil;
 }
 
+/*
+ * call-seq:
+ *   io.nonblock {|io| } -> io
+ *   io.nonblock(boolean) {|io| } -> io
+ *
+ * Yields +self+ in non-blocking mode.
+ *
+ * When +false+ is given as an argument, +self+ is yielded in blocking mode.
+ * The original mode is restored after the block is executed.
+ */
 static VALUE
 rb_io_nonblock_block(int argc, VALUE *argv, VALUE io)
 {
@@ -106,9 +132,7 @@ rb_io_nonblock_block(int argc, VALUE *argv, VALUE io)
 void
 Init_nonblock(void)
 {
-    VALUE io = rb_cIO;
-
-    rb_define_method(io, "nonblock?", rb_io_nonblock_p, 0);
-    rb_define_method(io, "nonblock=", rb_io_nonblock_set, 1);
-    rb_define_method(io, "nonblock", rb_io_nonblock_block, -1);
+    rb_define_method(rb_cIO, "nonblock?", rb_io_nonblock_p, 0);
+    rb_define_method(rb_cIO, "nonblock=", rb_io_nonblock_set, 1);
+    rb_define_method(rb_cIO, "nonblock", rb_io_nonblock_block, -1);
 }

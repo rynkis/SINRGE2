@@ -96,6 +96,8 @@ io_ready_p(VALUE io)
  * call-seq:
  *   io.wait          -> IO, true, false or nil
  *   io.wait(timeout) -> IO, true, false or nil
+ *   io.wait_readable          -> IO, true, false or nil
+ *   io.wait_readable(timeout) -> IO, true, false or nil
  *
  * Waits until input is available or times out and returns self or nil when
  * EOF is reached.
@@ -175,7 +177,7 @@ io_wait_writable(int argc, VALUE *argv, VALUE io)
  */
 
 void
-Init_wait()
+Init_wait(void)
 {
     rb_define_method(rb_cIO, "nread", io_nread, 0);
     rb_define_method(rb_cIO, "ready?", io_ready_p, 0);
