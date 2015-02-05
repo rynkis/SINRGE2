@@ -1,5 +1,5 @@
 ﻿# SINRGE2
-Copyright (C) 2013 Lynch Sherry (or Shy07) <Gernischt@gmail.com>
+Copyright (C) 2015 Lynch Sherry (or Shy07) <Gernischt@gmail.com>
 
 ## Notice
 Author's English was not good enough to assure everything all correct.
