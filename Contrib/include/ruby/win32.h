@@ -312,7 +312,7 @@ extern FILE *rb_w32_fsopen(const char *, const char *, int);
 #ifndef isnan
 #define isnan(x) _isnan(x)
 #endif
-static inline int
+static rb_inline int
 finite(double x)
 {
     return _finite(x);
@@ -320,7 +320,7 @@ finite(double x)
 #ifndef copysign
 #define copysign(a, b) _copysign(a, b)
 #endif
-static inline double
+static rb_inline double
 scalb(double a, long b)
 {
     return _scalb(a, b);
@@ -770,7 +770,7 @@ uintptr_t rb_w32_asynchronize(asynchronous_func_t func, uintptr_t self, int argc
  * This workaround will fix test failures in test_bignum.rb,
  * test_fixnum.rb and test_float.rb etc.
  */
-static inline double
+static rb_inline double
 rb_w32_pow(double x, double y)
 {
     return powl(x, y);
@@ -780,7 +780,7 @@ rb_w32_pow(double x, double y)
  * Set floating point precision for pow() of mingw-w64 x86.
  * With default precision the result is not proper on WinXP.
  */
-static inline double
+static rb_inline double
 rb_w32_pow(double x, double y)
 {
     double r;

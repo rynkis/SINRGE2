@@ -125,7 +125,7 @@
 #define RUBY_SETJMP(env) _setjmp(env)
 #define RUBY_LONGJMP(env,val) longjmp(env,val)
 #define RUBY_JMP_BUF jmp_buf
-#define inline __inline
+#define rb_inline __inline
 #define NEED_IO_SEEK_BETWEEN_RW 1
 #define STACK_GROW_DIRECTION -1
 #define CANONICALIZATION_FOR_MATHN 1

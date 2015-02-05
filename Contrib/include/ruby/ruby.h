@@ -311,7 +311,7 @@ NORETURN(void rb_out_of_int(SIGNED_VALUE num));
 #endif
 
 #if SIZEOF_INT < SIZEOF_LONG
-static inline int
+static rb_inline int
 rb_long2int_inline(long n)
 {
     int i = (int)n;
@@ -509,7 +509,7 @@ enum ruby_value_type {
 
 #define BUILTIN_TYPE(x) (int)(((struct RBasic*)(x))->flags & T_MASK)
 
-static inline int rb_type(VALUE obj);
+static rb_inline int rb_type(VALUE obj);
 #define TYPE(x) rb_type((VALUE)(x))
 
 /* RB_GC_GUARD_PTR() is an intermediate macro, and has no effect by
@@ -521,7 +521,7 @@ static inline int rb_type(VALUE obj);
 #ifdef _MSC_VER
 #pragma optimize("", off)
 #endif
-static inline volatile VALUE *rb_gc_guarded_ptr(volatile VALUE *ptr) {return ptr;}
+static rb_inline volatile VALUE *rb_gc_guarded_ptr(volatile VALUE *ptr) {return ptr;}
 #ifdef _MSC_VER
 #pragma optimize("", on)
 #endif
@@ -581,7 +581,7 @@ void rb_set_errinfo(VALUE);
 
 SIGNED_VALUE rb_num2long(VALUE);
 VALUE rb_num2ulong(VALUE);
-static inline long
+static rb_inline long
 rb_num2long_inline(VALUE x)
 {
     if (FIXNUM_P(x))
@@ -590,7 +590,7 @@ rb_num2long_inline(VALUE x)
 	return (long)rb_num2long(x);
 }
 #define NUM2LONG(x) rb_num2long_inline(x)
-static inline unsigned long
+static rb_inline unsigned long
 rb_num2ulong_inline(VALUE x)
 {
     if (FIXNUM_P(x))
@@ -604,7 +604,7 @@ long rb_num2int(VALUE);
 long rb_fix2int(VALUE);
 #define FIX2INT(x) ((int)rb_fix2int((VALUE)(x)))
 
-static inline int
+static rb_inline int
 rb_num2int_inline(VALUE x)
 {
     if (FIXNUM_P(x))
@@ -630,7 +630,7 @@ unsigned short rb_num2ushort(VALUE);
 short rb_fix2short(VALUE);
 unsigned short rb_fix2ushort(VALUE);
 #define FIX2SHORT(x) (rb_fix2short((VALUE)(x)))
-static inline short
+static rb_inline short
 rb_num2short_inline(VALUE x)
 {
     if (FIXNUM_P(x))
@@ -645,7 +645,7 @@ rb_num2short_inline(VALUE x)
 #ifdef HAVE_LONG_LONG
 LONG_LONG rb_num2ll(VALUE);
 unsigned LONG_LONG rb_num2ull(VALUE);
-static inline LONG_LONG
+static rb_inline LONG_LONG
 rb_num2ll_inline(VALUE x)
 {
     if (FIXNUM_P(x))
@@ -760,7 +760,7 @@ VALUE rb_float_new_in_heap(double);
 #define RUBY_BIT_ROTL(v, n) (((v) << (n)) | ((v) >> ((sizeof(v) * 8) - n)))
 #define RUBY_BIT_ROTR(v, n) (((v) >> (n)) | ((v) << ((sizeof(v) * 8) - n)))
 
-static inline double
+static rb_inline double
 rb_float_value(VALUE v)
 {
     if (FLONUM_P(v)) {
@@ -786,7 +786,7 @@ rb_float_value(VALUE v)
     }
 }
 
-static inline VALUE
+static rb_inline VALUE
 rb_float_new(double d)
 {
     union {
@@ -820,13 +820,13 @@ rb_float_new(double d)
 
 #else /* USE_FLONUM */
 
-static inline double
+static rb_inline double
 rb_float_value(VALUE v)
 {
     return ((struct RFloat *)v)->float_value;
 }
 
-static inline VALUE
+static rb_inline VALUE
 rb_float_new(double d)
 {
     return rb_float_new_in_heap(d);
@@ -1167,7 +1167,7 @@ struct RBignum {
 # define INT2NUM(v) INT2FIX((int)(v))
 # define UINT2NUM(v) LONG2FIX((unsigned int)(v))
 #else
-static inline VALUE
+static rb_inline VALUE
 rb_int2num_inline(int v)
 {
     if (FIXABLE(v))
@@ -1177,7 +1177,7 @@ rb_int2num_inline(int v)
 }
 #define INT2NUM(x) rb_int2num_inline(x)
 
-static inline VALUE
+static rb_inline VALUE
 rb_uint2num_inline(unsigned int v)
 {
     if (POSFIXABLE(v))
@@ -1188,7 +1188,7 @@ rb_uint2num_inline(unsigned int v)
 #define UINT2NUM(x) rb_uint2num_inline(x)
 #endif
 
-static inline VALUE
+static rb_inline VALUE
 rb_long2num_inline(long v)
 {
     if (FIXABLE(v))
@@ -1198,7 +1198,7 @@ rb_long2num_inline(long v)
 }
 #define LONG2NUM(x) rb_long2num_inline(x)
 
-static inline VALUE
+static rb_inline VALUE
 rb_ulong2num_inline(unsigned long v)
 {
     if (POSFIXABLE(v))
@@ -1208,7 +1208,7 @@ rb_ulong2num_inline(unsigned long v)
 }
 #define ULONG2NUM(x) rb_ulong2num_inline(x)
 
-static inline char
+static rb_inline char
 rb_num2char_inline(VALUE x)
 {
     if ((TYPE(x) == T_STRING) && (RSTRING_LEN(x)>=1))
@@ -1498,7 +1498,7 @@ RUBY_EXTERN VALUE rb_eMathDomainError;
 
 RUBY_EXTERN VALUE rb_stdin, rb_stdout, rb_stderr;
 
-static inline VALUE
+static rb_inline VALUE
 rb_class_of(VALUE obj)
 {
     if (IMMEDIATE_P(obj)) {
@@ -1514,7 +1514,7 @@ rb_class_of(VALUE obj)
     return RBASIC(obj)->klass;
 }
 
-static inline int
+static rb_inline int
 rb_type(VALUE obj)
 {
     if (IMMEDIATE_P(obj)) {
@@ -1555,7 +1555,7 @@ rb_type(VALUE obj)
 #define rb_special_const_p(obj) \
     __extension__ ({VALUE special_const_obj = (obj); (int)(SPECIAL_CONST_P(special_const_obj) ? Qtrue : Qfalse);})
 #else
-static inline int
+static rb_inline int
 rb_special_const_p(VALUE obj)
 {
     if (SPECIAL_CONST_P(obj)) return (int)Qtrue;

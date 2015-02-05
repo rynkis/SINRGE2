@@ -247,13 +247,13 @@ void rb_check_trusted(VALUE);
 #define rb_check_frozen(obj) __extension__({rb_check_frozen_internal(obj);})
 #define rb_check_trusted(obj) __extension__({rb_check_trusted_internal(obj);})
 #else
-static inline void
+static rb_inline void
 rb_check_frozen_inline(VALUE obj)
 {
     rb_check_frozen_internal(obj);
 }
 #define rb_check_frozen(obj) rb_check_frozen_inline(obj)
-static inline void
+static rb_inline void
 rb_check_trusted_inline(VALUE obj)
 {
     rb_check_trusted_internal(obj);

@@ -231,7 +231,7 @@ RUBY_EXTERN VALUE rb_cEncoding;
 #define ENC_DUMMY_P(enc) ((enc)->ruby_encoding_index & ENC_DUMMY_FLAG)
 #define ENC_SET_DUMMY(enc) ((enc)->ruby_encoding_index |= ENC_DUMMY_FLAG)
 
-static inline int
+static rb_inline int
 rb_enc_dummy_p(rb_encoding *enc)
 {
     return ENC_DUMMY_P(enc) != 0;

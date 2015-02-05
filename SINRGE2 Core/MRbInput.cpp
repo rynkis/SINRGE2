@@ -23,7 +23,9 @@ namespace
 	static const int	MAGIC_COUNT_PRESS		= 0;
 	static const int	MAGIC_COUNT_TRIGGER		= 1;
 	static const int	MAGIC_COUNT_REPEAT		= 2;
-	static const int	MAGIC_REPEAT_DELAY		= 24;
+	//static const int	MAGIC_REPEAT_DELAY = 24;
+
+	int magic_repeat_delay = 24;
 
 	inline static bool vk_is_press(int vk)
 	{
@@ -37,7 +39,7 @@ namespace
 
 	inline static bool vk_is_click(int vk)
 	{
-		return s_iLastRepeatCount[vk] > MAGIC_COUNT_PRESS && s_iRepeatCount[vk] == MAGIC_COUNT_PRESS;
+		return s_iLastRepeatCount[vk] > MAGIC_COUNT_PRESS && s_iRepeatCount[vk] == magic_repeat_delay;
 	}
 
 	void update_vk_states()
@@ -60,7 +62,7 @@ namespace
 				s_iRepeatCount[vk] = 0;
 
 			///<	¸üÐÂrepeat×´Ì¬
-			s_bRepeatBool[vk] = (vk_is_press(vk) && (vk_is_trigger(vk) || s_iRepeatCount[vk] > MAGIC_REPEAT_DELAY));
+			s_bRepeatBool[vk] = (vk_is_press(vk) && (vk_is_trigger(vk) || s_iRepeatCount[vk] > magic_repeat_delay));
 			if (s_bRepeatBool[vk] && s_iRepeatCount[vk] > MAGIC_COUNT_REPEAT)
 				s_iRepeatCount[vk] = MAGIC_COUNT_REPEAT;
 		}
@@ -335,6 +337,18 @@ VALUE MRbInput::get_character()
 	return Qnil;
 }
 
+VALUE MRbInput::set_repeat_delay(int argc, VALUE duration)
+{
+	SafeFixnumValue(duration);
+	magic_repeat_delay = FIX2INT(duration);
+	return Qnil;
+}
+
+VALUE MRbInput::get_repeat_delay()
+{
+	return INT2FIX(magic_repeat_delay);
+}
+
 void MRbInput::InitLibrary()
 {
 	mInput = rb_define_module_under(rb_mSin, "Input");
@@ -353,4 +367,7 @@ void MRbInput::InitLibrary()
 	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 
 	rb_define_module_function(mInput, "character", RbFunc(get_character), 0);
+
+	rb_define_module_function(mInput, "repeat_delay=", RbFunc(set_repeat_delay), 1);
+	rb_define_module_function(mInput, "repeat_delay", RbFunc(get_repeat_delay), 0);
 }
