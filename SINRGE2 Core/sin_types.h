@@ -26,6 +26,7 @@ typedef struct __SinFrameStruct
 	int			m_screen_height;
 
 	HWND		m_hwnd;
+	HWND		m_edit_hwnd;
 
 	wchar_t		m_title[MAX_PATH];
 
@@ -34,6 +35,7 @@ typedef struct __SinFrameStruct
 		, m_forbid_fullscreen(false)
 		, m_forbid_switch(false)
 		, m_hwnd(NULL)
+		, m_edit_hwnd(NULL)
 	{
 		m_screen_width	= 800;
 		m_screen_height = 600;

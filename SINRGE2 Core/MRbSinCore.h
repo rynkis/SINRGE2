@@ -66,6 +66,10 @@ struct MRbSinCore
 	static VALUE get_time_delta();
 
 	static VALUE get_screen_size();
+
+	static VALUE ime_init();
+	static VALUE ime_update();
+	static VALUE ime_exit();
 };
 
 #endif // __MODULE_RB_SIN_CORE_H__

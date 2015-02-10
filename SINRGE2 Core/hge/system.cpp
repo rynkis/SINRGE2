@@ -90,11 +90,11 @@ bool CALL HGE_Impl::System_Initiate()
 
 	// Create window
 
-	width = nScreenWidth;// +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	width = nScreenWidth;// + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
 	height = nScreenHeight;// +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
 
 	rectW.left = (GetSystemMetrics(SM_CXSCREEN)-width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);//(GetSystemMetrics(SM_CYSCREEN)-height) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - 360) / 2 - GetSystemMetrics(SM_CYCAPTION);//(GetSystemMetrics(SM_CYSCREEN)-height) / 2 - GetSystemMetrics(SM_CYCAPTION);
 	rectW.right = rectW.left + width;
 	rectW.bottom = rectW.top + height;
 	styleW = WS_POPUP | WS_VISIBLE;// | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE; //WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX;
@@ -107,19 +107,30 @@ bool CALL HGE_Impl::System_Initiate()
 
 	if (bWindowed)
 		hwnd = CreateWindowExW(WS_EX_TOOLWINDOW, WINDOW_CLASS_NAME, szWinTitle, styleW,
-				rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top,
-				NULL, NULL, hInstance, NULL);
+		rectW.left, rectW.top, width, height, NULL, NULL, hInstance, NULL);
 	else
-		hwnd = CreateWindowEx(WS_EX_TOPMOST, WINDOW_CLASS_NAME, szWinTitle, styleFS,
-				0, 0, 0, 0,
-				NULL, NULL, hInstance, NULL);
+		hwnd = CreateWindowExW(WS_EX_TOPMOST, WINDOW_CLASS_NAME, szWinTitle, styleFS,
+				0, 0, 0, 0, NULL, NULL, hInstance, NULL);
 	if (!hwnd)
 	{
 		_PostError(L"Can't create window");
 		return false;
 	}
 
-	ShowWindow(hwnd, SW_SHOW);
+	//ShowWindow(hwnd, SW_SHOW);
+
+
+	/*edit_hwnd = ::CreateWindowExW(0, L"EDIT", L"", WS_CHILD, rectW.left + 8, rectW.top - 22, 784, 22, hwnd, NULL, NULL, NULL);
+	if (!edit_hwnd)
+	{
+		printf("%d\n", GetLastError());
+	}
+	else
+	{
+		printf("%d\n", (long)edit_hwnd);
+	}
+	::ShowWindow(edit_hwnd, SW_SHOW);*/
+
 
 	// Init subsystems
 
@@ -479,8 +490,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		pHGE->bOnFocus = true;
 		return FALSE;
 
-	case WM_CREATE: 
-		return FALSE;
+	case WM_CREATE:
+		break;
+		//return FALSE;
 		
 	case WM_PAINT:
 		if(pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
@@ -528,12 +540,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				return FALSE;
 		}
 		return FALSE;
-	case WM_KEYDOWN:
-		return FALSE;
+	/*case WM_KEYDOWN:
+		return FALSE;*/
 	case WM_SYSKEYUP:
 		return FALSE;
-	case WM_KEYUP:
-		return FALSE;
+	/*case WM_KEYUP:
+		return FALSE;*/
 
 	case WM_LBUTTONDBLCLK:
 		pHGE->mouseButton += 64;
@@ -615,11 +627,11 @@ void CALL HGE_Impl::System_Resize(int width, int height)
 	nScreenWidth = width;
 	nScreenHeight = height;
 
-	width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
-	height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+	width = nScreenWidth;// +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+	height = nScreenHeight;// +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
 
 	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - 360) / 2 - GetSystemMetrics(SM_CYCAPTION);
 	rectW.right = rectW.left + width;
 	rectW.bottom = rectW.top + height;
 
