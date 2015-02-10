@@ -328,6 +328,9 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 const wchar_t* CALL HGE_Impl::System_GetStateString(hgeStringState state) {
 	if (state == HGE_TITLE)
 		return szWinTitle;
+	else if (state == IME_COMP)
+		return szCompStr;
+
 	return NULL;
 }
 
@@ -444,6 +447,7 @@ HGE_Impl::HGE_Impl()
 	szAppPath[i+1]=0;
 	
 	// +++SINRGE2+++
+	szCompStr[0] = 0;
 	szTitleFps[0] = 0;
 	mouseButton = 0;
 	mouseWheel = 0;
@@ -489,6 +493,26 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_SETFOCUS:
 		pHGE->bOnFocus = true;
 		return FALSE;
+	
+	case WM_IME_COMPOSITION:
+		if (lparam&GCS_RESULTSTR)//取得结果字符串
+		{
+			HIMC hIMC = ImmGetContext(pHGE->hwnd);
+			UINT uLen, uMem;
+
+			uLen = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0);//取得结果字符串大小
+			uMem = (uLen + sizeof(wchar_t));
+			//szCompStr = (TCHAR *)malloc(uMem = (uLen + sizeof(TCHAR)));//分配内存
+			/*if (szCompStr)
+			{*/
+				pHGE->szCompStr[uLen] = 0;//结尾的\0
+				ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompStr, uMem);//取得结果字符串
+				//wprintf(L"%s\n", szCompStr); //把结果字符串添加到最终输出的文本里面
+				//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
+				//free(szCompStr);
+			//}
+			ImmReleaseContext(pHGE->hwnd, hIMC);
+		}
 
 	case WM_CREATE:
 		break;
@@ -540,12 +564,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				return FALSE;
 		}
 		return FALSE;
-	/*case WM_KEYDOWN:
-		return FALSE;*/
+	case WM_KEYDOWN:
+		return FALSE;
 	case WM_SYSKEYUP:
 		return FALSE;
-	/*case WM_KEYUP:
-		return FALSE;*/
+	case WM_KEYUP:
+		return FALSE;
 
 	case WM_LBUTTONDBLCLK:
 		pHGE->mouseButton += 64;
@@ -617,6 +641,7 @@ bool CALL HGE_Impl::System_PeekMessage()
 			bActive=false;
 			return false;
 		}
+		TranslateMessage(&m_msg);
 		DispatchMessage(&m_msg);
 	}
 	return true;

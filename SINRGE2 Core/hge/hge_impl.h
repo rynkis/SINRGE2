@@ -125,6 +125,7 @@ public:
 	wchar_t					szError[256];
 	wchar_t					szAppPath[_MAX_PATH];
 
+	wchar_t					szCompStr[1024];
 
 	// System States
 	//bool					(*procFrameFunc)();

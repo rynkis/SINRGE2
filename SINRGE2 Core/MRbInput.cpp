@@ -14,6 +14,9 @@ static int				mouse_posX				= 0;
 static int				mouse_posY				= 0;
 static bool				in_screen				= false;
 
+static bool				capital = false;
+static bool				num_lock = true;
+
 namespace
 {
 	static int			s_iRepeatCount[256]		= { 0, };
@@ -278,12 +281,19 @@ VALUE MRbInput::get_mouse_pos()
 **		SINRGE2::Input.character	-> string
 **
 */
-VALUE MRbInput::get_character()
+VALUE MRbInput::get_characters()
 {
-	bool capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || vk_is_press(VK_LSHIFT) || vk_is_press(VK_RSHIFT);
+	capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || vk_is_press(VK_LSHIFT) || vk_is_press(VK_RSHIFT);
+	num_lock = (GetKeyState(VK_NUMLOCK) & 0x01) == 1;
 
 	//if (vk_is_trigger(VK_SPACE))		return rb_str_new2(" ");
 
+	/*wchar_t * ime_name = GetAppPtr()->IMEGetDescription();
+	if (ime_name[0])
+		wprintf(L"IME: %s\n", ime_name);*/
+	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP))
+		wprintf(L"%s\n", GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP));
+	
 	if (vk_is_trigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
 	if (vk_is_trigger(VK_B))			return rb_str_new2(capital ? "B" : "b");
 	if (vk_is_trigger(VK_C))			return rb_str_new2(capital ? "C" : "c");
@@ -334,6 +344,17 @@ VALUE MRbInput::get_character()
 	if (vk_is_trigger(VK_OEM_6))		return rb_str_new2(capital ? "}" : "]");
 	if (vk_is_trigger(VK_OEM_7))		return rb_str_new2(capital ? "\"" : "'");
 
+	if (vk_is_trigger(VK_NUMPAD0))		return rb_str_new2(num_lock ? "0" : "");
+	if (vk_is_trigger(VK_NUMPAD1))		return rb_str_new2(num_lock ? "1" : "");
+	if (vk_is_trigger(VK_NUMPAD2))		return rb_str_new2(num_lock ? "2" : "");
+	if (vk_is_trigger(VK_NUMPAD3))		return rb_str_new2(num_lock ? "3" : "");
+	if (vk_is_trigger(VK_NUMPAD4))		return rb_str_new2(num_lock ? "4" : "");
+	if (vk_is_trigger(VK_NUMPAD5))		return rb_str_new2(num_lock ? "5" : "");
+	if (vk_is_trigger(VK_NUMPAD6))		return rb_str_new2(num_lock ? "6" : "");
+	if (vk_is_trigger(VK_NUMPAD7))		return rb_str_new2(num_lock ? "7" : "");
+	if (vk_is_trigger(VK_NUMPAD8))		return rb_str_new2(num_lock ? "8" : "");
+	if (vk_is_trigger(VK_NUMPAD9))		return rb_str_new2(num_lock ? "9" : "");
+
 	return Qnil;
 }
 
@@ -366,7 +387,7 @@ void MRbInput::InitLibrary()
 	rb_define_module_function(mInput, "dir4", RbFunc(get_dir4), 0);
 	rb_define_module_function(mInput, "dir8", RbFunc(get_dir8), 0);
 
-	rb_define_module_function(mInput, "character", RbFunc(get_character), 0);
+	rb_define_module_function(mInput, "characters", RbFunc(get_characters), 0);
 
 	rb_define_module_function(mInput, "repeat_delay=", RbFunc(set_repeat_delay), 1);
 	rb_define_module_function(mInput, "repeat_delay", RbFunc(get_repeat_delay), 0);

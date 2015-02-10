@@ -62,6 +62,8 @@ public:
 	IC7pkgWriter *				Open7pkgWriter(const wchar_t * filename, const wchar_t * password);
 	void						Close7pkgWriter(IC7pkgWriter * pw);
 
+	const wchar_t *				IMEGetDescription();
+
 private:
 	//void						ShowError(const wchar_t *szFormat, ...);
 	void						Dispose();
@@ -87,6 +89,10 @@ private:
 	wchar_t						szAppPath[MAX_PATH];
 	wchar_t						szIniPath[MAX_PATH];
 	wchar_t						szScripts[MAX_PATH];
+
+	wchar_t						szIMEName[255];
+	DWORD						m_thId;
+	HKL							m_hkl;
 
 	bool						m_with_console;
 	char *						pScripts;

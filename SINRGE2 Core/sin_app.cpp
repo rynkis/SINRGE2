@@ -210,11 +210,15 @@ CApplication::CApplication()
 	, m_hSeal(0)
 
 	, m_inited(false)
+	, m_thId(0)
+	, m_hkl(0)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
 	szIniPath[0] = 0;
 	szScripts[0] = 0;
+	szIMEName[0] = 0;
+
 	//memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
 	m_pHge = hgeCreate(HGE_VERSION);
 	
@@ -638,6 +642,9 @@ bool CApplication::InitVideo()
 	//	Save the window's hwnd
 	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
 
+	m_thId = ::GetWindowThreadProcessId(m_frm_struct.m_hwnd, NULL);
+	m_hkl = ::GetKeyboardLayout(m_thId);
+
 	//CRbRenderTree::Init();
 
 	m_pRenderState = new CRbRenderState();
@@ -751,4 +758,10 @@ IC7pkgWriter * CApplication::Open7pkgWriter(const wchar_t * filename, const wcha
 void CApplication::Close7pkgWriter(IC7pkgWriter * pw)
 {
 	pw_close(pw);
+}
+
+const wchar_t * CApplication::IMEGetDescription()
+{
+	::ImmGetDescriptionW(m_hkl, szIMEName, 255);
+	return szIMEName;
 }

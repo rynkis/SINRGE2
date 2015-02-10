@@ -88,7 +88,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;winmm.lib;iphlpapi.lib;$(SolutionDir)Contrib/lib/msvcr120-ruby220-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;shell32.lib;ws2_32.lib;imagehlp.lib;shlwapi.lib;winmm.lib;iphlpapi.lib;Imm32.lib;$(SolutionDir)Contrib/lib/msvcr120-ruby220-static_MT.lib;$(SolutionDir)Contrib/lib/zlib.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3d8.lib;$(SolutionDir)Contrib/DXSDK81/lib/d3dx8.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>msvcrt.lib;libci.lib</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile>SINRGE2.def</ModuleDefinitionFile>
       <StackReserveSize>0</StackReserveSize>

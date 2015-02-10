@@ -330,57 +330,57 @@ VALUE MRbSinCore::get_screen_size()
 	return argv;
 }
 
-VALUE MRbSinCore::ime_init()
-{
-	GetAppPtr()->m_frm_struct.m_edit_hwnd = ::CreateWindowExW(0, L"EDIT", L"", 0x40011000L, 32, 480 - 22, 784, 22, GetAppPtr()->m_frm_struct.m_hwnd, NULL, NULL, NULL);
-	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-	{
-		printf("%d\n", GetLastError());
-		return Qfalse;
-	}
-	else
-	{
-		printf("%d\n", (long)GetAppPtr()->m_frm_struct.m_edit_hwnd);
-		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-		return Qtrue;
-	}
-}
-
-VALUE MRbSinCore::ime_update()
-{
-	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-	{
-		return Qfalse;
-	}
-	else
-	{
-		::UpdateWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-		int length = ::GetWindowTextLengthW(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-		if (length > 0)
-		{
-			char str[256];
-			::GetWindowTextA(GetAppPtr()->m_frm_struct.m_edit_hwnd, str, 256);
-			printf(str);
-		}
-		return Qtrue;
-	}
-}
-
-VALUE MRbSinCore::ime_exit()
-{
-	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-	{
-		return Qfalse;
-	}
-	else
-	{
-		if (::DestroyWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd))
-			return Qtrue;
-		else
-			return Qfalse;
-	}
-}
+//VALUE MRbSinCore::ime_init()
+//{
+//	GetAppPtr()->m_frm_struct.m_edit_hwnd = ::CreateWindowExW(0, L"EDIT", NULL, 0x40011000L, 8, 72-22, 784, 22, GetAppPtr()->m_frm_struct.m_hwnd, NULL, NULL, NULL);
+//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
+//	{
+//		printf("%d\n", GetLastError());
+//		return Qfalse;
+//	}
+//	else
+//	{
+//		printf("%d\n", (long)GetAppPtr()->m_frm_struct.m_edit_hwnd);
+//		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
+//		return Qtrue;
+//	}
+//}
+//
+//VALUE MRbSinCore::ime_update()
+//{
+//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
+//	{
+//		return Qfalse;
+//	}
+//	else
+//	{
+//		::UpdateWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd);
+//		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
+//		int length = ::GetWindowTextLengthW(GetAppPtr()->m_frm_struct.m_edit_hwnd);
+//		if (length > 0)
+//		{
+//			char str[256];
+//			::GetWindowTextA(GetAppPtr()->m_frm_struct.m_edit_hwnd, str, 256);
+//			printf(str);
+//		}
+//		return Qtrue;
+//	}
+//}
+//
+//VALUE MRbSinCore::ime_exit()
+//{
+//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
+//	{
+//		return Qfalse;
+//	}
+//	else
+//	{
+//		if (::DestroyWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd))
+//			return Qtrue;
+//		else
+//			return Qfalse;
+//	}
+//}
 
 void MRbSinCore::InitLibrary()
 {
@@ -445,7 +445,7 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "show_mouse=",			RbFunc(set_show_mouse), 1);
 	rb_define_module_function(rb_mFrame, "peek_message",		RbFunc(peek_message), 0);
 
-	rb_define_module_function(rb_mFrame, "ime_init", RbFunc(ime_init), 0);
+	/*rb_define_module_function(rb_mFrame, "ime_init", RbFunc(ime_init), 0);
 	rb_define_module_function(rb_mFrame, "ime_update", RbFunc(ime_update), 0);
-	rb_define_module_function(rb_mFrame, "ime_exit", RbFunc(ime_exit), 0);
+	rb_define_module_function(rb_mFrame, "ime_exit", RbFunc(ime_exit), 0);*/
 }
