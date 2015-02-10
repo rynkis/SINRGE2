@@ -1316,7 +1316,7 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 
 			if (dwBufferSize > 0)
 			{
-				int nLentemp = GetGlyphOutline(hScreenDC, pStr[i],GGO_GRAY8_BITMAP,&gm,dwBufferSize,buffer,&mmat2);
+				int nLentemp = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, dwBufferSize, buffer, &mmat2);
 				GetTextMetrics(hScreenDC, &tm);
 				int stride = dwBufferSize / gm.gmBlackBoxY;
 				//	ÖðÏñËØÃè»æ

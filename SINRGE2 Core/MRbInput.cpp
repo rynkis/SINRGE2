@@ -291,8 +291,11 @@ VALUE MRbInput::get_characters()
 	/*wchar_t * ime_name = GetAppPtr()->IMEGetDescription();
 	if (ime_name[0])
 		wprintf(L"IME: %s\n", ime_name);*/
-	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP))
-		wprintf(L"%s\n", GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP));
+	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP)[0] != L'')
+	{
+		VALUE str = rb_str_freeze(rb_str_new2(Kconv::UnicodeToUTF8(GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP))));
+		return str;
+	}
 	
 	if (vk_is_trigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
 	if (vk_is_trigger(VK_B))			return rb_str_new2(capital ? "B" : "b");

@@ -274,6 +274,11 @@ void CALL HGE_Impl::System_SetStateString(hgeStringState state, const wchar_t *v
 		if(pHGE->hwnd)
 			SetWindowText(pHGE->hwnd, szWinTitle);
 	}
+	else if (state == IME_COMP)
+	{
+		wcscpy_s(szCompStr, value);
+		//szCompStr[0] = 0;
+	}
 }
 
 bool CALL HGE_Impl::System_GetStateBool(hgeBoolState state)
@@ -498,16 +503,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		if (lparam&GCS_RESULTSTR)//取得结果字符串
 		{
 			HIMC hIMC = ImmGetContext(pHGE->hwnd);
-			UINT uLen, uMem;
+			//UINT uLen, uMem;
 
-			uLen = ImmGetCompositionString(hIMC, GCS_RESULTSTR, NULL, 0);//取得结果字符串大小
-			uMem = (uLen + sizeof(wchar_t));
+			//uLen = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);//取得结果字符串大小
+			//uMem = (uLen + sizeof(wchar_t));
 			//szCompStr = (TCHAR *)malloc(uMem = (uLen + sizeof(TCHAR)));//分配内存
-			/*if (szCompStr)
+			/*if (uLen > 0)
 			{*/
-				pHGE->szCompStr[uLen] = 0;//结尾的\0
-				ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompStr, uMem);//取得结果字符串
-				//wprintf(L"%s\n", szCompStr); //把结果字符串添加到最终输出的文本里面
+			memset(pHGE->szCompStr, 0, 1024);
+			//pHGE->szCompStr[uLen] = 0;//结尾的\0
+			ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompStr, 1024);//取得结果字符串
+				//if (pHGE->szCompStr[0] != L'')
+				//	wprintf(L"%s\n", pHGE->szCompStr); //把结果字符串添加到最终输出的文本里面
 				//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
 				//free(szCompStr);
 			//}
