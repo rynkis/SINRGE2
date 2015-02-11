@@ -159,6 +159,9 @@
     <ClCompile Include="CRbDisplayObject.cpp">
       <Filter>源文件\RbInterface</Filter>
     </ClCompile>
+    <ClCompile Include="CBrowseDir.cpp">
+      <Filter>源文件\SINRGE2</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -373,6 +376,9 @@
     </ClInclude>
     <ClInclude Include="CRbDisplayObject.h">
       <Filter>源文件\RbInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="CBrowseDir.h">
+      <Filter>源文件\SINRGE2\header</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

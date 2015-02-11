@@ -102,6 +102,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CBrowseDir.cpp" />
     <ClCompile Include="CRb7pkgWriter.cpp" />
     <ClCompile Include="CRbBitmap.cpp" />
     <ClCompile Include="CRbCharmap.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="..\Contrib\include\ruby\win32.h" />
     <ClInclude Include="..\Contrib\include\zconf.h" />
     <ClInclude Include="..\Contrib\include\zlib.h" />
+    <ClInclude Include="CBrowseDir.h" />
     <ClInclude Include="CRb7pkgWriter.h" />
     <ClInclude Include="CRbBitmap.h" />
     <ClInclude Include="CRbCharmap.h" />

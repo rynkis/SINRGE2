@@ -1303,7 +1303,9 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 										155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,
 										219,223,227,231,235,239,243,247,251,255};
 
-		static BYTE		buffer[1024];
+		static BYTE		buffer[6144];
+
+		//BYTE * buffer = (BYTE *)malloc(2048 * sizeof(BYTE));
 
 		HFONT hOldFont = (HFONT)SelectObject(hScreenDC, pfont->GetHFont());
 		//	循环逐字描绘
@@ -1311,6 +1313,13 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		{
 			u32 dwBufferSize = GetGlyphOutline(hScreenDC, pStr[i], GGO_GRAY8_BITMAP, &gm, 0, NULL, &mmat2);
 
+			/*if (dwBufferSize > SinArrayCount(buffer))
+			{
+				free(buffer);
+				buffer = NULL;
+				buffer = (BYTE *)malloc(dwBufferSize * sizeof(BYTE));
+				printf("%d\n", dwBufferSize);
+			}*/
 			if (dwBufferSize > SinArrayCount(buffer))
 				rb_raise(rb_eSinError, "too small buffer size.");
 
@@ -1359,6 +1368,8 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 			}
 			iCharOffset += gm.gmCellIncX;
 		}
+		//free(buffer);
+		//buffer = NULL;
 		SelectObject(hScreenDC, hOldFont);
 	}
 	// 取消锁定

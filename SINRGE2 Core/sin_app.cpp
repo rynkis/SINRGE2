@@ -28,6 +28,7 @@
 #include "sin_common.h"
 #include "sin_app.h"
 #include "sin_video.h"
+#include "CBrowseDir.h"
 
 namespace
 {
@@ -210,14 +211,11 @@ CApplication::CApplication()
 	, m_hSeal(0)
 
 	, m_inited(false)
-	, m_thId(0)
-	, m_hkl(0)
 {
 	s_pApp = this;
 	szAppPath[0] = 0;
 	szIniPath[0] = 0;
 	szScripts[0] = 0;
-	szIMEName[0] = 0;
 
 	//memset(&m_d3d_caps, 0, sizeof(m_d3d_caps));
 	m_pHge = hgeCreate(HGE_VERSION);
@@ -642,9 +640,6 @@ bool CApplication::InitVideo()
 	//	Save the window's hwnd
 	m_frm_struct.m_hwnd = m_pHge->System_GetState(HGE_HWND);
 
-	m_thId = ::GetWindowThreadProcessId(m_frm_struct.m_hwnd, NULL);
-	m_hkl = ::GetKeyboardLayout(m_thId);
-
 	//CRbRenderTree::Init();
 
 	m_pRenderState = new CRbRenderState();
@@ -656,6 +651,30 @@ bool CApplication::InitVideo()
 		return false;
 	if (!m_pVideoMgr->Init())
 		return false;
+
+	CStatDir statdir;
+	if (statdir.SetInitDir("Fonts"))
+	{
+		//¿ªÊ¼±éÀú
+		vector<string>file_vec = statdir.BeginBrowseFilenames("*.*");
+		for (vector<string>::const_iterator it = file_vec.begin(); it < file_vec.end(); ++it)
+		{
+			//std::cout << *it << std::endl;
+
+			int bufferlen = ::MultiByteToWideChar(CP_ACP, 0, (*it).c_str(), (*it).size(), NULL, 0);
+			if (bufferlen == 0)
+				continue;
+
+			LPWSTR widestr = new WCHAR[bufferlen + 1];
+			::MultiByteToWideChar(CP_ACP, 0, (*it).c_str(), (*it).size(), widestr, bufferlen);
+			widestr[bufferlen] = 0;
+
+			::AddFontResourceExW(widestr, FR_PRIVATE, NULL);
+
+			delete[] widestr;
+		}
+	}
+	::SetCurrentDirectoryW(szAppPath);
 
 	m_inited = true;
 
@@ -758,10 +777,4 @@ IC7pkgWriter * CApplication::Open7pkgWriter(const wchar_t * filename, const wcha
 void CApplication::Close7pkgWriter(IC7pkgWriter * pw)
 {
 	pw_close(pw);
-}
-
-const wchar_t * CApplication::IMEGetDescription()
-{
-	::ImmGetDescriptionW(m_hkl, szIMEName, 255);
-	return szIMEName;
 }

@@ -126,6 +126,8 @@ public:
 	wchar_t					szAppPath[_MAX_PATH];
 
 	wchar_t					szCompStr[1024];
+	wchar_t					szCompRes[1024];
+	wchar_t					szInputCh[2];
 
 	// System States
 	//bool					(*procFrameFunc)();

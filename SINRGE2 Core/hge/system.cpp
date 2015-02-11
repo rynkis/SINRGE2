@@ -268,17 +268,38 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 
 void CALL HGE_Impl::System_SetStateString(hgeStringState state, const wchar_t *value)
 {
-	if (state == HGE_TITLE)
+	switch (state)
 	{
-		wcscpy_s(szWinTitle,value);
-		if(pHGE->hwnd)
+	case HGE_TITLE:
+		wcscpy_s(szWinTitle, value);
+		if (pHGE->hwnd)
 			SetWindowText(pHGE->hwnd, szWinTitle);
-	}
-	else if (state == IME_COMP)
-	{
+		break;
+	case IME_COMP_STR:
 		wcscpy_s(szCompStr, value);
 		//szCompStr[0] = 0;
+		break;
+	case IME_COMP_RES:
+		wcscpy_s(szCompRes, value);
+		break;
+	case IME_INPUT:
+		wcscpy_s(szInputCh, value);
+		break;
+	default:
+		break;
 	}
+
+	//if (state == HGE_TITLE)
+	//{
+	//	wcscpy_s(szWinTitle,value);
+	//	if(pHGE->hwnd)
+	//		SetWindowText(pHGE->hwnd, szWinTitle);
+	//}
+	//else if (state == IME_COMP)
+	//{
+	//	wcscpy_s(szCompStr, value);
+	//	//szCompStr[0] = 0;
+	//}
 }
 
 bool CALL HGE_Impl::System_GetStateBool(hgeBoolState state)
@@ -330,13 +351,27 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 	return 0;
 }
 
-const wchar_t* CALL HGE_Impl::System_GetStateString(hgeStringState state) {
-	if (state == HGE_TITLE)
+const wchar_t* CALL HGE_Impl::System_GetStateString(hgeStringState state)
+{
+	switch (state)
+	{
+	case HGE_TITLE:
+		return szWinTitle;
+	case IME_COMP_STR:
+		return szCompStr;
+	case IME_COMP_RES:
+		return szCompRes;
+	case IME_INPUT:
+		return szInputCh;
+	default:
+		return NULL;
+	}
+	/*if (state == HGE_TITLE)
 		return szWinTitle;
 	else if (state == IME_COMP)
 		return szCompStr;
 
-	return NULL;
+	return NULL;*/
 }
 
 wchar_t* CALL HGE_Impl::System_GetErrorMessage()
@@ -453,6 +488,9 @@ HGE_Impl::HGE_Impl()
 	
 	// +++SINRGE2+++
 	szCompStr[0] = 0;
+	szCompRes[0] = 0;
+	//szInputCh[0] = 0;
+	memset(szInputCh, 0, 2);
 	szTitleFps[0] = 0;
 	mouseButton = 0;
 	mouseWheel = 0;
@@ -498,8 +536,33 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_SETFOCUS:
 		pHGE->bOnFocus = true;
 		return FALSE;
-	
+
+	case WM_CHAR:
+		pHGE->szInputCh[0] = (wchar_t)wparam;
+		switch (pHGE->szInputCh[0])
+		{
+		case L'\b':
+			return FALSE;
+		case L'\t':
+			return FALSE;
+		case L'\n':
+			return FALSE;
+		case L'\r':
+			return FALSE;
+		case 0x7F:
+			return FALSE;
+		default:
+			if (pHGE->szInputCh[0] < (wchar_t)' ')
+				return FALSE;
+		}
 	case WM_IME_COMPOSITION:
+		if (lparam&GCS_COMPSTR)//取得正在输入的字符串（拼音之类的）
+		{
+			HIMC hIMC = ImmGetContext(pHGE->hwnd);
+			memset(pHGE->szCompStr, 0, 1024);
+			ImmGetCompositionStringW(hIMC, GCS_COMPSTR, pHGE->szCompStr, 1024);//取得结果字符串
+			ImmReleaseContext(pHGE->hwnd, hIMC);
+		}
 		if (lparam&GCS_RESULTSTR)//取得结果字符串
 		{
 			HIMC hIMC = ImmGetContext(pHGE->hwnd);
@@ -510,9 +573,9 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			//szCompStr = (TCHAR *)malloc(uMem = (uLen + sizeof(TCHAR)));//分配内存
 			/*if (uLen > 0)
 			{*/
-			memset(pHGE->szCompStr, 0, 1024);
+			memset(pHGE->szCompRes, 0, 1024);
 			//pHGE->szCompStr[uLen] = 0;//结尾的\0
-			ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompStr, 1024);//取得结果字符串
+			ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompRes, 1024);//取得结果字符串
 				//if (pHGE->szCompStr[0] != L'')
 				//	wprintf(L"%s\n", pHGE->szCompStr); //把结果字符串添加到最终输出的文本里面
 				//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
@@ -520,7 +583,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			//}
 			ImmReleaseContext(pHGE->hwnd, hIMC);
 		}
-
+		return FALSE;
 	case WM_CREATE:
 		break;
 		//return FALSE;

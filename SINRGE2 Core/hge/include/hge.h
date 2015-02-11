@@ -178,7 +178,9 @@ enum hgeIntState
 enum hgeStringState
 {
 	HGE_TITLE			= 27,   // char*	window title		(default: "HGE")
-	IME_COMP			= 28,
+	IME_COMP_STR		= 28,
+	IME_COMP_RES		= 29,
+	IME_INPUT			= 30,
 	
 	HGESTRINGSTATE_FORCE_DWORD = 0x7FFFFFFF
 };

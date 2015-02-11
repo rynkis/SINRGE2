@@ -288,16 +288,20 @@ VALUE MRbInput::get_characters()
 
 	//if (vk_is_trigger(VK_SPACE))		return rb_str_new2(" ");
 
-	/*wchar_t * ime_name = GetAppPtr()->IMEGetDescription();
-	if (ime_name[0])
-		wprintf(L"IME: %s\n", ime_name);*/
-	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP)[0] != L'')
+	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP_RES)[0] != L'')
 	{
-		VALUE str = rb_str_freeze(rb_str_new2(Kconv::UnicodeToUTF8(GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP))));
+		VALUE str = rb_str_freeze(rb_str_new2(Kconv::UnicodeToUTF8(GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP_RES))));
+		GetAppPtr()->GetHgePtr()->System_SetState(IME_COMP_RES, L"");
+		return str;
+	}
+	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_INPUT)[0] != L'')
+	{
+		VALUE str = rb_str_freeze(rb_str_new2(Kconv::UnicodeToUTF8(GetAppPtr()->GetHgePtr()->System_GetState(IME_INPUT))));
+		GetAppPtr()->GetHgePtr()->System_SetState(IME_INPUT, L"");
 		return str;
 	}
 	
-	if (vk_is_trigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
+	/*if (vk_is_trigger(VK_A))			return rb_str_new2(capital ? "A" : "a");
 	if (vk_is_trigger(VK_B))			return rb_str_new2(capital ? "B" : "b");
 	if (vk_is_trigger(VK_C))			return rb_str_new2(capital ? "C" : "c");
 	if (vk_is_trigger(VK_D))			return rb_str_new2(capital ? "D" : "d");
@@ -356,7 +360,7 @@ VALUE MRbInput::get_characters()
 	if (vk_is_trigger(VK_NUMPAD6))		return rb_str_new2(num_lock ? "6" : "");
 	if (vk_is_trigger(VK_NUMPAD7))		return rb_str_new2(num_lock ? "7" : "");
 	if (vk_is_trigger(VK_NUMPAD8))		return rb_str_new2(num_lock ? "8" : "");
-	if (vk_is_trigger(VK_NUMPAD9))		return rb_str_new2(num_lock ? "9" : "");
+	if (vk_is_trigger(VK_NUMPAD9))		return rb_str_new2(num_lock ? "9" : "");*/
 
 	return Qnil;
 }
