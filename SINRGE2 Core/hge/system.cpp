@@ -263,6 +263,8 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 								}
 								nHGEFPS=value;
 								break;
+		case IME_RECT_X:	iIMEx = value; break;
+		case IME_RECT_Y:	iIMEy = value; break;
 	}
 }
 
@@ -491,6 +493,8 @@ HGE_Impl::HGE_Impl()
 	szCompRes[0] = 0;
 	//szInputCh[0] = 0;
 	memset(szInputCh, 0, 2);
+	iIMEx = 14;
+	iIMEy = 50;
 	szTitleFps[0] = 0;
 	mouseButton = 0;
 	mouseWheel = 0;
@@ -528,7 +532,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	pHGE->mouseMove = false;
 
-	switch(msg)
+	switch (msg)
 	{
 	case WM_KILLFOCUS:
 		pHGE->bOnFocus = false;
@@ -539,22 +543,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 
 	case WM_CHAR:
 		pHGE->szInputCh[0] = (wchar_t)wparam;
-		switch (pHGE->szInputCh[0])
-		{
-		case L'\b':
+		/*if (pHGE->szInputCh[0] < (wchar_t)' ')*/
 			return FALSE;
-		case L'\t':
-			return FALSE;
-		case L'\n':
-			return FALSE;
-		case L'\r':
-			return FALSE;
-		case 0x7F:
-			return FALSE;
-		default:
-			if (pHGE->szInputCh[0] < (wchar_t)' ')
-				return FALSE;
-		}
 	case WM_IME_COMPOSITION:
 		if (lparam&GCS_COMPSTR)//取得正在输入的字符串（拼音之类的）
 		{
@@ -576,10 +566,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			memset(pHGE->szCompRes, 0, 1024);
 			//pHGE->szCompStr[uLen] = 0;//结尾的\0
 			ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompRes, 1024);//取得结果字符串
-				//if (pHGE->szCompStr[0] != L'')
-				//	wprintf(L"%s\n", pHGE->szCompStr); //把结果字符串添加到最终输出的文本里面
-				//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
-				//free(szCompStr);
+			//if (pHGE->szCompStr[0] != L'')
+			//	wprintf(L"%s\n", pHGE->szCompStr); //把结果字符串添加到最终输出的文本里面
+			//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
+			//free(szCompStr);
 			//}
 			ImmReleaseContext(pHGE->hwnd, hIMC);
 		}
@@ -587,31 +577,31 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_CREATE:
 		break;
 		//return FALSE;
-		
+
 	case WM_PAINT:
-		if(pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
+		if (pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
 		break;
 
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return FALSE;
 
-/*
-		case WM_ACTIVATEAPP:
-			bActivating = (wparam == TRUE);
-			if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
-			return FALSE;
-*/
+		/*
+				case WM_ACTIVATEAPP:
+				bActivating = (wparam == TRUE);
+				if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+				return FALSE;
+				*/
 	case WM_ACTIVATE:
 		// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
 		// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
 		bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
-		if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+		if (pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
 		return FALSE;
 
 
 	case WM_SETCURSOR:
-		if(pHGE->bActive && LOWORD(lparam)==HTCLIENT && pHGE->bHideMouse) SetCursor(NULL);
+		if (pHGE->bActive && LOWORD(lparam) == HTCLIENT && pHGE->bHideMouse) SetCursor(NULL);
 		else SetCursor(LoadCursor(NULL, IDC_ARROW));
 		return FALSE;
 
@@ -623,18 +613,28 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 				SetWindowText(pHGE->hwnd, pHGE->szWinTitle);
 			return FALSE;
 		}
-		else if(wparam == VK_F4)
+		else if (wparam == VK_F4)
 		{
-			if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
+			if (pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
-		else if(wparam == VK_RETURN)
+		else if (wparam == VK_RETURN)
 		{
 			pHGE->System_SetState(HGE_WINDOWED, !pHGE->System_GetState(HGE_WINDOWED));
-				return FALSE;
+			return FALSE;
 		}
 		return FALSE;
-	case WM_KEYDOWN:
+	case WM_KEYDOWN: {
+		HIMC hIMC = ImmGetContext(pHGE->hwnd);
+		COMPOSITIONFORM form;
+		form.dwStyle = CFS_RECT;
+		POINT point{ pHGE->iIMEx, pHGE->iIMEy };
+		RECT rect{ point.x, point.y, point.x + 300, 100 };
+		form.ptCurrentPos = point;
+		form.rcArea = rect;
+		ImmSetCompositionWindow(hIMC, &form);
+		ImmReleaseContext(pHGE->hwnd, hIMC);
+	}
 		return FALSE;
 	case WM_SYSKEYUP:
 		return FALSE;

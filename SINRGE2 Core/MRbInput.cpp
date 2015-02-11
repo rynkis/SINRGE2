@@ -377,6 +377,17 @@ VALUE MRbInput::get_repeat_delay()
 	return INT2FIX(magic_repeat_delay);
 }
 
+VALUE MRbInput::set_ime_rect(int argc, VALUE x, VALUE y)
+{
+	SafeFixnumValue(x);
+	SafeFixnumValue(y);
+
+	int nx = FIX2INT(x), ny = FIX2INT(y);
+	GetAppPtr()->GetHgePtr()->System_SetState(IME_RECT_X, nx);
+	GetAppPtr()->GetHgePtr()->System_SetState(IME_RECT_Y, ny);
+	return Qnil;
+}
+
 void MRbInput::InitLibrary()
 {
 	mInput = rb_define_module_under(rb_mSin, "Input");
@@ -398,4 +409,6 @@ void MRbInput::InitLibrary()
 
 	rb_define_module_function(mInput, "repeat_delay=", RbFunc(set_repeat_delay), 1);
 	rb_define_module_function(mInput, "repeat_delay", RbFunc(get_repeat_delay), 0);
+
+	rb_define_module_function(mInput, "set_ime_rect", RbFunc(set_ime_rect), 2);
 }

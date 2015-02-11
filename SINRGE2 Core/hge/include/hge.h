@@ -169,6 +169,9 @@ enum hgeIntState
 	HGE_SCREENWIDTH		= 17,   // int		screen width		(default: 800)
 	HGE_SCREENHEIGHT	= 18,   // int		screen height		(default: 600)
 	HGE_SCREENBPP		= 19,   // int		screen bitdepth		(default: 32) (desktop bpp in windowed mode)
+
+	IME_RECT_X			= 20,
+	IME_RECT_Y			= 21,
 	
 	HGE_FPS				= 24,	// int		fixed fps			(default: HGEFPS_UNLIMITED)
 

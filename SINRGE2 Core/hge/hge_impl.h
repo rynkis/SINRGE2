@@ -128,6 +128,8 @@ public:
 	wchar_t					szCompStr[1024];
 	wchar_t					szCompRes[1024];
 	wchar_t					szInputCh[2];
+	int						iIMEx;
+	int						iIMEy;
 
 	// System States
 	//bool					(*procFrameFunc)();
