@@ -196,6 +196,7 @@ public:
 	wchar_t				szTmpFilename[_MAX_PATH];
 
 	//	+++SINRGE2+++
+	bool				toolWindow;
 	wchar_t				szTitleFps[MAX_PATH];
 	int					mouseButton;
 	short				mouseWheel;

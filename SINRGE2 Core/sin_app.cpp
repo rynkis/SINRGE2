@@ -631,6 +631,7 @@ bool CApplication::InitVideo()
 	m_pHge->System_SetState(HGE_SCREENBPP, 32);
  	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
 	m_pHge->System_SetState(HGE_FPS, m_pHge->System_GetState(HGE_FPS));
+	m_pHge->System_SetState(SIN_TOOL_WINDOW, m_frm_struct.m_tool_window);
 	
 	if(!m_pHge->System_Initiate())
 		return false;

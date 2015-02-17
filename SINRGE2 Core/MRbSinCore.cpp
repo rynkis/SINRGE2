@@ -250,6 +250,9 @@ VALUE MRbSinCore::set_framecount(int argc, VALUE framecount)
 
 VALUE MRbSinCore::set_start_width(int argc, VALUE width)
 {
+	if (GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has inited.");
+
 	SafeFixnumValue(width);
 	GetAppPtr()->m_frm_struct.m_screen_width = FIX2INT(width);
 	return width;
@@ -257,6 +260,9 @@ VALUE MRbSinCore::set_start_width(int argc, VALUE width)
 
 VALUE MRbSinCore::set_start_height(int argc, VALUE height)
 {
+	if (GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has inited.");
+
 	SafeFixnumValue(height);
 	GetAppPtr()->m_frm_struct.m_screen_height = FIX2INT(height);
 	return height;
@@ -281,6 +287,9 @@ VALUE MRbSinCore::get_fs_start()
 
 VALUE MRbSinCore::set_fs_start(int argc, VALUE fs_start)
 {
+	if (GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has inited.");
+
 	GetAppPtr()->m_frm_struct.m_fullscreen_start = RTEST(fs_start);
 	return fs_start;
 }
@@ -294,6 +303,20 @@ VALUE MRbSinCore::set_forbid_fs(int argc, VALUE forbid_fs)
 {
 	GetAppPtr()->m_frm_struct.m_forbid_fullscreen = RTEST(forbid_fs);
 	return forbid_fs;
+}
+
+VALUE MRbSinCore::get_tool_window()
+{
+	return C2RbBool(GetAppPtr()->m_frm_struct.m_tool_window);
+}
+
+VALUE MRbSinCore::set_tool_window(int argc, VALUE tool_window)
+{
+	if (GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has inited.");
+
+	GetAppPtr()->m_frm_struct.m_tool_window = RTEST(tool_window);
+	return tool_window;
 }
 
 VALUE MRbSinCore::get_forbid_switch()
@@ -329,58 +352,6 @@ VALUE MRbSinCore::get_screen_size()
 
 	return argv;
 }
-
-//VALUE MRbSinCore::ime_init()
-//{
-//	GetAppPtr()->m_frm_struct.m_edit_hwnd = ::CreateWindowExW(0, L"EDIT", NULL, 0x40011000L, 8, 72-22, 784, 22, GetAppPtr()->m_frm_struct.m_hwnd, NULL, NULL, NULL);
-//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-//	{
-//		printf("%d\n", GetLastError());
-//		return Qfalse;
-//	}
-//	else
-//	{
-//		printf("%d\n", (long)GetAppPtr()->m_frm_struct.m_edit_hwnd);
-//		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-//		return Qtrue;
-//	}
-//}
-//
-//VALUE MRbSinCore::ime_update()
-//{
-//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-//	{
-//		return Qfalse;
-//	}
-//	else
-//	{
-//		::UpdateWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-//		::SetFocus(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-//		int length = ::GetWindowTextLengthW(GetAppPtr()->m_frm_struct.m_edit_hwnd);
-//		if (length > 0)
-//		{
-//			char str[256];
-//			::GetWindowTextA(GetAppPtr()->m_frm_struct.m_edit_hwnd, str, 256);
-//			printf(str);
-//		}
-//		return Qtrue;
-//	}
-//}
-//
-//VALUE MRbSinCore::ime_exit()
-//{
-//	if (!GetAppPtr()->m_frm_struct.m_edit_hwnd)
-//	{
-//		return Qfalse;
-//	}
-//	else
-//	{
-//		if (::DestroyWindow(GetAppPtr()->m_frm_struct.m_edit_hwnd))
-//			return Qtrue;
-//		else
-//			return Qfalse;
-//	}
-//}
 
 void MRbSinCore::InitLibrary()
 {
@@ -440,6 +411,9 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "forbid_switch=",		RbFunc(set_forbid_switch), 1);
 	rb_define_module_function(rb_mFrame, "start_width=",		RbFunc(set_start_width), 1);
 	rb_define_module_function(rb_mFrame, "start_height=",		RbFunc(set_start_height), 1);
+
+	rb_define_module_function(rb_mFrame, "noframe_start",		RbFunc(get_tool_window), 0);
+	rb_define_module_function(rb_mFrame, "noframe_start=",		RbFunc(set_tool_window), 1);
 	
 	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(get_show_mouse), 0);
 	rb_define_module_function(rb_mFrame, "show_mouse=",			RbFunc(set_show_mouse), 1);

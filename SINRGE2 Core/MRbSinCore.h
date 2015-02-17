@@ -57,6 +57,9 @@ struct MRbSinCore
 	static VALUE set_forbid_fs(int argc, VALUE forbid_fs);
 	static VALUE get_forbid_switch();
 	static VALUE set_forbid_switch(int argc, VALUE forbid_switch);
+
+	static VALUE get_tool_window();
+	static VALUE set_tool_window(int argc, VALUE tool_window);
 	
 	static VALUE get_show_mouse();
 	static VALUE set_show_mouse(int argc, VALUE show);

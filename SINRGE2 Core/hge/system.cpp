@@ -90,24 +90,35 @@ bool CALL HGE_Impl::System_Initiate()
 
 	// Create window
 
-	width = nScreenWidth;// + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
-	height = nScreenHeight;// +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
-	int theight = height <= 72 ? 360 : height;
+	width = nScreenWidth;
+	height = nScreenHeight;
+	int theight = height < 360 ? 360 : height;
 
 	rectW.left = (GetSystemMetrics(SM_CXSCREEN)-width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - theight) / 2;// -GetSystemMetrics(SM_CYCAPTION);
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - theight) / 2;
 	rectW.right = rectW.left + width;
 	rectW.bottom = rectW.top + height;
-	styleW = WS_POPUP | WS_VISIBLE;// | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE; //WS_OVERLAPPED | WS_SYSMENU | WS_MINIMIZEBOX;
+	styleW = WS_POPUP | WS_VISIBLE;
+
+	if (!toolWindow) {
+		width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+		height = nScreenHeight + GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+
+		rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+		rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - height) / 2 - GetSystemMetrics(SM_CYCAPTION);
+		rectW.right = rectW.left + width;
+		rectW.bottom = rectW.top + height;
+		styleW = WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
+	}
 
 	rectFS.left = 0;
 	rectFS.top = 0;
 	rectFS.right = nScreenWidth;
 	rectFS.bottom = nScreenHeight;
-	styleFS = WS_POPUP | WS_VISIBLE; //WS_POPUP
+	styleFS = WS_POPUP | WS_VISIBLE;
 
 	if (bWindowed)
-		hwnd = CreateWindowExW(WS_EX_TOOLWINDOW, WINDOW_CLASS_NAME, szWinTitle, styleW,
+		hwnd = CreateWindowExW(toolWindow ? WS_EX_TOOLWINDOW : NULL, WINDOW_CLASS_NAME, szWinTitle, styleW,
 		rectW.left, rectW.top, width, height, NULL, NULL, hInstance, NULL);
 	else
 		hwnd = CreateWindowExW(WS_EX_TOPMOST, WINDOW_CLASS_NAME, szWinTitle, styleFS,
@@ -215,7 +226,7 @@ void CALL HGE_Impl::System_SetStateBool(hgeBoolState state, bool value)
 								break;
 
 		case HGE_DONTSUSPEND:	bDontSuspend=value; break;
-
+		case SIN_TOOL_WINDOW:	toolWindow = value; break;
 	}
 }
 
@@ -490,6 +501,7 @@ HGE_Impl::HGE_Impl()
 	szAppPath[i+1]=0;
 	
 	// +++SINRGE2+++
+	toolWindow = false;
 	szCompStr[0] = 0;
 	szCompRes[0] = 0;
 	//szInputCh[0] = 0;
@@ -723,14 +735,25 @@ void CALL HGE_Impl::System_Resize(int width, int height)
 	nScreenWidth = width;
 	nScreenHeight = height;
 
-	width = nScreenWidth;// +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
-	height = nScreenHeight;// +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
-	int theight = height <= 72 ? 360 : height;
+	width = nScreenWidth;
+	height = nScreenHeight;
+	int theight = height < 360 ? 360 : height;
 
 	rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
-	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - theight) / 2;// -GetSystemMetrics(SM_CYCAPTION);
+	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - theight) / 2;
 	rectW.right = rectW.left + width;
 	rectW.bottom = rectW.top + height;
+
+	if (!toolWindow)
+	{
+		width = nScreenWidth +GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
+		height = nScreenHeight +GetSystemMetrics(SM_CYFIXEDFRAME) * 2 + GetSystemMetrics(SM_CYCAPTION);
+
+		rectW.left = (GetSystemMetrics(SM_CXSCREEN) - width) / 2;
+		rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - height) / 2 - GetSystemMetrics(SM_CYCAPTION);
+		rectW.right = rectW.left + width;
+		rectW.bottom = rectW.top + height;
+	}
 
 	::SetWindowPos(hwnd, 0, rectW.left, rectW.top, rectW.right - rectW.left, rectW.bottom - rectW.top, SWP_NOZORDER);
 

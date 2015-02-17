@@ -140,6 +140,8 @@ enum hgeBoolState
 	HGE_WINDOWED		= 1,    // bool		run in window?		(default: false)
 	HGE_ZBUFFER			= 2,    // bool		use z-buffer?		(default: false)
 	HGE_TEXTUREFILTER	= 3,    // bool		texture filtering?	(default: true)
+
+	SIN_TOOL_WINDOW		= 4,
 	
 	HGE_DONTSUSPEND		= 5,	// bool		focus lost:suspend?	(default: false)
 
