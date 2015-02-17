@@ -643,13 +643,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		return FALSE;
 
 	case WM_LBUTTONDBLCLK:
-		pHGE->mouseButton += 64;
+		pHGE->mouseButton = 64;
 		return FALSE;
 	case WM_RBUTTONDBLCLK:
-		pHGE->mouseButton += 128;
+		pHGE->mouseButton = 128;
 		return FALSE;
 	case WM_MBUTTONDBLCLK:
-		pHGE->mouseButton += 256;
+		pHGE->mouseButton = 256;
 		return FALSE;
 			
 	case WM_MOUSEMOVE:
@@ -823,7 +823,9 @@ int MRbInput::MouseWheel()
 
 int MRbInput::MouseDblClk(int iKey)
 {
-	return pHGE->mouseButton & (iKey<<6);
+	bool dblclk = pHGE->mouseButton & (iKey << 6);
+	pHGE->mouseButton = 0;
+	return dblclk;
 }
 
 //int MRbInput::GetMouseMove()
