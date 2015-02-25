@@ -75,7 +75,7 @@ VALUE MRbSinCore::wait(int argc, VALUE duration)
 
 VALUE MRbSinCore::snap_to_bitmap()
 {
-	VALUE __argv[] = {INT2FIX(2), INT2FIX(2)};
+	VALUE __argv[] = { INT2FIX(GetAppPtr()->m_frm_struct.m_screen_width), INT2FIX(GetAppPtr()->m_frm_struct.m_screen_height) };
 	VALUE bitmap = rb_class_new_instance(2, __argv, rb_cBitmap);
 	CRbBitmap * pRbBmp = (CRbBitmap *)DATA_PTR(bitmap);
 	if (!CRbBitmap::ScreenToBitmap(pRbBmp->GetBitmapPtr()))
