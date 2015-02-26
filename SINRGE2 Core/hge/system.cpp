@@ -862,7 +862,7 @@ void MRbSinCore::Freeze()
 	pHGE->bFreeze = true;
 }
 
-void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
+void MRbSinCore::Transition(int duration, HTEXTURE midTex, float vague)
 {
 	if (!pHGE->freezeTex || !pHGE->bFreeze) return;
 
@@ -891,10 +891,10 @@ void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 	QUAD_INIT(newQuad);
 	QUAD_SET_VRECT(newQuad, tempx1, tempy1, tempx2, tempy2);
 
-	if (filename[0])
+	if (midTex)
 	{
 		int suffix_idx;
-		HTEXTURE midTex = CRbBitmap::LoadTexture(filename, 0, suffix_idx);
+		//HTEXTURE midTex = quad->tex;// CRbBitmap::LoadTexture(filename, 0, suffix_idx);
 
 		int mw = pHGE->Texture_GetWidth(midTex);
 		int mh = pHGE->Texture_GetHeight(midTex);
@@ -1062,7 +1062,8 @@ void MRbSinCore::Transition(int duration, const wchar_t * filename, float vague)
 				duration--;
 			} while (duration);
 		}
-		pHGE->Texture_Free(midTex);
+		//pHGE->Texture_Free(midTex);
+		pHGE->Texture_Unlock(midTex);
 	}
 	else
 	{

@@ -13,6 +13,7 @@
 #endif
 
 #include "RbExport.h"
+#include "hge.h"
 
 struct MRbSinCore
 {
@@ -21,7 +22,7 @@ struct MRbSinCore
 	static void HideMouse(bool hide);
 
 	static void Freeze();
-	static void Transition(int duration, const wchar_t * filename, float vague);
+	static void Transition(int duration, HTEXTURE tex, float vague);
 	
 	static VALUE init();
 	static VALUE init_video();

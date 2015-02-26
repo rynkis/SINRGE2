@@ -95,15 +95,20 @@ VALUE MRbSinCore::freeze()
 VALUE MRbSinCore::transition(int argc, VALUE * argv)
 {
 	int duration = FIXNUM_P(argv[0]) ? FIX2INT(argv[0]) : 8;
-	wchar_t filename[MAX_PATH];
-	filename[0] = 0;
+	//wchar_t filename[MAX_PATH];
+	//filename[0] = 0;
+	CRbBitmap * bmp_ptr;
+	HTEXTURE tex = 0;
 	float vague = FIXNUM_P(argv[2]) ? (float)FIX2INT(argv[2]) : 40.0f;
 	if (!NIL_P(argv[1]))
 	{
-		SafeStringValue(argv[1]);
-		wcscpy_s(filename, Kconv::UTF8ToUnicode(RSTRING_PTR(argv[1])));
+		/*SafeStringValue(argv[1]);
+		wcscpy_s(filename, Kconv::UTF8ToUnicode(RSTRING_PTR(argv[1])));*/
+		SafeBitmapValue(argv[1]);
+		bmp_ptr = (CRbBitmap *)DATA_PTR(argv[1]);
+		tex = bmp_ptr->GetBitmapPtr()->quad.tex;
 	}
-	Transition(duration, filename, vague);
+	Transition(duration, tex, vague);
 	return Qnil;
 }
 
