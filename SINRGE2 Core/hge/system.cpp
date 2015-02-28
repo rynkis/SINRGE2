@@ -549,9 +549,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 	case WM_KILLFOCUS:
 		pHGE->bOnFocus = false;
+		if (pHGE->procFocusLostFunc) pHGE->procFocusLostFunc();
 		return FALSE;
 	case WM_SETFOCUS:
 		pHGE->bOnFocus = true;
+		if (pHGE->procFocusGainFunc) pHGE->procFocusGainFunc();
 		return FALSE;
 
 	case WM_CHAR:
@@ -569,21 +571,8 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		if (lparam&GCS_RESULTSTR)//取得结果字符串
 		{
 			HIMC hIMC = ImmGetContext(pHGE->hwnd);
-			//UINT uLen, uMem;
-
-			//uLen = ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, NULL, 0);//取得结果字符串大小
-			//uMem = (uLen + sizeof(wchar_t));
-			//szCompStr = (TCHAR *)malloc(uMem = (uLen + sizeof(TCHAR)));//分配内存
-			/*if (uLen > 0)
-			{*/
 			memset(pHGE->szCompRes, 0, 1024);
-			//pHGE->szCompStr[uLen] = 0;//结尾的\0
 			ImmGetCompositionStringW(hIMC, GCS_RESULTSTR, pHGE->szCompRes, 1024);//取得结果字符串
-			//if (pHGE->szCompStr[0] != L'')
-			//	wprintf(L"%s\n", pHGE->szCompStr); //把结果字符串添加到最终输出的文本里面
-			//wprintf(L"Finish\n"); //把结果字符串添加到最终输出的文本里面
-			//free(szCompStr);
-			//}
 			ImmReleaseContext(pHGE->hwnd, hIMC);
 		}
 		return FALSE;
@@ -609,7 +598,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
 		// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
 		bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
-		if (pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+		//if (pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
 		return FALSE;
 
 
@@ -674,10 +663,10 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	case WM_SYSCOMMAND:
 		if (wparam == SC_KEYMENU)
 			return TRUE;
-		else if(wparam==SC_CLOSE)
+		else if(wparam == SC_CLOSE)
 		{
 			if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
-			pHGE->bActive=false;
+			pHGE->bActive = false;
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
 		break;
@@ -721,7 +710,7 @@ bool CALL HGE_Impl::System_PeekMessage()
 	{
 		if (m_msg.message == WM_QUIT)
 		{
-			bActive=false;
+			bActive = false;
 			return false;
 		}
 		TranslateMessage(&m_msg);
@@ -844,7 +833,7 @@ int MRbInput::MouseWheel()
 
 int MRbInput::MouseDblClk(int iKey)
 {
-	bool dblclk = pHGE->mouseButton & (iKey << 6);
+	int dblclk = (pHGE->mouseButton & (iKey << 6)) ? 1 : 0;
 	pHGE->mouseButton = 0;
 	return dblclk;
 }
@@ -893,7 +882,7 @@ void MRbSinCore::Transition(int duration, HTEXTURE midTex, float vague)
 
 	if (midTex)
 	{
-		int suffix_idx;
+		//int suffix_idx;
 		//HTEXTURE midTex = quad->tex;// CRbBitmap::LoadTexture(filename, 0, suffix_idx);
 
 		int mw = pHGE->Texture_GetWidth(midTex);

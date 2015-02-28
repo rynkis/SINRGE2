@@ -49,7 +49,9 @@ public:
 	int							Eval(const char *script);
 	int							RunScript();
 
-	void						Quit();
+	static bool					Quit();
+	static bool					LostFocus();
+	static bool					GainFocus();
 	void						GraphicsUpdate();
 	void						SystemUpdate();
 	void						BrightnessUpdate();
@@ -100,6 +102,9 @@ private:
 	hgeQuad						m_quad;
 	int							m_brightness;
 	int							m_saved_brghtness;
+
+	static bool					b_gain_focused;
+	static bool					b_exited;
 
 	u32							m_frame_count;
 	//fps

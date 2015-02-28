@@ -358,6 +358,16 @@ VALUE MRbSinCore::get_screen_size()
 	return argv;
 }
 
+VALUE MRbSinCore::lost_focus()
+{
+	return Qnil;
+}
+
+VALUE MRbSinCore::gain_focus()
+{
+	return Qnil;
+}
+
 void MRbSinCore::InitLibrary()
 {
 	rb_mSin = rb_define_module(SIN_CORENAME);
@@ -423,6 +433,9 @@ void MRbSinCore::InitLibrary()
 	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(get_show_mouse), 0);
 	rb_define_module_function(rb_mFrame, "show_mouse=",			RbFunc(set_show_mouse), 1);
 	rb_define_module_function(rb_mFrame, "peek_message",		RbFunc(peek_message), 0);
+
+	rb_define_module_function(rb_mFrame, "lost_focus", RbFunc(lost_focus), 0);
+	rb_define_module_function(rb_mFrame, "gain_focus", RbFunc(lost_focus), 0);
 
 	/*rb_define_module_function(rb_mFrame, "ime_init", RbFunc(ime_init), 0);
 	rb_define_module_function(rb_mFrame, "ime_update", RbFunc(ime_update), 0);

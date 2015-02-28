@@ -174,6 +174,9 @@ __failed_return:
 //static const wchar_t * pDefaultConsole	= L"0";
 static const wchar_t * pDefaultScripts	= L"main.rb";
 
+bool CApplication::b_gain_focused = true;
+bool CApplication::b_exited = false;
+
 /***
  *	全局单例静态变量定义
  */
@@ -283,9 +286,34 @@ void CApplication::Dispose()
 	}
 }
 
-void CApplication::Quit()
+bool CApplication::Quit()
 {
+	b_exited = true;
+	rb_eval_string("exit");
 	rb_exit(EXIT_SUCCESS);
+	return true;
+}
+
+bool CApplication::LostFocus()
+{
+	if (b_gain_focused)
+	{
+		if (!b_exited)
+			MRbSinCore::lost_focus();
+		b_gain_focused = false;
+	}
+	return true;
+}
+
+bool CApplication::GainFocus()
+{
+	if (!b_gain_focused)
+	{
+		if (!b_exited)
+			MRbSinCore::gain_focus();
+		b_gain_focused = true;
+	}
+	return true;
 }
 
 void CApplication::GraphicsUpdate()
@@ -607,9 +635,11 @@ bool CApplication::InitVideo()
 {
 	if (m_inited) return true;
 	// Set our render proc
-	//m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, LostFocusProc);
 	m_pHge->System_SetState(HGE_RENDERFUNC, CRbRenderTree::RenderProc);
 	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
+	m_pHge->System_SetState(HGE_EXITFUNC, CApplication::Quit);
+	m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, CApplication::LostFocus);
+	m_pHge->System_SetState(HGE_FOCUSGAINFUNC, CApplication::GainFocus);
 
 	bool	isFullScreen;
 
