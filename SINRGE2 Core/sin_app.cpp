@@ -174,7 +174,6 @@ __failed_return:
 //static const wchar_t * pDefaultConsole	= L"0";
 static const wchar_t * pDefaultScripts	= L"main.rb";
 
-bool CApplication::b_gain_focused = true;
 bool CApplication::b_exited = false;
 
 /***
@@ -289,30 +288,31 @@ void CApplication::Dispose()
 bool CApplication::Quit()
 {
 	b_exited = true;
-	rb_eval_string("exit");
+
+	const ID	id_exit = rb_intern("exit");
+	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
+
+	rb_funcall(rb_mKernel, id_exit, 0);
 	rb_exit(EXIT_SUCCESS);
-	return true;
+
+	return false;
 }
 
 bool CApplication::LostFocus()
 {
-	if (b_gain_focused)
-	{
-		if (!b_exited)
-			MRbSinCore::lost_focus();
-		b_gain_focused = false;
-	}
+	const ID	id_lost_focus = rb_intern("lost_focus");
+	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
+	rb_funcall(rb_mFrame, id_lost_focus, 0);
+
 	return true;
 }
 
 bool CApplication::GainFocus()
 {
-	if (!b_gain_focused)
-	{
-		if (!b_exited)
-			MRbSinCore::gain_focus();
-		b_gain_focused = true;
-	}
+	const ID	id_gain_focus = rb_intern("gain_focus");
+	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
+	rb_funcall(rb_mFrame, id_gain_focus, 0);
+	
 	return true;
 }
 
@@ -515,7 +515,7 @@ int CApplication::GetRuntimeInfos()
 	return 0;
 }
 
-int CApplication::Eval(const char * script)
+int CApplication::EvalRbString(const char * script)
 {
 	int status = -1;
 

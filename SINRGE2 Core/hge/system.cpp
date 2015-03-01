@@ -527,15 +527,15 @@ void HGE_Impl::_PostError(wchar_t *error)
 
 void HGE_Impl::_FocusChange(bool bAct)
 {
-	bActive=bAct;
+	bActive = bAct;
 
-	if(bActive)
+	if (bActive)
 	{
-		if(procFocusGainFunc) procFocusGainFunc();
+		if (procFocusGainFunc) procFocusGainFunc();
 	}
 	else
 	{
-		if(procFocusLostFunc) procFocusLostFunc();
+		if (procFocusLostFunc) procFocusLostFunc();
 	}
 }
 
@@ -549,11 +549,11 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 	case WM_KILLFOCUS:
 		pHGE->bOnFocus = false;
-		if (pHGE->procFocusLostFunc) pHGE->procFocusLostFunc();
+		//if (pHGE->procFocusLostFunc) pHGE->procFocusLostFunc();
 		return FALSE;
 	case WM_SETFOCUS:
 		pHGE->bOnFocus = true;
-		if (pHGE->procFocusGainFunc) pHGE->procFocusGainFunc();
+		//if (pHGE->procFocusGainFunc) pHGE->procFocusGainFunc();
 		return FALSE;
 
 	case WM_CHAR:
@@ -577,17 +577,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		}
 		return FALSE;
 	case WM_CREATE:
-		break;
-		//return FALSE;
-
+		break; //return FALSE;
 	case WM_PAINT:
 		if (pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
 		break;
-
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return FALSE;
-
 		/*
 				case WM_ACTIVATEAPP:
 				bActivating = (wparam == TRUE);
@@ -598,7 +594,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
 		// but only if HIWORD(wParam) (fMinimized) == FALSE (0)
 		bActivating = (LOWORD(wparam) != WA_INACTIVE) && (HIWORD(wparam) == 0);
-		//if (pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+		if (pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
 		return FALSE;
 
 
@@ -618,6 +614,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		else if (wparam == VK_F4)
 		{
 			if (pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
+			pHGE->bActive = false;
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
 		else if (wparam == VK_RETURN)
@@ -665,7 +662,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			return TRUE;
 		else if(wparam == SC_CLOSE)
 		{
-			if(pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
+			if (pHGE->procExitFunc && !pHGE->procExitFunc()) return FALSE;
 			pHGE->bActive = false;
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
