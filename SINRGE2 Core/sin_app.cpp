@@ -285,16 +285,18 @@ void CApplication::Dispose()
 	}
 }
 
+bool CApplication::IsRunning()
+{
+	return !b_exited;
+}
+
 bool CApplication::Quit()
 {
 	b_exited = true;
-
-	const ID	id_exit = rb_intern("exit");
+	const ID	id_quit = rb_intern("quit");
 	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
-
-	rb_funcall(rb_mKernel, id_exit, 0);
-	rb_exit(EXIT_SUCCESS);
-
+	rb_funcall(rb_mSin, id_quit, 0);
+	
 	return false;
 }
 
@@ -312,7 +314,7 @@ bool CApplication::GainFocus()
 	const ID	id_gain_focus = rb_intern("gain_focus");
 	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
 	rb_funcall(rb_mFrame, id_gain_focus, 0);
-	
+
 	return true;
 }
 
@@ -529,30 +531,6 @@ int CApplication::EvalRbString(const char * script)
 	return 0;
 }
 
-//void CApplication::ShowError(const wchar_t * szFormat, ...)
-//{
-//	wchar_t szError[1024];
-//
-//	va_list ap;
-//	va_start(ap, szFormat);
-//	vswprintf_s(szError, szFormat, ap);
-//	va_end(ap);
-//
-//	MessageBoxW(m_frm_struct.m_hwnd, szError, m_frm_struct.m_title, MB_ICONERROR);
-//}
-//
-//void CApplication::ShowErrorMsg(HWND hWnd, const wchar_t * szTitle, const wchar_t * szFormat, ...)
-//{
-//	wchar_t szError[1024];
-//
-//	va_list ap;
-//	va_start(ap, szFormat);
-//	vswprintf_s(szError, szFormat, ap);
-//	va_end(ap);
-//
-//	MessageBoxW(hWnd, szError, szTitle, MB_ICONERROR);
-//}
-
 void CApplication::InitRubyInnerClassExt()
 {
 	if (m_with_console)
@@ -637,7 +615,7 @@ bool CApplication::InitVideo()
 	// Set our render proc
 	m_pHge->System_SetState(HGE_RENDERFUNC, CRbRenderTree::RenderProc);
 	m_pHge->System_SetState(HGE_TEXTUREFILTER, false);
-	m_pHge->System_SetState(HGE_EXITFUNC, CApplication::Quit);
+	//m_pHge->System_SetState(HGE_EXITFUNC, CApplication::Quit);
 	m_pHge->System_SetState(HGE_FOCUSLOSTFUNC, CApplication::LostFocus);
 	m_pHge->System_SetState(HGE_FOCUSGAINFUNC, CApplication::GainFocus);
 
@@ -662,6 +640,7 @@ bool CApplication::InitVideo()
  	m_pHge->System_SetState(HGE_WINDOWED, !isFullScreen);
 	m_pHge->System_SetState(HGE_FPS, m_pHge->System_GetState(HGE_FPS));
 	m_pHge->System_SetState(SIN_TOOL_WINDOW, m_frm_struct.m_tool_window);
+	m_pHge->System_SetState(SIN_SILENCE_UP, m_frm_struct.m_silence_start);
 	
 	if(!m_pHge->System_Initiate())
 		return false;

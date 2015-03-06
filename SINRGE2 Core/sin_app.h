@@ -83,6 +83,8 @@ public:
 	static bool					IsFileExist(const wchar_t *pFileName);
 	static bool					IsFileExist(const char *pFileName);
 
+	static bool					IsRunning();
+
 	//static void					ShowErrorMsg(HWND hWnd, const wchar_t *szTitle, const wchar_t *szFormat, ...);
 	//static void					ShowErrorMsg(HWND hWnd, const char *szTitle, const char *szFormat, ...);
 

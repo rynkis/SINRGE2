@@ -98,7 +98,7 @@ bool CALL HGE_Impl::System_Initiate()
 	rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - theight) / 2;
 	rectW.right = rectW.left + width;
 	rectW.bottom = rectW.top + height;
-	styleW = WS_POPUP | WS_VISIBLE;
+	styleW = WS_POPUP;// | WS_VISIBLE;
 
 	if (!toolWindow) {
 		width = nScreenWidth + GetSystemMetrics(SM_CXFIXEDFRAME) * 2;
@@ -108,8 +108,10 @@ bool CALL HGE_Impl::System_Initiate()
 		rectW.top = (GetSystemMetrics(SM_CYMAXIMIZED) - nScreenHeight) / 2 - GetSystemMetrics(SM_CYCAPTION);
 		rectW.right = rectW.left + width;
 		rectW.bottom = rectW.top + height;
-		styleW = WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_VISIBLE;
+		styleW = WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;// | WS_VISIBLE;
 	}
+
+	if (!silence_start) styleW |= WS_VISIBLE;
 
 	rectFS.left = 0;
 	rectFS.top = 0;
@@ -130,19 +132,6 @@ bool CALL HGE_Impl::System_Initiate()
 	}
 
 	//ShowWindow(hwnd, SW_SHOW);
-
-
-	/*edit_hwnd = ::CreateWindowExW(0, L"EDIT", L"", WS_CHILD, rectW.left + 8, rectW.top - 22, 784, 22, hwnd, NULL, NULL, NULL);
-	if (!edit_hwnd)
-	{
-		printf("%d\n", GetLastError());
-	}
-	else
-	{
-		printf("%d\n", (long)edit_hwnd);
-	}
-	::ShowWindow(edit_hwnd, SW_SHOW);*/
-
 
 	// Init subsystems
 
@@ -227,6 +216,7 @@ void CALL HGE_Impl::System_SetStateBool(hgeBoolState state, bool value)
 
 		case HGE_DONTSUSPEND:	bDontSuspend=value; break;
 		case SIN_TOOL_WINDOW:	toolWindow = value; break;
+		case SIN_SILENCE_UP:	silence_start = value; break;
 	}
 }
 
@@ -277,6 +267,7 @@ void CALL HGE_Impl::System_SetStateInt(hgeIntState state, int value)
 								break;
 		case IME_RECT_X:	iIMEx = value; break;
 		case IME_RECT_Y:	iIMEy = value; break;
+		case MSG_PIPE_L:	pipemsg_length = value; break;
 	}
 }
 
@@ -360,6 +351,7 @@ int CALL HGE_Impl::System_GetStateInt(hgeIntState state)
 		case HGE_SCREENHEIGHT:	return nScreenHeight;
 		case HGE_SCREENBPP:		return nScreenBPP;
 		case HGE_FPS:			return nHGEFPS;
+		case MSG_PIPE_L:		return pipemsg_length;
 	}
 
 	return 0;
@@ -502,6 +494,7 @@ HGE_Impl::HGE_Impl()
 	
 	// +++SINRGE2+++
 	toolWindow = false;
+	silence_start = false;
 	szCompStr[0] = 0;
 	szCompRes[0] = 0;
 	//szInputCh[0] = 0;
@@ -516,6 +509,7 @@ HGE_Impl::HGE_Impl()
 	bOnFocus = true;
 	bFreeze = false;
 	freezeTex = 0;
+	pipemsg_length = 0;
 	// +++SINRGE2+++
 }
 
@@ -549,13 +543,25 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
 	case WM_KILLFOCUS:
 		pHGE->bOnFocus = false;
-		//if (pHGE->procFocusLostFunc) pHGE->procFocusLostFunc();
 		return FALSE;
 	case WM_SETFOCUS:
 		pHGE->bOnFocus = true;
-		//if (pHGE->procFocusGainFunc) pHGE->procFocusGainFunc();
 		return FALSE;
 
+	/*case WM_HOTKEY:
+		printf("hotkey%d\n", wparam);
+		switch (wparam)
+		{
+		case 0x8303:
+			printf("hotkey%d\n", wparam);
+		default:
+			return DefWindowProc(hwnd, msg, wparam, lparam);
+		}
+		return FALSE;*/
+
+	case 0x0401:
+		pHGE->pipemsg_length = wparam;
+		return FALSE;
 	case WM_CHAR:
 		pHGE->szInputCh[0] = (wchar_t)wparam;
 		/*if (pHGE->szInputCh[0] < (wchar_t)' ')*/
@@ -576,20 +582,26 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			ImmReleaseContext(pHGE->hwnd, hIMC);
 		}
 		return FALSE;
+
 	case WM_CREATE:
-		break; //return FALSE;
+		/*SetWindowLong(pHGE->hwnd, GWL_STYLE, GetWindowLong(pHGE->hwnd, GWL_STYLE) & ~WS_SYSMENU);
+		if (!RegisterHotKey(pHGE->hwnd, 0x8303, MOD_ALT, VK_SPACE))
+			printf("Failed to RegisterHotKey\n");
+		return FALSE;*/
+		break;
 	case WM_PAINT:
 		if (pHGE->pD3D && pHGE->procRenderFunc && pHGE->bWindowed) pHGE->procRenderFunc();
 		break;
 	case WM_DESTROY:
+		//UnregisterHotKey(pHGE->hwnd, 0x8303);
 		PostQuitMessage(0);
 		return FALSE;
-		/*
-				case WM_ACTIVATEAPP:
-				bActivating = (wparam == TRUE);
-				if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
-				return FALSE;
-				*/
+
+		/*case WM_ACTIVATEAPP:
+		bActivating = (wparam == TRUE);
+		if(pHGE->pD3D && pHGE->bActive != bActivating) pHGE->_FocusChange(bActivating);
+			return FALSE;*/
+
 	case WM_ACTIVATE:
 		// tricky: we should catch WA_ACTIVE and WA_CLICKACTIVE,
 		// but only if HIWORD(wParam) (fMinimized) == FALSE (0)

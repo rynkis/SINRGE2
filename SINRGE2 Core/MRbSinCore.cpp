@@ -36,13 +36,17 @@ VALUE MRbSinCore::init_video()
 	{
 		GetAppPtr()->GraphicsUpdate();
 		dt--;
-	} while (dt);
+	} while (GetAppPtr()->IsRunning() && dt);
 	return Qnil;
 }
 
 VALUE MRbSinCore::quit()
 {
-	GetAppPtr()->Quit();
+	const ID	id_exit = rb_intern("exit");
+	const VALUE	binding = rb_const_get(rb_mKernel, rb_intern("TOPLEVEL_BINDING"));
+
+	rb_funcall(rb_mKernel, id_exit, 0);
+	//rb_exit(EXIT_SUCCESS);
 	return Qnil;
 }
 
@@ -51,7 +55,7 @@ VALUE MRbSinCore::stop()
 	do
 	{
 		GetAppPtr()->GraphicsUpdate();
-	} while (true);
+	} while (GetAppPtr()->IsRunning());
 	return Qnil;
 }
 
@@ -69,7 +73,7 @@ VALUE MRbSinCore::wait(int argc, VALUE duration)
 	{
 		GetAppPtr()->GraphicsUpdate();
 		dt--;
-	} while (dt);
+	} while (GetAppPtr()->IsRunning() && dt);
 	return Qnil;
 }
 
@@ -324,6 +328,20 @@ VALUE MRbSinCore::set_tool_window(int argc, VALUE tool_window)
 	return tool_window;
 }
 
+VALUE MRbSinCore::get_silence_start()
+{
+	return C2RbBool(GetAppPtr()->m_frm_struct.m_silence_start);
+}
+
+VALUE MRbSinCore::set_silence_start(int argc, VALUE silence_start)
+{
+	if (GetAppPtr()->IsInited())
+		rb_raise(rb_eSinError, "SINRGE2 has inited.");
+
+	GetAppPtr()->m_frm_struct.m_silence_start = RTEST(silence_start);
+	return silence_start;
+}
+
 VALUE MRbSinCore::get_forbid_switch()
 {
 	return C2RbBool(GetAppPtr()->m_frm_struct.m_forbid_switch);
@@ -429,6 +447,8 @@ void MRbSinCore::InitLibrary()
 
 	rb_define_module_function(rb_mFrame, "noframe_start",		RbFunc(get_tool_window), 0);
 	rb_define_module_function(rb_mFrame, "noframe_start=",		RbFunc(set_tool_window), 1);
+	rb_define_module_function(rb_mFrame, "silence_start",		RbFunc(get_silence_start), 0);
+	rb_define_module_function(rb_mFrame, "silence_start=",		RbFunc(set_silence_start), 1);
 	
 	rb_define_module_function(rb_mFrame, "show_mouse",			RbFunc(get_show_mouse), 0);
 	rb_define_module_function(rb_mFrame, "show_mouse=",			RbFunc(set_show_mouse), 1);
@@ -436,8 +456,4 @@ void MRbSinCore::InitLibrary()
 
 	rb_define_module_function(rb_mFrame, "lost_focus",			RbFunc(lost_focus), 0);
 	rb_define_module_function(rb_mFrame, "gain_focus",			RbFunc(gain_focus), 0);
-
-	/*rb_define_module_function(rb_mFrame, "ime_init", RbFunc(ime_init), 0);
-	rb_define_module_function(rb_mFrame, "ime_update", RbFunc(ime_update), 0);
-	rb_define_module_function(rb_mFrame, "ime_exit", RbFunc(ime_exit), 0);*/
 }

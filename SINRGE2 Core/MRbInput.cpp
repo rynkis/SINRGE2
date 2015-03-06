@@ -14,9 +14,6 @@ static int				mouse_posX				= 0;
 static int				mouse_posY				= 0;
 static bool				in_screen				= false;
 
-static bool				capital = false;
-static bool				num_lock = true;
-
 namespace
 {
 	static int			s_iRepeatCount[256]		= { 0, };
@@ -281,10 +278,14 @@ VALUE MRbInput::get_mouse_pos()
 */
 VALUE MRbInput::get_characters()
 {
-	capital = (GetKeyState(VK_CAPITAL) & 0x01) == 1 || vk_is_press(VK_LSHIFT) || vk_is_press(VK_RSHIFT);
-	num_lock = (GetKeyState(VK_NUMLOCK) & 0x01) == 1;
-
 	//if (vk_is_trigger(VK_SPACE))		return rb_str_new2(" ");
+
+	if (GetAppPtr()->GetHgePtr()->System_GetState(MSG_PIPE_L))
+	{
+		VALUE num = LONG2FIX(GetAppPtr()->GetHgePtr()->System_GetState(MSG_PIPE_L));
+		GetAppPtr()->GetHgePtr()->System_SetState(MSG_PIPE_L, 0);
+		return num;
+	}
 
 	if (GetAppPtr()->GetHgePtr()->System_GetState(IME_COMP_RES)[0] != L'')
 	{

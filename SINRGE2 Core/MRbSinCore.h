@@ -61,6 +61,8 @@ struct MRbSinCore
 
 	static VALUE get_tool_window();
 	static VALUE set_tool_window(int argc, VALUE tool_window);
+	static VALUE get_silence_start();
+	static VALUE set_silence_start(int argc, VALUE silence_start);
 	
 	static VALUE get_show_mouse();
 	static VALUE set_show_mouse(int argc, VALUE show);
@@ -73,9 +75,6 @@ struct MRbSinCore
 
 	static VALUE lost_focus();
 	static VALUE gain_focus();
-	/*static VALUE ime_init();
-	static VALUE ime_update();
-	static VALUE ime_exit();*/
 };
 
 #endif // __MODULE_RB_SIN_CORE_H__

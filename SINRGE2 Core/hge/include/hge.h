@@ -142,6 +142,7 @@ enum hgeBoolState
 	HGE_TEXTUREFILTER	= 3,    // bool		texture filtering?	(default: true)
 
 	SIN_TOOL_WINDOW		= 4,
+	SIN_SILENCE_UP		= 6,
 	
 	HGE_DONTSUSPEND		= 5,	// bool		focus lost:suspend?	(default: false)
 
@@ -174,6 +175,7 @@ enum hgeIntState
 
 	IME_RECT_X			= 20,
 	IME_RECT_Y			= 21,
+	MSG_PIPE_L			= 22,
 	
 	HGE_FPS				= 24,	// int		fixed fps			(default: HGEFPS_UNLIMITED)
 
@@ -309,8 +311,6 @@ public:
 	virtual bool			CALL	Gfx_BeginScene(HTARGET target=0) = 0;
 	virtual void			CALL	Gfx_EndScene() = 0;
 	virtual void			CALL	Gfx_Clear(DWORD color) = 0;
-	//virtual void			CALL	Gfx_RenderLine(float x1, float y1, float x2, float y2, DWORD color=0xFFFFFFFF, float z=0.5f) = 0;
-	//virtual void			CALL	Gfx_RenderTriple(const hgeTriple *triple) = 0;
 	virtual void			CALL	Gfx_RenderQuad(const hgeQuad *quad) = 0;
 	virtual hgeVertex*		CALL	Gfx_StartBatch(int prim_type, HTEXTURE tex, int blend, int *max_prim) = 0;
 	virtual void			CALL	Gfx_FinishBatch(int nprim) = 0;

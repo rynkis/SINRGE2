@@ -19,6 +19,7 @@ typedef float			f32;
 typedef struct __SinFrameStruct
 {
 	bool		m_tool_window;
+	bool		m_silence_start;
 	bool		m_fullscreen_start;
 	bool		m_forbid_fullscreen;
 	bool		m_forbid_switch;
@@ -32,6 +33,7 @@ typedef struct __SinFrameStruct
 
 	__SinFrameStruct()
 		: m_tool_window(false)
+		, m_silence_start(false)
 		, m_fullscreen_start(false)
 		, m_forbid_fullscreen(false)
 		, m_forbid_switch(false)

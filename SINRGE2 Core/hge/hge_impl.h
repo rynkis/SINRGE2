@@ -197,6 +197,7 @@ public:
 
 	//	+++SINRGE2+++
 	bool				toolWindow;
+	bool				silence_start;
 	wchar_t				szTitleFps[MAX_PATH];
 	int					mouseButton;
 	short				mouseWheel;
@@ -208,6 +209,7 @@ public:
 	bool				bFreeze;
 	HTEXTURE			freezeTex;
 	DWORD				tempFlags;
+	long				pipemsg_length;
 	//	+++SINRGE2+++
 
 private:
