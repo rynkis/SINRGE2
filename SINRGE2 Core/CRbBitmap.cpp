@@ -22,70 +22,70 @@ namespace
 {
 	const BYTE sTable768_low[] =
 	{
-		  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-		 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-		 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
-		 96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
-		128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
-		160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
-		192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
-		224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+		32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+		64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+		96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+		128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
+		160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191,
+		192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223,
+		224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255,
 
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
 
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255
 	};
 
-	const BYTE sTable768_mid[] = 
+	const BYTE sTable768_mid[] =
 	{
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-		  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 
-		  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-		 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
-		 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
-		 96, 97, 98, 99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,
-		128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,
-		160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,
-		192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,
-		224,225,226,227,228,229,230,231,232,233,234,235,236,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,253,254,255,
+		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+		32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63,
+		64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
+		96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127,
+		128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
+		160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191,
+		192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223,
+		224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255,
 
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,
-		255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255,255
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255,
+		255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255
 	};
 }
 
 CRbBitmap::CRbBitmap()
-	: m_disposed(true)
-	, m_modify_count(0)
-	, m_filename(Qnil)
-	, m_rect_ptr(0)
+: m_disposed(true)
+, m_modify_count(0)
+, m_filename(Qnil)
+, m_rect_ptr(0)
 {
 }
 
@@ -108,48 +108,49 @@ void CRbBitmap::InitLibrary()
 	 *		位图的类。所谓位图即表示图像其本身。
 	 */
 	rb_cBitmap = rb_define_class_under(rb_mSin, "Bitmap", rb_cObject);
-	
+
 	// special method
 	rb_define_alloc_func(rb_cBitmap, ObjAllocate<CRbBitmap>);
-	rb_define_method(rb_cBitmap, "initialize",			(RbFunc)dm_initialize,			-1);
+	rb_define_method(rb_cBitmap, "initialize", (RbFunc)dm_initialize, -1);
 
 	// instance method
-	rb_define_method(rb_cBitmap, "dispose",				(RbFunc)dm_dispose,				0);
-	rb_define_method(rb_cBitmap, "disposed?",			(RbFunc)dm_is_disposed,			0);
-	rb_define_method(rb_cBitmap, "save_to_file",		(RbFunc)dm_save_to_file,		-1);
+	rb_define_method(rb_cBitmap, "dispose", (RbFunc)dm_dispose, 0);
+	rb_define_method(rb_cBitmap, "disposed?", (RbFunc)dm_is_disposed, 0);
+	rb_define_method(rb_cBitmap, "save_to_file", (RbFunc)dm_save_to_file, -1);
 
-	rb_define_method(rb_cBitmap, "hue_change",			(RbFunc)dm_hue_change,			1);
-	rb_define_method(rb_cBitmap, "brightness_change",	(RbFunc)dm_brightness_change,	1);
-	rb_define_method(rb_cBitmap, "tone_change",			(RbFunc)dm_tone_change,			-1);
+	rb_define_method(rb_cBitmap, "hue_change", (RbFunc)dm_hue_change, 1);
+	rb_define_method(rb_cBitmap, "brightness_change", (RbFunc)dm_brightness_change, 1);
+	rb_define_method(rb_cBitmap, "tone_change", (RbFunc)dm_tone_change, -1);
 
-	rb_define_method(rb_cBitmap, "blt",					(RbFunc)dm_blt,					-1);
-	rb_define_method(rb_cBitmap, "stretch_blt",			(RbFunc)dm_stretch_blt,			-1);
-	rb_define_method(rb_cBitmap, "fill_rect",			(RbFunc)dm_fill_rect,			-1);
-	rb_define_method(rb_cBitmap, "clear",				(RbFunc)dm_clear,				0);
-	rb_define_method(rb_cBitmap, "get_pixel",			(RbFunc)dm_get_pixel,			2);
-	rb_define_method(rb_cBitmap, "set_pixel",			(RbFunc)dm_set_pixel,			3);
+	rb_define_method(rb_cBitmap, "blt", (RbFunc)dm_blt, -1);
+	rb_define_method(rb_cBitmap, "stretch_blt", (RbFunc)dm_stretch_blt, -1);
+	rb_define_method(rb_cBitmap, "fill_rect", (RbFunc)dm_fill_rect, -1);
+	rb_define_method(rb_cBitmap, "clear", (RbFunc)dm_clear, 0);
+	rb_define_method(rb_cBitmap, "get_pixel", (RbFunc)dm_get_pixel, 2);
+	rb_define_method(rb_cBitmap, "set_pixel", (RbFunc)dm_set_pixel, 3);
 
-	rb_define_method(rb_cBitmap, "draw_text",			(RbFunc)dm_draw_text,			-1);
-	rb_define_method(rb_cBitmap, "text_size",			(RbFunc)dm_text_size,			2);
+	rb_define_method(rb_cBitmap, "draw_text", (RbFunc)dm_draw_text, -1);
+	rb_define_method(rb_cBitmap, "text_size", (RbFunc)dm_text_size, 2);
 
-	rb_define_method(rb_cBitmap, "gradient_fill_rect",	(RbFunc)dm_gradient_fill_rect,	-1);
-	rb_define_method(rb_cBitmap, "clear_rect",			(RbFunc)dm_clear_rect,			-1);
-	rb_define_method(rb_cBitmap, "blur",				(RbFunc)dm_blur ,				0);
-	rb_define_method(rb_cBitmap, "radial_blur",			(RbFunc)dm_radial_blur,			2);
-	
-	rb_define_method(rb_cBitmap, "flip_h",				(RbFunc)dm_flip_h ,				0);
-	rb_define_method(rb_cBitmap, "flip_v",				(RbFunc)dm_flip_v ,				0);
-	rb_define_method(rb_cBitmap, "to_str",				(RbFunc)dm_to_str ,				0);
+	rb_define_method(rb_cBitmap, "gradient_fill_rect", (RbFunc)dm_gradient_fill_rect, -1);
+	rb_define_method(rb_cBitmap, "clear_rect", (RbFunc)dm_clear_rect, -1);
+	rb_define_method(rb_cBitmap, "blur", (RbFunc)dm_blur, 0);
+	rb_define_method(rb_cBitmap, "radial_blur", (RbFunc)dm_radial_blur, 2);
+
+	rb_define_method(rb_cBitmap, "flip_h", (RbFunc)dm_flip_h, 0);
+	rb_define_method(rb_cBitmap, "flip_v", (RbFunc)dm_flip_v, 0);
+	rb_define_method(rb_cBitmap, "to_str", (RbFunc)dm_to_str, 0);
+	rb_define_method(rb_cBitmap, "to_bin", (RbFunc)dm_to_bin, 0);
 
 	// object attribute
-	rb_define_method(rb_cBitmap, "width",				(RbFunc)dm_get_width,			0);
-	rb_define_method(rb_cBitmap, "height",				(RbFunc)dm_get_height,			0);
-	rb_define_method(rb_cBitmap, "rect",				(RbFunc)dm_get_rect,			0);
-	rb_define_method(rb_cBitmap, "filename",			(RbFunc)dm_get_filename,		0);
+	rb_define_method(rb_cBitmap, "width", (RbFunc)dm_get_width, 0);
+	rb_define_method(rb_cBitmap, "height", (RbFunc)dm_get_height, 0);
+	rb_define_method(rb_cBitmap, "rect", (RbFunc)dm_get_rect, 0);
+	rb_define_method(rb_cBitmap, "filename", (RbFunc)dm_get_filename, 0);
 
 	// supplement
- 	rb_define_method(rb_cBitmap, "to_s",				(RbFunc)dm_to_string,			0);
-	rb_define_method(rb_cBitmap, "clone",				(RbFunc)dm_clone,				0);
+	rb_define_method(rb_cBitmap, "to_s", (RbFunc)dm_to_string, 0);
+	rb_define_method(rb_cBitmap, "clone", (RbFunc)dm_clone, 0);
 }
 
 void CRbBitmap::mark()
@@ -197,7 +198,7 @@ __bitmap_load_from_buffer:
 		int size = FIX2INT(arg02);
 		quad.tex = hge->Texture_Load(data, size);
 		data = NULL;
-		if(!quad.tex)
+		if (!quad.tex)
 			rb_raise(rb_eSinError, "Failed to create bitmap from buffer.");
 	}
 	goto __finish;
@@ -205,7 +206,7 @@ __bitmap_load_from_buffer:
 __bitmap_load:
 	{
 		int suffix_idx = -1;
-		static char * szSuffixA[] = { ".png",  ".jpg",  ".bmp",  ".tga",  ".dds",  ".dib"};
+		static char * szSuffixA[] = { ".png", ".jpg", ".bmp", ".tga", ".dds", ".dib" };
 		wchar_t filename[MAX_PATH];
 		wcscpy_s(filename, Kconv::UTF8ToUnicode(RSTRING_PTR(arg01)));
 		quad.tex = LoadTexture(filename, dwColorValue, suffix_idx);
@@ -225,7 +226,7 @@ __bitmap_create:
 		s32 h = FIX2INT(arg02);
 
 		quad.tex = hge->Texture_Create(w, h);
-		if(!quad.tex)
+		if (!quad.tex)
 			rb_raise(rb_eSinError, "Failed to create bitmap: %d x %d .", w, h);
 	}
 	goto __finish;
@@ -233,7 +234,7 @@ __bitmap_create:
 __finish:
 	{
 		QUAD_INIT(quad);
-		
+
 		m_image.quad = quad;
 		m_image.width = hge->Texture_GetWidth(quad.tex);
 		m_image.height = hge->Texture_GetHeight(quad.tex);
@@ -241,7 +242,7 @@ __finish:
 		m_image.oheight = hge->Texture_GetHeight(quad.tex, true);
 
 		//	create rect
-		VALUE __argv[] = {RUBY_0, RUBY_0, INT2FIX(m_image.width), INT2FIX(m_image.height)};
+		VALUE __argv[] = { RUBY_0, RUBY_0, INT2FIX(m_image.width), INT2FIX(m_image.height) };
 		VALUE rect = rb_class_new_instance(4, __argv, rb_cRect);
 		m_rect_ptr = GetObjectPtr<CRbRect>(rect);
 
@@ -272,7 +273,7 @@ VALUE CRbBitmap::clone()
 	bmp_ptr->m_filename = m_filename;
 	bmp_ptr->m_modify_count = m_modify_count;
 	bmp_ptr->m_rect_ptr = m_rect_ptr;
-	
+
 	bmp_ptr = NULL;
 	return bitmap;
 }
@@ -286,14 +287,14 @@ HTEXTURE CRbBitmap::LoadTexture(const wchar_t * filename, u32 colorKey, int &suf
 		void * data;
 		u32 size;
 
-		static wchar_t * szSuffix[]	= {L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib"};
-		static int		uSuffixCnt	= SinArrayCount(szSuffix);
-		
+		static wchar_t * szSuffix[] = { L".png", L".jpg", L".bmp", L".tga", L".dds", L".dib" };
+		static int		uSuffixCnt = SinArrayCount(szSuffix);
+
 		if (data = hge->Resource_Load_Without_Suffix(filename, &size, szSuffix, uSuffixCnt, &suffix_idx))
 		{
 			tex = hge->Texture_Load((const wchar_t *)data, size, false, colorKey);
-			
-			if(!tex)
+
+			if (!tex)
 				rb_raise(rb_eSinError, "Failed to load bitmap `%s'.", Kconv::UnicodeToAnsi(filename));
 
 			// free
@@ -316,7 +317,7 @@ bool CRbBitmap::AdjustTexturesTone(const image_p pimage, u32 dwTone)
 {
 	if (!dwTone)
 		return true;
-	
+
 	BYTE a1, r1, g1, b1, a2, r2, g2, b2;
 	GET_ARGB_8888(dwTone, a1, r1, g1, b1);
 
@@ -362,9 +363,9 @@ bool CRbBitmap::AdjustTexturesToneDouble(const image_p pSrcBmp, const HTEXTURE p
 
 	if (!pDstTex)
 		return false;
-	
+
 	HGE * hge = GetAppPtr()->GetHgePtr();
-	
+
 	/*int dw = hge->Texture_GetWidth(pDstTex, true);
 	int dh = hge->Texture_GetHeight(pDstTex, true);*/
 	int dtw = hge->Texture_GetWidth(pDstTex);
@@ -451,11 +452,11 @@ void CRbBitmap::ColorSpaceRGB2HSV(int R, int G, int B, float &H, float &S, float
 	else
 	{
 		if (R == max)		H = (G - B) / diff;
-		else if(G == max)	H = 2 + (B - R) / diff;
+		else if (G == max)	H = 2 + (B - R) / diff;
 		else				H = 4 + (R - G) / diff;
 
 		H *= 60;
-		if(H < 0) H += 360;
+		if (H < 0) H += 360;
 	}
 }
 
@@ -475,7 +476,7 @@ void CRbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, B
 		float a = V * (1 - S);
 		float b = V * (1 - S * f);
 		float c = V * (1 - S * (1 - f));
-		switch(i)
+		switch (i)
 		{
 		case 0:
 			R = V; G = c; B = a; break;
@@ -496,9 +497,9 @@ void CRbBitmap::ColorSpaceHSV2RGB(float H, float S, float V, BYTE &R, BYTE &G, B
 bool CRbBitmap::GetTextRect(HFONT hFont, const wchar_t * pStr, s32 &cx, s32 &cy, HDC hDC)
 {
 	HDC hScreenDC;
-	if (hDC)	
+	if (hDC)
 		hScreenDC = hDC;
-	else	
+	else
 		hScreenDC = GetDC(NULL);
 	HGDIOBJ Save = SelectObject(hScreenDC, (HGDIOBJ)hFont);
 	SIZE size;
@@ -538,7 +539,7 @@ HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, image_p pima
 
 	if (width <= 0 || height <= 0)
 		return 0;
-	
+
 	HGE * hge = GetAppPtr()->GetHgePtr();
 
 	HTEXTURE cut = hge->Texture_Create(width, height);
@@ -546,7 +547,7 @@ HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, image_p pima
 	u32 * pDesTexData = hge->Texture_Lock(cut, false);
 	//memcpy(pDesTexData, pSrcTexData, width * height *sizeof(u32));
 	for (s32 ly = 0; ly < height; ++ly)
-		memcpy(pDesTexData + (width * ly), pSrcTexData + (pimage->width * (y + ly) + x), sizeof(u32) * width);
+		memcpy(pDesTexData + (width * ly), pSrcTexData + (pimage->width * (y + ly) + x), sizeof(u32)* width);
 	hge->Texture_Unlock(pimage->quad.tex);
 	hge->Texture_Unlock(cut);
 	return cut;
@@ -555,7 +556,7 @@ HTEXTURE CRbBitmap::CutTexture(int x, int y, int width, int height, image_p pima
 void CRbBitmap::BilinearZoom(u32 * srcData, u32 * desData, int srcWidth, int srcHeight, int desWidth, int desHeight, int mathWidth, int mathHeight)
 {
 	long lx, ly, ty1, ty2, tx1, tx2, px1, px2, py1, py2, p11, p21, p12, p22;
-	
+
 	//u32 color11, color21, color12, color22;
 	BYTE a, r, g, b;
 	BYTE a11, r11, g11, b11;
@@ -623,12 +624,12 @@ bool CRbBitmap::ScreenToBitmap(image_p pimage)
 			pDesData[i + lx] = SETA(pSrcData[tmp_i + lx], 255);//MAKE_ARGB_8888(255, r, g, b);
 		}
 	}
-		//memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(u32));
+	//memcpy(pDesData + GetAppPtr()->GetFrameWidth() * ly, pSrcData + width * ly, GetAppPtr()->GetFrameWidth() * sizeof(u32));
 	hge->Texture_Unlock(pimage->quad.tex);
 	free(pSrcData);
 
-	pimage->width	= GetAppPtr()->GetFrameWidth();//hge->Texture_GetWidth(pimage->quad.tex, true);
-	pimage->height	= height;//hge->Texture_GetHeight(pimage->quad.tex, true);
+	pimage->width = GetAppPtr()->GetFrameWidth();//hge->Texture_GetWidth(pimage->quad.tex, true);
+	pimage->height = height;//hge->Texture_GetHeight(pimage->quad.tex, true);
 
 	return true;
 }
@@ -638,7 +639,7 @@ VALUE CRbBitmap::dispose()
 	if (m_disposed)
 		return Qnil;
 
-	if(m_image.quad.tex)
+	if (m_image.quad.tex)
 	{
 		GetAppPtr()->GetHgePtr()->Texture_Free(m_image.quad.tex);
 		m_image.quad.tex = 0;
@@ -677,10 +678,10 @@ VALUE CRbBitmap::hue_change(VALUE hue)
 	float tc = (float)(temp + sqrt(0.33333) * sin);
 
 	float matrix[] = {
-				ta, tb, tc,
-				tc, ta, tb,
-				tb, tc, ta
-		};*/
+	ta, tb, tc,
+	tc, ta, tb,
+	tb, tc, ta
+	};*/
 
 	float h, s, l;
 	BYTE a, r, g, b;
@@ -714,7 +715,7 @@ VALUE CRbBitmap::brightness_change(VALUE brightness)
 
 	SafeFixnumValue(brightness);
 	int iBrightness = FIX2INT(brightness);
-	if(!iBrightness) return Qnil;
+	if (!iBrightness) return Qnil;
 	iBrightness = SinBound(iBrightness, -255, 255);
 
 	BYTE a, r, g, b;
@@ -854,7 +855,7 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 	{
 		pTempData = pSrcTexData;
 	}
-	u32* pDstTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(des->quad.tex,false);
+	u32* pDstTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(des->quad.tex, false);
 	if (!pTempData || !pDstTexData)
 		return Qfalse;
 	u32 color1, color2;
@@ -867,7 +868,7 @@ VALUE CRbBitmap::blt(int argc, VALUE * argv, VALUE obj)
 			tmp_i = des->width * (ly - sy + dy) + lx - sx + dx;
 			color1 = pTempData[src->width * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
-			//	跳过透明像素
+				//	跳过透明像素
 			if (!a) continue;
 			a = a * op / 255;
 			//	跳过透明像素
@@ -898,11 +899,11 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 	VALUE dest_rect, src_bitmap, src_rect, opacity;
 	image_p src;
 	rb_scan_args(argc, argv, "31", &dest_rect, &src_bitmap, &src_rect, &opacity);
-	
+
 	SafeRectValue(dest_rect);
 	SafeBitmapValue(src_bitmap);
 	SafeRectValue(src_rect);
-	
+
 	CRbRect * desRect = GetObjectPtr<CRbRect>(dest_rect);
 	int dx = desRect->m_rect_data[0];
 	int dy = desRect->m_rect_data[1];
@@ -924,18 +925,18 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 		op = FIX2INT(opacity);
 		op = SinBound(op, 0, 255);
 	}
-	
+
 	if (dx + dw <= 0) return Qfalse;
 	if (dy + dh <= 0) return Qfalse;
 	if (m_image.width - dx <= 0) return Qfalse;
 	if (m_image.height - dy <= 0) return Qfalse;
-	
+
 	HGE* hge = GetAppPtr()->GetHgePtr();
 
 	HTEXTURE tmpTex;
 	/*if (sx == 0 && sy == 0 && sw == src->width && sh == src->height)
 		tmpTex = src->quad.tex;
-	else*/
+		else*/
 	tmpTex = CutTexture(sx, sy, sw, sh, src);
 
 	if (!tmpTex) return Qfalse;
@@ -962,7 +963,7 @@ VALUE CRbBitmap::stretch_blt(int argc, VALUE * argv, VALUE obj)
 			tmp_i = m_image.width * (ly + dy) + lx + dx;
 			color1 = pTempData[ndw * ly + lx];
 			GET_ARGB_8888(color1, a, r, g, b)
-			//	跳过透明像素
+				//	跳过透明像素
 			if (!a) continue;
 			a = a * op / 255;
 			//	跳过透明像素
@@ -995,7 +996,7 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 	{
 		for (int i = 0; i < 4; ++i)
 			SafeFixnumValue(argv[i]);
-		
+
 		x = FIX2INT(argv[0]);
 		y = FIX2INT(argv[1]);
 		width = FIX2INT(argv[2]);
@@ -1047,7 +1048,7 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData)
 		return Qfalse;
-	
+
 	int tmp_i;
 	for (s32 ly = y; ly < y + height; ++ly)
 	{
@@ -1056,7 +1057,7 @@ VALUE CRbBitmap::fill_rect(int argc, VALUE * argv, VALUE obj)
 			pTexData[tmp_i + lx] = color;
 	}
 	for (s32 ly = y + 1; ly < y + height; ++ly)
-		memcpy(pTexData + (m_image.width * ly) + x, pTexData + (m_image.width * y + x), sizeof(u32) * width);
+		memcpy(pTexData + (m_image.width * ly) + x, pTexData + (m_image.width * y + x), sizeof(u32)* width);
 	//u32 color2;
 	//for (s32 lx = x; lx < x + width; ++lx)
 	//{
@@ -1082,7 +1083,7 @@ VALUE CRbBitmap::clear()
 		return Qfalse;
 	/*for (int y = 0; y < m_image.height; ++y)
 		memset(&pTexData[m_image.width * y], 0, sizeof(u32) * m_image.width);*/
-	ZeroMemory(pTexData, sizeof(u32) * m_image.width * m_image.height);
+	ZeroMemory(pTexData, sizeof(u32)* m_image.width * m_image.height);
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	//	增加 修改计数值
 	++m_modify_count;
@@ -1092,7 +1093,7 @@ VALUE CRbBitmap::clear()
 VALUE CRbBitmap::get_pixel(VALUE x, VALUE y)
 {
 	check_raise();
-	
+
 	SafeFixnumValue(x);
 	SafeFixnumValue(y);
 	int dx = FIX2INT(x);
@@ -1101,13 +1102,13 @@ VALUE CRbBitmap::get_pixel(VALUE x, VALUE y)
 		return Qnil;
 
 	int a, r, g, b;
-	
+
 	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	if (!pTexData) return Qnil;
 	GET_ARGB_8888(pTexData[m_image.width * dy + dx], a, r, g, b);
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 
-	VALUE __argv[] = {INT2FIX(r), INT2FIX(g), INT2FIX(b), INT2FIX(a)};
+	VALUE __argv[] = { INT2FIX(r), INT2FIX(g), INT2FIX(b), INT2FIX(a) };
 	VALUE pixel = rb_class_new_instance(4, __argv, rb_cColor);
 	return pixel;
 }
@@ -1122,7 +1123,7 @@ VALUE CRbBitmap::set_pixel(VALUE x, VALUE y, VALUE color)
 	int dy = FIX2INT(y);
 	if (dx < 0 || dy < 0 || dx >= m_image.width || dy >= m_image.height)
 		return Qnil;
-	
+
 	u32 col;
 	if (rb_obj_is_kind_of(color, rb_cInteger))
 		col = NUM2ULONG(color);
@@ -1180,7 +1181,7 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		height = prect->m_rect_data[3];
 		prect = NULL;
 	}
-	
+
 	SafeFontValue(font);
 	CRbFont * pfont = GetObjectPtr<CRbFont>(font);
 
@@ -1228,15 +1229,15 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 
 	switch (halign % 3)
 	{
-		case 0:offset_x = 0;				break;
-		case 1:offset_x = (width - cx) / 2;	break;
-		case 2:offset_x = (width - cx);		break;
+	case 0:offset_x = 0;				break;
+	case 1:offset_x = (width - cx) / 2;	break;
+	case 2:offset_x = (width - cx);		break;
 	}
 	switch (valign % 3)
 	{
-		case 0:offset_y = 0;				break;
-		case 1:offset_y = (height - cy) / 2;break;
-		case 2:offset_y = (height - cy);	break;
+	case 0:offset_y = 0;				break;
+	case 1:offset_y = (height - cy) / 2; break;
+	case 2:offset_y = (height - cy);	break;
 	}
 
 	//	锁定纹理
@@ -1295,13 +1296,13 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 		GLYPHMETRICS	gm;
 		TEXTMETRIC		tm;
 
-		static MAT2		mmat2 = {0, 1, 0, 0, 0, 0, 0, 1};
+		static MAT2		mmat2 = { 0, 1, 0, 0, 0, 0, 0, 1 };
 
 		static BYTE		alphatable65[] = // 65.times{|i| 255 * i / (65 - 1)
-										{0,3,7,11,15,19,23,27,31,35,39,43,47,51,55,59,63,67,71,75,79,83,
-										87,91,95,99,103,107,111,115,119,123,127,131,135,139,143,147,151,
-										155,159,163,167,171,175,179,183,187,191,195,199,203,207,211,215,
-										219,223,227,231,235,239,243,247,251,255};
+		{ 0, 3, 7, 11, 15, 19, 23, 27, 31, 35, 39, 43, 47, 51, 55, 59, 63, 67, 71, 75, 79, 83,
+		87, 91, 95, 99, 103, 107, 111, 115, 119, 123, 127, 131, 135, 139, 143, 147, 151,
+		155, 159, 163, 167, 171, 175, 179, 183, 187, 191, 195, 199, 203, 207, 211, 215,
+		219, 223, 227, 231, 235, 239, 243, 247, 251, 255 };
 
 		static BYTE		buffer[6144];
 
@@ -1315,10 +1316,10 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 
 			/*if (dwBufferSize > SinArrayCount(buffer))
 			{
-				free(buffer);
-				buffer = NULL;
-				buffer = (BYTE *)malloc(dwBufferSize * sizeof(BYTE));
-				printf("%d\n", dwBufferSize);
+			free(buffer);
+			buffer = NULL;
+			buffer = (BYTE *)malloc(dwBufferSize * sizeof(BYTE));
+			printf("%d\n", dwBufferSize);
 			}*/
 			if (dwBufferSize > SinArrayCount(buffer))
 				rb_raise(rb_eSinError, "too small buffer size.");
@@ -1352,14 +1353,14 @@ VALUE CRbBitmap::draw_text(int argc, VALUE * argv, VALUE obj)
 						{
 							int v1 = h1 + tmp_x + 1;
 							//	处理阴影颜色
-							color1 = tmp_gray<<24;
+							color1 = tmp_gray << 24;
 							color2 = pTexData[v1];
 							BLEND_ARGB_8888(color1, color2);
 							pTexData[v1] = color2;
 						}
 						int v2 = h2 + tmp_x;
 						//	处理像素颜色
-						color1 = drgb + (tmp_gray<<24);
+						color1 = drgb + (tmp_gray << 24);
 						color2 = pTexData[v2];
 						BLEND_ARGB_8888(color1, color2);
 						pTexData[v2] = color2;
@@ -1388,7 +1389,7 @@ VALUE CRbBitmap::text_size(VALUE font, VALUE str)
 
 	VALUE vStr = NIL_P(str) ? rb_str_new2("nil") : rb_obj_as_string(str);
 	wchar_t * pStr = Kconv::UTF8ToUnicode(RSTRING_PTR(vStr));
-	
+
 	s32 cx = 0, cy = 0;
 	VALUE rect;
 
@@ -1400,10 +1401,10 @@ VALUE CRbBitmap::text_size(VALUE font, VALUE str)
 	else
 	{
 		if (GetTextRect(pfont->GetHFont(), pStr, cx, cy, NULL))
-			if (pfont->IsShadow())
-				cy += 1;
+		if (pfont->IsShadow())
+			cy += 1;
 	}
-	VALUE __argv[] = {RUBY_0, RUBY_0, LONG2FIX(cx), LONG2FIX(cy)};
+	VALUE __argv[] = { RUBY_0, RUBY_0, LONG2FIX(cx), LONG2FIX(cy) };
 	rect = rb_class_new_instance(4, __argv, rb_cRect);
 	pfont = NULL;
 	return rect;
@@ -1419,7 +1420,7 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	if (FIXNUM_P(argv[0]))
 	{
 		rb_scan_args(argc, argv, "61", &vx, &vy, &vw, &vh, &vcolor1, &vcolor2, &vert);
-		
+
 		SafeFixnumValue(vx);
 		SafeFixnumValue(vy);
 		SafeFixnumValue(vw);
@@ -1442,7 +1443,7 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 		width = rect->m_rect_data[2];
 		height = rect->m_rect_data[3];
 	}
-	
+
 	if (m_image.width - x <= 0 || m_image.height - y <= 0)
 		return Qfalse;
 
@@ -1497,7 +1498,7 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 	if (!vertical)
 	{
 		for (s32 ly = y; ly < y + height; ++ly)
-			memcpy(pTexData + (m_image.width * ly), pline, sizeof(u32) * width);
+			memcpy(pTexData + (m_image.width * ly), pline, sizeof(u32)* width);
 		//for (s32 lx = x; lx < x + width; ++lx)
 		//{
 		//	color1 = pline[lx - x];
@@ -1524,12 +1525,12 @@ VALUE CRbBitmap::gradient_fill_rect(int argc, VALUE * argv, VALUE obj)
 			//	跳过透明像素
 			/*if (!GET_ARGB_A(color1))
 				continue;
-			for (s32 lx = x; lx < x + width; ++lx)
-			{
+				for (s32 lx = x; lx < x + width; ++lx)
+				{
 				color2 = pTexData[m_image.width * ly + lx];
 				BLEND_ARGB_8888(color1, color2);
 				pTexData[m_image.width * ly + lx] = color2;
-			}*/
+				}*/
 		}
 	}
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
@@ -1577,10 +1578,10 @@ VALUE CRbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 	if (!pTexData) return Qfalse;
 
 	for (int ly = y; ly < y + height; ++ly)
-		memset(&pTexData[m_image.width * ly + x], 0, sizeof(u32) * width);
+		memset(&pTexData[m_image.width * ly + x], 0, sizeof(u32)* width);
 
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
-	
+
 	//	增加 修改计数值
 	++m_modify_count;
 
@@ -1590,7 +1591,7 @@ VALUE CRbBitmap::clear_rect(int argc, VALUE * argv, VALUE obj)
 VALUE CRbBitmap::blur()
 {
 	check_raise();
-	
+
 	HGE * hge = GetAppPtr()->GetHgePtr();
 	int mathW, mathH;
 
@@ -1620,7 +1621,7 @@ VALUE CRbBitmap::blur()
 VALUE CRbBitmap::flip_h()
 {
 	check_raise();
-	
+
 	s32 width = m_image.width;
 	s32 height = m_image.height;
 	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
@@ -1653,7 +1654,7 @@ VALUE CRbBitmap::flip_v()
 	u32 * pTempData = (u32 *)malloc(width * height * sizeof(u32));
 	memcpy(pTempData, pTexData, width * height * sizeof(u32));
 	for (s32 ly = 0; ly < height; ++ly)
-		memcpy(pTexData + (m_image.width * ly), pTempData + (m_image.width * (height - ly - 1)), sizeof(u32) * width);
+		memcpy(pTexData + (m_image.width * ly), pTempData + (m_image.width * (height - ly - 1)), sizeof(u32)* width);
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pTempData);
 	//	增加 修改计数值
@@ -1664,30 +1665,30 @@ VALUE CRbBitmap::flip_v()
 VALUE CRbBitmap::radial_blur(VALUE angle, VALUE division)
 {
 	check_raise();
-	
+
 #pragma message("		Unfinished Function " __FUNCTION__)
 	/*SafeFixnumValue(angle);
 	SafeFixnumValue(division);
-	
+
 	int agl = FIX2INT(angle);
 	agl = SinBound(agl, 0, 360);
 	int div = FIX2INT(division);
 	div = SinBound(div, 2, 100);
-	
+
 	float aglRate = (float)agl / div;
 	float alRate = 255.0f / div;
-	
+
 	HGE* hge = GetAppPtr()->GetHgePtr();
-	
+
 	float alpha = 0, rot = 0;*/
 
-	
+
 	/*s32 width = m_image.width;
 	s32 height = m_image.height;
 	u32* pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, false);
 	u32* pTempData = (u32*)malloc(width * height * sizeof(u32));
 
-	
+
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
 	free(pTempData);*/
 	//	增加 修改计数值
@@ -1732,8 +1733,67 @@ VALUE CRbBitmap::save_to_file(int argc, VALUE * argv, VALUE obj)
 	if (GetAppPtr()->GetHgePtr()->Texture_Save2File(m_image.quad.tex,
 		m_image.width, m_image.height, Kconv::UTF8ToUnicode(RSTRING_PTR(filepath))))
 		return Qtrue;
-	
+
 	return Qfalse;
+}
+
+VALUE CRbBitmap::to_bin()
+{
+	check_raise();
+
+	DWORD head_size = sizeof(BMPHEADER_T);
+	DWORD data_size = m_image.width * m_image.height * 3;
+	DWORD file_size = head_size + data_size;
+
+	// 位图第一部分，文件信息
+	BMPFILEHEADER_T bfh;
+	bfh.bfType = 0x4D42;
+	bfh.bfSize = file_size;
+	bfh.bfReserved1 = 0;
+	bfh.bfReserved2 = 0;
+	bfh.bfOffBits = head_size;
+
+	BMPINFOHEADER_T bih;
+	bih.biSize = sizeof(BMPINFOHEADER_T);
+	bih.biWidth = m_image.width;
+	bih.biHeight = m_image.height;
+	bih.biPlanes = 1;
+	bih.biBitCount = 24;
+	bih.biCompression = 0;
+	bih.biSizeImage = data_size;
+	bih.biXPelsPerMeter = 0;
+	bih.biYPelsPerMeter = 0;
+	bih.biClrUsed = 0;
+	bih.biClrImportant = 0;
+
+	BMPHEADER_T bmph;
+	bmph.bfh = bfh;
+	bmph.bih = bih;
+	BYTE * data = (BYTE *)malloc(file_size);
+	memcpy(data, &bmph, head_size);
+
+	BYTE a, r, g, b;
+	long lx, ly, lineno, offset, index;
+	long didx = head_size / sizeof(BYTE);
+	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, true);
+	for (ly = 0; ly < m_image.height; ++ly)
+	{
+		lineno = m_image.width * ly;
+		for (lx = 0; lx < m_image.width; ++lx)
+		{
+			offset = lineno + lx;
+			index = didx + offset * 3;
+			GET_ARGB_8888(pTexData[offset], a, r, g, b);
+			data[index] = r;
+			data[index + 1] = g;
+			data[index + 2] = b;
+		}
+	}
+	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
+
+	VALUE vstr = rb_str_new((char *)data, file_size / sizeof(char));
+	free(data);
+	return vstr;
 }
 
 VALUE CRbBitmap::to_str()
@@ -1745,7 +1805,7 @@ VALUE CRbBitmap::to_str()
 	int span = 0xFF / count;
 	long strLen = m_image.width * m_image.height + m_image.height;
 	char * charmap = (char *)malloc(strLen * sizeof(char));
-	
+
 	BYTE a, r, g, b;
 	long lx, ly, lineno, offset, cidx;
 	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, true);
@@ -1793,6 +1853,7 @@ imp_method02(CRbBitmap, radial_blur)
 imp_method(CRbBitmap, flip_h)
 imp_method(CRbBitmap, flip_v)
 imp_method(CRbBitmap, to_str)
+imp_method(CRbBitmap, to_bin)
 
 imp_attr_reader(CRbBitmap, rect)
 imp_attr_reader(CRbBitmap, width)

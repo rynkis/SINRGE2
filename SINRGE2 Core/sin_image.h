@@ -25,4 +25,31 @@ typedef struct tagImage
 	//float		rcentrey; /**< Í¼ÏñÖĞĞÄy */
 } image_t, * image_p;
 
+typedef struct {
+	WORD    bfType;
+	DWORD   bfSize;
+	WORD    bfReserved1;
+	WORD    bfReserved2;
+	DWORD   bfOffBits;
+} BMPFILEHEADER_T;
+
+typedef struct{
+	DWORD      biSize;
+	LONG       biWidth;
+	LONG       biHeight;
+	WORD       biPlanes;
+	WORD       biBitCount;
+	DWORD      biCompression;
+	DWORD      biSizeImage;
+	LONG       biXPelsPerMeter;
+	LONG       biYPelsPerMeter;
+	DWORD      biClrUsed;
+	DWORD      biClrImportant;
+} BMPINFOHEADER_T;
+
+typedef struct{
+	BMPFILEHEADER_T bfh;
+	BMPINFOHEADER_T bih;
+} BMPHEADER_T;
+
 #endif //__SIN_IMAGE_H__

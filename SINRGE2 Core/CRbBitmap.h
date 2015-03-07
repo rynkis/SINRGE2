@@ -94,6 +94,7 @@ protected:
 	dm_method(flip_v)
 	dm_method_vargs(save_to_file)
 	dm_method(to_str)
+	dm_method(to_bin)
 
 	attr_reader(rect)
 	attr_reader(width)
