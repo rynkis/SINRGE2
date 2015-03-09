@@ -48,8 +48,61 @@ typedef struct{
 } BMPINFOHEADER_T;
 
 typedef struct{
-	BMPFILEHEADER_T bfh;
-	BMPINFOHEADER_T bih;
+	WORD bfType;
+	BYTE bfSize8;
+	BYTE bfSize16;
+	BYTE bfSize24;
+	BYTE bfSize32;
+	WORD bfReserved1;
+
+	WORD bfReserved2;
+	BYTE bfOffBits8;
+	BYTE bfOffBits16;
+	BYTE bfOffBits24;
+	BYTE bfOffBits32;
+	BYTE biSize8;
+	BYTE biSize16;
+
+	BYTE biSize24;
+	BYTE biSize32;
+	BYTE biWidth8;
+	BYTE biWidth16;
+	BYTE biWidth24;
+	BYTE biWidth32;
+	BYTE biHeight8;
+	BYTE biHeight16;
+
+	BYTE biHeight24;
+	BYTE biHeight32;
+	WORD biPlanes;
+	WORD biBitCount;
+	BYTE biCompression8;
+	BYTE biCompression16;
+
+	BYTE biCompression24;
+	BYTE biCompression32;
+	BYTE biSizeImage8;
+	BYTE biSizeImage16;
+	BYTE biSizeImage24;
+	BYTE biSizeImage32;
+	BYTE biXPelsPerMeter8;
+	BYTE biXPelsPerMeter16;
+
+	BYTE biXPelsPerMeter24;
+	BYTE biXPelsPerMeter32;
+	BYTE biYPelsPerMeter8;
+	BYTE biYPelsPerMeter16;
+	BYTE biYPelsPerMeter24;
+	BYTE biYPelsPerMeter32;
+	BYTE biClrUsed8;
+	BYTE biClrUsed16;
+
+	BYTE biClrUsed24;
+	BYTE biClrUsed32;
+	BYTE biClrImportant8;
+	BYTE biClrImportant16;
+	BYTE biClrImportant24;
+	BYTE biClrImportant32;
 } BMPHEADER_T;
 
 #endif //__SIN_IMAGE_H__

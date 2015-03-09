@@ -1741,52 +1741,81 @@ VALUE CRbBitmap::to_bin()
 {
 	check_raise();
 
-	DWORD head_size = sizeof(BMPHEADER_T);
+	DWORD head_size = sizeof(BMPFILEHEADER_T)+sizeof(BMPINFOHEADER_T);
 	DWORD data_size = m_image.width * m_image.height * 3;
 	DWORD file_size = head_size + data_size;
 
-	// 位图第一部分，文件信息
-	BMPFILEHEADER_T bfh;
-	bfh.bfType = 0x4D42;
-	bfh.bfSize = file_size;
-	bfh.bfReserved1 = 0;
-	bfh.bfReserved2 = 0;
-	bfh.bfOffBits = head_size;
-
-	BMPINFOHEADER_T bih;
-	bih.biSize = sizeof(BMPINFOHEADER_T);
-	bih.biWidth = m_image.width;
-	bih.biHeight = m_image.height;
-	bih.biPlanes = 1;
-	bih.biBitCount = 24;
-	bih.biCompression = 0;
-	bih.biSizeImage = data_size;
-	bih.biXPelsPerMeter = 0;
-	bih.biYPelsPerMeter = 0;
-	bih.biClrUsed = 0;
-	bih.biClrImportant = 0;
-
 	BMPHEADER_T bmph;
-	bmph.bfh = bfh;
-	bmph.bih = bih;
+	bmph.bfType = 0x4D42;
+	bmph.bfSize8 = (file_size & 0xFF);
+	bmph.bfSize16 = (file_size >> 8) & 0xFF;
+	bmph.bfSize24 = (file_size >> 16) & 0xFF;
+	bmph.bfSize32 = (file_size >> 24);
+	bmph.bfReserved1 = 0;
+	bmph.bfReserved2 = 0;
+	bmph.bfOffBits8 = ((head_size - sizeof(WORD))& 0xFF);
+	bmph.bfOffBits16 = ((head_size - sizeof(WORD)) >> 8) & 0xFF;
+	bmph.bfOffBits24 = ((head_size - sizeof(WORD)) >> 16) & 0xFF;
+	bmph.bfOffBits32 = ((head_size - sizeof(WORD)) >> 24);
+	bmph.biSize8 = (sizeof(BMPINFOHEADER_T) & 0xFF);
+	bmph.biSize16 = (sizeof(BMPINFOHEADER_T) >> 8) & 0xFF;
+	bmph.biSize24 = (sizeof(BMPINFOHEADER_T) >> 16) & 0xFF;
+	bmph.biSize32 = (sizeof(BMPINFOHEADER_T) >> 24);
+	bmph.biWidth8 = (m_image.width & 0xFF);
+	bmph.biWidth16 = (m_image.width >> 8) & 0xFF;
+	bmph.biWidth24 = (m_image.width >> 16) & 0xFF;
+	bmph.biWidth32 = (m_image.width >> 24);
+	bmph.biHeight8 = (m_image.height & 0xFF);
+	bmph.biHeight16 = (m_image.height >> 8) & 0xFF;
+	bmph.biHeight24 = (m_image.height >> 16) & 0xFF;
+	bmph.biHeight32 = (m_image.height >> 24);
+
+	bmph.biPlanes = 1;
+	bmph.biBitCount = 24;
+	bmph.biCompression8 = 0;
+	bmph.biCompression16 = 0;
+	bmph.biCompression24 = 0;
+	bmph.biCompression32 = 0;
+	bmph.biSizeImage8 = (data_size & 0xFF);
+	bmph.biSizeImage16 = (data_size >> 8) & 0xFF;
+	bmph.biSizeImage24 = (data_size >> 16) & 0xFF;
+	bmph.biSizeImage32 = (data_size >> 24);
+	bmph.biXPelsPerMeter8 = 0;
+	bmph.biXPelsPerMeter16 = 0;
+	bmph.biXPelsPerMeter24 = 0;
+	bmph.biXPelsPerMeter32 = 0;
+	bmph.biYPelsPerMeter8 = 0;
+	bmph.biYPelsPerMeter16 = 0;
+	bmph.biYPelsPerMeter24 = 0;
+	bmph.biYPelsPerMeter32 = 0;
+	bmph.biClrUsed8 = 0;
+	bmph.biClrUsed16 = 0;
+	bmph.biClrUsed24 = 0;
+	bmph.biClrUsed32 = 0;
+	bmph.biClrImportant8 = 0;
+	bmph.biClrImportant16 = 0;
+	bmph.biClrImportant24 = 0;
+	bmph.biClrImportant32 = 0;
+
 	BYTE * data = (BYTE *)malloc(file_size);
 	memcpy(data, &bmph, head_size);
 
 	BYTE a, r, g, b;
-	long lx, ly, lineno, offset, index;
-	long didx = head_size / sizeof(BYTE);
+	long lx, ly, lineno1, offset, lineno2, index;
+	long didx = (head_size - sizeof(WORD)) / sizeof(BYTE);
 	u32 * pTexData = GetAppPtr()->GetHgePtr()->Texture_Lock(m_image.quad.tex, true);
 	for (ly = 0; ly < m_image.height; ++ly)
 	{
-		lineno = m_image.width * ly;
+		lineno1 = m_image.width * (m_image.height - ly - 1);
+		lineno2 = m_image.width * ly;
 		for (lx = 0; lx < m_image.width; ++lx)
 		{
-			offset = lineno + lx;
-			index = didx + offset * 3;
+			offset = lineno1 + lx;
+			index = didx + ((lineno2 + lx) * 3);
 			GET_ARGB_8888(pTexData[offset], a, r, g, b);
-			data[index] = r;
+			data[index] = b;
 			data[index + 1] = g;
-			data[index + 2] = b;
+			data[index + 2] = r;
 		}
 	}
 	GetAppPtr()->GetHgePtr()->Texture_Unlock(m_image.quad.tex);
