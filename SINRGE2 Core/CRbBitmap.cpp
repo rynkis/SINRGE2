@@ -1741,8 +1741,11 @@ VALUE CRbBitmap::to_bin()
 {
 	check_raise();
 
+	DWORD byte_width = m_image.width * 3;
+	if (m_image.width * 3 % 4 != 0)
+		byte_width += 4 - m_image.width * 3 % 4;
 	DWORD head_size = sizeof(BMPFILEHEADER_T)+sizeof(BMPINFOHEADER_T);
-	DWORD data_size = m_image.width * m_image.height * 3;
+	DWORD data_size = byte_width * m_image.height;
 	DWORD file_size = head_size + data_size;
 
 	BMPHEADER_T bmph;
@@ -1798,6 +1801,7 @@ VALUE CRbBitmap::to_bin()
 	bmph.biClrImportant32 = 0;
 
 	BYTE * data = (BYTE *)malloc(file_size);
+	ZeroMemory(data, file_size);
 	memcpy(data, &bmph, head_size);
 
 	BYTE a, r, g, b;
@@ -1807,11 +1811,11 @@ VALUE CRbBitmap::to_bin()
 	for (ly = 0; ly < m_image.height; ++ly)
 	{
 		lineno1 = m_image.width * (m_image.height - ly - 1);
-		lineno2 = m_image.width * ly;
+		lineno2 = byte_width * ly;
 		for (lx = 0; lx < m_image.width; ++lx)
 		{
 			offset = lineno1 + lx;
-			index = didx + ((lineno2 + lx) * 3);
+			index = didx + lineno2 + lx * 3;
 			GET_ARGB_8888(pTexData[offset], a, r, g, b);
 			data[index] = b;
 			data[index + 1] = g;
