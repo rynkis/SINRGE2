@@ -1,9 +1,5 @@
 ﻿# SINRGE2
-Copyright (C) 2013 Lynch Sherry (or Shy07) <Gernischt@gmail.com>
-
-## Notice
-Author's English was not good enough to assure everything all correct.
-So don't be too seriously, please tell me and I'll correct it.
+Copyright (C) 2013 - 2016 Lynch HSU (or Shy07) <Gernischt@gmail.com>
 
 ## About SINRGE2
 SINRGE2 is the recursive acronym of "SINRGE2 Is Not Ruby Game Engine 2".  
