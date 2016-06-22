@@ -16,10 +16,10 @@ the binary files first. And edit the .ini file to tell SINRGE2.dll
 some necessary parameters.
 ```Runme.ini
 [setting]
-Library=SINRGE2.dll # to tell Runme.exe the path of SINRGE2.dll
-ExtFunc=SealEx.dll  # to tell SINRGE2.dll the path of extension library and it could be empty  
-Scripts=main.rb     # to tell SINRGE2.dll the path of main script file
-Console=0           # to tell SINRGE2 whether show cmd window
+Library=SINRGE2.dll # the path of SINRGE2.dll
+ExtFunc=SealEx.dll  # the path of extension library and it could be empty  
+Scripts=main.rb     # the path of main script file
+Console=0           # show cmd window or not
                     # only '1' can open the console and any other value would close the console
 ```
 ### Basic Use
@@ -27,8 +27,8 @@ Console=0           # to tell SINRGE2 whether show cmd window
 Initialize SINRGE2:
 
 ```ruby
-SINRGE2.init_video # this can only initialize graphics moudle
-#SINRGE2.init      # this can initialize both graphics and seal moudle
+SINRGE2.init_video # only initialize graphics moudle
+#SINRGE2.init      # initialize both graphics and seal moudle
                    # premise is you have specified the ExtFunc in .ini
 include SINRGE2
 ```
