@@ -1,5 +1,5 @@
 ﻿# SINRGE2
-Copyright (C) Lynch HSU (or Shy07) <Gernischt@gmail.com>
+Copyright (c) Lynch HSU (or Shy07) <Gernischt@gmail.com>
 
 ## About SINRGE2
 SINRGE2 is the recursive acronym of "SINRGE2 Is Not Ruby Game Engine 2".  
@@ -54,6 +54,8 @@ And in SINRGE2 you can print it on screen. This is a sample:
 SINRGE2.stop # stop SINRGE2 with looping Graphics#update
 ```
 You can get the same effect in RGSS too.  
+
+You can find more info from [here](http://shy07.com/SINRGE2/index.html).  
 
 ## Platforms
 
