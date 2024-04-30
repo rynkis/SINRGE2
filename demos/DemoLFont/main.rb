@@ -76,11 +76,11 @@ def draw_lfont_text(lfont, str, x: nil, y: nil, width: nil, height: nil, rect: n
   end
 end
 
-texts = "16size：执着于老朽的文字诗篇；痴迷程序代码和主机游戏；"
+texts = "16size：你好，世界。Hello world."
 draw_lfont_text(@lfont16, texts, x: 32, y: 32, width: 800, height: 20)
-texts = "14size：爱世界，爱人民，不爱国；不坦率直白，造作即造文。"
+texts = "14size：你好，世界。Hello world."
 draw_lfont_text(@lfont14, texts, x: 32, y: 52, width: 800, height: 20)
-texts = "12size：I'm Sherry Lynch, I'm Shy07."
+texts = "12size：你好，世界。Hello world."
 draw_lfont_text(@lfont12, texts, rect: Rect.new(32, 72, 800, 20))
 
 SINRGE2.stop
